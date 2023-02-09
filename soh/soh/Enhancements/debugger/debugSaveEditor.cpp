@@ -625,7 +625,7 @@ void DrawInventoryTab() {
     ImGui::Checkbox("Restrict to valid items", &restrictToValid);
     UIWidgets::InsertHelpHoverText("Restricts items and ammo to only what is possible to legally acquire in-game");
 
-    for (int32_t y = 0; y < 4; y++) {
+    for (int32_t y = 0; y < 8; y++) {
         for (int32_t x = 0; x < 6; x++) {
             int32_t index = x + y * 6;
             static int32_t selectedIndex = -1;

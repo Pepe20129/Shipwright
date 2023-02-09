@@ -21,6 +21,12 @@ static s16 sAmmoVtxOffset[] = {
 extern const char* _gAmmoDigit0Tex[];
 
 void KaleidoScope_DrawAmmoCount(PauseContext* pauseCtx, GraphicsContext* gfxCtx, s16 item, int slot) {
+    if (slot >= SLOT_EXTRA_1 && pauseCtx->itemPage == 0) {
+        return;
+    }
+    if (slot <= SLOT_TRADE_CHILD && pauseCtx->itemPage == 1) {
+        return;
+    }
     s16 ammo;
     s16 i;
 
@@ -158,7 +164,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                             pauseCtx->cursorPoint[PAUSE_ITEM] =
                                 pauseCtx->cursorX[PAUSE_ITEM] + (pauseCtx->cursorY[PAUSE_ITEM] * 6);
 
-                            if (pauseCtx->cursorPoint[PAUSE_ITEM] >= 24) {
+                            if (pauseCtx->cursorPoint[PAUSE_ITEM] >= (pauseCtx->itemPage == 0 ? 24 : 48)) {
                                 pauseCtx->cursorPoint[PAUSE_ITEM] = pauseCtx->cursorX[PAUSE_ITEM];
                             }
 
@@ -166,6 +172,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                                 pauseCtx->cursorX[PAUSE_ITEM] = cursorX;
                                 pauseCtx->cursorPoint[PAUSE_ITEM] = cursorPoint;
 
+                                pauseCtx->itemPage = 0;
                                 KaleidoScope_MoveCursorToSpecialPos(play, PAUSE_CURSOR_PAGE_LEFT);
 
                                 moveCursorResult = 2;
@@ -190,7 +197,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                             pauseCtx->cursorPoint[PAUSE_ITEM] =
                                 pauseCtx->cursorX[PAUSE_ITEM] + (pauseCtx->cursorY[PAUSE_ITEM] * 6);
 
-                            if (pauseCtx->cursorPoint[PAUSE_ITEM] >= 24) {
+                            if (pauseCtx->cursorPoint[PAUSE_ITEM] >= (pauseCtx->itemPage == 0 ? 24 : 48)) {
                                 pauseCtx->cursorPoint[PAUSE_ITEM] = pauseCtx->cursorX[PAUSE_ITEM];
                             }
 
@@ -198,6 +205,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                                 pauseCtx->cursorX[PAUSE_ITEM] = cursorX;
                                 pauseCtx->cursorPoint[PAUSE_ITEM] = cursorPoint;
 
+                                pauseCtx->itemPage = 0;
                                 KaleidoScope_MoveCursorToSpecialPos(play, PAUSE_CURSOR_PAGE_RIGHT);
 
                                 moveCursorResult = 2;
@@ -244,6 +252,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                         continue;
                     }
 
+                    pauseCtx->itemPage = 0;
                     KaleidoScope_MoveCursorToSpecialPos(play, PAUSE_CURSOR_PAGE_RIGHT);
                     break;
                 }
@@ -279,6 +288,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                         continue;
                     }
 
+                    pauseCtx->itemPage = 0;
                     KaleidoScope_MoveCursorToSpecialPos(play, PAUSE_CURSOR_PAGE_LEFT);
                     break;
                 }
@@ -302,10 +312,23 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                                     moveCursorResult = 1;
                                 }
                             } else {
+                                if (pauseCtx->itemPage == 0) {
+                                    pauseCtx->itemPage = 1;
+                                    pauseCtx->cursorPoint[PAUSE_ITEM] += 24;
+                                } else {
+                                    pauseCtx->itemPage = 0;
+                                    pauseCtx->cursorPoint[PAUSE_ITEM] -= 24;
+                                }
+                                if ((gSaveContext.inventory.items[pauseCtx->cursorPoint[PAUSE_ITEM]] != ITEM_NONE) ||
+                                    pauseAnyCursor) {
+                                    moveCursorResult = 1;
+                                }
+                                /*
                                 pauseCtx->cursorY[PAUSE_ITEM] = cursorY;
                                 pauseCtx->cursorPoint[PAUSE_ITEM] = cursorPoint;
 
                                 moveCursorResult = 2;
+                                */
                             }
                         } else if ((pauseCtx->stickRelY < -30) || (dpad && CHECK_BTN_ALL(input->press.button, BTN_DDOWN))) {
                             if (pauseCtx->cursorY[PAUSE_ITEM] < 3) {
@@ -355,7 +378,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
             }
 
             if (cursorItem != PAUSE_ITEM_NONE) {
-                index = cursorSlot * 4; // required to match?
+                index = (cursorSlot % 24) * 4; // required to match?
                 KaleidoScope_SetCursorVtx(pauseCtx, index, pauseCtx->itemVtx);
 
                 if ((pauseCtx->debugState == 0) && (pauseCtx->state == 6) && (pauseCtx->unk_1E4 == 0)) {
@@ -455,7 +478,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
             Audio_PlaySoundGeneral(NA_SE_SY_CURSOR, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
         }
     } else if ((pauseCtx->unk_1E4 == 3) && (pauseCtx->pageIndex == PAUSE_ITEM)) {
-        KaleidoScope_SetCursorVtx(pauseCtx, cursorSlot * 4, pauseCtx->itemVtx);
+        KaleidoScope_SetCursorVtx(pauseCtx, (cursorSlot % 24) * 4, pauseCtx->itemVtx);
         pauseCtx->cursorColorSet = 4;
     }
 
@@ -476,7 +499,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
     gDPPipeSync(POLY_KAL_DISP++);
     gDPSetCombineMode(POLY_KAL_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
-    for (i = j = 0; i < 24; i++, j += 4) {
+    for (i = (pauseCtx->itemPage == 0 ? 0 : 24), j = 0; i < (pauseCtx->itemPage == 0 ? 24 : 48); i++, j += 4) {
         gDPSetPrimColor(POLY_KAL_DISP++, 0, 0, 255, 255, 255, pauseCtx->alpha);
 
         if (gSaveContext.inventory.items[i] != ITEM_NONE) {
