@@ -7,7 +7,9 @@
 #include "z_en_girla.h"
 #include "vt.h"
 
+#include "soh/Enhancements/custom-message/CustomMessageTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/pit/Pit.h"
 #include "soh/OTRGlobals.h"
 #include <assert.h>
 
@@ -140,7 +142,8 @@ static char* sShopItemDescriptions[] = {
     "爆弾×5       ",  // "Bomb x5"
     "赤クスリ      ", // "Red medicine"
     "赤クスリ      ", // "Red medicine"
-    "Random Item  "  // "Random Item"
+    "Random Item  ", // "Random Item"
+    "Pit Item     "  // "Pit Item"
 };
 
 static s16 sMaskShopItems[8] = {
@@ -317,7 +320,10 @@ static ShopItemEntry shopItemEntries[] = {
       EnGirlA_ItemGive_BottledItem, EnGirlA_BuyEvent_ShieldDiscount },
     /* SI_RANDOMIZED_ITEM */
     { OBJECT_INVALID, GID_MAXIMUM, NULL, 40, 1, 0x9100, 0x9100 + NUM_SHOP_ITEMS, GI_NONE, EnGirlA_CanBuy_Randomizer,
-      EnGirlA_ItemGive_Randomizer, EnGirlA_BuyEvent_Randomizer }
+      EnGirlA_ItemGive_Randomizer, EnGirlA_BuyEvent_Randomizer },
+    /* SI_PIT_ITEM */
+    { OBJECT_INVALID, GID_MAXIMUM, NULL, 40, 1, TEXT_SHOP_ITEM_PIT, TEXT_SHOP_ITEM_PIT_CONFIRM, GI_NONE, Pit_Shop_CanBuy,
+      Pit_Shop_ItemGive, Pit_Shop_BuyEvent }
 };
 
 // Defines the Hylian Shield discount amount
@@ -397,6 +403,9 @@ s32 EnGirlA_TryChangeShopItem(EnGirlA* this, PlayState* play) {
             }
             break;
         }
+
+        case SI_PIT_ITEM:
+            return Pit_Shop_ChangeItem(this);
     }
 
     return false;
@@ -416,7 +425,9 @@ void EnGirlA_InitItem(EnGirlA* this, PlayState* play) {
         return;
     }
 
-    if (!gSaveContext.n64ddFlag || Randomizer_GetSettingValue(RSK_SHOPSANITY) == RO_SHOPSANITY_OFF) {
+    if (params == SI_PIT_ITEM) {
+        Pit_Shop_InitItem(this);
+    } else if (!gSaveContext.n64ddFlag || Randomizer_GetSettingValue(RSK_SHOPSANITY) == RO_SHOPSANITY_OFF) {
         this->objBankIndex = Object_GetIndex(&play->objectCtx, shopItemEntries[params].objID);
     } else {
         s16 objectId = shopItemEntries[params].objID;
@@ -1133,6 +1144,8 @@ void EnGirlA_SetItemDescription(PlayState* play, EnGirlA* this) {
     if (params == SI_RANDOMIZED_ITEM) {
         ShopItemIdentity shopItemIdentity = Randomizer_IdentifyShopItem(play->sceneNum, this->randoSlotIndex);
         this->actor.textId = 0x9100 + (shopItemIdentity.randomizerInf - RAND_INF_SHOP_ITEMS_KF_SHOP_ITEM_1);
+    } else if (params == SI_PIT_ITEM) {
+        this->actor.textId = TEXT_SHOP_ITEM_PIT + this->randoSlotIndex;
     }
 
     this->isInvisible = false;
@@ -1142,7 +1155,7 @@ void EnGirlA_SetItemDescription(PlayState* play, EnGirlA* this) {
 void EnGirlA_SetItemOutOfStock(PlayState* play, EnGirlA* this) {
     this->isInvisible = true;
     this->actor.draw = NULL;
-    if (((this->actor.params >= SI_KEATON_MASK) && (this->actor.params <= SI_GERUDO_MASK)) || this->actor.params == SI_RANDOMIZED_ITEM) {
+    if (((this->actor.params >= SI_KEATON_MASK) && (this->actor.params <= SI_GERUDO_MASK)) || this->actor.params == SI_RANDOMIZED_ITEM || this->actor.params == SI_PIT_ITEM) {
         this->actor.textId = 0xBD;
     }
 }
@@ -1157,6 +1170,8 @@ void EnGirlA_UpdateStockedItem(PlayState* play, EnGirlA* this) {
         if (this->actor.params == SI_RANDOMIZED_ITEM) {
             ShopItemIdentity shopItemIdentity = Randomizer_IdentifyShopItem(play->sceneNum, this->randoSlotIndex);
             this->actor.textId = 0x9100 + (shopItemIdentity.randomizerInf - RAND_INF_SHOP_ITEMS_KF_SHOP_ITEM_1);
+        } else if (this->actor.params == SI_PIT_ITEM) {
+            this->actor.textId = TEXT_SHOP_ITEM_PIT + this->randoSlotIndex;
         } else {
             this->actor.textId = itemEntry->itemDescTextId;
         }
@@ -1294,6 +1309,8 @@ void EnGirlA_InitializeItemAction(EnGirlA* this, PlayState* play) {
             if (getItemEntry.getItemId >= RG_KOKIRI_EMERALD && getItemEntry.getItemId <= RG_ZORA_SAPPHIRE) {
                 this->actor.shape.rot.y = this->actor.shape.rot.y + 20000;
             }
+        } else if (params == SI_PIT_ITEM) {
+            Pit_Shop_InitializeItemAction(this);
         }
     }
 }
@@ -1340,6 +1357,9 @@ void EnGirlA_Draw(Actor* thisx, PlayState* play) {
 
         EnItem00_CustomItemsParticles(&this->actor, play, getItemEntry);
         GetItemEntry_Draw(play, getItemEntry);
+        return;
+    } else if (this->actor.params == SI_PIT_ITEM) {
+        Pit_Shop_ItemDraw(this);
         return;
     }
 

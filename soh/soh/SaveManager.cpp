@@ -7,6 +7,7 @@
 #include "macros.h"
 #include <variables.h>
 #include "soh/Enhancements/boss-rush/BossRush.h"
+#include "soh/Enhancements/pit/Pit.h"
 #include <libultraship/libultraship.h>
 
 #define NOGDI // avoid various windows defines that conflict with things in z64.h
@@ -584,6 +585,10 @@ void SaveManager::InitFileNormal() {
 
     if (gSaveContext.isBossRush) {
         BossRush_InitSave();
+    }
+
+    if (gSaveContext.isPitOf100Trials) {
+        Pit_InitSave();
     }
 
     //RANDOTODO (ADD ITEMLOCATIONS TO GSAVECONTEXT)

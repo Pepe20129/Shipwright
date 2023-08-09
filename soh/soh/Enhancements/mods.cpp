@@ -3,6 +3,7 @@
 #include "game-interactor/GameInteractor.h"
 #include "tts/tts.h"
 #include "soh/Enhancements/boss-rush/BossRushTypes.h"
+#include "soh/Enhancements/pit/Pit.h"
 #include "soh/Enhancements/enhancementTypes.h"
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/Enhancements/cosmetics/authenticGfxPatches.h"
@@ -599,6 +600,26 @@ void RegisterMirrorModeHandler() {
     });
 }
 
+void RegisterPit() {
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnTransitionEnd>([](int32_t sceneNum) {
+        if (gSaveContext.isPitOf100Trials) {
+            Pit_InitCurrentFloor();
+        }
+    });
+
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>([]() {
+        if (gSaveContext.isPitOf100Trials) {
+            Pit_Update();
+        }
+    });
+
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorKill>([](void* refActor) {
+        if (gSaveContext.isPitOf100Trials) {
+            Pit_OnActorKill((Actor*)refActor);
+        }
+    });
+}
+
 void InitMods() {
     RegisterTTS();
     RegisterInfiniteMoney();
@@ -621,4 +642,5 @@ void InitMods() {
     RegisterBonkDamage();
     RegisterMenuPathFix();
     RegisterMirrorModeHandler();
+    RegisterPit();
 }

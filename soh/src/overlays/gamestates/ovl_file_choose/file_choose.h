@@ -177,6 +177,7 @@ typedef enum {
     /* 01 */ FS_QUEST_MASTER,
     /* 02 */ FS_QUEST_RANDOMIZER,
     /* 03 */ FS_QUEST_BOSSRUSH,
+    /* 04 */ FS_QUEST_PIT,
 } FileSelectQuest;
 
 void FileChoose_SetupCopySource(GameState* thisx); 

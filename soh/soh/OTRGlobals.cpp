@@ -1966,6 +1966,14 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                 RandomizerInf randoInf = (RandomizerInf)((textId - (TEXT_SHOP_ITEM_RANDOM + NUM_SHOP_ITEMS)) + RAND_INF_SHOP_ITEMS_KF_SHOP_ITEM_1);
                 messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_RANDOM_CONFIRM);
             }
+        } else if (textId >= TEXT_SHOP_ITEM_PIT && textId <= TEXT_SHOP_ITEM_PIT + (NUM_SHOP_ITEMS * 2)) {
+            if (textId < TEXT_SHOP_ITEM_PIT + NUM_SHOP_ITEMS) {
+                //messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_PIT);
+                //messageEntry = CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, TEXT_SHOP_ITEM_PIT);
+            } else {
+                //messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_PIT_CONFIRM);
+                //messageEntry = CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, TEXT_SHOP_ITEM_PIT_CONFIRM);
+            }
         } else if (CVarGetInteger("gRandomizeRupeeNames", 1) &&
                    (textId == TEXT_BLUE_RUPEE || textId == TEXT_RED_RUPEE || textId == TEXT_PURPLE_RUPEE ||
                    textId == TEXT_HUGE_RUPEE)) {

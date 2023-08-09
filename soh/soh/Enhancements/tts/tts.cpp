@@ -553,6 +553,13 @@ void RegisterOnUpdateMainMenuSelection() {
                 SpeechSynthesizer::Instance->Speak(translation.c_str(), GetLanguageCode());
                 break;
             }
+            /*
+            case FS_QUEST_PIT: {
+                auto translation = GetParameritizedText("quest_sel_pit", TEXT_BANK_FILECHOOSE, nullptr);
+                SpeechSynthesizer::Instance->Speak(translation.c_str(), GetLanguageCode());
+                break;
+            }
+            */
             default:
                 break;
         }

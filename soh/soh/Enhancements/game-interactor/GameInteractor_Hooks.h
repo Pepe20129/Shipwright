@@ -15,6 +15,7 @@ void GameInteractor_ExecuteOnSceneSpawnActors();
 void GameInteractor_ExecuteOnPlayerUpdate();
 void GameInteractor_ExecuteOnOcarinaSongAction();
 void GameInteractor_ExecuteOnActorUpdate(void* actor);
+void GameInteractor_ExecuteOnActorKill(void* actor);
 void GameInteractor_ExecuteOnPlayerBonk();
 void GameInteractor_ExecuteOnOcarinaSongAction();
 

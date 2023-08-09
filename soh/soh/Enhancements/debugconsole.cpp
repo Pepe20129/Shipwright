@@ -10,6 +10,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/cosmetics/CosmeticsEditor.h"
 #include "soh/Enhancements/audio/AudioEditor.h"
+#include "soh/Enhancements/pit/Pit.h"
 
 #define Path _Path
 #define PATH_HACK
@@ -1320,6 +1321,30 @@ static bool SfxHandler(std::shared_ptr<LUS::Console> Console, const std::vector<
     return 0;
 }
 
+static bool PitHandler(std::shared_ptr<LUS::Console> Console, const std::vector<std::string>& args, std::string* output) {
+    if (args.size() < 2) {
+        ERROR_MESSAGE("[SOH] Unexpected arguments passed");
+        return 1;
+    }
+
+    if (args[1].compare("set_floor") == 0) {
+        if (args.size() < 3) {
+            ERROR_MESSAGE("[SOH] Argument after 'set_floor' must be an integer");
+            return 1;
+        }
+        gSaveContext.currentPitFloor = std::stoi(args[2]);
+        Pit_SetEntrace();
+    } else if (args[1].compare("reset") == 0) {
+        gSaveContext.currentPitFloor = 0;
+        Pit_SetEntrace();
+    } else {
+        ERROR_MESSAGE("[SOH] Invalid argument passed, must be 'set_floor' or 'reset'");
+        return 1;
+    }
+
+    return 0;
+}
+
 void DebugConsole_Init(void) {
     // Console
     CMD_REGISTER("file_select", {FileSelectHandler, "Returns to the file select."});
@@ -1505,6 +1530,10 @@ void DebugConsole_Init(void) {
 
     CMD_REGISTER("sfx", {SfxHandler, "Change SFX.", {
             {"reset|randomize", LUS::ArgumentType::TEXT},
+    }});
+
+    CMD_REGISTER("pit", {PitHandler, "Pit of 100 trials stuff", {
+            {"set_floor|reset", LUS::ArgumentType::TEXT},
     }});
 
     CVarSave();

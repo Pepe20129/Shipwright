@@ -162,4 +162,15 @@ extern "C" void OTRMessage_Init()
             "Cette sauvegarde a été créée sur&une version différente de SoH.&Certaines fonctionnalités&peuvent être "
             "corrompues.",
             TEXTBOX_TYPE_NONE_BOTTOM));
+    
+    CustomMessageManager::Instance->CreateMessage(
+        customMessageTableID, TEXT_SHOP_ITEM_PIT,
+        CustomMessage("\x08%r{{item}}  {{price}} Rupees\x0A\x02",
+            "\x08%r{{item}}  {{price}} Rubine\x0A\x02",
+            "\x08%r{{item}}  {{price}} Rubis\x0A\x02"));
+    CustomMessageManager::Instance->CreateMessage(
+        customMessageTableID, TEXT_SHOP_ITEM_PIT_CONFIRM,
+        CustomMessage("\x08{{item}}  {{price}} Rupees\x09&&\x1B%gBuy&Don't buy%w\x09\x02",
+            "\x08{{item}}  {{price}} Rubine\x09&&\x1B%gKaufen&Nicht kaufen%w\x09\x02",
+            "\x08{{item}}  {{price}} Rubis\x09&&\x1B%gAcheter&Ne pas acheter%w\x09\x02"));
 }

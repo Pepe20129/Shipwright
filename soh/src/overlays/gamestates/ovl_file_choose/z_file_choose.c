@@ -19,7 +19,7 @@
 
 
 #define MIN_QUEST (ResourceMgr_GameHasOriginal() ? FS_QUEST_NORMAL : FS_QUEST_MASTER)
-#define MAX_QUEST FS_QUEST_BOSSRUSH
+#define MAX_QUEST FS_QUEST_PIT
 
 void Sram_InitDebugSave(void);
 void Sram_InitBossRushSave();
@@ -636,12 +636,20 @@ void FileChoose_UpdateQuestMenu(GameState* thisx) {
         gSaveContext.n64ddFlag = this->questType[this->buttonIndex] == FS_QUEST_RANDOMIZER;
         gSaveContext.isBossRush = this->questType[this->buttonIndex] == FS_QUEST_BOSSRUSH;
         gSaveContext.isBossRushPaused = false;
+        gSaveContext.isPitOf100Trials = this->questType[this->buttonIndex] == FS_QUEST_PIT;
+        gSaveContext.currentPitFloor = 0;
 
         if (this->questType[this->buttonIndex] == FS_QUEST_BOSSRUSH) {
             Audio_PlaySoundGeneral(NA_SE_SY_FSEL_DECIDE_L, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
             this->prevConfigMode = this->configMode;
             this->configMode = CM_ROTATE_TO_BOSS_RUSH_MENU;
             return;
+        } else if (this->questType[this->buttonIndex] == FS_QUEST_PIT) {
+            Audio_PlaySoundGeneral(NA_SE_SY_FSEL_DECIDE_L, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
+            this->buttonIndex = 0xFE;
+            this->menuMode = FS_MENU_MODE_SELECT;
+            this->selectMode = SM_FADE_OUT;
+            this->prevConfigMode = this->configMode;
         } else {
             Audio_PlaySoundGeneral(NA_SE_SY_FSEL_DECIDE_L, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
             osSyncPrintf("Selected Dungeon Quest: %d\n", gSaveContext.isMasterQuest);
@@ -1615,6 +1623,14 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
                 FileChoose_DrawImageRGBA32(this->state.gfxCtx, 160, 135, ResourceMgr_GameHasOriginal() ? gTitleZeldaShieldLogoTex : gTitleZeldaShieldLogoMQTex, 160, 160);
                 FileChoose_DrawImageRGBA32(this->state.gfxCtx, 182, 180, gTitleBossRushSubtitleTex, 128, 32);
                 break;
+
+            case FS_QUEST_PIT:
+                gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 255, 255, 255, this->logoAlpha);
+                FileChoose_DrawTextureI8(this->state.gfxCtx, gTitleTheLegendOfTextTex, 72, 8, 156, 108, 72, 8, 1024, 1024);
+                FileChoose_DrawTextureI8(this->state.gfxCtx, gTitleOcarinaOfTimeTMTextTex, 96, 8, 154, 163, 96, 8, 1024, 1024);
+                FileChoose_DrawImageRGBA32(this->state.gfxCtx, 160, 135, ResourceMgr_GameHasOriginal() ? gTitleZeldaShieldLogoTex : gTitleZeldaShieldLogoMQTex, 160, 160);
+                FileChoose_DrawImageRGBA32(this->state.gfxCtx, 182, 180, gTitleBossRushSubtitleTex, 128, 32);
+                break;
         }
     } else if (this->configMode == CM_BOSS_RUSH_MENU) {
 
@@ -2162,6 +2178,7 @@ void FileChoose_ConfirmFile(GameState* thisx) {
             Audio_PlaySoundGeneral(NA_SE_SY_FSEL_DECIDE_L, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
             // Reset Boss Rush because it's only ever saved in memory.
             gSaveContext.isBossRush = 0;
+            gSaveContext.isPitOf100Trials = 0;
             this->selectMode = SM_FADE_OUT;
             func_800F6964(0xF);
         } else {

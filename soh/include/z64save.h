@@ -288,6 +288,8 @@ typedef struct {
     /*        */ uint32_t isBossRush;
     /*        */ uint32_t isBossRushPaused;
     /*        */ uint8_t bossRushOptions[BOSSRUSH_OPTIONS_AMOUNT];
+    /*        */ uint32_t isPitOf100Trials;
+    /*        */ uint32_t currentPitFloor;
     /*        */ u8 mqDungeonCount;
     /*        */ u8 pendingIceTrapCount;
     /*        */ SohStats sohStats;

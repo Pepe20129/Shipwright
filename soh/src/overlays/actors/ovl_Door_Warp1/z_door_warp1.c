@@ -116,7 +116,7 @@ void DoorWarp1_SetupWarp(DoorWarp1* this, PlayState* play) {
     this->scale = 0;
     this->unk_1AE = -140;
     this->unk_1B0 = -80;
-    sWarpTimerTarget = 100;
+    sWarpTimerTarget = gSaveContext.isPitOf100Trials ? 0 : 100;
     this->unk_1BC = 1.0f;
     this->lightRayAlpha = 0.0f;
     this->warpAlpha = 0.0f;
@@ -207,7 +207,7 @@ void DoorWarp1_SetupAdultDungeonWarp(DoorWarp1* this, PlayState* play) {
     this->scale = 0;
     this->unk_1AE = -140;
     this->unk_1B0 = -80;
-    sWarpTimerTarget = 160;
+    sWarpTimerTarget = gSaveContext.isPitOf100Trials ? 0 : 160;
     this->actor.shape.yOffset = -400.0f;
     this->warpTimer = 0;
     this->unk_1BC = 1.0f;
@@ -826,7 +826,9 @@ void DoorWarp1_AdultWarpOut(DoorWarp1* this, PlayState* play) {
     this->warpTimer++;
 
     if (this->warpTimer > sWarpTimerTarget && gSaveContext.nextCutsceneIndex == 0xFFEF) {
-        if (gSaveContext.isBossRush) {
+        if (gSaveContext.isPitOf100Trials && this->warpTimer == 1) {
+            Pit_HandleBlueWarp(play);
+        } else if (gSaveContext.isBossRush) {
             BossRush_HandleBlueWarp(play, this->actor.world.pos.x, this->actor.world.pos.z);
         } else if (play->sceneNum == SCENE_MORIBOSSROOM) {
             if (!Flags_GetEventChkInf(EVENTCHKINF_USED_FOREST_TEMPLE_BLUE_WARP)) {
