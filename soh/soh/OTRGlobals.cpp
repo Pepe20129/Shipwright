@@ -35,6 +35,7 @@
 #include "Enhancements/audio/AudioEditor.h"
 #include "Enhancements/enhancementTypes.h"
 #include "Enhancements/debugconsole.h"
+#include "Enhancements/pit/Pit.h"
 #include "Enhancements/randomizer/randomizer.h"
 #include "Enhancements/randomizer/randomizer_entrance_tracker.h"
 #include "Enhancements/randomizer/randomizer_item_tracker.h"
@@ -1897,7 +1898,15 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
     const int maxBufferSize = sizeof(font->msgBuf);
     CustomMessage messageEntry;
     s16 actorParams = 0;
-    if (gSaveContext.n64ddFlag) {
+    if (gSaveContext.isPitOf100Trials) {
+        if (textId >= TEXT_SHOP_ITEM_PIT && textId <= TEXT_SHOP_ITEM_PIT + (NUM_SHOP_ITEMS * 2)) {
+            if (textId < TEXT_SHOP_ITEM_PIT + NUM_SHOP_ITEMS) {
+                messageEntry = Pit_Shop_GetItemMessage(textId);
+            } else {
+                messageEntry = Pit_Shop_GetItemConfirmMessage(textId);
+            }
+        }
+    } else if (gSaveContext.n64ddFlag) {
         if (textId == TEXT_RANDOMIZER_CUSTOM_ITEM) {
             Player* player = GET_PLAYER(play);
             if (player->getItemEntry.getItemId == RG_ICE_TRAP) {
@@ -1965,14 +1974,6 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
             } else {
                 RandomizerInf randoInf = (RandomizerInf)((textId - (TEXT_SHOP_ITEM_RANDOM + NUM_SHOP_ITEMS)) + RAND_INF_SHOP_ITEMS_KF_SHOP_ITEM_1);
                 messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_RANDOM_CONFIRM);
-            }
-        } else if (textId >= TEXT_SHOP_ITEM_PIT && textId <= TEXT_SHOP_ITEM_PIT + (NUM_SHOP_ITEMS * 2)) {
-            if (textId < TEXT_SHOP_ITEM_PIT + NUM_SHOP_ITEMS) {
-                //messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_PIT);
-                //messageEntry = CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, TEXT_SHOP_ITEM_PIT);
-            } else {
-                //messageEntry = OTRGlobals::Instance->gRandomizer->GetMerchantMessage(randoInf, TEXT_SHOP_ITEM_PIT_CONFIRM);
-                //messageEntry = CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, TEXT_SHOP_ITEM_PIT_CONFIRM);
             }
         } else if (CVarGetInteger("gRandomizeRupeeNames", 1) &&
                    (textId == TEXT_BLUE_RUPEE || textId == TEXT_RED_RUPEE || textId == TEXT_PURPLE_RUPEE ||

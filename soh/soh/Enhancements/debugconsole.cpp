@@ -1337,8 +1337,11 @@ static bool PitHandler(std::shared_ptr<LUS::Console> Console, const std::vector<
     } else if (args[1].compare("reset") == 0) {
         gSaveContext.currentPitFloor = 0;
         Pit_SetEntrace();
+    } else if (args[1].compare("next_floor") == 0) {
+        gSaveContext.currentPitFloor += 1;
+        Pit_SetEntrace();
     } else {
-        ERROR_MESSAGE("[SOH] Invalid argument passed, must be 'set_floor' or 'reset'");
+        ERROR_MESSAGE("[SOH] Invalid argument passed, must be 'set_floor', 'reset' or 'next_floor'");
         return 1;
     }
 
@@ -1533,7 +1536,7 @@ void DebugConsole_Init(void) {
     }});
 
     CMD_REGISTER("pit", {PitHandler, "Pit of 100 trials stuff", {
-            {"set_floor|reset", LUS::ArgumentType::TEXT},
+            {"set_floor|reset|next_floor", LUS::ArgumentType::TEXT},
     }});
 
     CVarSave();

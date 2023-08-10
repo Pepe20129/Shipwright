@@ -618,6 +618,15 @@ void RegisterPit() {
             Pit_OnActorKill((Actor*)refActor);
         }
     });
+
+    //waiting on the pr
+    /*
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnDefeatEnemy>([](void* refActor) {
+        if (gSaveContext.isPitOf100Trials) {
+            Pit_OnDefeatEnemy((Actor*)refActor);
+        }
+    });
+    */
 }
 
 void InitMods() {

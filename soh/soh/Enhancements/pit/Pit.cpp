@@ -1,4 +1,5 @@
 #include "Pit.h"
+#include "PitFloorData.h"
 #include "soh/OTRGlobals.h"
 #include "../custom-message/CustomMessageTypes.h"
 #include "../item-tables/ItemTableManager.h"
@@ -10,9 +11,6 @@ extern "C" {
 #include "functions.h"
 #include "variables.h"
 #include "functions.h"
-#include "src/overlays/actors/ovl_En_Firefly/z_en_firefly.h"
-#include "src/overlays/actors/ovl_En_Ossan/z_en_ossan.h"
-#include "src/overlays/actors/ovl_En_Dekubaba/z_en_dekubaba.h"
 extern SaveContext gSaveContext;
 extern PlayState* gPlayState;
 extern s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
@@ -21,226 +19,6 @@ extern s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
 #include <array>
 #include <string>
 #include <vector>
-
-struct EnemyData {
-    s16 actorId;
-    Vec3f pos;
-    Vec3s rot;
-    s16 params;
-};
-
-enum FloorType {
-    ENEMY,
-    REST,
-    //END
-};
-
-struct FloorData {
-    FloorType type;
-    std::vector<EnemyData> enemies;
-};
-
-//the max coordinates in the room are 466 horizontally
-//-Z is forward
-std::vector<FloorData> floorData = {
-    //floors 1-9
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    /*
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_KAREBABA,
-                { 100, 0, -200 },
-                { 0, 0, 0 },
-                0
-            },
-            {
-                ACTOR_EN_KAREBABA,
-                { -100, 0, -200 },
-                { 0, 0, 0 },
-                0
-            }
-        }
-    },
-    */
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_DEKUBABA,
-                { 100, 0, -200 },
-                { 0, 0, 0 },
-                DEKUBABA_NORMAL
-            },
-            {
-                ACTOR_EN_DEKUBABA,
-                { -100, 0, -200 },
-                { 0, 0, 0 },
-                DEKUBABA_NORMAL
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { 0, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { 0, 50, -250 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_DEKUBABA,
-                { 0, 0, -200 },
-                { 0, 0, 0 },
-                DEKUBABA_NORMAL
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-    {
-        FloorType::ENEMY,
-        {
-            {
-                ACTOR_EN_FIREFLY,
-                { 100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            },
-            {
-                ACTOR_EN_FIREFLY,
-                { -100, 70, -200 },
-                { 0, 0, 0 },
-                KEESE_NORMAL_FLY
-            }
-        }
-    },
-
-    //floor 10
-    {
-        FloorType::REST,
-        {}
-    }
-};
 
 std::vector<Actor*> currentFloorEnemies;
 
@@ -373,6 +151,18 @@ void Pit_SpawnEnemiesForCurrentFloor() {
             currentFloorEnemies.push_back(spawnedActor);
         }
     }
+}
+
+//this will return the number of rest floors before your current floor
+//it will return 0 on the first rest floor, 1 on the second one and so on
+u8 Pit_GetRestFloorNumber() {
+    u8 restFloorNumber = 0;
+    for (u16 i = 0; i < (floorData.size() < gSaveContext.currentPitFloor ? floorData.size() : gSaveContext.currentPitFloor); i += 1) {
+        if (floorData[i].type == FloorType::REST) {
+            restFloorNumber += 1;
+        }
+    }
+    return restFloorNumber;
 }
 
 #pragma region Shop
@@ -511,10 +301,53 @@ ShopItemOffset shopItemOffsets[8] = {
     { -80, 76,  -3, 0x1554 }
 };
 
+CustomMessage Pit_Shop_GetItemMessage(u16 textId) {
+    return CustomMessage("test", "test", "test");
+}
+
+CustomMessage Pit_Shop_GetItemConfirmMessage(u16 textId) {
+    return CustomMessage("test", "test", "test");
+}
+
 #pragma endregion
+
+GetItemEntry Pit_GetItemInChest() {
+    //in case of failure, return greg
+    GetItemEntry giEntry = ItemTableManager::Instance->RetrieveItemEntry(MOD_RANDOMIZER, RG_GREG_RUPEE);
+
+    switch (Pit_GetRestFloorNumber()) {
+        case 0:
+            giEntry = ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_SHIELD_DEKU);
+            break;
+    }
+
+    return giEntry;
+}
+
+void Pit_OpenChest(EnBox* chest) {
+    GetItemEntry giEntry = Pit_GetItemInChest();
+    giEntry.getItemId = 0 - giEntry.getItemId;
+    giEntry.getItemFrom = ITEM_FROM_CHEST;
+    GiveItemEntryFromActorWithFixedRange(&chest->dyna.actor, gPlayState, giEntry);
+}
+
+void Pit_SetUpChest(EnBox* chest) {
+    chest->getItemEntry = Pit_GetItemInChest();
+}
 
 void Pit_InitRestFloor() {
     osSyncPrintf("Initializing a rest floor");
+
+    //chest
+    Actor_Spawn(
+        &gPlayState->actorCtx,
+        gPlayState,
+        ACTOR_EN_BOX,
+        200, 0, 0,
+        0, 16384, 0,
+        0,
+        false
+    );
 
     shopItems.clear();
     Pit_Shop_CreateShopItems();
@@ -562,9 +395,7 @@ void Pit_InitRestFloor() {
     osSyncPrintf("Finished initializing a rest floor");
 }
 
-//needs to be replaced with an OnEnemyDefeated for cases (like withered deku babas)
-//where defeating an enemy doesn't kill the actor
-void Pit_OnActorKill(Actor* actor) {
+void Pit_OnDefeatEnemy(Actor* actor) {
     if (std::find(currentFloorEnemies.begin(), currentFloorEnemies.end(), actor) != currentFloorEnemies.end()) {
         currentFloorEnemies.erase(std::remove(currentFloorEnemies.begin(), currentFloorEnemies.end(), actor), currentFloorEnemies.end());
     }
@@ -572,6 +403,11 @@ void Pit_OnActorKill(Actor* actor) {
     if (Actor_Find(&gPlayState->actorCtx, ACTOR_DOOR_WARP1, ACTORCAT_ITEMACTION) == NULL && currentFloorEnemies.empty()) {
         Pit_SpawnBlueWarp();
     }
+}
+
+//in case we get out with debug warp menu
+void Pit_OnActorKill(Actor* actor) {
+    Pit_OnDefeatEnemy(actor);
 }
 
 void Pit_InitCurrentFloor() {
@@ -582,7 +418,7 @@ void Pit_InitCurrentFloor() {
 
     if (gSaveContext.currentPitFloor >= floorData.size()) {
         osSyncPrintf("Error: Pit_InitCurrentFloor was called with a gSaveContext.currentPitFloor higher than the number of floors");
-        gSaveContext.currentPitFloor = floorData.size();
+        gSaveContext.currentPitFloor = floorData.size() - 1;
     }
 
     switch (floorData[gSaveContext.currentPitFloor].type) {

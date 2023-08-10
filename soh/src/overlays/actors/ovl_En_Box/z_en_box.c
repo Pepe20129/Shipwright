@@ -2,6 +2,7 @@
 #include "objects/object_box/object_box.h"
 #include "soh_assets.h"
 #include "soh/Enhancements/enhancementTypes.h"
+#include "soh/Enhancements/pit/Pit.h"
 #include <assert.h>
 
 #define FLAGS 0
@@ -192,7 +193,9 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
     SkelAnime_Init(play, &this->skelanime, &gTreasureChestSkel, anim, this->jointTable, this->morphTable, 5);
     Animation_Change(&this->skelanime, anim, 1.5f, animFrameStart, endFrame, ANIMMODE_ONCE, 0.0f);
 
-    if (gSaveContext.n64ddFlag) {
+    if (gSaveContext.isPitOf100Trials) {
+        Pit_SetUpChest(this);
+    } else if (gSaveContext.n64ddFlag) {
         this->getItemEntry = Randomizer_GetItemFromActor(this->dyna.actor.id, play->sceneNum, this->dyna.actor.params, this->dyna.actor.params >> 5 & 0x7F);
     } else {
         this->getItemEntry = ItemTable_RetrieveEntry(MOD_NONE, this->dyna.actor.params >> 5 & 0x7F);
@@ -506,7 +509,9 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             }
             // Chests need to have a negative getItemId in order to not immediately give their item
             // when approaching.
-            if (gSaveContext.n64ddFlag) {
+            if (gSaveContext.isPitOf100Trials) {
+                Pit_OpenChest(this);
+            } else if (gSaveContext.n64ddFlag) {
                 sItem.getItemId = 0 - sItem.getItemId;
                 sItem.getItemFrom = ITEM_FROM_CHEST;
                 GiveItemEntryFromActorWithFixedRange(&this->dyna.actor, play, sItem);
