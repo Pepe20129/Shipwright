@@ -727,6 +727,13 @@ void Flags_SetTreasure(PlayState* play, s32 flag) {
 }
 
 /**
+ * Unsets current scene chest flag.
+ */
+void Flags_UnsetTreasure(PlayState* play, s32 flag) {
+    play->actorCtx.flags.chest &= ~(1 << flag);
+}
+
+/**
  * Tests if current scene clear flag is set.
  */
 s32 Flags_GetClear(PlayState* play, s32 flag) {

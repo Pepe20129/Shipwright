@@ -381,6 +381,7 @@ void Flags_SetUnknown(PlayState* play, s32 flag);
 void Flags_UnsetUnknown(PlayState* play, s32 flag);
 s32 Flags_GetTreasure(PlayState* play, s32 flag);
 void Flags_SetTreasure(PlayState* play, s32 flag);
+void Flags_UnsetTreasure(PlayState* play, s32 flag);
 s32 Flags_GetClear(PlayState* play, s32 flag);
 void Flags_SetClear(PlayState* play, s32 flag);
 void Flags_UnsetClear(PlayState* play, s32 flag);

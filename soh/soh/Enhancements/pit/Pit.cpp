@@ -181,36 +181,36 @@ void Pit_Shop_CreateShopItems() {
     }
     shopItems = {
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_STICKS_1),
+            1
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_NUTS_5),
+            10
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_SHIELD_HYLIAN),
+            10
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_NAYRUS_LOVE),
+            50
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_BOOMERANG),
+            25
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_MASK_BUNNY),
+            15
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_HEART_CONTAINER),
+            5
         },
         {
-            ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, ITEM_SOLD_OUT),
-            0
+            ItemTableManager::Instance->RetrieveItemEntry(MOD_RANDOMIZER, RG_BOTTLE_WITH_RED_POTION),
+            15
         }
     };
 }
@@ -319,16 +319,21 @@ GetItemEntry Pit_GetItemInChest() {
         case 0:
             giEntry = ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_SHIELD_DEKU);
             break;
+
+        case 1:
+            giEntry = ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_SLINGSHOT);
+            break;
     }
 
     return giEntry;
 }
 
-void Pit_OpenChest(EnBox* chest) {
+GetItemEntry Pit_OpenChest(EnBox* chest) {
     GetItemEntry giEntry = Pit_GetItemInChest();
     giEntry.getItemId = 0 - giEntry.getItemId;
     giEntry.getItemFrom = ITEM_FROM_CHEST;
     GiveItemEntryFromActorWithFixedRange(&chest->dyna.actor, gPlayState, giEntry);
+    return giEntry;
 }
 
 void Pit_SetUpChest(EnBox* chest) {
@@ -337,6 +342,9 @@ void Pit_SetUpChest(EnBox* chest) {
 
 void Pit_InitRestFloor() {
     osSyncPrintf("Initializing a rest floor");
+
+    //unset the flag that the chest uses
+    Flags_UnsetTreasure(gPlayState, 0);
 
     //chest
     Actor_Spawn(
@@ -391,6 +399,10 @@ void Pit_InitRestFloor() {
     }
 
     Pit_SpawnBlueWarp();
+
+    //fill health and magic
+    gSaveContext.health = gSaveContext.healthCapacity;
+    gSaveContext.magic = gSaveContext.magicCapacity;
 
     osSyncPrintf("Finished initializing a rest floor");
 }

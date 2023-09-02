@@ -23,7 +23,7 @@ void Pit_Shop_BuyEvent(PlayState*, EnGirlA*);
 void Pit_Shop_InitItem(EnGirlA*);
 void Pit_Shop_InitializeItemAction(EnGirlA*);
 void Pit_Shop_ItemDraw(EnGirlA*);
-void Pit_OpenChest(EnBox*);
+GetItemEntry Pit_OpenChest(EnBox*);
 void Pit_SetUpChest(EnBox*);
 #ifdef __cplusplus
 };

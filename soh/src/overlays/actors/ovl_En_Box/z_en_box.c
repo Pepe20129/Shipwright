@@ -510,7 +510,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             // Chests need to have a negative getItemId in order to not immediately give their item
             // when approaching.
             if (gSaveContext.isPitOf100Trials) {
-                Pit_OpenChest(this);
+                sItem = Pit_OpenChest(this);
             } else if (gSaveContext.n64ddFlag) {
                 sItem.getItemId = 0 - sItem.getItemId;
                 sItem.getItemFrom = ITEM_FROM_CHEST;
