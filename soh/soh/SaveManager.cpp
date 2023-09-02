@@ -415,6 +415,17 @@ void SaveManager::InitMeta(int fileNum) {
     }
     fileMetaInfo[fileNum].healthCapacity = gSaveContext.healthCapacity;
     fileMetaInfo[fileNum].questItems = gSaveContext.inventory.questItems;
+    for (int i = 0; i < ARRAY_COUNT(fileMetaInfo[fileNum].inventoryItems); i++) {
+        fileMetaInfo[fileNum].inventoryItems[i] = gSaveContext.inventory.items[i];
+    }
+    fileMetaInfo[fileNum].equipment = gSaveContext.inventory.equipment;
+    fileMetaInfo[fileNum].upgrades = gSaveContext.inventory.upgrades;
+    fileMetaInfo[fileNum].isMagicAcquired = gSaveContext.isMagicAcquired;
+    fileMetaInfo[fileNum].isDoubleMagicAcquired = gSaveContext.isDoubleMagicAcquired;
+    fileMetaInfo[fileNum].rupees = gSaveContext.rupees;
+    fileMetaInfo[fileNum].gsTokens = gSaveContext.inventory.gsTokens;
+    fileMetaInfo[fileNum].isDoubleDefenseAcquired = gSaveContext.isDoubleDefenseAcquired;
+    fileMetaInfo[fileNum].gregFound = Flags_GetRandomizerInf(RAND_INF_GREG_FOUND);
     fileMetaInfo[fileNum].defense = gSaveContext.inventory.defenseHearts;
     fileMetaInfo[fileNum].health = gSaveContext.health;
 
@@ -572,7 +583,7 @@ void SaveManager::InitFileNormal() {
         gSaveContext.scarecrowSpawnSong[i].semitone = 0;
     }
 
-    gSaveContext.horseData.scene = SCENE_SPOT00;
+    gSaveContext.horseData.scene = SCENE_HYRULE_FIELD;
     gSaveContext.horseData.pos.x = -1840;
     gSaveContext.horseData.pos.y = 72;
     gSaveContext.horseData.pos.z = 5497;
@@ -673,7 +684,7 @@ void SaveManager::InitFileDebug() {
     gSaveContext.inventory.defenseHearts = 0;
     gSaveContext.inventory.gsTokens = 0;
 
-    gSaveContext.horseData.scene = SCENE_SPOT00;
+    gSaveContext.horseData.scene = SCENE_HYRULE_FIELD;
     gSaveContext.horseData.pos.x = -1840;
     gSaveContext.horseData.pos.y = 72;
     gSaveContext.horseData.pos.z = 5497;
