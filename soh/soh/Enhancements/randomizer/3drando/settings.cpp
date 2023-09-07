@@ -195,6 +195,7 @@ namespace Settings {
   Option ShuffleMerchants       = Option::U8  ("Shuffle Merchants",      {"Off", "On (No Hints)", "On (With Hints)"},                       {merchantsDesc, merchantsHintsDesc});
   Option ShuffleFrogSongRupees  = Option::Bool("Shuffle Frog Song Rupees",{"Off", "On"},                                                    {frogSongRupeesDesc});
   Option ShuffleAdultTradeQuest = Option::Bool("Shuffle Adult Trade",    {"Off", "On"},                                                     {adultTradeDesc});
+  Option ShuffleTrials          = Option::Bool("Shuffle Trials",         {"Off", "On"},                                                     {adultTradeDesc});
   Option ShuffleChestMinigame   = Option::U8  ("Shuffle Chest Minigame", {"Off", "On (Separate)", "On (Pack)"},                             {chestMinigameDesc});
   Option Shuffle100GSReward     = Option::Bool("Shuffle 100 GS Reward",  {"Off", "On"},                                                     {shuffle100GsDesc});
   std::vector<Option *> shuffleOptions = {
@@ -216,6 +217,7 @@ namespace Settings {
     &ShuffleMerchants,
     &ShuffleFrogSongRupees,
     &ShuffleAdultTradeQuest,
+    &ShuffleTrials,
     &ShuffleChestMinigame,
     &Shuffle100GSReward,
   };
@@ -1602,6 +1604,7 @@ namespace Settings {
     ctx.shuffleMerchants     = ShuffleMerchants.Value<uint8_t>();
     ctx.shuffleFrogSongRupees= (ShuffleFrogSongRupees) ? 1 : 0;
     ctx.shuffleAdultTradeQuest = (ShuffleAdultTradeQuest) ? 1 : 0;
+    ctx.shuffleTrials        = (ShuffleTrials) ? 1 : 0;
     ctx.shuffleChestMinigame = ShuffleChestMinigame.Value<uint8_t>();
     ctx.shuffle100GsReward   = (Shuffle100GSReward) ? 1 : 0;
 
@@ -2035,6 +2038,21 @@ namespace Settings {
       Unhide(ocarinaLocations);
     } else {
       IncludeAndHide(ocarinaLocations);
+    }
+
+    //Force include the trial locations if Shuffle Trials is Off
+    std::vector<uint32_t> trialLocations = {
+      GANONS_CASTLE_FOREST_TRIAL_CHECK,
+      GANONS_CASTLE_FIRE_TRIAL_CHECK,
+      GANONS_CASTLE_WATER_TRIAL_CHECK,
+      GANONS_CASTLE_SHADOW_TRIAL_CHECK,
+      GANONS_CASTLE_SPIRIT_TRIAL_CHECK,
+      GANONS_CASTLE_LIGHT_TRIAL_CHECK
+    };
+    if (ShuffleTrials) {
+      Unhide(trialLocations);
+    } else {
+      IncludeAndHide(trialLocations);
     }
 
     //Force include Malon if Shuffle Weird Egg is Off
@@ -2610,6 +2628,7 @@ namespace Settings {
     &ShuffleMerchants,
     &ShuffleFrogSongRupees,
     &ShuffleAdultTradeQuest,
+    &ShuffleTrials,
     &Shuffle100GSReward,
     &GossipStoneHints,
   };
@@ -2943,6 +2962,7 @@ namespace Settings {
     ShuffleFrogSongRupees.SetSelectedIndex(cvarSettings[RSK_SHUFFLE_FROG_SONG_RUPEES]);
 
     ShuffleAdultTradeQuest.SetSelectedIndex(cvarSettings[RSK_SHUFFLE_ADULT_TRADE]);
+    ShuffleTrials.SetSelectedIndex(cvarSettings[RSK_SHUFFLE_TRIALS]);
     ShuffleMagicBeans.SetSelectedIndex(cvarSettings[RSK_SHUFFLE_MAGIC_BEANS]);
     ShuffleMerchants.SetSelectedIndex(cvarSettings[RSK_SHUFFLE_MERCHANTS]);
 

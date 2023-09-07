@@ -64,8 +64,8 @@ static u8 sEnergyColors[] = {
     /* Forest  prim */ 255, 255, 170, /* env */ 0,   200, 0,
 };
 
-// Translates from the barrier's actor params to their corresponding randInf flags.
-RandomizerInf trialParamToRandInf(u16 params) {
+// Translates from the barrier's actor params to their corresponding randInf flags determining if they're done
+RandomizerInf TrialParamToCompletedRandInf(u16 params) {
     switch (params) {
         case KEKKAI_LIGHT:
             return RAND_INF_TRIALS_DONE_LIGHT_TRIAL;
@@ -82,6 +82,60 @@ RandomizerInf trialParamToRandInf(u16 params) {
     }
 }
 
+// Translates from the barrier's actor params to their corresponding randInf flags determining if they've given you the item in case of trial shuffle
+RandomizerInf TrialParamToGottenRandInf(u16 params) {
+    switch (params) {
+        case KEKKAI_LIGHT:
+            return RAND_INF_TRIAL_SHUFFLE_LIGHT_TRIAL;
+        case KEKKAI_FOREST:
+            return RAND_INF_TRIAL_SHUFFLE_FOREST_TRIAL;
+        case KEKKAI_FIRE:
+            return RAND_INF_TRIAL_SHUFFLE_FIRE_TRIAL;
+        case KEKKAI_WATER:
+            return RAND_INF_TRIAL_SHUFFLE_WATER_TRIAL;
+        case KEKKAI_SPIRIT:
+            return RAND_INF_TRIAL_SHUFFLE_SPIRIT_TRIAL;
+        case KEKKAI_SHADOW:
+            return RAND_INF_TRIAL_SHUFFLE_SHADOW_TRIAL;
+    }
+}
+
+// Translates from the barrier's actor params to their corresponding check
+RandomizerCheck TrialParamToCheck(u16 params) {
+    switch (params) {
+        case KEKKAI_LIGHT:
+            return RC_GANONS_CASTLE_LIGHT_TRIAL;
+        case KEKKAI_FOREST:
+            return RC_GANONS_CASTLE_FOREST_TRIAL;
+        case KEKKAI_FIRE:
+            return RC_GANONS_CASTLE_FIRE_TRIAL;
+        case KEKKAI_WATER:
+            return RC_GANONS_CASTLE_WATER_TRIAL;
+        case KEKKAI_SPIRIT:
+            return RC_GANONS_CASTLE_SPIRIT_TRIAL;
+        case KEKKAI_SHADOW:
+            return RC_GANONS_CASTLE_SHADOW_TRIAL;
+    }
+}
+
+// Translates from the barrier's actor params to their corresponding randomizer get
+RandomizerGet TrialParamToRG(u16 params) {
+    switch (params) {
+        case KEKKAI_LIGHT:
+            return RG_LIGHT_TRIAL;
+        case KEKKAI_FOREST:
+            return RG_FOREST_TRIAL;
+        case KEKKAI_FIRE:
+            return RG_FIRE_TRIAL;
+        case KEKKAI_WATER:
+            return RG_WATER_TRIAL;
+        case KEKKAI_SPIRIT:
+            return RG_SPIRIT_TRIAL;
+        case KEKKAI_SHADOW:
+            return RG_SHADOW_TRIAL;
+    }
+}
+
 s32 DemoKekkai_CheckEventFlag(s32 params) {
     static s32 eventFlags[] = { 0xC3, 0xBC, 0xBF, 0xBE, 0xBD, 0xAD, 0xBB };
 
@@ -89,7 +143,7 @@ s32 DemoKekkai_CheckEventFlag(s32 params) {
         return true;
     }
     if (gSaveContext.n64ddFlag && params > KEKKAI_TOWER) {
-        return Flags_GetRandomizerInf(trialParamToRandInf(params));
+        return Randomizer_GetSettingValue(RSK_SHUFFLE_TRIALS) ? Flags_GetRandomizerInf(TrialParamToGottenRandInf(params)) : Flags_GetRandomizerInf(TrialParamToCompletedRandInf(params));
     }
     return Flags_GetEventChkInf(eventFlags[params]);
 }
@@ -161,7 +215,7 @@ void DemoKekkai_Init(Actor* thisx, PlayState* play) {
         case KEKKAI_SHADOW:
         case KEKKAI_SPIRIT:
         case KEKKAI_FOREST:
-            if (gSaveContext.n64ddFlag && Flags_GetRandomizerInf(trialParamToRandInf(thisx->params))) {
+            if (gSaveContext.n64ddFlag && Randomizer_GetSettingValue(RSK_SHUFFLE_TRIALS) ? Flags_GetRandomizerInf(TrialParamToGottenRandInf(thisx->params)) : Flags_GetRandomizerInf(TrialParamToCompletedRandInf(thisx->params))) {
                 Actor_Kill(thisx);
                 return;
             }
@@ -271,10 +325,10 @@ void DemoKekkai_TrialBarrierDispel(Actor* thisx, PlayState* play) {
     DemoKekkai* this = (DemoKekkai*)thisx;
 
     if (gSaveContext.n64ddFlag) {
-        Flags_SetRandomizerInf(trialParamToRandInf(thisx->params));
+        Flags_SetRandomizerInf(TrialParamToCompletedRandInf(thisx->params));
         // May or may not be needed. Not sure if needed for anything
         // that randoInf isn't already covering. Leaving it for safety.
-        Flags_SetEventChkInf(eventFlags[thisx->params]); 
+        Flags_SetEventChkInf(eventFlags[thisx->params]);
     }
 
     if (play->csCtx.frames == csFrames[this->actor.params]) {
@@ -321,13 +375,29 @@ void DemoKekkai_TrialBarrierIdle(Actor* thisx, PlayState* play) {
     CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider1.base);
     CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider1.base);
     if (this->collider2.base.acFlags & AC_HIT) {
-        func_80078884(NA_SE_SY_CORRECT_CHIME);
-        // "I got it"
-        LOG_STRING("当ったよ");
-        this->actor.update = DemoKekkai_TrialBarrierDispel;
-        this->timer = 0;
-        play->csCtx.segment = SEGMENTED_TO_VIRTUAL(sSageCutscenes[this->actor.params]);
-        gSaveContext.cutsceneTrigger = 1;
+        if (gSaveContext.n64ddFlag && Randomizer_GetSettingValue(RSK_SHUFFLE_TRIALS)) {
+            if (!Flags_GetRandomizerInf(TrialParamToGottenRandInf(thisx->params))) {
+                GetItemEntry randoTrialGIEntry = Randomizer_GetItemFromKnownCheck(TrialParamToCheck(thisx->params), ItemTable_RetrieveEntry(MOD_RANDOMIZER, TrialParamToRG(thisx->params)).getItemId);
+                if (GiveItemEntryFromActor(this, play, randoTrialGIEntry, 1000000.0f, 1000000.0f)) {
+                    Flags_SetRandomizerInf(TrialParamToGottenRandInf(thisx->params));
+                    func_80078884(NA_SE_SY_CORRECT_CHIME);
+                    // "I got it"
+                    LOG_STRING("当ったよ");
+                    this->actor.update = DemoKekkai_TrialBarrierDispel;
+                    this->timer = 0;
+                    play->csCtx.segment = SEGMENTED_TO_VIRTUAL(sSageCutscenes[this->actor.params]);
+                    gSaveContext.cutsceneTrigger = 1;
+                }
+            }
+        } else {
+            func_80078884(NA_SE_SY_CORRECT_CHIME);
+            // "I got it"
+            LOG_STRING("当ったよ");
+            this->actor.update = DemoKekkai_TrialBarrierDispel;
+            this->timer = 0;
+            play->csCtx.segment = SEGMENTED_TO_VIRTUAL(sSageCutscenes[this->actor.params]);
+            gSaveContext.cutsceneTrigger = 1;
+        }
     }
     CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider2.base);
     func_8002F974(&this->actor, NA_SE_EV_TOWER_ENERGY - SFX_FLAG);

@@ -692,6 +692,23 @@ void GenerateItemPool() {
     PlaceItemInLocation(HF_OCARINA_OF_TIME_ITEM, PROGRESSIVE_OCARINA, false, true);
   }
 
+  if (ShuffleTrials) {
+    AddItemToMainPool(FOREST_TRIAL_ITEM);
+    AddItemToMainPool(FIRE_TRIAL_ITEM);
+    AddItemToMainPool(WATER_TRIAL_ITEM);
+    AddItemToMainPool(SHADOW_TRIAL_ITEM);
+    AddItemToMainPool(SPIRIT_TRIAL_ITEM);
+    AddItemToMainPool(LIGHT_TRIAL_ITEM);
+  } else {
+    //we put blue rupees even tho they will never be gotten because if we put NONE it doesn't work
+    PlaceItemInLocation(GANONS_CASTLE_FOREST_TRIAL_CHECK, BLUE_RUPEE, false, true);
+    PlaceItemInLocation(GANONS_CASTLE_FIRE_TRIAL_CHECK, BLUE_RUPEE, false, true);
+    PlaceItemInLocation(GANONS_CASTLE_WATER_TRIAL_CHECK, BLUE_RUPEE, false, true);
+    PlaceItemInLocation(GANONS_CASTLE_SHADOW_TRIAL_CHECK, BLUE_RUPEE, false, true);
+    PlaceItemInLocation(GANONS_CASTLE_SPIRIT_TRIAL_CHECK, BLUE_RUPEE, false, true);
+    PlaceItemInLocation(GANONS_CASTLE_LIGHT_TRIAL_CHECK, BLUE_RUPEE, false, true);
+  }
+
   if (ShuffleCows) {
     //9 total cow locations
     for (uint8_t i = 0; i < 9; i++) {

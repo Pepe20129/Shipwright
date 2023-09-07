@@ -1953,6 +1953,72 @@ void HintTable_Init_Item() {
                        Text{"Epona", /*french*/"Epona", /*spanish*/"a Epona"}
     );
 
+    hintTable[FOREST_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Forest Trial", /*french*/"!!!", /*spanish*/"la Prueba del Bosque"}
+    );
+
+    hintTable[FIRE_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Fire Trial", /*french*/"!!!", /*spanish*/"la Prueba del Fuego"}
+    );
+
+    hintTable[WATER_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Water Trial", /*french*/"!!!", /*spanish*/"la Prueba del Agua"}
+    );
+
+    hintTable[SHADOW_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Shadow Trial", /*french*/"!!!", /*spanish*/"la Prueba de la Sombra"}
+    );
+
+    hintTable[SPIRIT_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Spirit Trial", /*french*/"!!!", /*spanish*/"la Prueba del Espiritú"}
+    );
+
+    hintTable[LIGHT_TRIAL_ITEM] = HintText::Item({
+                       //obscure text
+                       Text{"a wall", /*french*/"!!!", /*spanish*/"una pared"},
+                     }, {
+                       //ambiguous text
+                       Text{"a barrier", /*french*/"!!!", /*spanish*/"una barrera"},
+                     },
+                       //clear text
+                       Text{"the Light Trial", /*french*/"!!!", /*spanish*/"la Prueba de la Luz"}
+    );
+
     // [HINT_ERROR] = HintText::Item({
     //                      //obscure text
     //                      Text{"something mysterious", /*french*/"un sacré mystère", /*spanish*/"algo misterioso"},

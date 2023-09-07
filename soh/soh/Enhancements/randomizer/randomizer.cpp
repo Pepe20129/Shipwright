@@ -259,6 +259,7 @@ std::unordered_map<std::string, RandomizerSettingKey> SpoilerfileSettingNameToEn
     { "Shuffle Settings:Tokensanity", RSK_SHUFFLE_TOKENS },
     { "Shuffle Settings:Shuffle Ocarinas", RSK_SHUFFLE_OCARINA },
     { "Shuffle Settings:Shuffle Adult Trade", RSK_SHUFFLE_ADULT_TRADE },
+    { "Shuffle Settings:Shuffle Trials", RSK_SHUFFLE_TRIALS },
     { "Shuffle Settings:Shuffle Magic Beans", RSK_SHUFFLE_MAGIC_BEANS },
     { "Shuffle Settings:Shuffle Kokiri Sword", RSK_SHUFFLE_KOKIRI_SWORD },
     { "Shuffle Settings:Shuffle Weird Egg", RSK_SHUFFLE_WEIRD_EGG },
@@ -828,6 +829,7 @@ void Randomizer::ParseRandomizerSettingsFile(const char* spoilerFileName) {
                     case RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD:
                     case RSK_SHUFFLE_COWS:
                     case RSK_SHUFFLE_ADULT_TRADE:
+                    case RSK_SHUFFLE_TRIALS:
                     case RSK_SHUFFLE_MAGIC_BEANS:
                     case RSK_SHUFFLE_KOKIRI_SWORD:
                     case RSK_SHUFFLE_WEIRD_EGG:
@@ -2853,6 +2855,7 @@ void GenerateRandomizerImgui(std::string seed = "") {
     cvarSettings[RSK_SHUFFLE_SCRUBS] = CVarGetInteger("gRandomizeShuffleScrubs", RO_SCRUBS_OFF);
     cvarSettings[RSK_SHUFFLE_COWS] = CVarGetInteger("gRandomizeShuffleCows", 0);
     cvarSettings[RSK_SHUFFLE_ADULT_TRADE] = CVarGetInteger("gRandomizeShuffleAdultTrade", 0);
+    cvarSettings[RSK_SHUFFLE_TRIALS] = CVarGetInteger("gRandomizeShuffleTrials", 0);
     cvarSettings[RSK_SHUFFLE_MAGIC_BEANS] = CVarGetInteger("gRandomizeShuffleBeans", 0);
     cvarSettings[RSK_SHUFFLE_MERCHANTS] = CVarGetInteger("gRandomizeShuffleMerchants", RO_SHUFFLE_MERCHANTS_OFF);
     cvarSettings[RSK_SHUFFLE_100_GS_REWARD] = CVarGetInteger("gRandomizeShuffle100GSReward", RO_GENERIC_OFF);
@@ -3915,6 +3918,19 @@ void RandomizerSettingsWindow::DrawElement() {
                     "\n"
                     "If disabled, only the Claim Check will be found in the pool."
                 );
+
+                UIWidgets::PaddedSeparator();
+
+                // Shuffle Trials
+                bool disableShuffleTrials = CVarGetInteger("gRandomizeGanonTrial", RO_GANONS_TRIALS_SET_NUMBER) == RO_GANONS_TRIALS_SKIP;
+                static const char* disableShuffleTrialsText = "This option is disabled because \"Ganon's Trials\" is set to \"Skip\".";
+                UIWidgets::EnhancementCheckbox(
+                    Settings::ShuffleTrials.GetName().c_str(),
+                    "gRandomizeShuffleTrials",
+                    disableShuffleTrials,
+                    disableShuffleTrialsText
+                );
+                UIWidgets::InsertHelpHoverText("Adds all the trials as items to the item pool.");
 
                 UIWidgets::PaddedSeparator();
 
@@ -5683,7 +5699,7 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
-    const std::array<GetItemMessage, 56> getItemMessages = {{
+    const std::array<GetItemMessage, 62> getItemMessages = {{
         GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, 
 			"You found %gGreg%w!",
 			"%gGreg%w! Du hast ihn wirklich gefunden!",
@@ -5913,7 +5929,32 @@ void Randomizer::CreateCustomMessages() {
         GIMESSAGE(RG_TYCOON_WALLET, ITEM_WALLET_GIANT,
 			"You got a %rTycoon's Wallet%w!&It's gigantic! Now you can carry&up to %y999 rupees%w!",
 			"Du erhältst die %rGoldene&Geldbörse%w! Die größte aller&Geldbörsen! Jetzt kannst Du bis&zu %y999 Rubine%w mit dir führen!",
-			"Vous obtenez la %rBourse de Magnat%w!&Elle peut contenir jusqu'à %y999 rubis%w!&C'est gigantesque!")
+			"Vous obtenez la %rBourse de Magnat%w!&Elle peut contenir jusqu'à %y999 rubis%w!&C'est gigantesque!"),
+        
+        GIMESSAGE(RG_LIGHT_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rLight Trial%w!",
+			"!!!",
+			"!!!"),
+        GIMESSAGE(RG_FOREST_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rForest Trial%w!",
+			"!!!",
+			"!!!"),
+        GIMESSAGE(RG_FIRE_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rFire Trial%w!",
+			"!!!",
+			"!!!"),
+        GIMESSAGE(RG_WATER_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rWater Trial%w!",
+			"!!!",
+			"!!!"),
+        GIMESSAGE(RG_SPIRIT_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rSpirit Trial%w!",
+			"!!!",
+			"!!!"),
+        GIMESSAGE(RG_SHADOW_TRIAL, ITEM_WALLET_GIANT,
+			"You got the %rShadow Trial%w!",
+			"!!!",
+			"!!!"),
     }};
     CreateGetItemMessages(&getItemMessages);
     CreateRupeeMessages();
@@ -6027,6 +6068,12 @@ void InitRandoItemTable() {
         GET_ITEM(RG_MAGIC_BEAN_PACK,                   OBJECT_GI_BEAN,     GID_BEAN,             TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_MAGIC_BEAN_PACK),
         GET_ITEM(RG_TYCOON_WALLET,                     OBJECT_GI_PURSE,    GID_WALLET_GIANT,     TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_LESSER,    MOD_RANDOMIZER, RG_TYCOON_WALLET),
         GET_ITEM(RG_PROGRESSIVE_BOMBCHUS,              OBJECT_GI_BOMB_2,   GID_BOMBCHU,          0x33,                        0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_PROGRESSIVE_BOMBCHUS),
+        GET_ITEM(RG_LIGHT_TRIAL,                       OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_LIGHT_TRIAL),
+        GET_ITEM(RG_FOREST_TRIAL,                      OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_FOREST_TRIAL),
+        GET_ITEM(RG_FIRE_TRIAL,                        OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_FIRE_TRIAL),
+        GET_ITEM(RG_WATER_TRIAL,                       OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_WATER_TRIAL),
+        GET_ITEM(RG_SPIRIT_TRIAL,                      OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_SPIRIT_TRIAL),
+        GET_ITEM(RG_SHADOW_TRIAL,                      OBJECT_GI_MAP,      GID_STONE_OF_AGONY,   TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG,  ITEM_CATEGORY_MAJOR,     MOD_RANDOMIZER, RG_SHADOW_TRIAL),
     };
     ItemTableManager::Instance->AddItemTable(MOD_RANDOMIZER);
     for (int i = 0; i < ARRAY_COUNT(extendedVanillaGetItemTable); i++) {

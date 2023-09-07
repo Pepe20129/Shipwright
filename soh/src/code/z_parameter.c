@@ -2542,6 +2542,54 @@ u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
         return Return_Item_Entry(giEntry, RG_NONE);
     }
 
+    if (item == RG_LIGHT_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_LIGHT_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xBF);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    if (item == RG_FOREST_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_FOREST_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xBB);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    if (item == RG_FIRE_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_FIRE_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xBE);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    if (item == RG_WATER_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_WATER_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xBC);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    if (item == RG_SPIRIT_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_SPIRIT_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xAD);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
+    if (item == RG_SHADOW_TRIAL) {
+        Flags_SetRandomizerInf(RAND_INF_TRIALS_DONE_SHADOW_TRIAL);
+        // May or may not be needed. Not sure if needed for anything
+        // that randoInf isn't already covering. Leaving it for safety.
+        Flags_SetEventChkInf(0xBD);
+        return Return_Item_Entry(giEntry, RG_NONE);
+    }
+
     temp = gSaveContext.inventory.items[slot];
     osSyncPrintf("Item_Register(%d)=%d  %d\n", slot, item, temp);
     INV_CONTENT(item) = item;
