@@ -324,7 +324,7 @@ void DemoKekkai_TrialBarrierDispel(Actor* thisx, PlayState* play) {
     s32 pad;
     DemoKekkai* this = (DemoKekkai*)thisx;
 
-    if (gSaveContext.n64ddFlag) {
+    if (gSaveContext.n64ddFlag && !Randomizer_GetSettingValue(RSK_SHUFFLE_TRIALS)) {
         Flags_SetRandomizerInf(TrialParamToCompletedRandInf(thisx->params));
         // May or may not be needed. Not sure if needed for anything
         // that randoInf isn't already covering. Leaving it for safety.
@@ -380,6 +380,7 @@ void DemoKekkai_TrialBarrierIdle(Actor* thisx, PlayState* play) {
                 GetItemEntry randoTrialGIEntry = Randomizer_GetItemFromKnownCheck(TrialParamToCheck(thisx->params), ItemTable_RetrieveEntry(MOD_RANDOMIZER, TrialParamToRG(thisx->params)).getItemId);
                 if (GiveItemEntryFromActor(this, play, randoTrialGIEntry, 1000000.0f, 1000000.0f)) {
                     Flags_SetRandomizerInf(TrialParamToGottenRandInf(thisx->params));
+                    /*
                     func_80078884(NA_SE_SY_CORRECT_CHIME);
                     // "I got it"
                     LOG_STRING("当ったよ");
@@ -387,6 +388,7 @@ void DemoKekkai_TrialBarrierIdle(Actor* thisx, PlayState* play) {
                     this->timer = 0;
                     play->csCtx.segment = SEGMENTED_TO_VIRTUAL(sSageCutscenes[this->actor.params]);
                     gSaveContext.cutsceneTrigger = 1;
+                    */
                 }
             }
         } else {
