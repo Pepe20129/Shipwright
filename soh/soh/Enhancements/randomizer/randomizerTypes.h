@@ -59,6 +59,7 @@ typedef enum {
     RCTYPE_BOSS_HEART_OR_OTHER_REWARD, // Boss heart container or lesser dungeon rewards (lens, ice arrow)
     RCTYPE_DUNGEON_REWARD,             // Dungeon rewards (blue warps)
     RCTYPE_OCARINA,                    // Ocarina locations
+    RCTYPE_TRIAL                       // Trial locations (trial shuffle)
 } RandomizerCheckType;
 
 typedef enum { RCVORMQ_VANILLA, RCVORMQ_MQ, RCVORMQ_BOTH } RandomizerCheckVanillaOrMQ;

@@ -816,7 +816,13 @@ std::map<RandomizerCheck, RandomizerCheckObject> rcObjects = {
     RC_OBJECT(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_CENTER,                          RCVORMQ_MQ,      RCTYPE_SCRUB,          RCAREA_GANONS_CASTLE,          ACTOR_EN_DNS,       SCENE_INSIDE_GANONS_CASTLE,           0x03,                        GI_SEEDS_30,         "MQ Deku Scrub Center", "Ganon's Castle MQ Deku Scrub Center"),
     RC_OBJECT(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_CENTER_RIGHT,                    RCVORMQ_MQ,      RCTYPE_SCRUB,          RCAREA_GANONS_CASTLE,          ACTOR_EN_DNS,       SCENE_INSIDE_GANONS_CASTLE,           0x07,                        GI_POTION_RED,       "MQ Deku Scrub Center-Right", "Ganon's Castle MQ Deku Scrub Center-Right"),
     RC_OBJECT(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_LEFT,                            RCVORMQ_MQ,      RCTYPE_SCRUB,          RCAREA_GANONS_CASTLE,          ACTOR_EN_DNS,       SCENE_INSIDE_GANONS_CASTLE,           0x08,                        GI_POTION_GREEN,     "MQ Deku Scrub Left", "Ganon's Castle MQ Deku Scrub Left"),
-
+    
+    RC_OBJECT(RC_GANONS_CASTLE_FOREST_TRIAL,                                  RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Forest Trial Check", "Ganon's Castle Forest Trial Check"),
+    RC_OBJECT(RC_GANONS_CASTLE_FIRE_TRIAL,                                    RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Fire Trial Check",   "Ganon's Castle Fire Trial Check"),
+    RC_OBJECT(RC_GANONS_CASTLE_WATER_TRIAL,                                   RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Water Trial Check",  "Ganon's Castle Water Trial Check"),
+    RC_OBJECT(RC_GANONS_CASTLE_SHADOW_TRIAL,                                  RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Shadow Trial Check", "Ganon's Castle Shadow Trial Check"),
+    RC_OBJECT(RC_GANONS_CASTLE_SPIRIT_TRIAL,                                  RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Spirit Trial Check", "Ganon's Castle Spirit Trial Check"),
+    RC_OBJECT(RC_GANONS_CASTLE_LIGHT_TRIAL,                                   RCVORMQ_MQ,      RCTYPE_TRIAL,          RCAREA_GANONS_CASTLE,          ACTOR_DEMO_KEKKAI,  SCENE_INSIDE_GANONS_CASTLE,           0,                           GI_NONE,             "Light Trial Check",  "Ganon's Castle Light Trial Check"),
 
     RC_OBJECT(RC_UNKNOWN_CHECK,                                               RCVORMQ_BOTH,    RCTYPE_STANDARD,       RCAREA_INVALID,                ACTOR_ID_MAX,       SCENE_ID_MAX,                         0x00,                        GI_NONE,             "Invalid Check", "Invalid Check"),
 };
@@ -953,6 +959,7 @@ void RandomizerCheckObjects::UpdateImGuiVisibility() {
             (locationIt.rcType != RCTYPE_COW || CVarGetInteger("gRandomizeShuffleCows", RO_GENERIC_NO)) &&
             (locationIt.rcType != RCTYPE_ADULT_TRADE || CVarGetInteger("gRandomizeShuffleAdultTrade", RO_GENERIC_NO)) &&
             (locationIt.rc != RC_KF_KOKIRI_SWORD_CHEST || CVarGetInteger("gRandomizeShuffleKokiriSword", RO_GENERIC_NO)) &&
+            (locationIt.rcType != RCTYPE_TRIAL || CVarGetInteger("gRandomizeShuffleTrials", RO_GENERIC_NO)) &&
             (locationIt.rc != RC_ZR_MAGIC_BEAN_SALESMAN || CVarGetInteger("gRandomizeShuffleBeans", RO_GENERIC_NO)) &&
             (locationIt.rc != RC_HC_MALON_EGG || CVarGetInteger("gRandomizeShuffleWeirdEgg", RO_GENERIC_NO)) &&
             (locationIt.rcType != RCTYPE_FROG_SONG || CVarGetInteger("gRandomizeShuffleFrogSongRupees", RO_GENERIC_NO)) &&

@@ -2533,7 +2533,12 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_DMT_TRADE_BROKEN_SWORD,                                      RAND_INF_ADULT_TRADES_DMT_TRADE_BROKEN_SWORD },
     { RC_LH_TRADE_FROG,                                               RAND_INF_ADULT_TRADES_LH_TRADE_FROG },
     { RC_DMT_TRADE_EYEDROPS,                                          RAND_INF_ADULT_TRADES_DMT_TRADE_EYEDROPS },
-
+    { RC_GANONS_CASTLE_FOREST_TRIAL,                                  RAND_INF_TRIAL_SHUFFLE_FOREST_TRIAL },
+    { RC_GANONS_CASTLE_FIRE_TRIAL,                                    RAND_INF_TRIAL_SHUFFLE_FIRE_TRIAL   },
+    { RC_GANONS_CASTLE_WATER_TRIAL,                                   RAND_INF_TRIAL_SHUFFLE_WATER_TRIAL  },
+    { RC_GANONS_CASTLE_SHADOW_TRIAL,                                  RAND_INF_TRIAL_SHUFFLE_SHADOW_TRIAL },
+    { RC_GANONS_CASTLE_SPIRIT_TRIAL,                                  RAND_INF_TRIAL_SHUFFLE_SPIRIT_TRIAL },
+    { RC_GANONS_CASTLE_LIGHT_TRIAL,                                   RAND_INF_TRIAL_SHUFFLE_LIGHT_TRIAL  },
 };
 
 RandomizerCheckObject Randomizer::GetCheckObjectFromActor(s16 actorId, s16 sceneNum, s32 actorParams = 0x00) {

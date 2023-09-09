@@ -542,12 +542,12 @@ void LocationTable_Init() {
        --- TRIAL SHUFFLE ---
       -----------------------*/
     
-    locationTable[GANONS_CASTLE_FOREST_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_FOREST_TRIAL, 0, 0, "Ganon's Castle Forest Trial", GANONS_CASTLE_FOREST_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
-    locationTable[GANONS_CASTLE_FIRE_TRIAL_CHECK]   = ItemLocation::Base(RC_GANONS_CASTLE_FIRE_TRIAL,   0, 0, "Ganon's Castle Fire Trial",   GANONS_CASTLE_FIRE_TRIAL_CHECK,   NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
-    locationTable[GANONS_CASTLE_WATER_TRIAL_CHECK]  = ItemLocation::Base(RC_GANONS_CASTLE_WATER_TRIAL,  0, 0, "Ganon's Castle Water Trial",  GANONS_CASTLE_WATER_TRIAL_CHECK,  NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
-    locationTable[GANONS_CASTLE_SHADOW_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_SHADOW_TRIAL, 0, 0, "Ganon's Castle Shadow Trial", GANONS_CASTLE_SHADOW_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
-    locationTable[GANONS_CASTLE_SPIRIT_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_SPIRIT_TRIAL, 0, 0, "Ganon's Castle Spirit Trial", GANONS_CASTLE_SPIRIT_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
-    locationTable[GANONS_CASTLE_LIGHT_TRIAL_CHECK]  = ItemLocation::Base(RC_GANONS_CASTLE_LIGHT_TRIAL,  0, 0, "Ganon's Castle Light Trial",  GANONS_CASTLE_LIGHT_TRIAL_CHECK,  NONE, {}, SpoilerCollectionCheck::None(), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_FOREST_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_FOREST_TRIAL, 0, 0, "Ganon's Castle Forest Trial", GANONS_CASTLE_FOREST_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_FIRE_TRIAL_CHECK]   = ItemLocation::Base(RC_GANONS_CASTLE_FIRE_TRIAL,   0, 0, "Ganon's Castle Fire Trial",   GANONS_CASTLE_FIRE_TRIAL_CHECK,   NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_WATER_TRIAL_CHECK]  = ItemLocation::Base(RC_GANONS_CASTLE_WATER_TRIAL,  0, 0, "Ganon's Castle Water Trial",  GANONS_CASTLE_WATER_TRIAL_CHECK,  NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_SHADOW_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_SHADOW_TRIAL, 0, 0, "Ganon's Castle Shadow Trial", GANONS_CASTLE_SHADOW_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_SPIRIT_TRIAL_CHECK] = ItemLocation::Base(RC_GANONS_CASTLE_SPIRIT_TRIAL, 0, 0, "Ganon's Castle Spirit Trial", GANONS_CASTLE_SPIRIT_TRIAL_CHECK, NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
+    locationTable[GANONS_CASTLE_LIGHT_TRIAL_CHECK]  = ItemLocation::Base(RC_GANONS_CASTLE_LIGHT_TRIAL,  0, 0, "Ganon's Castle Light Trial",  GANONS_CASTLE_LIGHT_TRIAL_CHECK,  NONE, {}, SpoilerCollectionCheck::RandomizerInf(0, 0), SpoilerCollectionCheckGroup::GROUP_DUNGEON_GANONS_CASTLE);
 
     /*-------------------------------
        --- GOLD SKULLTULA TOKENS ---
