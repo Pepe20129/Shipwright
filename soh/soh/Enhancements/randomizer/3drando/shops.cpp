@@ -14,7 +14,7 @@ using namespace Settings;
 
 std::vector<ItemAndPrice> NonShopItems = {};
 
-static std::array<std::vector<Text>, 0xD5> trickNameTable; //Table of trick names for ice traps
+static std::array<std::vector<Text>, 0xE6> trickNameTable; //Table of trick names for ice traps
 bool initTrickNames = false; //Indicates if trick ice trap names have been initialized yet
 
 //Set vanilla shop item locations before potentially shuffling
@@ -699,6 +699,31 @@ void InitTrickNames() {
      Text{"Crystal Heart", "Cœur de cristal", "Corazón de cristal"},
      Text{"Life Heart", "Cœur de vie", "Vida Corazón"},
      Text{"Lots of Love", "Beaucoup d'amour", "Mucho amor"}};
+
+  trickNameTable[0xE0] = {//Light Trial
+     Text{"Radiant Trial", "!!!", "Prueba de la Radiancia"},
+     Text{"Luminance Trial", "!!!", "Prueba de la Luminancia"},
+     Text{"Bright Trial", "!!!", "Prueba brillante"}};
+  trickNameTable[0xE1] = {//Forest Trial
+     Text{"Nature Trial", "!!!", "Prueba de la Naturaleza"},
+     Text{"Wind Trial", "!!!", "Prueba del Viento"},
+     Text{"Grass Trial", "!!!", "Prueba de la Hierba"}};
+  trickNameTable[0xE2] = {//Fire Trial
+     Text{"Volcano Trial", "!!!", "Prueba del Volcán"},
+     Text{"Lava Trial", "!!!", "Prueba de la Lava"},
+     Text{"Goron Trial", "!!!", "Prueba de los Gorons"}};
+  trickNameTable[0xE3] = {//Water Trial
+     Text{"Ocean Trial", "!!!", "Prueba del Oceano"},
+     Text{"Ice Trial", "!!!", "Prueba del Hielo"},
+     Text{"Lake Trial", "!!!", "Prueba del Lago"}};
+  trickNameTable[0xE4] = {//Shadow Trial
+     Text{"Blackness Trial", "!!!", "Prueba de la Oscuridad"},
+     Text{"Thunder Trial", "!!!", "Prueba del Relámpago"},
+     Text{"Void Trial", "!!!", "Prueba del Vacío"}};
+  trickNameTable[0xE5] = {//Spirit Trial
+     Text{"Holy Trial", "!!!", "Prueba Sagrada"},
+     Text{"Ghost Trial", "!!!", "Prueba del Fantasma"},
+     Text{"Haunted Trial", "!!!", "Prueba Encantada"}};
 
 /*
   //Names for individual upgrades, in case progressive names are replaced
