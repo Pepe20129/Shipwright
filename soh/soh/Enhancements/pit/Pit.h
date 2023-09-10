@@ -14,7 +14,7 @@ void Pit_Update();
 void Pit_GoToNextFloor();
 void Pit_SetEntrace();
 void Pit_HandleBlueWarp(PlayState*);
-void Pit_OnDefeatEnemy(Actor*);
+void Pit_OnEnemyDefeat(Actor*);
 void Pit_OnActorKill(Actor*);
 s32 Pit_Shop_ChangeItem(EnGirlA*);
 s32 Pit_Shop_CanBuy(PlayState*, EnGirlA*);

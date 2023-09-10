@@ -407,7 +407,7 @@ void Pit_InitRestFloor() {
     osSyncPrintf("Finished initializing a rest floor");
 }
 
-void Pit_OnDefeatEnemy(Actor* actor) {
+void Pit_OnEnemyDefeat(Actor* actor) {
     if (std::find(currentFloorEnemies.begin(), currentFloorEnemies.end(), actor) != currentFloorEnemies.end()) {
         currentFloorEnemies.erase(std::remove(currentFloorEnemies.begin(), currentFloorEnemies.end(), actor), currentFloorEnemies.end());
     }
@@ -419,7 +419,7 @@ void Pit_OnDefeatEnemy(Actor* actor) {
 
 //in case we get out with debug warp menu
 void Pit_OnActorKill(Actor* actor) {
-    Pit_OnDefeatEnemy(actor);
+    Pit_OnEnemyDefeat(actor);
 }
 
 void Pit_InitCurrentFloor() {

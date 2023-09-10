@@ -636,7 +636,7 @@ void RegisterPit() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnEnemyDefeat>([](void* refActor) {
         if (gSaveContext.isPitOf100Trials) {
-            Pit_OnDefeatEnemy((Actor*)refActor);
+            Pit_OnEnemyDefeat((Actor*)refActor);
         }
     });
 }
