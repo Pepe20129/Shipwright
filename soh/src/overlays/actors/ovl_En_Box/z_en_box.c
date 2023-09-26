@@ -195,7 +195,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
 
     if (gSaveContext.isPitOf100Trials) {
         Pit_SetUpChest(this);
-    } else if (gSaveContext.n64ddFlag) {
+    } else if (IS_RANDO) {
         this->getItemEntry = Randomizer_GetItemFromActor(this->dyna.actor.id, play->sceneNum, this->dyna.actor.params, this->dyna.actor.params >> 5 & 0x7F);
     } else {
         this->getItemEntry = ItemTable_RetrieveEntry(MOD_NONE, this->dyna.actor.params >> 5 & 0x7F);
@@ -209,7 +209,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
     }
 
     // Delete chests in Boss Rush. Mainly for the chest in King Dodongo's boss room.
-    if (gSaveContext.isBossRush) {
+    if (IS_BOSS_RUSH) {
         EnBox_SetupAction(this, EnBox_Destroy);
     }
 }
@@ -451,7 +451,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
 
         // treasure chest game rando
         if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHEST_MINIGAME)) {
-            if (gSaveContext.n64ddFlag && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
+            if (IS_RANDO && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
                 if((this->dyna.actor.params & 0xF) < 2) {
                     Flags_SetCollectible(play, 0x1B);
                 }
@@ -479,7 +479,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             
             // RANDOTODO treasure chest game rando
             if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHEST_MINIGAME)) {
-                if (gSaveContext.n64ddFlag && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
+                if (IS_RANDO && play->sceneNum == 16 && (this->dyna.actor.params & 0x60) != 0x20) {
                     if((this->dyna.actor.params & 0xF) < 2) {
                         if(Flags_GetCollectible(play, 0x1B)) {
                             sItem = blueRupee;
@@ -511,7 +511,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             // when approaching.
             if (gSaveContext.isPitOf100Trials) {
                 sItem = Pit_OpenChest(this);
-            } else if (gSaveContext.n64ddFlag) {
+            } else if (IS_RANDO) {
                 sItem.getItemId = 0 - sItem.getItemId;
                 sItem.getItemFrom = ITEM_FROM_CHEST;
                 GiveItemEntryFromActorWithFixedRange(&this->dyna.actor, play, sItem);
@@ -631,8 +631,8 @@ void EnBox_Update(Actor* thisx, PlayState* play) {
             Actor_SetFocus(&this->dyna.actor, 40.0f);
     }
 
-    if (((!gSaveContext.n64ddFlag && ((this->dyna.actor.params >> 5 & 0x7F) == 0x7C)) ||
-        (gSaveContext.n64ddFlag && ABS(sItem.getItemId) == RG_ICE_TRAP)) &&
+    if (((!IS_RANDO && ((this->dyna.actor.params >> 5 & 0x7F) == 0x7C)) ||
+        (IS_RANDO && ABS(sItem.getItemId) == RG_ICE_TRAP)) &&
         this->actionFunc == EnBox_Open && this->skelanime.curFrame > 45 && this->iceSmokeTimer < 100) {
         if (!CVarGetInteger("gAddTraps.enabled", 0)) {
             EnBox_SpawnIceSmoke(this, play);
