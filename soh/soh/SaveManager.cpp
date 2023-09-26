@@ -622,7 +622,7 @@ void SaveManager::InitFileNormal() {
         BossRush_InitSave();
     }
 
-    if (gSaveContext.isPitOf100Trials) {
+    if (IS_PIT) {
         Pit_InitSave();
     }
 

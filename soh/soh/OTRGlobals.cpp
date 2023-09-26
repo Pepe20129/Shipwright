@@ -1967,7 +1967,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
     const int maxBufferSize = sizeof(font->msgBuf);
     CustomMessage messageEntry;
     s16 actorParams = 0;
-    if (gSaveContext.isPitOf100Trials) {
+    if (IS_PIT) {
         if (textId >= TEXT_SHOP_ITEM_PIT && textId <= TEXT_SHOP_ITEM_PIT + (NUM_SHOP_ITEMS * 2)) {
             if (textId < TEXT_SHOP_ITEM_PIT + NUM_SHOP_ITEMS) {
                 messageEntry = Pit_Shop_GetItemMessage(textId);

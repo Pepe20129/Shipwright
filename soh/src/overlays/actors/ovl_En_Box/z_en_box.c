@@ -193,7 +193,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
     SkelAnime_Init(play, &this->skelanime, &gTreasureChestSkel, anim, this->jointTable, this->morphTable, 5);
     Animation_Change(&this->skelanime, anim, 1.5f, animFrameStart, endFrame, ANIMMODE_ONCE, 0.0f);
 
-    if (gSaveContext.isPitOf100Trials) {
+    if (IS_PIT) {
         Pit_SetUpChest(this);
     } else if (IS_RANDO) {
         this->getItemEntry = Randomizer_GetItemFromActor(this->dyna.actor.id, play->sceneNum, this->dyna.actor.params, this->dyna.actor.params >> 5 & 0x7F);
@@ -509,7 +509,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             }
             // Chests need to have a negative getItemId in order to not immediately give their item
             // when approaching.
-            if (gSaveContext.isPitOf100Trials) {
+            if (IS_PIT) {
                 sItem = Pit_OpenChest(this);
             } else if (IS_RANDO) {
                 sItem.getItemId = 0 - sItem.getItemId;

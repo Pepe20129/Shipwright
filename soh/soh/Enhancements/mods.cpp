@@ -618,25 +618,25 @@ void RegisterMirrorModeHandler() {
 
 void RegisterPit() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnTransitionEnd>([](int32_t sceneNum) {
-        if (gSaveContext.isPitOf100Trials) {
+        if (IS_PIT) {
             Pit_InitCurrentFloor();
         }
     });
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>([]() {
-        if (gSaveContext.isPitOf100Trials) {
+        if (IS_PIT) {
             Pit_Update();
         }
     });
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorKill>([](void* refActor) {
-        if (gSaveContext.isPitOf100Trials) {
+        if (IS_PIT) {
             Pit_OnActorKill((Actor*)refActor);
         }
     });
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnEnemyDefeat>([](void* refActor) {
-        if (gSaveContext.isPitOf100Trials) {
+        if (IS_PIT) {
             Pit_OnEnemyDefeat((Actor*)refActor);
         }
     });

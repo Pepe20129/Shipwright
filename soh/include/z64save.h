@@ -287,7 +287,6 @@ typedef struct {
     /*        */ uint8_t questId;
     /*        */ uint32_t isBossRushPaused;
     /*        */ uint8_t bossRushOptions[BOSSRUSH_OPTIONS_AMOUNT];
-    /*        */ uint32_t isPitOf100Trials;
     /*        */ uint32_t currentPitFloor;
     /*        */ u8 mqDungeonCount;
     /*        */ u8 pendingIceTrapCount;
@@ -334,12 +333,14 @@ typedef enum {
     /* 01 */ QUEST_MASTER,
     /* 02 */ QUEST_RANDOMIZER,
     /* 03 */ QUEST_BOSSRUSH,
+    /* 04 */ QUEST_PIT,
 } Quest;
 
 #define IS_VANILLA (gSaveContext.questId == QUEST_NORMAL)
 #define IS_MASTER_QUEST (gSaveContext.questId == QUEST_MASTER)
 #define IS_RANDO (gSaveContext.questId == QUEST_RANDOMIZER)
 #define IS_BOSS_RUSH (gSaveContext.questId == QUEST_BOSSRUSH)
+#define IS_PIT (gSaveContext.questId == QUEST_PIT)
 
 typedef enum {
     /* 0x00 */ BTN_ENABLED,

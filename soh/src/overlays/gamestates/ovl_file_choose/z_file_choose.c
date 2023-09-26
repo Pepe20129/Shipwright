@@ -1297,7 +1297,6 @@ void FileChoose_UpdateQuestMenu(GameState* thisx) {
         gSaveContext.questId = this->questType[this->buttonIndex];
 
         gSaveContext.isBossRushPaused = false;
-        gSaveContext.isPitOf100Trials = this->questType[this->buttonIndex] == FS_QUEST_PIT;
         gSaveContext.currentPitFloor = 0;
 
         if (this->questType[this->buttonIndex] == QUEST_BOSSRUSH) {
@@ -2832,11 +2831,10 @@ void FileChoose_ConfirmFile(GameState* thisx) {
         if (this->confirmButtonIndex == FS_BTN_CONFIRM_YES) {
             func_800AA000(300.0f, 180, 20, 100);
             Audio_PlaySoundGeneral(NA_SE_SY_FSEL_DECIDE_L, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
-            // Reset Boss Rush because it's only ever saved in memory.
-            if (IS_BOSS_RUSH) {
+            // Reset Boss Rush and Pit of 100 Trials because they're only ever saved in memory.
+            if (IS_BOSS_RUSH || IS_PIT) {
                 gSaveContext.questId = 0;
             }
-            gSaveContext.isPitOf100Trials = 0;
             this->selectMode = SM_FADE_OUT;
             func_800F6964(0xF);
         } else {
