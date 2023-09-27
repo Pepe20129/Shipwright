@@ -29,6 +29,9 @@ typedef struct {
     s16 gsTokens;
     u8 isDoubleDefenseAcquired;
     u8 gregFound;
+    u8 isTriforceHunt;
+    u8 currentTriforcePieces;
+    u8 maxTriforcePieces;
 } SaveFileMetaInfo;
 
 #ifdef __cplusplus

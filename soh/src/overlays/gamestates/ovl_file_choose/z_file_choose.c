@@ -22,6 +22,8 @@
 #include <assert.h>
 #include "z64save.h"
 
+#pragma region More info in file select
+
 typedef struct {
     s16 left;
     s16 top;
@@ -62,115 +64,113 @@ typedef struct {
 #define SIZE_COUNTER {COUNTER_SIZE, COUNTER_SIZE}
 #define SIZE_SONG {SONG_WIDTH, SONG_HEIGHT}
 
-#define INV_IC_POS(x, y) {0x4E + ICON_SIZE * x, 0x00 + ICON_SIZE * y}
-#define EQP_IC_POS(x, y) {0x7E + ICON_SIZE * x, 0x2A + ICON_SIZE * y}
-#define SNG_IC_POS(x, y) {0x49 + SONG_WIDTH * x, 0x45 + SONG_HEIGHT * y}
-#define UPG_IC_POS(x, y) {0x5A + ICON_SIZE * x, 0x2A + ICON_SIZE * y}
-#define STN_IC_POS(i) {0x29 + ICON_SIZE * i, 0x31}
+#define INVENTORY_ICON_POS(x, y) {0x4E + ICON_SIZE * x, 0x00 + ICON_SIZE * y}
+#define EQUIPMENT_ICON_POS(x, y) {0x7E + ICON_SIZE * x, 0x2A + ICON_SIZE * y}
+#define SONG_ICON_POS(x, y) {0x49 + SONG_WIDTH * x, 0x45 + SONG_HEIGHT * y}
+#define UPGRADE_ICON_POS(x, y) {0x5A + ICON_SIZE * x, 0x2A + ICON_SIZE * y}
+#define STONE_ICON_POS(i) {0x29 + ICON_SIZE * i, 0x31}
 
-static ItemData itemData[88] = {
-    {CREATE_SPRITE_32(dgItemIconDekuStickTex, 1),          ITEM_STICK,            INV_IC_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconDekuNutTex, 0),            ITEM_NUT,              INV_IC_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBombTex, 2),               ITEM_BOMB,             INV_IC_POS(2, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBowTex, 3),                ITEM_BOW,              INV_IC_POS(3, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowFireTex, 4),          ITEM_ARROW_FIRE,       INV_IC_POS(4, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconDinsFireTex, 5),           ITEM_DINS_FIRE,        INV_IC_POS(5, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBottleEmptyTex, 20),       ITEM_BOTTLE,           INV_IC_POS(6, 0), SIZE_NORMAL},
+static ItemData itemData[87] = {
+    {CREATE_SPRITE_32(dgItemIconDekuStickTex, 1),          ITEM_STICK,            INVENTORY_ICON_POS(0, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconDekuNutTex, 0),            ITEM_NUT,              INVENTORY_ICON_POS(1, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBombTex, 2),               ITEM_BOMB,             INVENTORY_ICON_POS(2, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBowTex, 3),                ITEM_BOW,              INVENTORY_ICON_POS(3, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowFireTex, 4),          ITEM_ARROW_FIRE,       INVENTORY_ICON_POS(4, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconDinsFireTex, 5),           ITEM_DINS_FIRE,        INVENTORY_ICON_POS(5, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBottleEmptyTex, 20),       ITEM_BOTTLE,           INVENTORY_ICON_POS(6, 0), SIZE_NORMAL},
 
-    {CREATE_SPRITE_32(dgItemIconSlingshotTex, 6),          ITEM_SLINGSHOT,        INV_IC_POS(0, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOcarinaFairyTex, 7),       ITEM_OCARINA_FAIRY,    INV_IC_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOcarinaOfTimeTex, 7),      ITEM_OCARINA_TIME,     INV_IC_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBombchuTex, 9),            ITEM_BOMBCHU,          INV_IC_POS(2, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconHookshotTex, 10),          ITEM_HOOKSHOT,         INV_IC_POS(3, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconLongshotTex, 10),          ITEM_LONGSHOT,         INV_IC_POS(3, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowIceTex, 12),          ITEM_ARROW_ICE,        INV_IC_POS(4, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconFaroresWindTex, 13),       ITEM_FARORES_WIND,     INV_IC_POS(5, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconWeirdEggTex, 37),          ITEM_WEIRD_EGG,        INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconChickenTex, 37),           ITEM_CHICKEN,          INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconZeldasLetterTex, 37),      ITEM_LETTER_ZELDA,     INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskKeatonTex, 37),        ITEM_MASK_KEATON,      INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskSkullTex, 37),         ITEM_MASK_SKULL,       INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskSpookyTex, 37),        ITEM_MASK_SPOOKY,      INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskBunnyHoodTex, 37),     ITEM_MASK_BUNNY,       INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskGoronTex, 37),         ITEM_MASK_GORON,       INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskZoraTex, 37),          ITEM_MASK_ZORA,        INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskGerudoTex, 37),        ITEM_MASK_GERUDO,      INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskTruthTex, 37),         ITEM_MASK_TRUTH,       INV_IC_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSoldOutTex, 37),           ITEM_SOLD_OUT,         INV_IC_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSlingshotTex, 6),          ITEM_SLINGSHOT,        INVENTORY_ICON_POS(0, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOcarinaFairyTex, 7),       ITEM_OCARINA_FAIRY,    INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOcarinaOfTimeTex, 7),      ITEM_OCARINA_TIME,     INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBombchuTex, 9),            ITEM_BOMBCHU,          INVENTORY_ICON_POS(2, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconHookshotTex, 10),          ITEM_HOOKSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconLongshotTex, 10),          ITEM_LONGSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowIceTex, 12),          ITEM_ARROW_ICE,        INVENTORY_ICON_POS(4, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconFaroresWindTex, 13),       ITEM_FARORES_WIND,     INVENTORY_ICON_POS(5, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconWeirdEggTex, 37),          ITEM_WEIRD_EGG,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconChickenTex, 37),           ITEM_CHICKEN,          INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconZeldasLetterTex, 37),      ITEM_LETTER_ZELDA,     INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskKeatonTex, 37),        ITEM_MASK_KEATON,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskSkullTex, 37),         ITEM_MASK_SKULL,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskSpookyTex, 37),        ITEM_MASK_SPOOKY,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskBunnyHoodTex, 37),     ITEM_MASK_BUNNY,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskGoronTex, 37),         ITEM_MASK_GORON,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskZoraTex, 37),          ITEM_MASK_ZORA,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskGerudoTex, 37),        ITEM_MASK_GERUDO,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskTruthTex, 37),         ITEM_MASK_TRUTH,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSoldOutTex, 37),           ITEM_SOLD_OUT,         INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconBoomerangTex, 14),         ITEM_BOOMERANG,        INV_IC_POS(0, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconLensOfTruthTex, 15),       ITEM_LENS,             INV_IC_POS(1, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMagicBeanTex, 16),         ITEM_BEAN,             INV_IC_POS(2, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconHammerTex, 17),            ITEM_HAMMER,           INV_IC_POS(3, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowLightTex, 18),        ITEM_ARROW_LIGHT,      INV_IC_POS(4, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconNayrusLoveTex, 19),        ITEM_NAYRUS_LOVE,      INV_IC_POS(5, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPocketEggTex, 53),         ITEM_POCKET_EGG,       INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPocketCuccoTex, 53),       ITEM_POCKET_CUCCO,     INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconCojiroTex, 53),            ITEM_COJIRO,           INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOddMushroomTex, 53),       ITEM_ODD_MUSHROOM,     INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOddPotionTex, 53),         ITEM_ODD_POTION,       INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPoachersSawTex, 53),       ITEM_SAW,              INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBrokenGoronsSwordTex, 53), ITEM_SWORD_BROKEN,     INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPrescriptionTex, 53),      ITEM_PRESCRIPTION,     INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconEyeballFrogTex, 53),       ITEM_FROG,             INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconEyeDropsTex, 53),          ITEM_EYEDROPS,         INV_IC_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconClaimCheckTex, 53),        ITEM_CLAIM_CHECK,      INV_IC_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBoomerangTex, 14),         ITEM_BOOMERANG,        INVENTORY_ICON_POS(0, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconLensOfTruthTex, 15),       ITEM_LENS,             INVENTORY_ICON_POS(1, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMagicBeanTex, 16),         ITEM_BEAN,             INVENTORY_ICON_POS(2, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconHammerTex, 17),            ITEM_HAMMER,           INVENTORY_ICON_POS(3, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowLightTex, 18),        ITEM_ARROW_LIGHT,      INVENTORY_ICON_POS(4, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconNayrusLoveTex, 19),        ITEM_NAYRUS_LOVE,      INVENTORY_ICON_POS(5, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPocketEggTex, 53),         ITEM_POCKET_EGG,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPocketCuccoTex, 53),       ITEM_POCKET_CUCCO,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconCojiroTex, 53),            ITEM_COJIRO,           INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOddMushroomTex, 53),       ITEM_ODD_MUSHROOM,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOddPotionTex, 53),         ITEM_ODD_POTION,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPoachersSawTex, 53),       ITEM_SAW,              INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBrokenGoronsSwordTex, 53), ITEM_SWORD_BROKEN,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPrescriptionTex, 53),      ITEM_PRESCRIPTION,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconEyeballFrogTex, 53),       ITEM_FROG,             INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconEyeDropsTex, 53),          ITEM_EYEDROPS,         INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconClaimCheckTex, 53),        ITEM_CLAIM_CHECK,      INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconSwordKokiriTex, 54),       ITEM_SWORD_KOKIRI,     EQP_IC_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSwordMasterTex, 55),       ITEM_SWORD_MASTER,     EQP_IC_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSwordBiggoronTex, 56),     ITEM_SWORD_BGS,        EQP_IC_POS(2, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordKokiriTex, 54),       ITEM_SWORD_KOKIRI,     EQUIPMENT_ICON_POS(0, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordMasterTex, 55),       ITEM_SWORD_MASTER,     EQUIPMENT_ICON_POS(1, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordBiggoronTex, 56),     ITEM_SWORD_BGS,        EQUIPMENT_ICON_POS(2, 0), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconShieldDekuTex, 57),        ITEM_SHIELD_DEKU,      EQP_IC_POS(0, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconShieldHylianTex, 58),      ITEM_SHIELD_HYLIAN,    EQP_IC_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconShieldMirrorTex, 59),      ITEM_SHIELD_MIRROR,    EQP_IC_POS(2, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldDekuTex, 57),        ITEM_SHIELD_DEKU,      EQUIPMENT_ICON_POS(0, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldHylianTex, 58),      ITEM_SHIELD_HYLIAN,    EQUIPMENT_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldMirrorTex, 59),      ITEM_SHIELD_MIRROR,    EQUIPMENT_ICON_POS(2, 1), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconTunicKokiriTex, 60),       ITEM_TUNIC_KOKIRI,     EQP_IC_POS(0, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconTunicGoronTex, 61),        ITEM_TUNIC_GORON,      EQP_IC_POS(1, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconTunicZoraTex, 62),         ITEM_TUNIC_ZORA,       EQP_IC_POS(2, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicKokiriTex, 60),       ITEM_TUNIC_KOKIRI,     EQUIPMENT_ICON_POS(0, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicGoronTex, 61),        ITEM_TUNIC_GORON,      EQUIPMENT_ICON_POS(1, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicZoraTex, 62),         ITEM_TUNIC_ZORA,       EQUIPMENT_ICON_POS(2, 2), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconBootsKokiriTex, 63),       ITEM_BOOTS_KOKIRI,     EQP_IC_POS(0, 3), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBootsIronTex, 64),         ITEM_BOOTS_IRON,       EQP_IC_POS(1, 3), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBootsHoverTex, 65),        ITEM_BOOTS_HOVER,      EQP_IC_POS(2, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsKokiriTex, 63),       ITEM_BOOTS_KOKIRI,     EQUIPMENT_ICON_POS(0, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsIronTex, 64),         ITEM_BOOTS_IRON,       EQUIPMENT_ICON_POS(1, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsHoverTex, 65),        ITEM_BOOTS_HOVER,      EQUIPMENT_ICON_POS(2, 3), SIZE_NORMAL},
 
-    {CREATE_SPRITE_24(dgQuestIconKokiriEmeraldTex, 87),    ITEM_KOKIRI_EMERALD,   STN_IC_POS(-1),   SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconGoronRubyTex, 88),        ITEM_GORON_RUBY,       STN_IC_POS(0),    SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconZoraSapphireTex, 89),     ITEM_ZORA_SAPPHIRE,    STN_IC_POS(1),    SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconKokiriEmeraldTex, 87),    ITEM_KOKIRI_EMERALD,   STONE_ICON_POS(-1),       SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconGoronRubyTex, 88),        ITEM_GORON_RUBY,       STONE_ICON_POS(0),        SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconZoraSapphireTex, 89),     ITEM_ZORA_SAPPHIRE,    STONE_ICON_POS(1),        SIZE_NORMAL},
     
-    {CREATE_SPRITE_24(dgQuestIconMedallionForestTex, 81),  ITEM_MEDALLION_FOREST, {0x37, 0x0A},     SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionFireTex, 82),    ITEM_MEDALLION_FIRE,   {0x37, 0x1A},     SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionWaterTex, 83),   ITEM_MEDALLION_WATER,  {0x29, 0x22},     SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionSpiritTex, 84),  ITEM_MEDALLION_SPIRIT, {0x1B, 0x1A},     SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionShadowTex, 85),  ITEM_MEDALLION_SHADOW, {0x1B, 0x0A},     SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionLightTex, 86),   ITEM_MEDALLION_LIGHT,  {0x29, 0x02},     SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionForestTex, 81),  ITEM_MEDALLION_FOREST, {0x37, 0x0A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionFireTex, 82),    ITEM_MEDALLION_FIRE,   {0x37, 0x1A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionWaterTex, 83),   ITEM_MEDALLION_WATER,  {0x29, 0x22},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionSpiritTex, 84),  ITEM_MEDALLION_SPIRIT, {0x1B, 0x1A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionShadowTex, 85),  ITEM_MEDALLION_SHADOW, {0x1B, 0x0A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionLightTex, 86),   ITEM_MEDALLION_LIGHT,  {0x29, 0x02},             SIZE_NORMAL},
 
-    {CREATE_SPRITE_32(dgItemIconGoronsBraceletTex, 71),    ITEM_BRACELET,         UPG_IC_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSilverGauntletsTex, 71),   ITEM_GAUNTLETS_SILVER, UPG_IC_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconGoldenGauntletsTex, 71),   ITEM_GAUNTLETS_GOLD,   UPG_IC_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconScaleSilverTex, 74),       ITEM_SCALE_SILVER,     UPG_IC_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconScaleGoldenTex, 74),       ITEM_SCALE_GOLDEN,     UPG_IC_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMagicJarSmallTex, 97),    ITEM_SINGLE_MAGIC,     UPG_IC_POS(2, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMagicJarBigTex, 97),      ITEM_DOUBLE_MAGIC,     UPG_IC_POS(2, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),                ITEM_RUPEE_GREEN,      UPG_IC_POS(0, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconGerudosCardTex, 91),      ITEM_GERUDO_CARD,      UPG_IC_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconStoneOfAgonyTex, 90),     ITEM_STONE_OF_AGONY,   UPG_IC_POS(2, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconGoronsBraceletTex, 71),    ITEM_BRACELET,         UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSilverGauntletsTex, 71),   ITEM_GAUNTLETS_SILVER, UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconGoldenGauntletsTex, 71),   ITEM_GAUNTLETS_GOLD,   UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconScaleSilverTex, 74),       ITEM_SCALE_SILVER,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconScaleGoldenTex, 74),       ITEM_SCALE_GOLDEN,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMagicJarSmallTex, 97),    ITEM_SINGLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMagicJarBigTex, 97),      ITEM_DOUBLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),                ITEM_RUPEE_GREEN,      UPGRADE_ICON_POS(0, 1),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconGerudosCardTex, 91),      ITEM_GERUDO_CARD,      UPGRADE_ICON_POS(1, 1),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconStoneOfAgonyTex, 90),     ITEM_STONE_OF_AGONY,   UPGRADE_ICON_POS(2, 1),   SIZE_NORMAL},
 
-    {CREATE_SPRITE_SONG(224, 107, 255),                    ITEM_SONG_LULLABY,     SNG_IC_POS(0, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 195, 60),                     ITEM_SONG_EPONA,       SNG_IC_POS(1, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(127, 255, 137),                    ITEM_SONG_SARIA,       SNG_IC_POS(2, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 255, 60),                     ITEM_SONG_SUN,         SNG_IC_POS(3, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(119, 236, 255),                    ITEM_SONG_TIME,        SNG_IC_POS(4, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(165, 165, 165),                    ITEM_SONG_STORMS,      SNG_IC_POS(5, 0), SIZE_SONG},
-    {CREATE_SPRITE_SONG(150, 255, 100),                    ITEM_SONG_MINUET,      SNG_IC_POS(0, 1), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 80,  40),                     ITEM_SONG_BOLERO,      SNG_IC_POS(1, 1), SIZE_SONG},
-    {CREATE_SPRITE_SONG(100, 150, 255),                    ITEM_SONG_SERENADE,    SNG_IC_POS(2, 1), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 160, 0),                      ITEM_SONG_REQUIEM,     SNG_IC_POS(3, 1), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 100, 255),                    ITEM_SONG_NOCTURNE,    SNG_IC_POS(4, 1), SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 240, 100),                    ITEM_SONG_PRELUDE,     SNG_IC_POS(5, 1), SIZE_SONG},
-
-    {CREATE_SPRITE_24(dgQuestIconHeartContainerTex, 101),  ITEM_DOUBLE_DEFENSE,   {0x05, -0x04},    SIZE_COUNTER},
+    {CREATE_SPRITE_SONG(224, 107, 255),                    ITEM_SONG_LULLABY,     SONG_ICON_POS(0, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 195, 60),                     ITEM_SONG_EPONA,       SONG_ICON_POS(1, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(127, 255, 137),                    ITEM_SONG_SARIA,       SONG_ICON_POS(2, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 255, 60),                     ITEM_SONG_SUN,         SONG_ICON_POS(3, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(119, 236, 255),                    ITEM_SONG_TIME,        SONG_ICON_POS(4, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(165, 165, 165),                    ITEM_SONG_STORMS,      SONG_ICON_POS(5, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(150, 255, 100),                    ITEM_SONG_MINUET,      SONG_ICON_POS(0, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 80,  40),                     ITEM_SONG_BOLERO,      SONG_ICON_POS(1, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(100, 150, 255),                    ITEM_SONG_SERENADE,    SONG_ICON_POS(2, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 160, 0),                      ITEM_SONG_REQUIEM,     SONG_ICON_POS(3, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 100, 255),                    ITEM_SONG_NOCTURNE,    SONG_ICON_POS(4, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 240, 100),                    ITEM_SONG_PRELUDE,     SONG_ICON_POS(5, 1),      SIZE_SONG},
 };
 
-static u8 color_product(u8 c1, u8 c2) {
+static u8 ColorProduct(u8 c1, u8 c2) {
     u16 prod = (u16)c1 * (u16)c2;
     u16 div255 = (prod + 1 + (prod >> 8)) >> 8;
     return (u8)div255;
@@ -452,9 +452,9 @@ static void DrawItems(FileChooseContext* this, s16 fileIndex, u8 alpha) {
 
         if (ShouldRenderItem(fileIndex, data->item)) {
             if (HasItem(fileIndex, data->item)) {
-                gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, data->color.r, data->color.g, data->color.b, color_product(data->color.a, alpha));
+                gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, data->color.r, data->color.g, data->color.b, ColorProduct(data->color.a, alpha));
             } else {
-                gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, color_product(data->color.r, DIM.r), color_product(data->color.g, DIM.g), color_product(data->color.b, DIM.b), color_product(color_product(data->color.a, DIM.a), alpha));
+                gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, ColorProduct(data->color.r, DIM.r), ColorProduct(data->color.g, DIM.g), ColorProduct(data->color.b, DIM.b), ColorProduct(ColorProduct(data->color.a, DIM.a), alpha));
             }
         
             SpriteLoad(this, &(data->sprite));
@@ -468,12 +468,15 @@ static void DrawItems(FileChooseContext* this, s16 fileIndex, u8 alpha) {
 
 typedef enum {
     /* 0x00 */ COUNTER_HEALTH,
-    /* 0x01 */ COUNTER_WALLET_CHILD,
-    /* 0x02 */ COUNTER_WALLET_ADULT,
-    /* 0x03 */ COUNTER_WALLET_GIANT,
-    /* 0x04 */ COUNTER_WALLET_TYCOON,
-    /* 0x04 */ COUNTER_SKULLTULLAS,
-    /* 0x04 */ COUNTER_DEATHS,
+    /* 0x01 */ COUNTER_WALLET_NONE,
+    /* 0x02 */ COUNTER_WALLET_CHILD,
+    /* 0x03 */ COUNTER_WALLET_ADULT,
+    /* 0x04 */ COUNTER_WALLET_GIANT,
+    /* 0x05 */ COUNTER_WALLET_TYCOON,
+    /* 0x06 */ COUNTER_SKULLTULLAS,
+    /* 0x07 */ COUNTER_DEATHS,
+    /* 0x08 */ COUNTER_TRIFORCE_PIECES,
+    /* 0x09 */ COUNTER_MAX
 } CounterID;
 
 typedef struct {
@@ -484,14 +487,16 @@ typedef struct {
     IconSize size;
 } CounterData;
 
-static CounterData counterData[7] = {
-    {CREATE_SPRITE_24(dgQuestIconHeartContainerTex, 101), COUNTER_HEALTH,        {0x05, 0x00}, SIZE_COUNTER},
-    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),               COUNTER_WALLET_CHILD,  {0x05, 0x15}, SIZE_COUNTER},
-    {CREATE_SPRITE_RUPEE(0x82, 0x82, 0xFF),               COUNTER_WALLET_ADULT,  {0x05, 0x15}, SIZE_COUNTER},
-    {CREATE_SPRITE_RUPEE(0xFF, 0x64, 0x64),               COUNTER_WALLET_GIANT,  {0x05, 0x15}, SIZE_COUNTER},
-    {CREATE_SPRITE_RUPEE(0xFF, 0x5A, 0xFF),               COUNTER_WALLET_TYCOON, {0x05, 0x15}, SIZE_COUNTER},
-    {CREATE_SPRITE_24(dgQuestIconGoldSkulltulaTex, 103),  COUNTER_SKULLTULLAS,   {0x05, 0x2A}, SIZE_COUNTER},
-    {CREATE_SPRITE_SKULL,                                 COUNTER_DEATHS,        {0x48, 0x2A}, SIZE_COUNTER},
+static CounterData counterData[COUNTER_MAX] = {
+    {CREATE_SPRITE_24(dgQuestIconHeartContainerTex, 101), COUNTER_HEALTH,          {0x05, 0x00}, SIZE_COUNTER},
+    {CREATE_SPRITE_RUPEE(0x32, 0x40, 0x19),               COUNTER_WALLET_NONE,     {0x05, 0x15}, SIZE_COUNTER},
+    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),               COUNTER_WALLET_CHILD,    {0x05, 0x15}, SIZE_COUNTER},
+    {CREATE_SPRITE_RUPEE(0x82, 0x82, 0xFF),               COUNTER_WALLET_ADULT,    {0x05, 0x15}, SIZE_COUNTER},
+    {CREATE_SPRITE_RUPEE(0xFF, 0x64, 0x64),               COUNTER_WALLET_GIANT,    {0x05, 0x15}, SIZE_COUNTER},
+    {CREATE_SPRITE_RUPEE(0xFF, 0x5A, 0xFF),               COUNTER_WALLET_TYCOON,   {0x05, 0x15}, SIZE_COUNTER},
+    {CREATE_SPRITE_24(dgQuestIconGoldSkulltulaTex, 103),  COUNTER_SKULLTULLAS,     {0x05, 0x2A}, SIZE_COUNTER},
+    {CREATE_SPRITE_SKULL,                                 COUNTER_DEATHS,          {0x48, 0x2A}, SIZE_COUNTER},
+    {CREATE_SPRITE_32(dgTriforcePiece, 110),              COUNTER_TRIFORCE_PIECES, {0xB0, 0x00}, SIZE_COUNTER}
 };
 
 static Sprite counterDigitSprites[10] = {
@@ -508,6 +513,11 @@ static Sprite counterDigitSprites[10] = {
 };
 
 u8 ShouldRenderCounter(s16 fileIndex, u8 counterId) {
+    if (counterId == COUNTER_WALLET_NONE) {
+        //this should be changed once shuffle child wallet is in
+        return false;
+    }
+
     if (counterId == COUNTER_WALLET_CHILD) {
         return ((Save_GetSaveMetaInfo(fileIndex)->upgrades & gUpgradeMasks[UPG_WALLET]) >> gUpgradeShifts[UPG_WALLET]) == 0;
     }
@@ -522,6 +532,10 @@ u8 ShouldRenderCounter(s16 fileIndex, u8 counterId) {
 
     if (counterId == COUNTER_WALLET_TYCOON) {
         return ((Save_GetSaveMetaInfo(fileIndex)->upgrades & gUpgradeMasks[UPG_WALLET]) >> gUpgradeShifts[UPG_WALLET]) == 3;
+    }
+
+    if (counterId == COUNTER_TRIFORCE_PIECES) {
+        return Save_GetSaveMetaInfo(fileIndex)->isTriforceHunt;
     }
 
     return 1;
@@ -543,6 +557,10 @@ u16 GetCurrentCounterValue(s16 fileIndex, u8 counter) {
 
     if (counter == COUNTER_DEATHS) {
         return Save_GetSaveMetaInfo(fileIndex)->deaths;
+    }
+
+    if (counter == COUNTER_TRIFORCE_PIECES) {
+        return Save_GetSaveMetaInfo(fileIndex)->currentTriforcePieces;
     }
 
     return 0;
@@ -575,6 +593,10 @@ u16 GetMaxCounterValue(s16 fileIndex, u8 counter) {
 
     if (counter == COUNTER_DEATHS) {
         return 999;
+    }
+
+    if (counter == COUNTER_TRIFORCE_PIECES) {
+        return Save_GetSaveMetaInfo(fileIndex)->maxTriforcePieces;
     }
 
     return 0;
@@ -647,10 +669,17 @@ static void DrawCounters(FileChooseContext* this, s16 fileIndex, u8 alpha) {
         CounterData* data = &counterData[i];
 
         if (ShouldRenderCounter(fileIndex, data->id)) {
-            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, data->color.r, data->color.g, data->color.b, color_product(data->color.a, alpha));
+            gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, data->color.r, data->color.g, data->color.b, ColorProduct(data->color.a, alpha));
         
             SpriteLoad(this, &(data->sprite));
-            SpriteDraw(this, &(data->sprite), LEFT_OFFSET + data->pos.left, TOP_OFFSET + data->pos.top, data->size.width, data->size.height);
+
+            //special case because the counter icon has to follow the actual position but the sprites have to be offset horizontally
+            if (data->id == COUNTER_HEALTH && HasItem(fileIndex, ITEM_DOUBLE_DEFENSE)) {
+                SpriteDraw(this, &(data->sprite), LEFT_OFFSET + data->pos.left - 2, TOP_OFFSET + data->pos.top, data->size.width, data->size.height);
+                SpriteDraw(this, &(data->sprite), LEFT_OFFSET + data->pos.left + 2, TOP_OFFSET + data->pos.top, data->size.width, data->size.height);
+            } else {
+                SpriteDraw(this, &(data->sprite), LEFT_OFFSET + data->pos.left, TOP_OFFSET + data->pos.top, data->size.width, data->size.height);
+            }
 
             DrawCounterValue(this, fileIndex, alpha, data);
         }
@@ -664,6 +693,8 @@ static void DrawMoreInfo(FileChooseContext* this, s16 fileIndex, u8 alpha) {
     DrawItems(this, fileIndex, alpha);
     DrawCounters(this, fileIndex, alpha);
 }
+
+#pragma endregion
 
 #define MIN_QUEST (ResourceMgr_GameHasOriginal() ? QUEST_NORMAL : QUEST_MASTER)
 #define MAX_QUEST QUEST_BOSSRUSH
