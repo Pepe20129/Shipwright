@@ -19,6 +19,7 @@
 #include "soh/Enhancements/custom-message/CustomMessageTypes.h"
 #include "soh/Enhancements/enhancementTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include <assert.h>
 #include "z64save.h"
 
@@ -37,7 +38,8 @@ typedef struct {
 typedef struct {
     Sprite sprite;
     Color_RGBA8 color;
-    u8 item;
+    u8 modId;
+    u8 itemId;
     IconPosition pos;
     IconSize size;
 } ItemData;
@@ -71,103 +73,103 @@ typedef struct {
 #define STONE_ICON_POS(i) {0x29 + ICON_SIZE * i, 0x31}
 
 static ItemData itemData[87] = {
-    {CREATE_SPRITE_32(dgItemIconDekuStickTex, 1),          ITEM_STICK,            INVENTORY_ICON_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconDekuNutTex, 0),            ITEM_NUT,              INVENTORY_ICON_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBombTex, 2),               ITEM_BOMB,             INVENTORY_ICON_POS(2, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBowTex, 3),                ITEM_BOW,              INVENTORY_ICON_POS(3, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowFireTex, 4),          ITEM_ARROW_FIRE,       INVENTORY_ICON_POS(4, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconDinsFireTex, 5),           ITEM_DINS_FIRE,        INVENTORY_ICON_POS(5, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBottleEmptyTex, 20),       ITEM_BOTTLE,           INVENTORY_ICON_POS(6, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconDekuStickTex, 1),          MOD_NONE, ITEM_STICK,            INVENTORY_ICON_POS(0, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconDekuNutTex, 0),            MOD_NONE, ITEM_NUT,              INVENTORY_ICON_POS(1, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBombTex, 2),               MOD_NONE, ITEM_BOMB,             INVENTORY_ICON_POS(2, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBowTex, 3),                MOD_NONE, ITEM_BOW,              INVENTORY_ICON_POS(3, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowFireTex, 4),          MOD_NONE, ITEM_ARROW_FIRE,       INVENTORY_ICON_POS(4, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconDinsFireTex, 5),           MOD_NONE, ITEM_DINS_FIRE,        INVENTORY_ICON_POS(5, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBottleEmptyTex, 20),       MOD_NONE, ITEM_BOTTLE,           INVENTORY_ICON_POS(6, 0), SIZE_NORMAL},
 
-    {CREATE_SPRITE_32(dgItemIconSlingshotTex, 6),          ITEM_SLINGSHOT,        INVENTORY_ICON_POS(0, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOcarinaFairyTex, 7),       ITEM_OCARINA_FAIRY,    INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOcarinaOfTimeTex, 7),      ITEM_OCARINA_TIME,     INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBombchuTex, 9),            ITEM_BOMBCHU,          INVENTORY_ICON_POS(2, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconHookshotTex, 10),          ITEM_HOOKSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconLongshotTex, 10),          ITEM_LONGSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowIceTex, 12),          ITEM_ARROW_ICE,        INVENTORY_ICON_POS(4, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconFaroresWindTex, 13),       ITEM_FARORES_WIND,     INVENTORY_ICON_POS(5, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconWeirdEggTex, 37),          ITEM_WEIRD_EGG,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconChickenTex, 37),           ITEM_CHICKEN,          INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconZeldasLetterTex, 37),      ITEM_LETTER_ZELDA,     INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskKeatonTex, 37),        ITEM_MASK_KEATON,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskSkullTex, 37),         ITEM_MASK_SKULL,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskSpookyTex, 37),        ITEM_MASK_SPOOKY,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskBunnyHoodTex, 37),     ITEM_MASK_BUNNY,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskGoronTex, 37),         ITEM_MASK_GORON,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskZoraTex, 37),          ITEM_MASK_ZORA,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskGerudoTex, 37),        ITEM_MASK_GERUDO,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMaskTruthTex, 37),         ITEM_MASK_TRUTH,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSoldOutTex, 37),           ITEM_SOLD_OUT,         INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSlingshotTex, 6),          MOD_NONE, ITEM_SLINGSHOT,        INVENTORY_ICON_POS(0, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOcarinaFairyTex, 7),       MOD_NONE, ITEM_OCARINA_FAIRY,    INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOcarinaOfTimeTex, 7),      MOD_NONE, ITEM_OCARINA_TIME,     INVENTORY_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBombchuTex, 9),            MOD_NONE, ITEM_BOMBCHU,          INVENTORY_ICON_POS(2, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconHookshotTex, 10),          MOD_NONE, ITEM_HOOKSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconLongshotTex, 10),          MOD_NONE, ITEM_LONGSHOT,         INVENTORY_ICON_POS(3, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowIceTex, 12),          MOD_NONE, ITEM_ARROW_ICE,        INVENTORY_ICON_POS(4, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconFaroresWindTex, 13),       MOD_NONE, ITEM_FARORES_WIND,     INVENTORY_ICON_POS(5, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconWeirdEggTex, 37),          MOD_NONE, ITEM_WEIRD_EGG,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconChickenTex, 37),           MOD_NONE, ITEM_CHICKEN,          INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconZeldasLetterTex, 37),      MOD_NONE, ITEM_LETTER_ZELDA,     INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskKeatonTex, 37),        MOD_NONE, ITEM_MASK_KEATON,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskSkullTex, 37),         MOD_NONE, ITEM_MASK_SKULL,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskSpookyTex, 37),        MOD_NONE, ITEM_MASK_SPOOKY,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskBunnyHoodTex, 37),     MOD_NONE, ITEM_MASK_BUNNY,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskGoronTex, 37),         MOD_NONE, ITEM_MASK_GORON,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskZoraTex, 37),          MOD_NONE, ITEM_MASK_ZORA,        INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskGerudoTex, 37),        MOD_NONE, ITEM_MASK_GERUDO,      INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMaskTruthTex, 37),         MOD_NONE, ITEM_MASK_TRUTH,       INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSoldOutTex, 37),           MOD_NONE, ITEM_SOLD_OUT,         INVENTORY_ICON_POS(6, 1), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconBoomerangTex, 14),         ITEM_BOOMERANG,        INVENTORY_ICON_POS(0, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconLensOfTruthTex, 15),       ITEM_LENS,             INVENTORY_ICON_POS(1, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconMagicBeanTex, 16),         ITEM_BEAN,             INVENTORY_ICON_POS(2, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconHammerTex, 17),            ITEM_HAMMER,           INVENTORY_ICON_POS(3, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconArrowLightTex, 18),        ITEM_ARROW_LIGHT,      INVENTORY_ICON_POS(4, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconNayrusLoveTex, 19),        ITEM_NAYRUS_LOVE,      INVENTORY_ICON_POS(5, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPocketEggTex, 53),         ITEM_POCKET_EGG,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPocketCuccoTex, 53),       ITEM_POCKET_CUCCO,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconCojiroTex, 53),            ITEM_COJIRO,           INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOddMushroomTex, 53),       ITEM_ODD_MUSHROOM,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconOddPotionTex, 53),         ITEM_ODD_POTION,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPoachersSawTex, 53),       ITEM_SAW,              INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBrokenGoronsSwordTex, 53), ITEM_SWORD_BROKEN,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconPrescriptionTex, 53),      ITEM_PRESCRIPTION,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconEyeballFrogTex, 53),       ITEM_FROG,             INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconEyeDropsTex, 53),          ITEM_EYEDROPS,         INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconClaimCheckTex, 53),        ITEM_CLAIM_CHECK,      INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBoomerangTex, 14),         MOD_NONE, ITEM_BOOMERANG,        INVENTORY_ICON_POS(0, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconLensOfTruthTex, 15),       MOD_NONE, ITEM_LENS,             INVENTORY_ICON_POS(1, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconMagicBeanTex, 16),         MOD_NONE, ITEM_BEAN,             INVENTORY_ICON_POS(2, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconHammerTex, 17),            MOD_NONE, ITEM_HAMMER,           INVENTORY_ICON_POS(3, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconArrowLightTex, 18),        MOD_NONE, ITEM_ARROW_LIGHT,      INVENTORY_ICON_POS(4, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconNayrusLoveTex, 19),        MOD_NONE, ITEM_NAYRUS_LOVE,      INVENTORY_ICON_POS(5, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPocketEggTex, 53),         MOD_NONE, ITEM_POCKET_EGG,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPocketCuccoTex, 53),       MOD_NONE, ITEM_POCKET_CUCCO,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconCojiroTex, 53),            MOD_NONE, ITEM_COJIRO,           INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOddMushroomTex, 53),       MOD_NONE, ITEM_ODD_MUSHROOM,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconOddPotionTex, 53),         MOD_NONE, ITEM_ODD_POTION,       INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPoachersSawTex, 53),       MOD_NONE, ITEM_SAW,              INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBrokenGoronsSwordTex, 53), MOD_NONE, ITEM_SWORD_BROKEN,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconPrescriptionTex, 53),      MOD_NONE, ITEM_PRESCRIPTION,     INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconEyeballFrogTex, 53),       MOD_NONE, ITEM_FROG,             INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconEyeDropsTex, 53),          MOD_NONE, ITEM_EYEDROPS,         INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconClaimCheckTex, 53),        MOD_NONE, ITEM_CLAIM_CHECK,      INVENTORY_ICON_POS(6, 2), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconSwordKokiriTex, 54),       ITEM_SWORD_KOKIRI,     EQUIPMENT_ICON_POS(0, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSwordMasterTex, 55),       ITEM_SWORD_MASTER,     EQUIPMENT_ICON_POS(1, 0), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSwordBiggoronTex, 56),     ITEM_SWORD_BGS,        EQUIPMENT_ICON_POS(2, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordKokiriTex, 54),       MOD_NONE, ITEM_SWORD_KOKIRI,     EQUIPMENT_ICON_POS(0, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordMasterTex, 55),       MOD_NONE, ITEM_SWORD_MASTER,     EQUIPMENT_ICON_POS(1, 0), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSwordBiggoronTex, 56),     MOD_NONE, ITEM_SWORD_BGS,        EQUIPMENT_ICON_POS(2, 0), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconShieldDekuTex, 57),        ITEM_SHIELD_DEKU,      EQUIPMENT_ICON_POS(0, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconShieldHylianTex, 58),      ITEM_SHIELD_HYLIAN,    EQUIPMENT_ICON_POS(1, 1), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconShieldMirrorTex, 59),      ITEM_SHIELD_MIRROR,    EQUIPMENT_ICON_POS(2, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldDekuTex, 57),        MOD_NONE, ITEM_SHIELD_DEKU,      EQUIPMENT_ICON_POS(0, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldHylianTex, 58),      MOD_NONE, ITEM_SHIELD_HYLIAN,    EQUIPMENT_ICON_POS(1, 1), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconShieldMirrorTex, 59),      MOD_NONE, ITEM_SHIELD_MIRROR,    EQUIPMENT_ICON_POS(2, 1), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconTunicKokiriTex, 60),       ITEM_TUNIC_KOKIRI,     EQUIPMENT_ICON_POS(0, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconTunicGoronTex, 61),        ITEM_TUNIC_GORON,      EQUIPMENT_ICON_POS(1, 2), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconTunicZoraTex, 62),         ITEM_TUNIC_ZORA,       EQUIPMENT_ICON_POS(2, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicKokiriTex, 60),       MOD_NONE, ITEM_TUNIC_KOKIRI,     EQUIPMENT_ICON_POS(0, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicGoronTex, 61),        MOD_NONE, ITEM_TUNIC_GORON,      EQUIPMENT_ICON_POS(1, 2), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconTunicZoraTex, 62),         MOD_NONE, ITEM_TUNIC_ZORA,       EQUIPMENT_ICON_POS(2, 2), SIZE_NORMAL},
     
-    {CREATE_SPRITE_32(dgItemIconBootsKokiriTex, 63),       ITEM_BOOTS_KOKIRI,     EQUIPMENT_ICON_POS(0, 3), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBootsIronTex, 64),         ITEM_BOOTS_IRON,       EQUIPMENT_ICON_POS(1, 3), SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconBootsHoverTex, 65),        ITEM_BOOTS_HOVER,      EQUIPMENT_ICON_POS(2, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsKokiriTex, 63),       MOD_NONE, ITEM_BOOTS_KOKIRI,     EQUIPMENT_ICON_POS(0, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsIronTex, 64),         MOD_NONE, ITEM_BOOTS_IRON,       EQUIPMENT_ICON_POS(1, 3), SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconBootsHoverTex, 65),        MOD_NONE, ITEM_BOOTS_HOVER,      EQUIPMENT_ICON_POS(2, 3), SIZE_NORMAL},
 
-    {CREATE_SPRITE_24(dgQuestIconKokiriEmeraldTex, 87),    ITEM_KOKIRI_EMERALD,   STONE_ICON_POS(-1),       SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconGoronRubyTex, 88),        ITEM_GORON_RUBY,       STONE_ICON_POS(0),        SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconZoraSapphireTex, 89),     ITEM_ZORA_SAPPHIRE,    STONE_ICON_POS(1),        SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconKokiriEmeraldTex, 87),    MOD_NONE, ITEM_KOKIRI_EMERALD,   STONE_ICON_POS(-1),       SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconGoronRubyTex, 88),        MOD_NONE, ITEM_GORON_RUBY,       STONE_ICON_POS(0),        SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconZoraSapphireTex, 89),     MOD_NONE, ITEM_ZORA_SAPPHIRE,    STONE_ICON_POS(1),        SIZE_NORMAL},
     
-    {CREATE_SPRITE_24(dgQuestIconMedallionForestTex, 81),  ITEM_MEDALLION_FOREST, {0x37, 0x0A},             SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionFireTex, 82),    ITEM_MEDALLION_FIRE,   {0x37, 0x1A},             SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionWaterTex, 83),   ITEM_MEDALLION_WATER,  {0x29, 0x22},             SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionSpiritTex, 84),  ITEM_MEDALLION_SPIRIT, {0x1B, 0x1A},             SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionShadowTex, 85),  ITEM_MEDALLION_SHADOW, {0x1B, 0x0A},             SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMedallionLightTex, 86),   ITEM_MEDALLION_LIGHT,  {0x29, 0x02},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionForestTex, 81),  MOD_NONE, ITEM_MEDALLION_FOREST, {0x37, 0x0A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionFireTex, 82),    MOD_NONE, ITEM_MEDALLION_FIRE,   {0x37, 0x1A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionWaterTex, 83),   MOD_NONE, ITEM_MEDALLION_WATER,  {0x29, 0x22},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionSpiritTex, 84),  MOD_NONE, ITEM_MEDALLION_SPIRIT, {0x1B, 0x1A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionShadowTex, 85),  MOD_NONE, ITEM_MEDALLION_SHADOW, {0x1B, 0x0A},             SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMedallionLightTex, 86),   MOD_NONE, ITEM_MEDALLION_LIGHT,  {0x29, 0x02},             SIZE_NORMAL},
 
-    {CREATE_SPRITE_32(dgItemIconGoronsBraceletTex, 71),    ITEM_BRACELET,         UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconSilverGauntletsTex, 71),   ITEM_GAUNTLETS_SILVER, UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconGoldenGauntletsTex, 71),   ITEM_GAUNTLETS_GOLD,   UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconScaleSilverTex, 74),       ITEM_SCALE_SILVER,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_32(dgItemIconScaleGoldenTex, 74),       ITEM_SCALE_GOLDEN,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMagicJarSmallTex, 97),    ITEM_SINGLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconMagicJarBigTex, 97),      ITEM_DOUBLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
-    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),                ITEM_RUPEE_GREEN,      UPGRADE_ICON_POS(0, 1),   SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconGerudosCardTex, 91),      ITEM_GERUDO_CARD,      UPGRADE_ICON_POS(1, 1),   SIZE_NORMAL},
-    {CREATE_SPRITE_24(dgQuestIconStoneOfAgonyTex, 90),     ITEM_STONE_OF_AGONY,   UPGRADE_ICON_POS(2, 1),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconGoronsBraceletTex, 71),    MOD_NONE, ITEM_BRACELET,         UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconSilverGauntletsTex, 71),   MOD_NONE, ITEM_GAUNTLETS_SILVER, UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconGoldenGauntletsTex, 71),   MOD_NONE, ITEM_GAUNTLETS_GOLD,   UPGRADE_ICON_POS(0, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconScaleSilverTex, 74),       MOD_NONE, ITEM_SCALE_SILVER,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_32(dgItemIconScaleGoldenTex, 74),       MOD_NONE, ITEM_SCALE_GOLDEN,     UPGRADE_ICON_POS(1, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMagicJarSmallTex, 97),    MOD_NONE, ITEM_SINGLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconMagicJarBigTex, 97),      MOD_NONE, ITEM_DOUBLE_MAGIC,     UPGRADE_ICON_POS(2, 0),   SIZE_NORMAL},
+    {CREATE_SPRITE_RUPEE(0xC8, 0xFF, 0x64),                MOD_NONE, ITEM_RUPEE_GREEN,      UPGRADE_ICON_POS(0, 1),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconGerudosCardTex, 91),      MOD_NONE, ITEM_GERUDO_CARD,      UPGRADE_ICON_POS(1, 1),   SIZE_NORMAL},
+    {CREATE_SPRITE_24(dgQuestIconStoneOfAgonyTex, 90),     MOD_NONE, ITEM_STONE_OF_AGONY,   UPGRADE_ICON_POS(2, 1),   SIZE_NORMAL},
 
-    {CREATE_SPRITE_SONG(224, 107, 255),                    ITEM_SONG_LULLABY,     SONG_ICON_POS(0, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 195, 60),                     ITEM_SONG_EPONA,       SONG_ICON_POS(1, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(127, 255, 137),                    ITEM_SONG_SARIA,       SONG_ICON_POS(2, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 255, 60),                     ITEM_SONG_SUN,         SONG_ICON_POS(3, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(119, 236, 255),                    ITEM_SONG_TIME,        SONG_ICON_POS(4, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(165, 165, 165),                    ITEM_SONG_STORMS,      SONG_ICON_POS(5, 0),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(150, 255, 100),                    ITEM_SONG_MINUET,      SONG_ICON_POS(0, 1),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 80,  40),                     ITEM_SONG_BOLERO,      SONG_ICON_POS(1, 1),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(100, 150, 255),                    ITEM_SONG_SERENADE,    SONG_ICON_POS(2, 1),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 160, 0),                      ITEM_SONG_REQUIEM,     SONG_ICON_POS(3, 1),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 100, 255),                    ITEM_SONG_NOCTURNE,    SONG_ICON_POS(4, 1),      SIZE_SONG},
-    {CREATE_SPRITE_SONG(255, 240, 100),                    ITEM_SONG_PRELUDE,     SONG_ICON_POS(5, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(224, 107, 255),                    MOD_NONE, ITEM_SONG_LULLABY,     SONG_ICON_POS(0, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 195, 60),                     MOD_NONE, ITEM_SONG_EPONA,       SONG_ICON_POS(1, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(127, 255, 137),                    MOD_NONE, ITEM_SONG_SARIA,       SONG_ICON_POS(2, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 255, 60),                     MOD_NONE, ITEM_SONG_SUN,         SONG_ICON_POS(3, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(119, 236, 255),                    MOD_NONE, ITEM_SONG_TIME,        SONG_ICON_POS(4, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(165, 165, 165),                    MOD_NONE, ITEM_SONG_STORMS,      SONG_ICON_POS(5, 0),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(150, 255, 100),                    MOD_NONE, ITEM_SONG_MINUET,      SONG_ICON_POS(0, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 80,  40),                     MOD_NONE, ITEM_SONG_BOLERO,      SONG_ICON_POS(1, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(100, 150, 255),                    MOD_NONE, ITEM_SONG_SERENADE,    SONG_ICON_POS(2, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 160, 0),                      MOD_NONE, ITEM_SONG_REQUIEM,     SONG_ICON_POS(3, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 100, 255),                    MOD_NONE, ITEM_SONG_NOCTURNE,    SONG_ICON_POS(4, 1),      SIZE_SONG},
+    {CREATE_SPRITE_SONG(255, 240, 100),                    MOD_NONE, ITEM_SONG_PRELUDE,     SONG_ICON_POS(5, 1),      SIZE_SONG},
 };
 
 static u8 ColorProduct(u8 c1, u8 c2) {
@@ -450,8 +452,8 @@ static void DrawItems(FileChooseContext* this, s16 fileIndex, u8 alpha) {
     for (int i = 0; i < ARRAY_COUNT(itemData); i += 1) {
         ItemData* data = &itemData[i];
 
-        if (ShouldRenderItem(fileIndex, data->item)) {
-            if (HasItem(fileIndex, data->item)) {
+        if (ShouldRenderItem(fileIndex, data->itemId)) {
+            if (HasItem(fileIndex, data->itemId)) {
                 gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, data->color.r, data->color.g, data->color.b, ColorProduct(data->color.a, alpha));
             } else {
                 gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, ColorProduct(data->color.r, DIM.r), ColorProduct(data->color.g, DIM.g), ColorProduct(data->color.b, DIM.b), ColorProduct(ColorProduct(data->color.a, DIM.a), alpha));
