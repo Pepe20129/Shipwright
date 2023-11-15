@@ -24,6 +24,27 @@ std::shared_ptr<IResource> SetTransitionActorListFactory::ReadResource(std::shar
     return resource;
 }
 
+std::shared_ptr<IResource>
+SetTransitionActorListFactory::ReadResourceXML(std::shared_ptr<ResourceInitData> initData, tinyxml2::XMLElement *reader) {
+    auto resource = std::make_shared<SetTransitionActorList>(initData);
+    std::shared_ptr<ResourceVersionFactory> factory = nullptr;
+
+    switch (resource->GetInitData()->ResourceVersion) {
+        case 0:
+            factory = std::make_shared<SetTransitionActorListFactoryV0>();
+            break;
+    }
+
+    if (factory == nullptr) {
+        SPDLOG_ERROR("Failed to load SetTransitionActorList with version {}", resource->GetInitData()->ResourceVersion);
+        return nullptr;
+    }
+
+    factory->ParseFileXML(reader, resource);
+
+    return resource;
+}
+
 void LUS::SetTransitionActorListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> reader,
                                         std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetTransitionActorList> setTransitionActorList = std::static_pointer_cast<SetTransitionActorList>(resource);
@@ -49,6 +70,64 @@ void LUS::SetTransitionActorListFactoryV0::ParseFileBinary(std::shared_ptr<Binar
 
         setTransitionActorList->transitionActorList.push_back(entry);
     }
+
+    LogTransitionActorListAsXML(setTransitionActorList);
+}
+
+void LUS::SetTransitionActorListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetTransitionActorList> setTransitionActorList = std::static_pointer_cast<SetTransitionActorList>(resource);
+
+    auto child = reader->FirstChildElement();
+
+    while (child != nullptr) {
+        std::string childName = child->Name();
+        if (childName == "TransitionActorEntry") {
+            TransitionActorEntry entry;
+            entry.sides[0].room = child->IntAttribute("FrontSideRoom");
+            entry.sides[0].effects = child->IntAttribute("FrontSideEffects");
+            entry.sides[1].room = child->IntAttribute("BackSideRoom");
+            entry.sides[1].effects = child->IntAttribute("BackSideEffects");
+            entry.id = child->IntAttribute("Id");
+            entry.pos.x = child->IntAttribute("PosX");
+            entry.pos.y = child->IntAttribute("PosY");
+            entry.pos.z = child->IntAttribute("PosZ");
+            entry.rotY = child->IntAttribute("RotY");
+            entry.params = child->IntAttribute("Params");
+            setTransitionActorList->transitionActorList.push_back(entry);
+        }
+
+        child = child->NextSiblingElement();
+    }
+
+    setTransitionActorList->numTransitionActors = setTransitionActorList->transitionActorList.size();
+}
+
+void LogTransitionActorListAsXML(std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetTransitionActorList> setTransitionActorList = std::static_pointer_cast<SetTransitionActorList>(resource);
+
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLElement* root = doc.NewElement("SetTransitionActorList");
+    doc.InsertFirstChild(root);
+
+    for (size_t i = 0; i < setTransitionActorList->numTransitionActors; i++) {
+        tinyxml2::XMLElement* entry = doc.NewElement("TransitionActorEntry");
+        entry->SetAttribute("FrontSideRoom", setTransitionActorList->transitionActorList[i].sides[0].room);
+        entry->SetAttribute("FrontSideEffects", setTransitionActorList->transitionActorList[i].sides[0].effects);
+        entry->SetAttribute("BackSideRoom", setTransitionActorList->transitionActorList[i].sides[1].room);
+        entry->SetAttribute("BackSideEffects", setTransitionActorList->transitionActorList[i].sides[1].effects);
+        entry->SetAttribute("Id", setTransitionActorList->transitionActorList[i].id);
+        entry->SetAttribute("PosX", setTransitionActorList->transitionActorList[i].pos.x);
+        entry->SetAttribute("PosY", setTransitionActorList->transitionActorList[i].pos.y);
+        entry->SetAttribute("PosZ", setTransitionActorList->transitionActorList[i].pos.z);
+        entry->SetAttribute("RotY", setTransitionActorList->transitionActorList[i].rotY);
+        entry->SetAttribute("Params", setTransitionActorList->transitionActorList[i].params);
+        root->InsertEndChild(entry);
+    }
+
+    tinyxml2::XMLPrinter printer;
+    doc.Accept(&printer);
+    
+    SPDLOG_INFO("{}: {}", resource->GetInitData()->Path, printer.CStr());
 }
 
 } // namespace LUS
