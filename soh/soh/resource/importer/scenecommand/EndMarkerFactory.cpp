@@ -56,8 +56,8 @@ void LUS::EndMarkerFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> read
     // This has no data.
 }
 
-void LUS::SetLightListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
-    std::shared_ptr<SetLightList> setLightList = std::static_pointer_cast<SetLightList>(resource);
+void LUS::EndMarkerFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
+    std::shared_ptr<EndMarker> endMarker = std::static_pointer_cast<EndMarker>(resource);
 	
     // This has no data.
 }
