@@ -24,6 +24,27 @@ EndMarkerFactory::ReadResource(std::shared_ptr<ResourceInitData> initData, std::
     return resource;
 }
 
+std::shared_ptr<IResource>
+EndMarkerFactory::ReadResourceXML(std::shared_ptr<ResourceInitData> initData, tinyxml2::XMLElement *reader) {
+    auto resource = std::make_shared<EndMarker>(initData);
+    std::shared_ptr<ResourceVersionFactory> factory = nullptr;
+
+    switch (resource->GetInitData()->ResourceVersion) {
+        case 0:
+            factory = std::make_shared<EndMarkerFactoryV0>();
+            break;
+    }
+
+    if (factory == nullptr) {
+        SPDLOG_ERROR("Failed to load EndMarker with version {}", resource->GetInitData()->ResourceVersion);
+        return nullptr;
+    }
+
+    factory->ParseFileXML(reader, resource);
+
+    return resource;
+}
+
 void LUS::EndMarkerFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> reader,
                                         std::shared_ptr<IResource> resource)
 {
@@ -31,6 +52,12 @@ void LUS::EndMarkerFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> read
     ResourceVersionFactory::ParseFileBinary(reader, endMarker);
 
     ReadCommandId(endMarker, reader);
+	
+    // This has no data.
+}
+
+void LUS::SetLightListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetLightList> setLightList = std::static_pointer_cast<SetLightList>(resource);
 	
     // This has no data.
 }

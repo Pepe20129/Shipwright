@@ -25,6 +25,27 @@ SetPathwaysFactory::ReadResource(std::shared_ptr<ResourceInitData> initData, std
     return resource;
 }
 
+std::shared_ptr<IResource>
+SetPathwaysFactory::ReadResourceXML(std::shared_ptr<ResourceInitData> initData, tinyxml2::XMLElement *reader) {
+    auto resource = std::make_shared<SetPathways>(initData);
+    std::shared_ptr<ResourceVersionFactory> factory = nullptr;
+
+    switch (resource->GetInitData()->ResourceVersion) {
+        case 0:
+            factory = std::make_shared<SetPathwaysFactoryV0>();
+            break;
+    }
+
+    if (factory == nullptr) {
+        SPDLOG_ERROR("Failed to load SetPathways with version {}", resource->GetInitData()->ResourceVersion);
+        return nullptr;
+    }
+
+    factory->ParseFileXML(reader, resource);
+
+    return resource;
+}
+
 void LUS::SetPathwaysFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> reader,
                                                  std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetPathways> setPathways = std::static_pointer_cast<SetPathways>(resource);
@@ -39,6 +60,25 @@ void LUS::SetPathwaysFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
         auto path = std::static_pointer_cast<Path>(LUS::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(pathFileName.c_str()));
         setPathways->paths.push_back(path->GetPointer());
     }
+}
+
+void LUS::SetPathwaysFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetPathways> setPathways = std::static_pointer_cast<SetPathways>(resource);
+
+    auto child = reader->FirstChildElement();
+
+    while (child != nullptr) {
+        std::string childName = child->Name();
+        if (childName == "Pathway") {
+            std::string pathFileName = child->Attribute("FilePath");
+            auto path = std::static_pointer_cast<Path>(LUS::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(pathFileName.c_str()));
+            setPathways->paths.push_back(path->GetPointer());
+        }
+
+        child = child->NextSiblingElement();
+    }
+
+    setPathways->numPaths = setPathways->paths.size();
 }
 
 } // namespace LUS

@@ -24,6 +24,27 @@ SetCsCameraFactory::ReadResource(std::shared_ptr<ResourceInitData> initData, std
     return resource;
 }
 
+std::shared_ptr<IResource>
+SetCsCameraFactory::ReadResourceXML(std::shared_ptr<ResourceInitData> initData, tinyxml2::XMLElement *reader) {
+    auto resource = std::make_shared<SetCsCamera>(initData);
+    std::shared_ptr<ResourceVersionFactory> factory = nullptr;
+
+    switch (resource->GetInitData()->ResourceVersion) {
+        case 0:
+            factory = std::make_shared<SetCsCameraFactoryV0>();
+            break;
+    }
+
+    if (factory == nullptr) {
+        SPDLOG_ERROR("Failed to load SetCsCamera with version {}", resource->GetInitData()->ResourceVersion);
+        return nullptr;
+    }
+
+    factory->ParseFileXML(reader, resource);
+
+    return resource;
+}
+
 void LUS::SetCsCameraFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> reader,
                                         std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetCsCamera> setCsCamera = std::static_pointer_cast<SetCsCamera>(resource);
@@ -33,6 +54,12 @@ void LUS::SetCsCameraFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
 	
     reader->ReadInt8();  // camSize
     reader->ReadInt32(); // segOffset
+
+    // OTRTODO: FINISH!
+}
+
+void LUS::SetCsCameraFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetCsCamera> setCsCamera = std::static_pointer_cast<SetCsCamera>(resource);
 
     // OTRTODO: FINISH!
 }

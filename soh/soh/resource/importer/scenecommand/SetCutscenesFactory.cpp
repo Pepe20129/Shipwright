@@ -63,7 +63,7 @@ void LUS::SetCutscenesFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> r
 void LUS::SetCutscenesFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetCutscenes> setCutscenes = std::static_pointer_cast<SetCutscenes>(resource);
 
-    setCutscenes->fileName = reader->IntAttribute("FileName");
+    setCutscenes->fileName = reader->Attribute("FileName");
     setCutscenes->cutscene = std::static_pointer_cast<Cutscene>(LUS::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(setCutscenes->fileName.c_str()));
 }
 
