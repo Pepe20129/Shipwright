@@ -77,6 +77,8 @@ void LUS::SetTransitionActorListFactoryV0::ParseFileBinary(std::shared_ptr<Binar
 void LUS::SetTransitionActorListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetTransitionActorList> setTransitionActorList = std::static_pointer_cast<SetTransitionActorList>(resource);
 
+    setTransitionActorList->cmdId = SceneCommandID::SetTransitionActorList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

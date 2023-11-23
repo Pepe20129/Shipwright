@@ -70,6 +70,8 @@ void LUS::SetAlternateHeadersFactoryV0::ParseFileBinary(std::shared_ptr<BinaryRe
 void LUS::SetAlternateHeadersFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetAlternateHeaders> setAlternateHeaders = std::static_pointer_cast<SetAlternateHeaders>(resource);
 
+    setAlternateHeaders->cmdId = SceneCommandID::SetAlternateHeaders;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

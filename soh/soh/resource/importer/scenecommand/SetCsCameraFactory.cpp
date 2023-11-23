@@ -61,6 +61,8 @@ void LUS::SetCsCameraFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
 void LUS::SetCsCameraFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetCsCamera> setCsCamera = std::static_pointer_cast<SetCsCamera>(resource);
 
+    setCsCamera->cmdId = SceneCommandID::SetCsCamera;
+
     // OTRTODO: FINISH!
 }
 

@@ -62,6 +62,8 @@ void LUS::SetCameraSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryRead
 void LUS::SetCameraSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetCameraSettings> setCameraSettings = std::static_pointer_cast<SetCameraSettings>(resource);
 
+    setCameraSettings->cmdId = SceneCommandID::SetCameraSettings;
+
     setCameraSettings->settings.cameraMovement = reader->IntAttribute("CameraMovement");
     setCameraSettings->settings.worldMapArea = reader->IntAttribute("WorldMapArea");
 }

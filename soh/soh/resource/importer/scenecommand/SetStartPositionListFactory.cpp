@@ -78,6 +78,8 @@ void LUS::SetStartPositionListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryR
 void LUS::SetStartPositionListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetStartPositionList> setStartPositionList = std::static_pointer_cast<SetStartPositionList>(resource);
 
+    setStartPositionList->cmdId = SceneCommandID::SetStartPositionList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

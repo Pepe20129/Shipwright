@@ -61,6 +61,8 @@ void LUS::SetSpecialObjectsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryRead
 void LUS::SetSpecialObjectsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetSpecialObjects> setSpecialObjects = std::static_pointer_cast<SetSpecialObjects>(resource);
 
+    setSpecialObjects->cmdId = SceneCommandID::SetSpecialObjects;
+
     setSpecialObjects->specialObjects.elfMessage = reader->IntAttribute("ElfMessage");
     setSpecialObjects->specialObjects.globalObject = reader->IntAttribute("GlobalObject");
 }

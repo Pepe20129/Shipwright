@@ -59,6 +59,7 @@ void LUS::EndMarkerFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> read
 void LUS::EndMarkerFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<EndMarker> endMarker = std::static_pointer_cast<EndMarker>(resource);
 	
+    endMarker->cmdId = SceneCommandID::EndMarker;
     // This has no data.
 }
 

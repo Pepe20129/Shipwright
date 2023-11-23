@@ -65,6 +65,8 @@ void LUS::SetPathwaysFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
 void LUS::SetPathwaysFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetPathways> setPathways = std::static_pointer_cast<SetPathways>(resource);
 
+    setPathways->cmdId = SceneCommandID::SetPathways;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

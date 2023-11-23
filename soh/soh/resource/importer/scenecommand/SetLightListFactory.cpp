@@ -82,6 +82,8 @@ void LUS::SetLightListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> r
 void LUS::SetLightListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetLightList> setLightList = std::static_pointer_cast<SetLightList>(resource);
 
+    setLightList->cmdId = SceneCommandID::SetLightList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

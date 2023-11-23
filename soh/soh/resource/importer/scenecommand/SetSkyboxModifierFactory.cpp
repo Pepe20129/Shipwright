@@ -61,6 +61,8 @@ void LUS::SetSkyboxModifierFactoryV0::ParseFileBinary(std::shared_ptr<BinaryRead
 void LUS::SetSkyboxModifierFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetSkyboxModifier> setSkyboxModifier = std::static_pointer_cast<SetSkyboxModifier>(resource);
 
+    setSkyboxModifier->cmdId = SceneCommandID::SetSkyboxModifier;
+
     setSkyboxModifier->modifier.skyboxDisabled = reader->IntAttribute("SkyboxDisabled");
     setSkyboxModifier->modifier.sunMoonDisabled = reader->IntAttribute("SunMoonDisabled");
 }

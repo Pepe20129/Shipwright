@@ -73,14 +73,16 @@ void LUS::SetRoomListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
 void LUS::SetRoomListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetRoomList> setRoomList = std::static_pointer_cast<SetRoomList>(resource);
 
+    setRoomList->cmdId = SceneCommandID::SetRoomList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {
         std::string childName = child->Name();
-        if (childName == "Room") {
+        if (childName == "RoomEntry") {
             RomFile room;
 
-	        setRoomList->fileNames.push_back(child->Attribute("FileName"));
+	        setRoomList->fileNames.push_back(child->Attribute("Path"));
 
 	        room.fileName = (char*)setRoomList->fileNames.back().c_str();
 	        room.vromStart = child->IntAttribute("VromStart");

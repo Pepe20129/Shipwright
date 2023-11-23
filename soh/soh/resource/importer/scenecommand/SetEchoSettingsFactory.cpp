@@ -61,6 +61,8 @@ void LUS::SetEchoSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader
 void LUS::SetEchoSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetEchoSettings> setEchoSettings = std::static_pointer_cast<SetEchoSettings>(resource);
 
+    setEchoSettings->cmdId = SceneCommandID::SetEchoSettings;
+
     setEchoSettings->settings.echo = reader->IntAttribute("Echo");
 }
 

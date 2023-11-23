@@ -63,6 +63,8 @@ void SetSkyboxSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> r
 void LUS::SetSkyboxSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetSkyboxSettings> setSkyboxSettings = std::static_pointer_cast<SetSkyboxSettings>(resource);
 
+    setSkyboxSettings->cmdId = SceneCommandID::SetSkyboxSettings;
+
     setSkyboxSettings->settings.unk = reader->IntAttribute("Unknown");
     setSkyboxSettings->settings.skyboxId = reader->IntAttribute("SkyboxId");
     setSkyboxSettings->settings.weather = reader->IntAttribute("Weather");

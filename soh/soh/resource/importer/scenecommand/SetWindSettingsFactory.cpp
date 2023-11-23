@@ -63,6 +63,8 @@ void LUS::SetWindSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader
 void LUS::SetWindSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetWindSettings> setWindSettings = std::static_pointer_cast<SetWindSettings>(resource);
 
+    setWindSettings->cmdId = SceneCommandID::SetWind;
+
     setWindSettings->settings.windWest = reader->IntAttribute("WindWest");
     setWindSettings->settings.windVertical = reader->IntAttribute("WindVertical");
     setWindSettings->settings.windSouth = reader->IntAttribute("WindSouth");

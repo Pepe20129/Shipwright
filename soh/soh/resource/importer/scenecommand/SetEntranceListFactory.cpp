@@ -69,6 +69,8 @@ void LUS::SetEntranceListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader
 void LUS::SetEntranceListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetEntranceList> setEntranceList = std::static_pointer_cast<SetEntranceList>(resource);
 
+    setEntranceList->cmdId = SceneCommandID::SetEntranceList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

@@ -62,6 +62,8 @@ void LUS::SetTimeSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader
 void LUS::SetTimeSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetTimeSettings> setTimeSettings = std::static_pointer_cast<SetTimeSettings>(resource);
 
+    setTimeSettings->cmdId = SceneCommandID::SetTimeSettings;
+
     setTimeSettings->settings.hour = reader->IntAttribute("Hour");
     setTimeSettings->settings.minute = reader->IntAttribute("Minute");
     setTimeSettings->settings.timeIncrement = reader->IntAttribute("TimeIncrement");

@@ -62,6 +62,8 @@ void LUS::SetSoundSettingsFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReade
 void LUS::SetSoundSettingsFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetSoundSettings> setSoundSettings = std::static_pointer_cast<SetSoundSettings>(resource);
 
+    setSoundSettings->cmdId = SceneCommandID::SetSoundSettings;
+
     setSoundSettings->settings.reverb = reader->IntAttribute("Reverb");
     setSoundSettings->settings.natureAmbienceId = reader->IntAttribute("NatureAmbienceId");
     setSoundSettings->settings.seqId = reader->IntAttribute("SeqId");

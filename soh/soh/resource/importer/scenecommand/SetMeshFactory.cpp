@@ -190,6 +190,8 @@ void LUS::SetMeshFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> reader
 void LUS::SetMeshFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetMesh> setMesh = std::static_pointer_cast<SetMesh>(resource);
 
+    setMesh->cmdId = SceneCommandID::SetMesh;
+
     setMesh->data = reader->IntAttribute("Data");
 
     setMesh->meshHeader.base.type = reader->IntAttribute("MeshHeaderType");

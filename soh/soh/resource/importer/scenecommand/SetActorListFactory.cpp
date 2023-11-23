@@ -76,6 +76,8 @@ void LUS::SetActorListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> r
 void LUS::SetActorListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetActorList> setActorList = std::static_pointer_cast<SetActorList>(resource);
 
+    setActorList->cmdId = SceneCommandID::SetActorList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {

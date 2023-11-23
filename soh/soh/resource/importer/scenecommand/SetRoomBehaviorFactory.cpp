@@ -61,6 +61,8 @@ void LUS::SetRoomBehaviorFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader
 void LUS::SetRoomBehaviorFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetRoomBehavior> setRoomBehavior = std::static_pointer_cast<SetRoomBehavior>(resource);
 	
+    setRoomBehavior->cmdId = SceneCommandID::SetRoomBehavior;
+
     setRoomBehavior->roomBehavior.gameplayFlags = reader->IntAttribute("GameplayFlags1");
     setRoomBehavior->roomBehavior.gameplayFlags2 = reader->IntAttribute("GameplayFlags2");
 }

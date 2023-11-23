@@ -64,6 +64,8 @@ void LUS::SetExitListFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
 void LUS::SetExitListFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
     std::shared_ptr<SetExitList> setExitList = std::static_pointer_cast<SetExitList>(resource);
 
+    setExitList->cmdId = SceneCommandID::SetExitList;
+
     auto child = reader->FirstChildElement();
 
     while (child != nullptr) {
