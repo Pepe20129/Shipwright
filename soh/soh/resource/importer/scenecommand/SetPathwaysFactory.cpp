@@ -59,7 +59,10 @@ void LUS::SetPathwaysFactoryV0::ParseFileBinary(std::shared_ptr<BinaryReader> re
         std::string pathFileName = reader->ReadString();
         auto path = std::static_pointer_cast<Path>(LUS::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(pathFileName.c_str()));
         setPathways->paths.push_back(path->GetPointer());
+        setPathways->pathFileNames.push_back(pathFileName);
     }
+
+    LogPathwaysAsXML(setPathways);
 }
 
 void LUS::SetPathwaysFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) {
@@ -75,12 +78,32 @@ void LUS::SetPathwaysFactoryV0::ParseFileXML(tinyxml2::XMLElement* reader, std::
             std::string pathFileName = child->Attribute("FilePath");
             auto path = std::static_pointer_cast<Path>(LUS::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(pathFileName.c_str()));
             setPathways->paths.push_back(path->GetPointer());
+            setPathways->pathFileNames.push_back(pathFileName);
         }
 
         child = child->NextSiblingElement();
     }
 
     setPathways->numPaths = setPathways->paths.size();
+}
+
+void LogPathwaysAsXML(std::shared_ptr<IResource> resource) {
+    std::shared_ptr<SetPathways> setPathways = std::static_pointer_cast<SetPathways>(resource);
+
+    tinyxml2::XMLDocument doc;
+    tinyxml2::XMLElement* root = doc.NewElement("SetPathways");
+    doc.InsertFirstChild(root);
+
+    for (size_t i = 0; i < setPathways->pathFileNames.size(); i++) {
+        tinyxml2::XMLElement* pathway = doc.NewElement("Pathway");
+        pathway->SetAttribute("FilePath", setPathways->pathFileNames[i].c_str());
+        root->InsertEndChild(pathway);
+    }
+
+    tinyxml2::XMLPrinter printer;
+    doc.Accept(&printer);
+
+    SPDLOG_INFO("{}: {}", resource->GetInitData()->Path, printer.CStr());
 }
 
 } // namespace LUS
