@@ -448,8 +448,8 @@ void LogMeshAsXML(std::shared_ptr<IResource> resource) {
             polygon->SetAttribute("MeshXlu", setMesh->xluPaths[i].c_str());
 
             root->InsertEndChild(polygon);
+            dlist += sizeof(PolygonDlist2);
         }
-        dlist += sizeof(PolygonDlist2);
     }
 
     tinyxml2::XMLPrinter printer;
