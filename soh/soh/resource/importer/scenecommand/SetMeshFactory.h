@@ -16,4 +16,6 @@ class SetMeshFactoryV0 : public SceneCommandVersionFactory {
     void ParseFileBinary(std::shared_ptr<BinaryReader> reader, std::shared_ptr<IResource> resource) override;
     void ParseFileXML(tinyxml2::XMLElement* reader, std::shared_ptr<IResource> resource) override;
 };
+
+void LogMeshAsXML(std::shared_ptr<IResource> resource);
 }; // namespace LUS
