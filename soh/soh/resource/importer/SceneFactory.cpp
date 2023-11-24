@@ -157,12 +157,9 @@ void SceneFactoryV0::ParseSceneCommands(std::shared_ptr<Scene> scene, std::share
 void SceneFactoryV0::ParseSceneCommandsXML(std::shared_ptr<Scene> scene, tinyxml2::XMLElement* reader) {
     auto child = reader->FirstChildElement();
 
-    lusprintf(__FILE__, __LINE__, 2, "SceneFactoryV0::ParseSceneCommandsXML");
-
     int i = 0;
 
     while (child != nullptr) {
-        lusprintf(__FILE__, __LINE__, 2, "SceneFactoryV0::ParseSceneCommandsXML %d", i);
         scene->commands.push_back(ParseSceneCommandXML(scene, child, i));
 
         child = child->NextSiblingElement();
@@ -236,13 +233,11 @@ SceneCommandID GetCommandID(std::string commandName) {
 }
 
 std::shared_ptr<ISceneCommand> SceneFactoryV0::ParseSceneCommandXML(std::shared_ptr<Scene> scene, tinyxml2::XMLElement* reader, uint32_t index) {
-    lusprintf(__FILE__, __LINE__, 2, "SceneFactoryV0::ParseSceneCommandXML %d", index);
     
     std::string commandName = reader->Name();
     SceneCommandID cmdID = GetCommandID(commandName);
     
     if (cmdID == SceneCommandID::Error) {
-        lusprintf(__FILE__, __LINE__, 2, "Failed to load scene command with name %s in scene %s", commandName, scene->GetInitData()->Path);
         SPDLOG_ERROR("Failed to load scene command with name {} in scene {}", commandName, scene->GetInitData()->Path);
         return nullptr;
     }
