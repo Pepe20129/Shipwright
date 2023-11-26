@@ -666,7 +666,7 @@ static void DrawMoreInfo(FileChooseContext* this, s16 fileIndex, u8 alpha) {
 }
 
 #define MIN_QUEST (ResourceMgr_GameHasOriginal() ? QUEST_NORMAL : QUEST_MASTER)
-#define MAX_QUEST QUEST_BOSSRUSH
+#define MAX_QUEST QUEST_CYAN
 
 void Sram_InitDebugSave(void);
 void Sram_InitBossRushSave();
@@ -2387,7 +2387,7 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
             gSP1Quadrangle(POLY_OPA_DISP++, 4, 6, 7, 5, 0);
 
             // draw disk label for 64DD
-            if (this->n64ddFlags[i]) {
+            if (this->n64ddFlags[i] || Save_GetSaveMetaInfo(i)->cyanSave) {
                 gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[isActive][0], sWindowContentColors[isActive][1],
                                 sWindowContentColors[isActive][2], this->nameBoxAlpha[i]);
                 gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelDISKButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
@@ -2444,7 +2444,7 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
                                 G_TX_NOLOD, G_TX_NOLOD);
             gSP1Quadrangle(POLY_OPA_DISP++, 12, 14, 15, 13, 0);
 
-            if (this->n64ddFlags[i] || Save_GetSaveMetaInfo(i)->randoSave || Save_GetSaveMetaInfo(i)->requiresMasterQuest) {
+            if (this->n64ddFlags[i] || Save_GetSaveMetaInfo(i)->randoSave || Save_GetSaveMetaInfo(i)->requiresMasterQuest || Save_GetSaveMetaInfo(i)->cyanSave) {
                 gSP1Quadrangle(POLY_OPA_DISP++, 16, 18, 19, 17, 0);
             }
         }

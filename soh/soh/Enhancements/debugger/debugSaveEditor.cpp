@@ -689,7 +689,7 @@ void DrawInventoryTab() {
                                          selectedIndex == SLOT_BOTTLE_3 || selectedIndex == SLOT_BOTTLE_4)
                                             ? SLOT_BOTTLE_1
                                             : selectedIndex;
-                        if (gItemSlots[slotIndex] == testIndex) {
+                        if (IS_CYAN ? (gCyanItemSlots[slotIndex] == selectedIndex) : (gItemSlots[slotIndex] == testIndex)) {
                             possibleItems.push_back(itemMapping[slotIndex]);
                         }
                     }
@@ -729,7 +729,7 @@ void DrawInventoryTab() {
 
     ImGui::Text("Ammo");
     for (uint32_t ammoIndex = 0, drawnAmmoItems = 0; ammoIndex < 16; ammoIndex++) {
-        uint8_t item = (restrictToValid) ? gAmmoItems[ammoIndex] : gAllAmmoItems[ammoIndex];
+        uint8_t item = IS_CYAN ? gCyanAmmoItems[ammoIndex] : ((restrictToValid) ? gAmmoItems[ammoIndex] : gAllAmmoItems[ammoIndex]);
         if (item != ITEM_NONE) {
             // For legal items, display as 1 row of 7. For unrestricted items, display rows of 6 to match
             // inventory

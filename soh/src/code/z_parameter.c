@@ -878,7 +878,7 @@ void func_80083108(PlayState* play) {
 
                             Interface_LoadItemIcon1(play, 0);
                         } else {
-                            if (gSaveContext.inventory.items[SLOT_BOW] == ITEM_NONE) {
+                            if (gSaveContext.inventory.items[(IS_CYAN ? CYAN_SLOT_BOW : SLOT_BOW)] == ITEM_NONE) {
                                 gSaveContext.equips.buttonItems[0] = ITEM_NONE;
                             } else {
                                 Interface_LoadItemIcon1(play, 0);
@@ -1025,7 +1025,7 @@ void func_80083108(PlayState* play) {
                 if (player->stateFlags1 & PLAYER_STATE1_ON_HORSE) {
                     if ((gSaveContext.equips.buttonItems[0] != ITEM_NONE) &&
                         (gSaveContext.equips.buttonItems[0] != ITEM_BOW)) {
-                        if (gSaveContext.inventory.items[SLOT_BOW] == ITEM_NONE) {
+                        if (gSaveContext.inventory.items[(IS_CYAN ? CYAN_SLOT_BOW : SLOT_BOW)] == ITEM_NONE) {
                             gSaveContext.equips.buttonItems[0] = ITEM_NONE;
                         } else {
                             gSaveContext.equips.buttonItems[0] = ITEM_BOW;
@@ -1472,17 +1472,19 @@ void Inventory_SwapAgeEquipment(void) {
                 Flags_SetInfTable(INFTABLE_SWORDLESS);
             }
 
-            if (gSaveContext.inventory.items[SLOT_NUT] != ITEM_NONE) {
-                gSaveContext.equips.buttonItems[1] = ITEM_NUT;
-                gSaveContext.equips.cButtonSlots[0] = SLOT_NUT;
-            } else {
-                gSaveContext.equips.buttonItems[1] = gSaveContext.equips.cButtonSlots[0] = ITEM_NONE;
-            }
+            if (!IS_CYAN) {
+                if (gSaveContext.inventory.items[SLOT_NUT] != ITEM_NONE) {
+                    gSaveContext.equips.buttonItems[1] = ITEM_NUT;
+                    gSaveContext.equips.cButtonSlots[0] = SLOT_NUT;
+                } else {
+                    gSaveContext.equips.buttonItems[1] = gSaveContext.equips.cButtonSlots[0] = ITEM_NONE;
+                }
 
-            gSaveContext.equips.buttonItems[2] = ITEM_BOMB;
-            gSaveContext.equips.buttonItems[3] = gSaveContext.inventory.items[SLOT_OCARINA];
-            gSaveContext.equips.cButtonSlots[1] = SLOT_BOMB;
-            gSaveContext.equips.cButtonSlots[2] = SLOT_OCARINA;
+                gSaveContext.equips.buttonItems[2] = ITEM_BOMB;
+                gSaveContext.equips.buttonItems[3] = gSaveContext.inventory.items[SLOT_OCARINA];
+                gSaveContext.equips.cButtonSlots[1] = SLOT_BOMB;
+                gSaveContext.equips.cButtonSlots[2] = SLOT_OCARINA;
+            }
             
             gSaveContext.equips.equipment = (EQUIP_VALUE_SWORD_MASTER << (EQUIP_TYPE_SWORD * 4)) |
                                             (EQUIP_VALUE_SHIELD_HYLIAN << (EQUIP_TYPE_SHIELD * 4)) |
@@ -2818,6 +2820,10 @@ s32 Inventory_ReplaceItem(PlayState* play, u16 oldItem, u16 newItem) {
 s32 Inventory_HasEmptyBottle(void) {
     u8* items = gSaveContext.inventory.items;
 
+    if (IS_CYAN) {
+        return items[CYAN_SLOT_BOTTLE] == ITEM_BOTTLE;
+    }
+
     if (items[SLOT_BOTTLE_1] == ITEM_BOTTLE) {
         return 1;
     } else if (items[SLOT_BOTTLE_2] == ITEM_BOTTLE) {
@@ -2834,6 +2840,10 @@ s32 Inventory_HasEmptyBottle(void) {
 bool Inventory_HasEmptyBottleSlot(void) {
     u8* items = gSaveContext.inventory.items;
 
+    if (IS_CYAN) {
+        return items[CYAN_SLOT_BOTTLE] == ITEM_NONE;
+    }
+
     return (
         items[SLOT_BOTTLE_1] == ITEM_NONE ||
         items[SLOT_BOTTLE_2] == ITEM_NONE ||
@@ -2844,6 +2854,10 @@ bool Inventory_HasEmptyBottleSlot(void) {
 
 s32 Inventory_HasSpecificBottle(u8 bottleItem) {
     u8* items = gSaveContext.inventory.items;
+
+    if (IS_CYAN) {
+        return items[CYAN_SLOT_BOTTLE] == bottleItem;
+    }
 
     if (items[SLOT_BOTTLE_1] == bottleItem) {
         return 1;

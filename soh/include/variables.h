@@ -9,6 +9,8 @@ extern "C"
 {
 #endif
 
+#include "soh/Enhancements/cyan/cyan.h"
+
 	extern u32 osTvType;
 	extern u32 osRomBase;
 	extern u32 osResetType;

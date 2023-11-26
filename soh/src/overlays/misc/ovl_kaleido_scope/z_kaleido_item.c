@@ -57,7 +57,7 @@ void KaleidoScope_DrawAmmoCount(PauseContext* pauseCtx, GraphicsContext* gfxCtx,
     gDPPipeSync(POLY_KAL_DISP++);
 
     if (i != 0) {
-        gSPVertex(POLY_KAL_DISP++, &pauseCtx->itemVtx[(sAmmoVtxOffset[slot] + 31) * 4], 4, 0);
+        gSPVertex(POLY_KAL_DISP++, &pauseCtx->itemVtx[((IS_CYAN ? sCyanAmmoVtxOffset[slot] : sAmmoVtxOffset[slot]) + 31) * 4], 4, 0);
 
         gDPLoadTextureBlock(POLY_KAL_DISP++, ((u8*)_gAmmoDigit0Tex[i]), G_IM_FMT_IA, G_IM_SIZ_8b, 8, 8, 0,
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
@@ -66,7 +66,7 @@ void KaleidoScope_DrawAmmoCount(PauseContext* pauseCtx, GraphicsContext* gfxCtx,
         gSP1Quadrangle(POLY_KAL_DISP++, 0, 2, 3, 1, 0);
     }
 
-    gSPVertex(POLY_KAL_DISP++, &pauseCtx->itemVtx[(sAmmoVtxOffset[slot] + 32) * 4], 4, 0);
+    gSPVertex(POLY_KAL_DISP++, &pauseCtx->itemVtx[((IS_CYAN ? sCyanAmmoVtxOffset[slot] : sAmmoVtxOffset[slot]) + 32) * 4], 4, 0);
 
     gDPLoadTextureBlock(POLY_KAL_DISP++, ((u8*)_gAmmoDigit0Tex[ammo]), G_IM_FMT_IA, G_IM_SIZ_8b, 8, 8, 0,
                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
@@ -499,7 +499,7 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                 KaleidoScope_SetCursorVtx(pauseCtx, index, pauseCtx->itemVtx);
 
                 if ((pauseCtx->debugState == 0) && (pauseCtx->state == 6) && (pauseCtx->unk_1E4 == 0)) {
-                    if (canMaskSelect && cursorSlot == SLOT_TRADE_CHILD && CHECK_BTN_ALL(input->press.button, BTN_A)) {
+                    if (!IS_CYAN && canMaskSelect && cursorSlot == SLOT_TRADE_CHILD && CHECK_BTN_ALL(input->press.button, BTN_A)) {
                         Audio_PlaySoundGeneral(NA_SE_SY_DECIDE, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
                         gSelectingMask = !gSelectingMask;
                     }
@@ -673,20 +673,22 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                       ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
 
     for (i = 0; i < 15; i++) {
-        if ((gAmmoItems[i] != ITEM_NONE) && (gSaveContext.inventory.items[i] != ITEM_NONE)) {
+        if (((IS_CYAN) ? (gCyanAmmoItems[i] != ITEM_NONE) : (gAmmoItems[i] != ITEM_NONE)) && (gSaveContext.inventory.items[i] != ITEM_NONE)) {
             KaleidoScope_DrawAmmoCount(pauseCtx, play->state.gfxCtx, gSaveContext.inventory.items[i], i);
         }
     }
 
-    // Adult trade item cycle
-    KaleidoScope_DrawItemCycleExtras(play, SLOT_TRADE_ADULT, gSelectingAdultTrade,
-                                     IS_RANDO && Randomizer_GetSettingValue(RSK_SHUFFLE_ADULT_TRADE),
-                                     Randomizer_GetPrevAdultTradeItem(), Randomizer_GetNextAdultTradeItem());
-    // Child mask item cycle (mimics the left/right item behavior from the cycling logic above)
-    u8 childTradeItem = INV_CONTENT(ITEM_TRADE_CHILD);
-    KaleidoScope_DrawItemCycleExtras(play, SLOT_TRADE_CHILD, gSelectingMask, canMaskSelect,
-                                     childTradeItem <= ITEM_MASK_KEATON ? ITEM_MASK_TRUTH : childTradeItem - 1,
-                                     childTradeItem >= ITEM_MASK_TRUTH ? ITEM_MASK_KEATON : childTradeItem + 1);
+    if (!IS_CYAN) {
+        // Adult trade item cycle
+        KaleidoScope_DrawItemCycleExtras(play, SLOT_TRADE_ADULT, gSelectingAdultTrade,
+                                         IS_RANDO && Randomizer_GetSettingValue(RSK_SHUFFLE_ADULT_TRADE),
+                                         Randomizer_GetPrevAdultTradeItem(), Randomizer_GetNextAdultTradeItem());
+        // Child mask item cycle (mimics the left/right item behavior from the cycling logic above)
+        u8 childTradeItem = INV_CONTENT(ITEM_TRADE_CHILD);
+        KaleidoScope_DrawItemCycleExtras(play, SLOT_TRADE_CHILD, gSelectingMask, canMaskSelect,
+                                         childTradeItem <= ITEM_MASK_KEATON ? ITEM_MASK_TRUTH : childTradeItem - 1,
+                                         childTradeItem >= ITEM_MASK_TRUTH ? ITEM_MASK_KEATON : childTradeItem + 1);
+    }
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

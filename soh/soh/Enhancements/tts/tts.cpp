@@ -11,6 +11,7 @@
 #include "message_data_static.h"
 #include "overlays/gamestates/ovl_file_choose/file_choose.h"
 #include "soh/Enhancements/boss-rush/BossRush.h"
+#include "soh/Enhancements/cyan/cyan.h"
 
 extern "C" {
 extern MapData* gMapData;

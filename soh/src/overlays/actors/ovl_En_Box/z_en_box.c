@@ -3,6 +3,7 @@
 #include "soh_assets.h"
 #include "soh/Enhancements/enhancementTypes.h"
 #include <assert.h>
+#include "soh/Enhancements/cyan/cyan.h"
 
 #define FLAGS 0
 
@@ -655,7 +656,7 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
             (this->getItemEntry.modIndex == MOD_RANDOMIZER && this->getItemEntry.getItemId >= RG_BOTTLE_WITH_RED_POTION && this->getItemEntry.getItemId <= RG_BOTTLE_WITH_BIG_POE) ||
             (this->getItemEntry.modIndex == MOD_NONE && (this->getItemEntry.getItemId == GI_BOTTLE || this->getItemEntry.getItemId == GI_MILK_BOTTLE))
         ) {
-            if (gSaveContext.inventory.items[SLOT_BOTTLE_1] != ITEM_NONE) {
+            if (gSaveContext.inventory.items[(IS_CYAN ? CYAN_SLOT_BOTTLE : SLOT_BOTTLE_1)] != ITEM_NONE) {
                 getItemCategory = ITEM_CATEGORY_LESSER;
             }
         }

@@ -2827,8 +2827,8 @@ void KaleidoScope_InitVertices(PlayState* play, GraphicsContext* gfxCtx) {
         }
     }
 
-    for (phi_t3 = 0; phi_t3 < 7; phi_t3++) {
-        phi_t4 = D_8082B11C[phi_t3];
+    for (phi_t3 = 0; phi_t3 < (IS_CYAN ? ARRAY_COUNT(cyan_D_8082B11C) : ARRAY_COUNT(D_8082B11C)); phi_t3++) {
+        phi_t4 = IS_CYAN ? cyan_D_8082B11C[phi_t3] : D_8082B11C[phi_t3];
 
         pauseCtx->itemVtx[phi_t2 + 0].v.ob[0] = pauseCtx->itemVtx[phi_t2 + 2].v.ob[0] =
             pauseCtx->itemVtx[phi_t4].v.ob[0];

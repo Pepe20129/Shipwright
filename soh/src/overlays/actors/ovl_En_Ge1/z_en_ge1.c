@@ -8,6 +8,7 @@
 #include "vt.h"
 #include "objects/object_ge1/object_ge1.h"
 #include "soh/Enhancements/randomizer/randomizer_entrance.h"
+#include "soh/Enhancements/cyan/cyan.h"
 
 #define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
 
@@ -162,7 +163,7 @@ void EnGe1_Init(Actor* thisx, PlayState* play) {
             break;
 
         case GE1_TYPE_HORSEBACK_ARCHERY:
-            if (INV_CONTENT(SLOT_BOW) == ITEM_NONE) {
+            if (INV_CONTENT((IS_CYAN ? CYAN_SLOT_BOW : SLOT_BOW)) == ITEM_NONE) {
                 Actor_Kill(&this->actor);
                 return;
             }

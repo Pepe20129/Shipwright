@@ -29,6 +29,8 @@ typedef struct {
     s16 gsTokens;
     u8 isDoubleDefenseAcquired;
     u8 gregFound;
+
+    u8 cyanSave;
 } SaveFileMetaInfo;
 
 #ifdef __cplusplus

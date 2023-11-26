@@ -3,6 +3,7 @@
 
 #include <libultraship/libultra.h>
 #include "global.h"
+#include "soh/Enhancements/cyan/cyan.h"
 
 extern u8 gAmmoItems[];
 extern s16 D_8082AAEC[];
@@ -18,8 +19,8 @@ extern bool gSelectingMask;
 #define AGE_REQ_NONE 9
 
 #define CHECK_AGE_REQ_EQUIP(i, j) (CVarGetInteger("gTimelessEquipment", 0) || (gEquipAgeReqs[i][j] == AGE_REQ_NONE) || (gEquipAgeReqs[i][j] == ((void)0, gSaveContext.linkAge)))
-#define CHECK_AGE_REQ_SLOT(slotIndex) (CVarGetInteger("gTimelessEquipment", 0) || (gSlotAgeReqs[slotIndex] == AGE_REQ_NONE) || gSlotAgeReqs[slotIndex] == ((void)0, gSaveContext.linkAge))
-#define CHECK_AGE_REQ_ITEM(itemIndex) (CVarGetInteger("gTimelessEquipment", 0) || (gItemAgeReqs[itemIndex] == AGE_REQ_NONE) || (gItemAgeReqs[itemIndex] == gSaveContext.linkAge))
+#define CHECK_AGE_REQ_SLOT(slotIndex) (CVarGetInteger("gTimelessEquipment", 0) || (IS_CYAN ? (gCyanSlotAgeReqs[slotIndex] == AGE_REQ_NONE || gCyanSlotAgeReqs[slotIndex] == gSaveContext.linkAge) : ((gSlotAgeReqs[slotIndex] == AGE_REQ_NONE) || gSlotAgeReqs[slotIndex] == ((void)0, gSaveContext.linkAge))))
+#define CHECK_AGE_REQ_ITEM(itemIndex) (CVarGetInteger("gTimelessEquipment", 0) || (IS_CYAN ? (gCyanItemAgeReqs[itemIndex] == AGE_REQ_NONE || gCyanItemAgeReqs[itemIndex] == gSaveContext.linkAge) : ((gItemAgeReqs[itemIndex] == AGE_REQ_NONE) || (gItemAgeReqs[itemIndex] == gSaveContext.linkAge))))
 
 void KaleidoScope_DrawQuestStatus(PlayState* play, GraphicsContext* gfxCtx);
 s32 KaleidoScope_UpdateQuestStatusPoint(PauseContext* pauseCtx, s32 point);

@@ -452,6 +452,7 @@ void SaveManager::InitMeta(int fileNum) {
     }
 
     fileMetaInfo[fileNum].randoSave = IS_RANDO;
+    fileMetaInfo[fileNum].cyanSave = IS_CYAN;
     // If the file is marked as a Master Quest file or if we're randomized and have at least one master quest dungeon, we need the mq otr.
     fileMetaInfo[fileNum].requiresMasterQuest = IS_MASTER_QUEST || (IS_RANDO && gSaveContext.mqDungeonCount > 0);
     // If the file is not marked as Master Quest, it could still theoretically be a rando save with all 12 MQ dungeons, in which case
@@ -1915,6 +1916,11 @@ void SaveManager::LoadBaseVersion4() {
         SaveManager::Instance->LoadData("tempCollectFlags", gSaveContext.backupFW.tempCollectFlags);
     });
     SaveManager::Instance->LoadData("dogParams", gSaveContext.dogParams);
+    int isCyan = 0;
+    SaveManager::Instance->LoadData("isCyan", isCyan);
+    if (isCyan) {
+        gSaveContext.questId = QUEST_CYAN;
+    }
 }
 
 void SaveManager::SaveBase(SaveContext* saveContext, int sectionID, bool fullSave) {
@@ -2084,6 +2090,7 @@ void SaveManager::SaveBase(SaveContext* saveContext, int sectionID, bool fullSav
         SaveManager::Instance->SaveData("tempCollectFlags", saveContext->backupFW.tempCollectFlags);
     });
     SaveManager::Instance->SaveData("dogParams", saveContext->dogParams);
+    SaveManager::Instance->SaveData("isCyan", saveContext->questId == QUEST_CYAN);
 }
 
 // Load a string into a char array based on size and ensuring it is null terminated when overflowed
