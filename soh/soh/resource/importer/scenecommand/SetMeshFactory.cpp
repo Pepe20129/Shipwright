@@ -378,7 +378,7 @@ void LogMeshAsXML(std::shared_ptr<IResource> resource) {
 
             root->InsertEndChild(polygon);
         }
-        dlist += sizeof(PolygonDlist);
+        dlist += 1;
     } else if (setMesh->meshHeader.base.type == 1) {
         root->SetAttribute("PolyNum", "1");
         tinyxml2::XMLElement* polygon = doc.NewElement("Polygon");
@@ -430,7 +430,7 @@ void LogMeshAsXML(std::shared_ptr<IResource> resource) {
             }
             polygon->InsertEndChild(bgImage);
 
-            image += sizeof(BgImage);
+            image += 1;
         }
     } else if (setMesh->meshHeader.base.type == 2) {
         root->SetAttribute("PolyNum", setMesh->meshHeader.polygon2.num);
@@ -448,7 +448,7 @@ void LogMeshAsXML(std::shared_ptr<IResource> resource) {
             polygon->SetAttribute("MeshXlu", setMesh->xluPaths[i].c_str());
 
             root->InsertEndChild(polygon);
-            dlist += sizeof(PolygonDlist2);
+            dlist += 1;
         }
     }
 
