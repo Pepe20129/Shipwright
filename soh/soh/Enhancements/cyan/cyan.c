@@ -1,7 +1,7 @@
 #include "src/overlays/misc/ovl_kaleido_scope/z_kaleido_scope.h"
 #include "z64item.h"
 
-static u8 gCyanSlotAgeReqs[24] = {
+u8 gCyanSlotAgeReqs[24] = {
     AGE_REQ_NONE, // CYAN_SLOT_EMPTY_1
     AGE_REQ_NONE, // CYAN_SLOT_EMPTY_2
     AGE_REQ_NONE, // CYAN_SLOT_EMPTY_3
@@ -28,7 +28,7 @@ static u8 gCyanSlotAgeReqs[24] = {
     AGE_REQ_NONE, // CYAN_SLOT_EMPTY_14
 };
 
-static u8 gCyanItemAgeReqs[86] = {
+u8 gCyanItemAgeReqs[86] = {
     AGE_REQ_CHILD, // ITEM_DEKU_STICK
     AGE_REQ_NONE,  // ITEM_DEKU_NUT
     AGE_REQ_NONE,  // ITEM_BOMB
@@ -117,7 +117,7 @@ static u8 gCyanItemAgeReqs[86] = {
     AGE_REQ_ADULT, // ITEM_GIANTS_KNIFE
 };
 
-static u8 gCyanItemSlots[86] = {
+u8 gCyanItemSlots[86] = {
     CYAN_SLOT_NONE,      // ITEM_DEKU_STICK
 	CYAN_SLOT_NUT,       // ITEM_DEKU_NUT
 	CYAN_SLOT_BOMB,      // ITEM_BOMB
