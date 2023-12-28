@@ -677,6 +677,9 @@ void DrawInventoryTab() {
                     if (selectedIndex == SLOT_TRADE_ADULT) {
                         gSaveContext.adultTradeItems = 0;
                     }
+                    if (IS_CYAN && selectedIndex == CYAN_SLOT_BOW) {
+                        gSaveContext.cyan.bowItems = 0;
+                    }
                     ImGui::CloseCurrentPopup();
                 }
                 UIWidgets::SetLastItemHoverText("None");
@@ -713,6 +716,32 @@ void DrawInventoryTab() {
                             selectedIndex == SLOT_TRADE_ADULT &&
                             slotEntry.id >= ITEM_POCKET_EGG && slotEntry.id <= ITEM_CLAIM_CHECK) {
                             gSaveContext.adultTradeItems |= ADULT_TRADE_FLAG(slotEntry.id);
+                        }
+
+                        if (
+                            IS_CYAN &&
+                            selectedIndex == CYAN_SLOT_BOW &&
+                            (
+                                slotEntry.id == ITEM_BOW ||
+                                slotEntry.id == ITEM_ARROW_FIRE ||
+                                slotEntry.id == ITEM_ARROW_ICE ||
+                                slotEntry.id == ITEM_ARROW_LIGHT
+                            )
+                        ) {
+                            switch (slotEntry.id) {
+                                case ITEM_BOW:
+                                    gSaveContext.cyan.bowItems |= 1;
+                                    break;
+                                case ITEM_ARROW_FIRE:
+                                    gSaveContext.cyan.bowItems |= 2;
+                                    break;
+                                case ITEM_ARROW_ICE:
+                                    gSaveContext.cyan.bowItems |= 4;
+                                    break;
+                                case ITEM_ARROW_LIGHT:
+                                    gSaveContext.cyan.bowItems |= 8;
+                                    break;
+                            }
                         }
                         ImGui::CloseCurrentPopup();
                     }
@@ -757,6 +786,45 @@ void DrawInventoryTab() {
         && ImGui::TreeNode("Adult trade quest items")) {
         for (int i = ITEM_POCKET_EGG; i <= ITEM_CLAIM_CHECK; i++) {
             DrawBGSItemFlag(i);
+        }
+        ImGui::TreePop();
+    }
+
+    if (IS_CYAN && ImGui::TreeNode("Bow items")) {
+        for (int i = 0; i < ARRAY_COUNT(gCyanBowSlotItems); i++) {
+            int itemID = gCyanBowSlotItems[i];
+            const ItemMapEntry& slotEntry = itemMapping[itemID];
+            ImGui::Image(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f), ImVec2(0, 0), ImVec2(1, 1));
+            ImGui::SameLine();
+            int bowIndex;
+            switch (itemID) {
+                case ITEM_BOW:
+                    bowIndex = 0;
+                    break;
+                case ITEM_ARROW_FIRE:
+                    bowIndex = 1;
+                    break;
+                case ITEM_ARROW_ICE:
+                    bowIndex = 2;
+                    break;
+                case ITEM_ARROW_LIGHT:
+                    bowIndex = 3;
+                    break;
+            }
+            bool hasItem = (gSaveContext.cyan.bowItems & (1 << bowIndex)) != 0;
+            bool shouldHaveItem = hasItem;
+            ImGui::Checkbox(("##cyanBowFlag" + std::to_string(itemID)).c_str(), &shouldHaveItem);
+            if (hasItem != shouldHaveItem) {
+                if (shouldHaveItem) {
+                    gSaveContext.cyan.bowItems |= (1 << bowIndex);
+                    if (INV_CONTENT(CYAN_SLOT_BOW) == ITEM_NONE) {
+                        INV_CONTENT(CYAN_SLOT_BOW) = itemID;
+                    }
+                } else {
+                    gSaveContext.cyan.bowItems &= ~(1 << bowIndex);
+                    Inventory_ReplaceItem(gPlayState, itemID, Cyan_GetNextBowSlotItem());
+                }
+            }
         }
         ImGui::TreePop();
     }

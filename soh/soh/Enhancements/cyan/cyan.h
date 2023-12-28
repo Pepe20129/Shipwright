@@ -51,4 +51,12 @@ extern s16 sCyanAmmoVtxOffset[15];
 
 extern s16 cyan_D_8082B11C[4];
 
+#define BOW_SLOT_ITEM_COUNT 4
+
+extern u8 gCyanBowSlotItems[BOW_SLOT_ITEM_COUNT];
+
+u8 Cyan_GetPrevBowSlotItem();
+
+u8 Cyan_GetNextBowSlotItem();
+
 #endif // CYAN_H

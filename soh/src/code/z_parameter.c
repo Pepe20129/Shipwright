@@ -1870,6 +1870,18 @@ u8 Item_Give(PlayState* play, u8 item) {
     osSyncPrintf("item_get_setting=%d  pt=%d  z=%x\n", item, slot, gSaveContext.inventory.items[slot]);
     osSyncPrintf(VT_RST);
 
+    if (IS_CYAN) {
+        if (item == ITEM_BOW) {
+            gSaveContext.cyan.bowItems |= 1;
+        } else if (item == ITEM_ARROW_FIRE || item == ITEM_BOW_ARROW_FIRE) {
+            gSaveContext.cyan.bowItems |= 2;
+        } else if (item == ITEM_ARROW_ICE || item == ITEM_BOW_ARROW_ICE) {
+            gSaveContext.cyan.bowItems |= 4;
+        } else if (item == ITEM_ARROW_LIGHT || item == ITEM_BOW_ARROW_LIGHT) {
+            gSaveContext.cyan.bowItems |= 8;
+        }
+    }
+
     if ((item >= ITEM_MEDALLION_FOREST) && (item <= ITEM_MEDALLION_LIGHT)) {
         gSaveContext.inventory.questItems |= gBitFlags[item - ITEM_MEDALLION_FOREST + QUEST_MEDALLION_FOREST];
 

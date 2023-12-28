@@ -40,6 +40,7 @@ void KaleidoScope_DrawAmmoCount(PauseContext* pauseCtx, GraphicsContext* gfxCtx,
             gDPSetPrimColor(POLY_KAL_DISP++, 0, 0, 130, 130, 130, pauseCtx->alpha);
         } else if ((item == ITEM_BOMB && AMMO(item) == CUR_CAPACITY(UPG_BOMB_BAG)) ||
                    (item == ITEM_BOW && AMMO(item) == CUR_CAPACITY(UPG_QUIVER)) ||
+                   (IS_CYAN && AMMO(item) == CUR_CAPACITY(UPG_QUIVER) && (item == ITEM_ARROW_FIRE || item == ITEM_ARROW_ICE || item == ITEM_ARROW_LIGHT)) ||
                    (item == ITEM_SLINGSHOT && AMMO(item) == CUR_CAPACITY(UPG_BULLET_BAG)) ||
                    (item == ITEM_STICK && AMMO(item) == CUR_CAPACITY(UPG_STICKS)) ||
                    (item == ITEM_NUT && AMMO(item) == CUR_CAPACITY(UPG_NUTS)) || (item == ITEM_BOMBCHU && ammo == 50) ||
@@ -306,6 +307,7 @@ bool CanMaskSelect() {
 
 void KaleidoScope_HandleItemCycles(PlayState* play) {
     if (IS_CYAN) {
+        Cyan_HandleItemCycles(play);
         return;
     }
 
@@ -355,6 +357,7 @@ void KaleidoScope_HandleItemCycles(PlayState* play) {
 
 void KaleidoScope_DrawItemCycles(PlayState* play) {
     if (IS_CYAN) {
+        Cyan_DrawItemCycles(play);
         return;
     }
 
@@ -817,7 +820,7 @@ void KaleidoScope_SetupItemEquip(PlayState* play, u16 item, u16 slot, s16 animX,
     sEquipMoveTimer = 10;
     if ((pauseCtx->equipTargetItem == ITEM_ARROW_FIRE) || (pauseCtx->equipTargetItem == ITEM_ARROW_ICE) ||
         (pauseCtx->equipTargetItem == ITEM_ARROW_LIGHT)) {
-        if (CVarGetInteger("gSkipArrowAnimation", 0)) {
+        if (IS_CYAN || CVarGetInteger("gSkipArrowAnimation", 0)) {
             Audio_PlaySoundGeneral(NA_SE_SY_DECIDE, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
         } else {
             u16 index = 0;

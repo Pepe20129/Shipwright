@@ -158,6 +158,9 @@ class SaveManager {
     static void InitFileDebug();
     static void InitFileMaxed();
 
+    static void LoadCyanVersion1();
+    static void SaveCyan(SaveContext* saveContext, int sectionID, bool fullSave);
+
     static void LoadRandomizerVersion1();
     static void LoadRandomizerVersion2();
     static void SaveRandomizer(SaveContext* saveContext, int sectionID, bool fullSave);

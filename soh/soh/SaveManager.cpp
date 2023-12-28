@@ -68,6 +68,9 @@ SaveManager::SaveManager() {
     AddLoadFunction("randomizer", 2, LoadRandomizerVersion2);
     AddSaveFunction("randomizer", 2, SaveRandomizer, true, SECTION_PARENT_NONE);
 
+    AddLoadFunction("cyan", 1, LoadCyanVersion1);
+    AddSaveFunction("cyan", 1, SaveCyan, true, SECTION_PARENT_NONE);
+
     AddInitFunction(InitFileImpl);
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>([this](uint32_t fileNum) { ThreadPoolWait(); });
@@ -99,6 +102,20 @@ SaveManager::SaveManager() {
         memset(&info.buildVersion, 0, sizeof(info.buildVersion));
     }
 }
+
+#pragma region Cyan
+
+void SaveManager::LoadCyanVersion1() {
+    SaveManager::Instance->LoadData("bowItems", gSaveContext.cyan.bowItems);
+}
+
+void SaveManager::SaveCyan(SaveContext* saveContext, int sectionID, bool fullSave) {
+    if(saveContext->questId != QUEST_CYAN) return;
+
+    SaveManager::Instance->SaveData("bowItems", saveContext->cyan.bowItems);
+}
+
+#pragma endregion
 
 void SaveManager::LoadRandomizerVersion1() {
     for (int i = 0; i < ARRAY_COUNT(gSaveContext.itemLocations); i++) {

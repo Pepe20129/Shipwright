@@ -167,6 +167,10 @@ typedef struct {
 } RandoSetting;
 
 typedef struct {
+    u8 bowItems;
+} CyanData;
+
+typedef struct {
     /* 0x0000 */ s32 entranceIndex; // start of `save` substruct, originally called "memory"
     /* 0x0004 */ s32 linkAge; // 0: Adult; 1: Child (see enum `LinkAge`)
     /* 0x0008 */ s32 cutsceneIndex;
@@ -325,6 +329,7 @@ typedef struct {
     /*        */ u16 adultTradeItems;
     /*        */ u8 triforcePiecesCollected;
     // #endregion
+    CyanData cyan;
 } SaveContext; // size = 0x1428
 
 typedef enum {
