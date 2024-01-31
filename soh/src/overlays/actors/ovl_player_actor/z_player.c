@@ -2011,7 +2011,7 @@ s8 Player_ItemToItemAction(s32 item) {
     } else if (item == ITEM_FISHING_POLE) {
         return PLAYER_IA_FISHING_POLE;
     // #region SOH [Enhancement] Added to prevent crashes with assignable equipment
-    } else if (item >= ITEM_TUNIC_KOKIRI && item <= ITEM_BOOTS_HOVER) {
+    } else if (item >= ITEM_SHIELD_DEKU && item <= ITEM_BOOTS_HOVER) {
         return PLAYER_IA_NONE;
     // #endregion
     } else {
@@ -2488,7 +2488,7 @@ s32 func_80834758(PlayState* play, Player* this) {
     if (!(this->stateFlags1 & (PLAYER_STATE1_SHIELDING | PLAYER_STATE1_ON_HORSE | PLAYER_STATE1_IN_CUTSCENE)) &&
         (play->shootingGalleryStatus == 0) && (this->heldItemAction == this->itemAction) &&
         (this->currentShield != PLAYER_SHIELD_NONE) && !Player_IsChildWithHylianShield(this) && func_80833BCC(this) &&
-        CHECK_BTN_ALL(sControlInput->cur.button, BTN_R)) {
+        (CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) || Player_ShieldBeingUsedWithCButton(this, play) != EQUIP_VALUE_SHIELD_NONE)) {
 
         anim = func_808346C4(play, this);
         frame = Animation_GetLastFrame(anim);
@@ -2578,7 +2578,7 @@ s32 Player_UpperAction_ChangeHeldItem(Player* this, PlayState* play) {
 s32 func_80834B5C(Player* this, PlayState* play) {
     LinkAnimation_Update(play, &this->upperSkelAnime);
 
-    if (!CHECK_BTN_ALL(sControlInput->cur.button, BTN_R)) {
+    if (!CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) && Player_ShieldBeingUsedWithCButton(this, play) == EQUIP_VALUE_SHIELD_NONE) {
         func_80834894(this);
         return 1;
     } else {
@@ -3133,6 +3133,10 @@ void Player_UseItem(PlayState* play, Player* this, s32 item) {
     s8 itemAction;
     s32 temp;
     s32 nextAnimType;
+
+    if (item >= ITEM_SHIELD_DEKU && item <= ITEM_SHIELD_MIRROR) {
+        return;
+    }
 
     itemAction = Player_ItemToItemAction(item);
 
@@ -5756,7 +5760,7 @@ s32 func_8083C2B0(Player* this, PlayState* play) {
     f32 frame;
 
     if ((play->shootingGalleryStatus == 0) && (this->currentShield != PLAYER_SHIELD_NONE) &&
-        CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) &&
+        (CHECK_BTN_ALL(sControlInput->cur.button, BTN_R) || Player_ShieldBeingUsedWithCButton(this, play) != EQUIP_VALUE_SHIELD_NONE) &&
         (Player_IsChildWithHylianShield(this) || (!func_80833B2C(this) && (this->unk_664 == NULL)))) {
 
         func_80832318(this);
@@ -10998,6 +11002,24 @@ static Vec3f D_80854814 = { 0.0f, 0.0f, 200.0f };
 static f32 D_80854820[] = { 2.0f, 4.0f, 7.0f };
 static f32 D_8085482C[] = { 0.5f, 1.0f, 3.0f };
 
+EquipValueShield Player_ShieldBeingUsedWithCButton(Player* this, PlayState* play) {
+    s32 i;
+    for (i = 0; i < ARRAY_COUNT(sItemButtons); i++) {
+        if (CHECK_BTN_ALL(sControlInput->cur.button, sItemButtons[i])) {
+            break;
+        }
+    }
+
+    s32 item = Player_GetItemOnButton(play, i);
+    if (item >= ITEM_SHIELD_DEKU && item <= ITEM_SHIELD_MIRROR) {
+        return item - ITEM_SHIELD_DEKU + 1;
+    }
+
+    return EQUIP_VALUE_SHIELD_NONE;
+}
+
+static EquipValueShield lastShieldEquipValue = EQUIP_VALUE_SHIELD_NONE;
+
 void Player_UseTunicBoots(Player* this, PlayState* play) {
     // Boots and tunics equip despite state
     if (
@@ -11008,14 +11030,39 @@ void Player_UseTunicBoots(Player* this, PlayState* play) {
     }
 
     s32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sItemButtons); i++) {
+        if (CHECK_BTN_ALL(sControlInput->rel.button, sItemButtons[i])) {
+            break;
+        }
+    }
+    s32 item = Player_GetItemOnButton(play, i);
+
+    if (item >= ITEM_SHIELD_DEKU && item <= ITEM_SHIELD_MIRROR) {
+        Inventory_ChangeEquipment(EQUIP_TYPE_SHIELD, lastShieldEquipValue);
+
+        Player_SetEquipmentData(play, this);
+
+        this->currentShield = SHIELD_EQUIP_TO_PLAYER(CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD));
+    }
+
     for (i = 0; i < ARRAY_COUNT(sItemButtons); i++) {
         if (CHECK_BTN_ALL(sControlInput->press.button, sItemButtons[i])) {
             break;
         }
     }
-    s32 item = Player_GetItemOnButton(play, i);
-    if (item >= ITEM_TUNIC_KOKIRI && item <= ITEM_BOOTS_HOVER) {
-        if (item >= ITEM_BOOTS_KOKIRI) {
+
+    item = Player_GetItemOnButton(play, i);
+    if (item >= ITEM_SHIELD_DEKU && item <= ITEM_BOOTS_HOVER) {
+        if (item >= ITEM_SHIELD_DEKU) {
+            u16 shieldValue = item - ITEM_SHIELD_DEKU + 1;
+
+            lastShieldEquipValue = SHIELD_EQUIP_TO_PLAYER(CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD));
+
+            Inventory_ChangeEquipment(EQUIP_TYPE_SHIELD, shieldValue);
+
+            Player_SetEquipmentData(play, this);
+        } else if (item >= ITEM_BOOTS_KOKIRI) {
             u16 bootsValue = item - ITEM_BOOTS_KOKIRI + 1;
             if (CUR_EQUIP_VALUE(EQUIP_TYPE_BOOTS) == bootsValue) {
                 Inventory_ChangeEquipment(EQUIP_TYPE_BOOTS, EQUIP_VALUE_BOOTS_KOKIRI);
