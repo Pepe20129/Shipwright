@@ -244,15 +244,15 @@ void EnMag_UpdateMq(Actor* thisx, PlayState* play) {
                     CHECK_BTN_ALL(play->state.input[0].press.button, BTN_A) ||
                     CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B)) {
 
-                    if (play->sceneLoadFlag != 20) {
+                    if (play->transitionTrigger != TRANS_TRIGGER_START) {
                         Audio_SetCutsceneFlag(0);
 
                         Audio_PlaySoundGeneral(NA_SE_SY_PIECE_OF_HEART, &D_801333D4, 4, &D_801333E0, &D_801333E0,
                                                &D_801333E8);
 
                         gSaveContext.gameMode = 2;
-                        play->sceneLoadFlag = 20;
-                        play->fadeTransition = 2;
+                        play->transitionTrigger = TRANS_TRIGGER_START;
+                        play->transitionType = TRANS_TYPE_FADE_BLACK;
                     }
 
                     this->copyrightAlphaStep = 15;
@@ -404,15 +404,15 @@ void EnMag_UpdateVanilla(Actor* thisx, PlayState* play) {
                     CHECK_BTN_ALL(play->state.input[0].press.button, BTN_A) ||
                     CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B)) {
 
-                    if (play->sceneLoadFlag != 20) {
+                    if (play->transitionTrigger != TRANS_TRIGGER_START) {
                         Audio_SetCutsceneFlag(0);
 
                         Audio_PlaySoundGeneral(NA_SE_SY_PIECE_OF_HEART, &D_801333D4, 4, &D_801333E0, &D_801333E0,
                                                &D_801333E8);
 
                         gSaveContext.gameMode = 2;
-                        play->sceneLoadFlag = 20;
-                        play->fadeTransition = 2;
+                        play->transitionTrigger = TRANS_TRIGGER_START;
+                        play->transitionType = TRANS_TYPE_FADE_BLACK;
                     }
 
                     this->copyrightAlphaStep = 15;
@@ -620,9 +620,9 @@ s16 GetCharArraySize(const char* str) {
 }
 
 static void EnMag_SetCopyValues(const char** copy_tex, u16* copy_width, u16* copy_xl, u16* copy_xh) {
-    u32 gameVersion = ResourceMgr_GetGameVersion(0);
-    switch (gameVersion) {
-        case OOT_PAL_11:
+    u32 platform = ResourceMgr_GetGamePlatform(0);
+    switch (platform) {
+        case GAME_PLATFORM_N64:
             *copy_tex = gTitleCopyright1998Tex;
             *copy_width = 128;
             *copy_xl = 376;

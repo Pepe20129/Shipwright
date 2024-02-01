@@ -9,7 +9,14 @@
 // This should probably go in a less rando-specific location
 // but the best location will probably be in the modding engine
 // which doesn't exist yet.
-typedef enum { MOD_NONE, MOD_RANDOMIZER } ModIndex;
+typedef enum {
+    MOD_NONE,
+    MOD_RANDOMIZER
+} ModIndex;
+typedef enum {
+    TABLE_VANILLA = MOD_NONE,
+    TABLE_RANDOMIZER = MOD_RANDOMIZER
+} TableIndex;
 
 typedef struct {
     char tex[512];
@@ -19,6 +26,16 @@ typedef struct {
     uint8_t im_siz;
     uint8_t id;
 } Sprite;
+
+// Check tracker check visibility categories
+typedef enum {
+    RCSHOW_UNCHECKED,
+    RCSHOW_SEEN,
+    RCSHOW_IDENTIFIED,
+    RCSHOW_SCUMMED,
+    RCSHOW_COLLECTED,
+    RCSHOW_SAVED,
+} RandomizerCheckStatus;
 
 typedef enum {
     HINT_TYPE_TRIAL,
@@ -211,6 +228,7 @@ typedef enum {
     RC_MARKET_BOMBCHU_SHOP_ITEM_7,
     RC_MARKET_BOMBCHU_SHOP_ITEM_8,
     RC_TOT_LIGHT_ARROWS_CUTSCENE,
+    RC_TOT_MASTER_SWORD,
     RC_HC_MALON_EGG,
     RC_HC_ZELDAS_LETTER,
     RC_HC_GREAT_FAIRY_REWARD,
@@ -1113,6 +1131,7 @@ typedef enum {
 typedef enum {
     RG_NONE,
     RG_KOKIRI_SWORD,
+    RG_MASTER_SWORD,
     RG_GIANTS_KNIFE,
     RG_BIGGORON_SWORD,
     RG_DEKU_SHIELD,
@@ -1350,6 +1369,7 @@ typedef enum {
     RSK_STARTING_NOCTURNE_OF_SHADOW, 
     RSK_STARTING_PRELUDE_OF_LIGHT,
     RSK_SHUFFLE_KOKIRI_SWORD,
+    RSK_SHUFFLE_MASTER_SWORD,
     RSK_STARTING_MAPS_COMPASSES,
     RSK_SHUFFLE_DUNGEON_REWARDS,
     RSK_SHUFFLE_SONGS,
@@ -1460,6 +1480,13 @@ typedef enum {
     RSK_TRIFORCE_HUNT_PIECES_REQUIRED,
     RSK_MAX
 } RandomizerSettingKey;
+
+typedef struct {
+    RandomizerCheckStatus status;
+    uint16_t skipped;
+    int16_t price;
+    uint16_t hintItem;
+} RandomizerCheckTrackerData;
 
 //Generic Settings (any binary option can use this)
 // off/on
@@ -1747,6 +1774,7 @@ typedef enum {
     RO_LOGIC_GLITCHLESS,
     //RO_LOGIC_GLITCHED,
     RO_LOGIC_NO_LOGIC,
+    RO_LOGIC_VANILLA,
 } RandoOptionLogic;
 
 // MQ Dungeons

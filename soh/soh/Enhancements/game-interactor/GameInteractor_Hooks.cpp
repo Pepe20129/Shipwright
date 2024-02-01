@@ -58,6 +58,10 @@ void GameInteractor_ExecuteOnOcarinaSongAction() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnOcarinaSongAction>();
 }
 
+void GameInteractor_ExecuteOnShopSlotChangeHooks(uint8_t cursorIndex, int16_t price) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnShopSlotChange>(cursorIndex, price);
+}
+
 void GameInteractor_ExecuteOnActorInit(void* actor) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorInit>(actor);
 }
@@ -176,4 +180,10 @@ void GameInteractor_ExecuteOnUpdateFileNameSelection(int16_t charCode) {
 
 void GameInteractor_ExecuteOnSetGameLanguage() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSetGameLanguage>();
+}
+
+// MARK: - System
+
+void GameInteractor_RegisterOnAssetAltChange(void (*fn)(void)) {
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnAssetAltChange>(fn);
 }

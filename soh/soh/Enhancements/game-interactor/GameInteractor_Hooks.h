@@ -24,6 +24,7 @@ void GameInteractor_ExecuteOnActorKill(void* actor);
 void GameInteractor_ExecuteOnEnemyDefeat(void* actor);
 void GameInteractor_ExecuteOnPlayerBonk();
 void GameInteractor_ExecuteOnOcarinaSongAction();
+void GameInteractor_ExecuteOnShopSlotChangeHooks(uint8_t cursorIndex, int16_t price);
 void GameInteractor_ExecuteOnPlayDestroy();
 void GameInteractor_ExecuteOnPlayDrawEnd();
 
@@ -55,6 +56,10 @@ void GameInteractor_ExecuteOnUpdateFileNameSelection(int16_t charCode);
 
 // MARK: - Game
 void GameInteractor_ExecuteOnSetGameLanguage();
+
+// MARK: - System
+void GameInteractor_RegisterOnAssetAltChange(void (*fn)(void));
+
 #ifdef __cplusplus
 }
 #endif
