@@ -120,11 +120,11 @@ void Pit_SetEquipment(uint8_t linkAge) {
     if (linkAge == LINK_AGE_CHILD) {
         gSaveContext.equips.buttonItems[0] = ITEM_SWORD_KOKIRI;
         gSaveContext.inventory.equipment |= 1 << 0; // Kokiri Sword
-        Inventory_ChangeEquipment(EQUIP_SWORD, PLAYER_SWORD_KOKIRI);
+        Inventory_ChangeEquipment(EQUIP_TYPE_SWORD, PLAYER_SWORD_KOKIRI);
     } else {
         gSaveContext.equips.buttonItems[0] = ITEM_SWORD_MASTER;
         gSaveContext.inventory.equipment |= 1 << 1; // Master Sword
-        Inventory_ChangeEquipment(EQUIP_SWORD, PLAYER_SWORD_MASTER);
+        Inventory_ChangeEquipment(EQUIP_TYPE_SWORD, PLAYER_SWORD_MASTER);
     }
 }
 

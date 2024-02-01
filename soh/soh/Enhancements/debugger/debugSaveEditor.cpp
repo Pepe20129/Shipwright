@@ -1290,7 +1290,7 @@ void DrawEquipmentTab() {
         "Giant (500)",
     };
     // only display Tycoon wallet if you're in a save file that would allow it.
-    if ((IS_RANDO || gSaveContext.isPitOf100Trials) && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) > RO_SHOPSANITY_ZERO_ITEMS) {
+    if ((IS_RANDO || IS_PIT) && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) > RO_SHOPSANITY_ZERO_ITEMS) {
         const std::string walletName = "Tycoon (999)";
         walletNamesImpl.push_back(walletName);
     }
