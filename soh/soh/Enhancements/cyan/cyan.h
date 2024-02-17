@@ -47,10 +47,6 @@ extern u8 gCyanItemSlots[86];
 
 extern u8 gCyanAmmoItems[16];
 
-extern s16 sCyanAmmoVtxOffset[15];
-
-extern s16 cyan_D_8082B11C[4];
-
 #define BOW_SLOT_ITEM_COUNT 4
 
 extern u8 gCyanBowSlotItems[BOW_SLOT_ITEM_COUNT];

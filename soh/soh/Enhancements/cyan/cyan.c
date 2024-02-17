@@ -206,36 +206,11 @@ u8 gCyanItemSlots[86] = {
     CYAN_SLOT_NONE,      // ITEM_GIANTS_KNIFE
 };
 
+//used for the save editor
 u8 gCyanAmmoItems[16] = {
     ITEM_NONE, ITEM_NONE,    ITEM_NONE, ITEM_NONE, ITEM_NONE, ITEM_NONE,
     ITEM_NONE, ITEM_NUT,     ITEM_BOMB, ITEM_BOW,  ITEM_NONE, ITEM_NONE,
     ITEM_NONE, ITEM_BOMBCHU, ITEM_NONE, ITEM_NONE,
-};
-
-s16 sCyanAmmoVtxOffset[15] = {
-    99, //CYAN_SLOT_EMPTY_1
-    99, //CYAN_SLOT_EMPTY_2
-    99, //CYAN_SLOT_EMPTY_3
-    99, //CYAN_SLOT_EMPTY_4
-    99, //CYAN_SLOT_EMPTY_5
-    99, //CYAN_SLOT_EMPTY_6
-    99, //CYAN_SLOT_EMPTY_7
-    0,  //CYAN_SLOT_NUT
-    2,  //CYAN_SLOT_BOMB
-    4,  //CYAN_SLOT_BOW
-    99, //CYAN_SLOT_OCARINA
-    99, //CYAN_SLOT_EMPTY_8
-    99, //CYAN_SLOT_EMPTY_9
-    6,  //CYAN_SLOT_BOMBCHU
-    99, //CYAN_SLOT_HOOKSHOT
-};
-
-//the slots with ammo counts multiplied by 4
-s16 cyan_D_8082B11C[4] = {
-    CYAN_SLOT_NUT * 4,
-    CYAN_SLOT_BOMB * 4,
-    CYAN_SLOT_BOW * 4,
-    CYAN_SLOT_BOMBCHU * 4,
 };
 
 u8 gCyanBowSlotItems[BOW_SLOT_ITEM_COUNT] = {
