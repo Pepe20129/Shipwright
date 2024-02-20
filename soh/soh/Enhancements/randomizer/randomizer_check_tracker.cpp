@@ -505,6 +505,10 @@ void CheckTrackerLoadGame(int32_t fileNum) {
 }
 
 void CheckTrackerShopSlotChange(uint8_t cursorSlot, int16_t basePrice) {
+    if (IS_PIT) { // pit of 100 trials shop is not tracked
+        return;
+    }
+
     if (gPlayState->sceneNum == SCENE_HAPPY_MASK_SHOP) { // Happy Mask Shop is not used in rando, so is not tracked
         return;
     }
