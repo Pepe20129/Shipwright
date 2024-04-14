@@ -207,6 +207,7 @@ public:
     DEFINE_HOOK(OnShopSlotChange, void(uint8_t cursorIndex, int16_t price));
     DEFINE_HOOK(OnActorInit, void(void* actor));
     DEFINE_HOOK(OnActorUpdate, void(void* actor));
+    DEFINE_HOOK(OnActorDraw, void(void* actor));
     DEFINE_HOOK(OnActorKill, void(void* actor));
     DEFINE_HOOK(OnEnemyDefeat, void(void* actor));
     DEFINE_HOOK(OnPlayerBonk, void());

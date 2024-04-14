@@ -70,6 +70,10 @@ void GameInteractor_ExecuteOnActorUpdate(void* actor) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorUpdate>(actor);
 }
 
+void GameInteractor_ExecuteOnActorDraw(void* actor) {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorDraw>(actor);
+}
+
 void GameInteractor_ExecuteOnActorKill(void* actor) {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnActorKill>(actor);
 }

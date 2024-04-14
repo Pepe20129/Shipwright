@@ -1382,6 +1382,12 @@ void DrawEnhancementsMenu() {
                 "- Each Heart Container or full Heart Piece reduces Links hearts by 1.\n"
                 "- Can be enabled retroactively after a File has already started.");
 
+            UIWidgets::PaddedEnhancementCheckbox("Enable Shiny Enemies", "gShinyEnabled", true, false);
+            UIWidgets::Tooltip("Allows enemies to be shiny.\nShiny enemies are 25% bigger and have 4 times the health but drop a gold rupee upon death");
+
+            UIWidgets::PaddedEnhancementSliderInt("Shiny Chance: %d", "##ShinyChance", "gShinyChance", 1, 8192, "", 8192, true, true, false, false, "");
+            UIWidgets::Tooltip("The chance for an enemy to be shiny is 1 / Shiny Chance");
+
             ImGui::EndMenu();
         }
 
