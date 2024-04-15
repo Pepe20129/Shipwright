@@ -9,6 +9,7 @@
 #include "soh/Enhancements/gameplaystats.h"
 #include "soh/Enhancements/randomizer/randomizer_entrance.h"
 #include "soh/Enhancements/boss-rush/BossRushTypes.h"
+#include "soh/Enhancements/modded-items/ModdedItems.h"
 
 typedef enum {
     /* 0x0 */ MAGIC_STATE_IDLE, // Regular gameplay
@@ -40,6 +41,7 @@ typedef struct {
     /* 0x00 */ u8 buttonItems[8]; // SOH [Enhancements] Changed from 4 to 8 to support Dpad equips
     /* 0x04 */ u8 cButtonSlots[7]; // SOH [Enhancements] Changed from 3 to 7 to support Dpad equips
     /* 0x08 */ u16 equipment; // a mask where each nibble corresponds to a type of equipment `EquipmentType`, and each nibble is a piece `EquipValue*`
+    /*      */ ModdedItem buttonModdedItems[8]; // SOH [Modded Items] See ITEM_MODDED_ITEM_MARKER in z64item.h
 } ItemEquips; // size = 0x0A
 
 typedef struct {
@@ -52,6 +54,7 @@ typedef struct {
     /* 0x48 */ s8 dungeonKeys[19];
     /* 0x5B */ s8 defenseHearts;
     /* 0x5C */ s16 gsTokens;
+    /*      */ ModdedItem moddedItems[24]; // SOH [Modded Items] See ITEM_MODDED_ITEM_MARKER in z64item.h
 } Inventory; // size = 0x5E
 
 typedef struct {

@@ -7,9 +7,11 @@
 #include "soh/Enhancements/enhancementTypes.h"
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/Enhancements/cosmetics/authenticGfxPatches.h"
+#include "soh/Enhancements/modded-items/ModdedItems.h"
 #include <soh/Enhancements/item-tables/ItemTableManager.h>
 #include "soh/Enhancements/nametag.h"
 
+#include "src/overlays/actors/ovl_En_Arrow/z_en_arrow.h"
 #include "src/overlays/actors/ovl_En_Bb/z_en_bb.h"
 #include "src/overlays/actors/ovl_En_Dekubaba/z_en_dekubaba.h"
 #include "src/overlays/actors/ovl_En_Mb/z_en_mb.h"
@@ -27,6 +29,12 @@
 #include "objects/object_link_boy/object_link_boy.h"
 #include "objects/object_link_child/object_link_child.h"
 
+#include "textures/icon_item_static/icon_item_static.h"
+#include "textures/icon_item_24_static/icon_item_24_static.h"
+#include "textures/parameter_static/parameter_static.h"
+#include "textures/item_name_static/item_name_static.h"
+#include "objects/gameplay_keep/gameplay_keep.h"
+
 extern "C" {
 #include <z64.h>
 #include "align_asset_macro.h"
@@ -42,6 +50,12 @@ extern SaveContext gSaveContext;
 extern PlayState* gPlayState;
 extern void Overlay_DisplayText(float duration, const char* text);
 uint32_t ResourceMgr_IsSceneMasterQuest(s16 sceneNum);
+void func_80838940(Player* player, LinkAnimationHeader* anim, f32 arg2, PlayState* play, u16 sfxId);
+void func_8083A098(Player* player, LinkAnimationHeader* anim, PlayState* play);
+void func_80832698(Player* player, u16 sfxId);
+s32 func_8083721C(Player* player);
+s32 Player_SetupAction(PlayState* play, Player* player, PlayerActionFunc actionFunc, s32 flags);
+void Player_AnimPlayOnce(PlayState* play, Player* player, LinkAnimationHeader* anim);
 }
 
 // GreyScaleEndDlist
@@ -1394,6 +1408,20 @@ void RegisterPauseMenuHooks() {
     });
 }
 
+void Player_ThrowDekuNutFunctionCopy(Player* player, PlayState* play) {
+    if (LinkAnimation_Update(play, &player->skelAnime)) {
+        func_8083A098(player, (LinkAnimationHeader*)(&gPlayerAnim_link_normal_light_bom_end), play);
+    } else if (LinkAnimation_OnFrame(&player->skelAnime, 3.0f)) {
+        Inventory_ChangeAmmo(ITEM_NUT, -1);
+        Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ARROW, player->bodyPartsPos[PLAYER_BODYPART_R_HAND].x,
+                    player->bodyPartsPos[PLAYER_BODYPART_R_HAND].y, player->bodyPartsPos[PLAYER_BODYPART_R_HAND].z, 4000,
+                    player->actor.shape.rot.y, 0, ARROW_NUT, true);
+        func_80832698(player, NA_SE_VO_LI_SWORD_N);
+    }
+
+    func_8083721C(player);
+}
+
 void InitMods() {
     RegisterTTS();
     RegisterInfiniteMoney();
@@ -1433,4 +1461,94 @@ void InitMods() {
     RegisterPatchHandHandler();
     RegisterHurtContainerModeHandler();
     RegisterPauseMenuHooks();
+
+    //for testing purposes
+    ModdedItems_RegisterModdedItem(
+        2,
+        0,
+        [](PlayState* play, Player* player, ModdedItem moddedItem) {
+            player->linearVelocity = 5.0f;
+            player->actor.velocity.y = 8.0f;
+            player->actor.world.rot.y = player->currentYaw = player->actor.shape.rot.y;
+
+            func_80838940(player, (LinkAnimationHeader*)gPlayerAnim_link_fighter_backturn_jump, !(2 & 1) ? 5.8f : 3.5f, play, /* NA_SE_VO_LI_SWORD_N*/ 0);
+
+            Vec3f effectsPos = player->actor.home.pos;
+            effectsPos.y += 3;
+            f32 effectsScale = 1;
+            if (!gSaveContext.linkAge) {
+                effectsScale = 1.5f;
+            }
+            EffectSsGRipple_Spawn(play, &effectsPos, 200 * effectsScale, 300 * effectsScale, 1);
+            EffectSsGSplash_Spawn(play, &effectsPos, NULL, NULL, 0, 150 * effectsScale);
+
+            player->stateFlags2 &= ~(PLAYER_STATE2_HOPPING);
+
+            Player_PlaySfx(&player->actor, NA_SE_PL_SKIP);
+        },
+        gItemIconGiantsWalletTex,
+        gBombItemNameENGTex,
+        "Roc's Feather",
+        []() {
+            return 0;
+        },
+        []() {
+            return -1;
+        },
+        9
+    );
+
+    ModdedItems_RegisterModdedItem(
+        2,
+        1,
+        [](PlayState* play, Player* player, ModdedItem moddedItem) {
+            if (Magic_RequestChange(play, 0, 3)) {
+                if (play->actorCtx.lensActive) {
+                    Actor_DisableLens(play);
+                } else {
+                    play->actorCtx.lensActive = true;
+                }
+                func_80078884((play->actorCtx.lensActive) ? NA_SE_SY_GLASSMODE_ON : NA_SE_SY_GLASSMODE_OFF);
+            } else {
+                func_80078884(NA_SE_SY_ERROR);
+            }
+        },
+        gItemIconLensOfTruthTex,
+        gLensItemNameENGTex,
+        "Lens Copy",
+        []() {
+            return 0;
+        },
+        []() {
+            return -1;
+        },
+        0
+    );
+
+    ModdedItems_RegisterModdedItem(
+        2,
+        2,
+        [](PlayState* play, Player* player, ModdedItem moddedItem) {
+            if (AMMO(ITEM_NUT) != 0) {
+                if ((play->roomCtx.curRoom.behaviorType1 != ROOM_BEHAVIOR_TYPE1_2) && (player->actor.bgCheckFlags & 1) &&
+                    (AMMO(ITEM_NUT) != 0)) {
+                    Player_SetupAction(play, player, Player_ThrowDekuNutFunctionCopy, 0);
+                    Player_AnimPlayOnce(play, player, (LinkAnimationHeader*)(&gPlayerAnim_link_normal_light_bom));
+                    player->unk_6AD = 0;
+                }
+            } else {
+                func_80078884(NA_SE_SY_ERROR);
+            }
+        },
+        gItemIconDekuNutTex,
+        gDekuNutItemNameENGTex,
+        "Deku Nuts Copy",
+        []() {
+            return AMMO(ITEM_NUT);
+        },
+        []() {
+            return CUR_CAPACITY(UPG_NUTS);
+        },
+        1
+    );
 }

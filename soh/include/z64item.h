@@ -306,6 +306,10 @@ typedef enum {
     /* 0x99 */ ITEM_STICK_UPGRADE_30,
     /* 0x9A */ ITEM_NUT_UPGRADE_30,
     /* 0x9B */ ITEM_NUT_UPGRADE_40,
+    /* 0xCA */ ITEM_MODDED_ITEM_MARKER = 0xCA, // SOH [Modded Items] This item id is a marker that
+                                               // signifies that the modded item data should be used
+                                               // instead of the normal one, this was done to avoid
+                                               // needing to change vanilla code as much as possible
     /* 0xFC */ ITEM_LAST_USED = 0xFC,
     /* 0xFE */ ITEM_NONE_FE = 0xFE,
     /* 0xFF */ ITEM_NONE = 0xFF

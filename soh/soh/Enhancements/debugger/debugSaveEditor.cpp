@@ -1,5 +1,6 @@
 #include "debugSaveEditor.h"
 #include "../../util.h"
+#include "../../ImGuiUtils.h"
 #include "../../OTRGlobals.h"
 #include "../../UIWidgets.hpp"
 
@@ -10,6 +11,7 @@
 #include <string>
 #include <libultraship/bridge.h>
 #include <libultraship/libultraship.h>
+#include "soh/Enhancements/modded-items/ModdedItems.h"
 #include "soh_assets.h"
 
 extern "C" {
@@ -24,130 +26,6 @@ extern PlayState* gPlayState;
 #include "textures/icon_item_24_static/icon_item_24_static.h"
 #include "textures/parameter_static/parameter_static.h"
 }
-
-typedef struct {
-    uint32_t id;
-    std::string name;
-    std::string nameFaded;
-    std::string texturePath;
-} ItemMapEntry;
-
-#define ITEM_MAP_ENTRY(id)                              \
-    {                                                   \
-        id, {                                           \
-            id, #id, #id "_Faded", static_cast<char*>(gItemIcons[id]) \
-        }                                               \
-    }
-
-// Maps items ids to info for use in ImGui
-std::map<uint32_t, ItemMapEntry> itemMapping = {
-    ITEM_MAP_ENTRY(ITEM_STICK),
-    ITEM_MAP_ENTRY(ITEM_NUT),
-    ITEM_MAP_ENTRY(ITEM_BOMB),
-    ITEM_MAP_ENTRY(ITEM_BOW),
-    ITEM_MAP_ENTRY(ITEM_ARROW_FIRE),
-    ITEM_MAP_ENTRY(ITEM_DINS_FIRE),
-    ITEM_MAP_ENTRY(ITEM_SLINGSHOT),
-    ITEM_MAP_ENTRY(ITEM_OCARINA_FAIRY),
-    ITEM_MAP_ENTRY(ITEM_OCARINA_TIME),
-    ITEM_MAP_ENTRY(ITEM_BOMBCHU),
-    ITEM_MAP_ENTRY(ITEM_HOOKSHOT),
-    ITEM_MAP_ENTRY(ITEM_LONGSHOT),
-    ITEM_MAP_ENTRY(ITEM_ARROW_ICE),
-    ITEM_MAP_ENTRY(ITEM_FARORES_WIND),
-    ITEM_MAP_ENTRY(ITEM_BOOMERANG),
-    ITEM_MAP_ENTRY(ITEM_LENS),
-    ITEM_MAP_ENTRY(ITEM_BEAN),
-    ITEM_MAP_ENTRY(ITEM_HAMMER),
-    ITEM_MAP_ENTRY(ITEM_ARROW_LIGHT),
-    ITEM_MAP_ENTRY(ITEM_NAYRUS_LOVE),
-    ITEM_MAP_ENTRY(ITEM_BOTTLE),
-    ITEM_MAP_ENTRY(ITEM_POTION_RED),
-    ITEM_MAP_ENTRY(ITEM_POTION_GREEN),
-    ITEM_MAP_ENTRY(ITEM_POTION_BLUE),
-    ITEM_MAP_ENTRY(ITEM_FAIRY),
-    ITEM_MAP_ENTRY(ITEM_FISH),
-    ITEM_MAP_ENTRY(ITEM_MILK_BOTTLE),
-    ITEM_MAP_ENTRY(ITEM_LETTER_RUTO),
-    ITEM_MAP_ENTRY(ITEM_BLUE_FIRE),
-    ITEM_MAP_ENTRY(ITEM_BUG),
-    ITEM_MAP_ENTRY(ITEM_BIG_POE),
-    ITEM_MAP_ENTRY(ITEM_MILK_HALF),
-    ITEM_MAP_ENTRY(ITEM_POE),
-    ITEM_MAP_ENTRY(ITEM_WEIRD_EGG),
-    ITEM_MAP_ENTRY(ITEM_CHICKEN),
-    ITEM_MAP_ENTRY(ITEM_LETTER_ZELDA),
-    ITEM_MAP_ENTRY(ITEM_MASK_KEATON),
-    ITEM_MAP_ENTRY(ITEM_MASK_SKULL),
-    ITEM_MAP_ENTRY(ITEM_MASK_SPOOKY),
-    ITEM_MAP_ENTRY(ITEM_MASK_BUNNY),
-    ITEM_MAP_ENTRY(ITEM_MASK_GORON),
-    ITEM_MAP_ENTRY(ITEM_MASK_ZORA),
-    ITEM_MAP_ENTRY(ITEM_MASK_GERUDO),
-    ITEM_MAP_ENTRY(ITEM_MASK_TRUTH),
-    ITEM_MAP_ENTRY(ITEM_SOLD_OUT),
-    ITEM_MAP_ENTRY(ITEM_POCKET_EGG),
-    ITEM_MAP_ENTRY(ITEM_POCKET_CUCCO),
-    ITEM_MAP_ENTRY(ITEM_COJIRO),
-    ITEM_MAP_ENTRY(ITEM_ODD_MUSHROOM),
-    ITEM_MAP_ENTRY(ITEM_ODD_POTION),
-    ITEM_MAP_ENTRY(ITEM_SAW),
-    ITEM_MAP_ENTRY(ITEM_SWORD_BROKEN),
-    ITEM_MAP_ENTRY(ITEM_PRESCRIPTION),
-    ITEM_MAP_ENTRY(ITEM_FROG),
-    ITEM_MAP_ENTRY(ITEM_EYEDROPS),
-    ITEM_MAP_ENTRY(ITEM_CLAIM_CHECK),
-    ITEM_MAP_ENTRY(ITEM_BOW_ARROW_FIRE),
-    ITEM_MAP_ENTRY(ITEM_BOW_ARROW_ICE),
-    ITEM_MAP_ENTRY(ITEM_BOW_ARROW_LIGHT),
-    ITEM_MAP_ENTRY(ITEM_SWORD_KOKIRI),
-    ITEM_MAP_ENTRY(ITEM_SWORD_MASTER),
-    ITEM_MAP_ENTRY(ITEM_SWORD_BGS),
-    ITEM_MAP_ENTRY(ITEM_SHIELD_DEKU),
-    ITEM_MAP_ENTRY(ITEM_SHIELD_HYLIAN),
-    ITEM_MAP_ENTRY(ITEM_SHIELD_MIRROR),
-    ITEM_MAP_ENTRY(ITEM_TUNIC_KOKIRI),
-    ITEM_MAP_ENTRY(ITEM_TUNIC_GORON),
-    ITEM_MAP_ENTRY(ITEM_TUNIC_ZORA),
-    ITEM_MAP_ENTRY(ITEM_BOOTS_KOKIRI),
-    ITEM_MAP_ENTRY(ITEM_BOOTS_IRON),
-    ITEM_MAP_ENTRY(ITEM_BOOTS_HOVER),
-    ITEM_MAP_ENTRY(ITEM_BULLET_BAG_30),
-    ITEM_MAP_ENTRY(ITEM_BULLET_BAG_40),
-    ITEM_MAP_ENTRY(ITEM_BULLET_BAG_50),
-    ITEM_MAP_ENTRY(ITEM_QUIVER_30),
-    ITEM_MAP_ENTRY(ITEM_QUIVER_40),
-    ITEM_MAP_ENTRY(ITEM_QUIVER_50),
-    ITEM_MAP_ENTRY(ITEM_BOMB_BAG_20),
-    ITEM_MAP_ENTRY(ITEM_BOMB_BAG_30),
-    ITEM_MAP_ENTRY(ITEM_BOMB_BAG_40),
-    ITEM_MAP_ENTRY(ITEM_BRACELET),
-    ITEM_MAP_ENTRY(ITEM_GAUNTLETS_SILVER),
-    ITEM_MAP_ENTRY(ITEM_GAUNTLETS_GOLD),
-    ITEM_MAP_ENTRY(ITEM_SCALE_SILVER),
-    ITEM_MAP_ENTRY(ITEM_SCALE_GOLDEN),
-    ITEM_MAP_ENTRY(ITEM_SWORD_KNIFE),
-    ITEM_MAP_ENTRY(ITEM_WALLET_ADULT),
-    ITEM_MAP_ENTRY(ITEM_WALLET_GIANT),
-    ITEM_MAP_ENTRY(ITEM_SEEDS),
-    ITEM_MAP_ENTRY(ITEM_FISHING_POLE),
-    ITEM_MAP_ENTRY(ITEM_KEY_BOSS),
-    ITEM_MAP_ENTRY(ITEM_COMPASS),
-    ITEM_MAP_ENTRY(ITEM_DUNGEON_MAP),
-    ITEM_MAP_ENTRY(ITEM_KEY_SMALL),
-    ITEM_MAP_ENTRY(ITEM_HEART_CONTAINER),
-    ITEM_MAP_ENTRY(ITEM_HEART_PIECE),
-    ITEM_MAP_ENTRY(ITEM_MAGIC_SMALL),
-    ITEM_MAP_ENTRY(ITEM_MAGIC_LARGE)
-};
-
-std::map<uint32_t, ItemMapEntry> gregMapping = {
-    {ITEM_RUPEE_GREEN, {ITEM_RUPEE_GREEN, "ITEM_RUPEE_GREEN", "ITEM_RUPEE_GREEN_Faded", gRupeeCounterIconTex}}
-};
-
-std::map<uint32_t, ItemMapEntry> triforcePieceMapping = {
-    {RG_TRIFORCE_PIECE, {RG_TRIFORCE_PIECE, "RG_TRIFORCE_PIECE", "RG_TRIFORCE_PIECE_Faded", gTriforcePieceTex}}
-};
 
 // Maps entries in the GS flag array to the area name it represents
 std::vector<std::string> gsMapping = {
@@ -185,85 +63,6 @@ u8 gAllAmmoItems[] = {
     ITEM_SLINGSHOT, ITEM_OCARINA_TIME, ITEM_BOMBCHU, ITEM_LONGSHOT, ITEM_ARROW_ICE,  ITEM_FARORES_WIND,
     ITEM_BOOMERANG, ITEM_LENS,         ITEM_BEAN,    ITEM_HAMMER,
 };
-
-typedef struct {
-    uint32_t id;
-    std::string name;
-    std::string nameFaded;
-    std::string texturePath;
-} QuestMapEntry;
-
-#define QUEST_MAP_ENTRY(id, tex)                              \
-    {                                                   \
-        id, {                                           \
-            id, #id, #id "_Faded", tex \
-        }                                               \
-    }
-
-// Maps quest items ids to info for use in ImGui
-std::map<uint32_t, QuestMapEntry> questMapping = {
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_FOREST, dgQuestIconMedallionForestTex),
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_FIRE, dgQuestIconMedallionFireTex),
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_WATER, dgQuestIconMedallionWaterTex),
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_SPIRIT, dgQuestIconMedallionSpiritTex),
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_SHADOW, dgQuestIconMedallionShadowTex),
-    QUEST_MAP_ENTRY(QUEST_MEDALLION_LIGHT, dgQuestIconMedallionLightTex),
-    QUEST_MAP_ENTRY(QUEST_KOKIRI_EMERALD, dgQuestIconKokiriEmeraldTex),
-    QUEST_MAP_ENTRY(QUEST_GORON_RUBY, dgQuestIconGoronRubyTex),
-    QUEST_MAP_ENTRY(QUEST_ZORA_SAPPHIRE, dgQuestIconZoraSapphireTex),
-    QUEST_MAP_ENTRY(QUEST_STONE_OF_AGONY, dgQuestIconStoneOfAgonyTex),
-    QUEST_MAP_ENTRY(QUEST_GERUDO_CARD, dgQuestIconGerudosCardTex),
-    QUEST_MAP_ENTRY(QUEST_SKULL_TOKEN, dgQuestIconGoldSkulltulaTex),
-};
-
-typedef struct {
-    uint32_t id;
-    std::string name;
-    std::string nameFaded;
-    ImVec4 color;
-} SongMapEntry;
-
-#define SONG_MAP_ENTRY(id, r, g, b)       \
-    {                                  \
-            id, #id, #id "_Faded", ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f) \
-    }
-
-// Maps song ids to info for use in ImGui
-std::array<SongMapEntry, 12> songMapping = { {
-    SONG_MAP_ENTRY(QUEST_SONG_LULLABY,  224, 107, 255),
-    SONG_MAP_ENTRY(QUEST_SONG_EPONA,    255, 195, 60),
-    SONG_MAP_ENTRY(QUEST_SONG_SARIA,    127, 255, 137),
-    SONG_MAP_ENTRY(QUEST_SONG_SUN,      255, 255, 60),
-    SONG_MAP_ENTRY(QUEST_SONG_TIME,     119, 236, 255),
-    SONG_MAP_ENTRY(QUEST_SONG_STORMS,   165, 165, 165),
-    SONG_MAP_ENTRY(QUEST_SONG_MINUET,   150, 255, 100),
-    SONG_MAP_ENTRY(QUEST_SONG_BOLERO,   255, 80,  40),
-    SONG_MAP_ENTRY(QUEST_SONG_SERENADE, 100, 150, 255),
-    SONG_MAP_ENTRY(QUEST_SONG_REQUIEM,  255, 160, 0),
-    SONG_MAP_ENTRY(QUEST_SONG_NOCTURNE, 255, 100, 255),
-    SONG_MAP_ENTRY(QUEST_SONG_PRELUDE,  255, 240, 100),
-} };
-
-#define VANILLA_SONG_MAP_ENTRY(id, r, g, b)       \
-    {                                  \
-            id, #id "_Vanilla", #id "_Vanilla_Faded", ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f) \
-    }
-
-// Maps song ids to info for use in ImGui
-std::array<SongMapEntry, 12> vanillaSongMapping = { {
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_LULLABY,  255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_EPONA,    255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_SARIA,    255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_SUN,      255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_TIME,     255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_STORMS,   255, 255, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_MINUET,   150, 255, 100),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_BOLERO,   255, 80,  40),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_SERENADE, 100, 150, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_REQUIEM,  255, 160, 0),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_NOCTURNE, 255, 100, 255),
-    VANILLA_SONG_MAP_ENTRY(QUEST_SONG_PRELUDE,  255, 240, 100),
-} };
 
 // Encapsulates what is drawn by the passed-in function within a border
 template<typename T>
@@ -635,6 +434,7 @@ void DrawBGSItemFlag(uint8_t itemID) {
 
 void DrawInventoryTab() {
     static bool restrictToValid = true;
+    static int modId = 0;
 
     ImGui::Checkbox("Restrict to valid items", &restrictToValid);
     UIWidgets::InsertHelpHoverText("Restricts items and ammo to only what is possible to legally acquire in-game");
@@ -654,7 +454,23 @@ void DrawInventoryTab() {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1, 1, 1, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
             uint8_t item = gSaveContext.inventory.items[index];
-            if (item != ITEM_NONE) {
+            if (item == ITEM_MODDED_ITEM_MARKER) {
+                ModdedItem moddedItem = gSaveContext.inventory.moddedItems[index];
+                auto entry = moddedItemMapping.find(moddedItem);
+                if (entry == moddedItemMapping.end()) {
+                    if (ImGui::Button("##itemNoneError", ImVec2(32.0f, 32.0f))) {
+                        selectedIndex = index;
+                        ImGui::OpenPopup(itemPopupPicker);
+                    }
+                } else {
+                    const ModdedItemMapEntry& slotEntry = entry->second;
+                    if (ImGui::ImageButton(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f), ImVec2(0, 0),
+                                           ImVec2(1, 1), 0)) {
+                        selectedIndex = index;
+                        ImGui::OpenPopup(itemPopupPicker);
+                    }
+                }
+            } else if (item != ITEM_NONE) {
                 const ItemMapEntry& slotEntry = itemMapping.find(item)->second;
                 if (ImGui::ImageButton(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f), ImVec2(0, 0),
                                        ImVec2(1, 1), 0)) {
@@ -672,6 +488,12 @@ void DrawInventoryTab() {
 
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
             if (ImGui::BeginPopup(itemPopupPicker)) {
+                if (!restrictToValid) {
+                    ImU16 one = 1;
+                    ImGui::InputScalar("Mod Id", ImGuiDataType_U8, &modId, &one);
+                    UIWidgets::InsertHelpHoverText("Changes the modId of the items that you can place in the item slots");
+                    ImGui::NewLine();
+                }
                 if (ImGui::Button("##itemNonePicker", ImVec2(32.0f, 32.0f))) {
                     gSaveContext.inventory.items[selectedIndex] = ITEM_NONE;
                     if (selectedIndex == SLOT_TRADE_ADULT) {
@@ -682,6 +504,7 @@ void DrawInventoryTab() {
                 UIWidgets::SetLastItemHoverText("None");
 
                 std::vector<ItemMapEntry> possibleItems;
+                std::vector<ModdedItemMapEntry> possibleModdedItems;
                 if (restrictToValid) {
                     // Scan gItemSlots to find legal items for this slot. Bottles are a special case
                     for (int slotIndex = 0; slotIndex < 56; slotIndex++) {
@@ -697,27 +520,51 @@ void DrawInventoryTab() {
                     for (const auto& entry : itemMapping) {
                         possibleItems.push_back(entry.second);
                     }
+
+                    for (const auto& entry : moddedItemMapping) {
+                        if (entry.second.moddedItem.modId != modId) {
+                            continue;
+                        }
+                        possibleModdedItems.push_back(entry.second);
+                    }
                 }
 
-                for (int32_t pickerIndex = 0; pickerIndex < possibleItems.size(); pickerIndex++) {
-                    if (((pickerIndex + 1) % 8) != 0) {
-                        ImGui::SameLine();
-                    }
-                    const ItemMapEntry& slotEntry = possibleItems[pickerIndex];
-                    if (ImGui::ImageButton(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f),
-                                           ImVec2(0, 0), ImVec2(1, 1), 0)) {
-                        gSaveContext.inventory.items[selectedIndex] = slotEntry.id;
-                        // Set adult trade item flag if you're playing adult trade shuffle in rando  
-                        if (IS_RANDO &&
-                            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ADULT_TRADE) &&
-                            selectedIndex == SLOT_TRADE_ADULT &&
-                            slotEntry.id >= ITEM_POCKET_EGG && slotEntry.id <= ITEM_CLAIM_CHECK) {
-                            gSaveContext.adultTradeItems |= ADULT_TRADE_FLAG(slotEntry.id);
+                if (modId == 0) {
+                    for (int32_t pickerIndex = 0; pickerIndex < possibleItems.size(); pickerIndex++) {
+                        if (((pickerIndex + 1) % 8) != 0) {
+                            ImGui::SameLine();
                         }
-                        ImGui::CloseCurrentPopup();
+                        const ItemMapEntry& slotEntry = possibleItems[pickerIndex];
+                        if (ImGui::ImageButton(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f),
+                                               ImVec2(0, 0), ImVec2(1, 1), 0)) {
+                            gSaveContext.inventory.items[selectedIndex] = slotEntry.id;
+                            // Set adult trade item flag if you're playing adult trade shuffle in rando
+                            if (IS_RANDO &&
+                                OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ADULT_TRADE) &&
+                                selectedIndex == SLOT_TRADE_ADULT &&
+                                slotEntry.id >= ITEM_POCKET_EGG && slotEntry.id <= ITEM_CLAIM_CHECK) {
+                                gSaveContext.adultTradeItems |= ADULT_TRADE_FLAG(slotEntry.id);
+                            }
+                            ImGui::CloseCurrentPopup();
+                        }
+                        UIWidgets::SetLastItemHoverText(SohUtils::GetItemName(slotEntry.id));
                     }
-                    UIWidgets::SetLastItemHoverText(SohUtils::GetItemName(slotEntry.id));
+                } else {
+                    for (int32_t pickerIndex = 0; pickerIndex < possibleModdedItems.size(); pickerIndex++) {
+                        if (((pickerIndex + 1) % 8) != 0) {
+                            ImGui::SameLine();
+                        }
+                        const ModdedItemMapEntry& slotEntry = possibleModdedItems[pickerIndex];
+                        if (ImGui::ImageButton(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f),
+                                               ImVec2(0, 0), ImVec2(1, 1), 0)) {
+                            gSaveContext.inventory.items[selectedIndex] = slotEntry.moddedItem.itemId;
+                            gSaveContext.inventory.itemModIds[selectedIndex] = slotEntry.moddedItem.modId;
+                            ImGui::CloseCurrentPopup();
+                        }
+                        UIWidgets::SetLastItemHoverText(ModdedItems_GetModdedItemName(slotEntry.moddedItem.modId, slotEntry.moddedItem.itemId));
+                    }
                 }
+                
 
                 ImGui::EndPopup();
             }
@@ -1718,6 +1565,62 @@ void DrawPlayerTab() {
             }
         });
 
+        ImGui::Text("Modded Items");
+        DrawGroupWithBorder([&]() {
+            ImGui::Text("Current C Item Ids");
+            if (ImGui::InputScalar("C Left##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[1].itemId, &one, NULL)) {
+                gSaveContext.equips.buttonItems[1] = ITEM_MODDED_ITEM_MARKER;
+            }
+            ImGui::SameLine();
+            if (ImGui::InputScalar("C Down##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[2].itemId, &one, NULL)) {
+                gSaveContext.equips.buttonItems[2] = ITEM_MODDED_ITEM_MARKER;
+            }
+            ImGui::SameLine();
+            if (ImGui::InputScalar("C Right##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[3].itemId, &one, NULL)) {
+                gSaveContext.equips.buttonItems[3] = ITEM_MODDED_ITEM_MARKER;
+            }
+
+            if (CVarGetInteger("gDpadEquips", 0)) {
+                ImGui::NewLine();
+                ImGui::Text("Current D-pad Equips");
+                if (ImGui::InputScalar("D-pad Up  ##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[4].itemId, &one, NULL)) { // Two spaces at the end for aligning, not elegant but it's working
+                    gSaveContext.equips.buttonItems[4] = ITEM_MODDED_ITEM_MARKER;
+                }
+                ImGui::SameLine();
+                if (ImGui::InputScalar("D-pad Down##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[5].itemIds, &one, NULL)) {
+                    gSaveContext.equips.buttonItems[5] = ITEM_MODDED_ITEM_MARKER;
+                }
+                // Intentionnal to not put everything on the same line, else it's taking too much for lower resolution.
+                if (ImGui::InputScalar("D-pad Left##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[6].itemIds, &one, NULL)) {
+                    gSaveContext.equips.buttonItems[6] = ITEM_MODDED_ITEM_MARKER;
+                }
+                ImGui::SameLine();
+                if (ImGui::InputScalar("D-pad Right##modItem", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[7].itemIds, &one, NULL)) {
+                    gSaveContext.equips.buttonItems[7] = ITEM_MODDED_ITEM_MARKER;
+                }
+            }
+
+
+            ImGui::Text("Current C Mod Ids");
+            ImGui::InputScalar("C Left##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[1].modId, &one, NULL);
+            ImGui::SameLine();
+            ImGui::InputScalar("C Down##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[2].modId, &one, NULL);
+            ImGui::SameLine();
+            ImGui::InputScalar("C Right##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[3].modId, &one, NULL);
+
+            if (CVarGetInteger("gDpadEquips", 0)) {
+                ImGui::NewLine();
+                ImGui::Text("Current D-pad Mod Ids");
+                ImGui::InputScalar("D-pad Up  ##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[4].modId, &one, NULL); // Two spaces at the end for aligning, not elegant but it's working
+                ImGui::SameLine();
+                ImGui::InputScalar("D-pad Down##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[5].modId, &one, NULL);
+                // Intentionnal to not put everything on the same line, else it's taking too much for lower resolution.
+                ImGui::InputScalar("D-pad Left##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[6].modId, &one, NULL);
+                ImGui::SameLine();
+                ImGui::InputScalar("D-pad Right##modId", ImGuiDataType_U8, &gSaveContext.equips.buttonModdedItems[7].modId, &one, NULL);
+            }
+        });
+
         ImGui::Text("Player State");
         uint8_t bit[32] = {};
         uint32_t flags[3] = { player->stateFlags1, player->stateFlags2, player->stateFlags3 };
@@ -1790,37 +1693,4 @@ void SaveEditorWindow::DrawElement() {
     ImGui::End();
 }
 
-void SaveEditorWindow::InitElement() {
-    // Load item icons into ImGui
-    for (const auto& entry : itemMapping) {
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.name, entry.second.texturePath, ImVec4(1, 1, 1, 1));
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, ImVec4(1, 1, 1, 0.3f));
-    }
-    for (const auto& entry : gregMapping) {
-        ImVec4 gregGreen = ImVec4(42.0f / 255.0f, 169.0f / 255.0f, 40.0f / 255.0f, 1.0f);
-        ImVec4 gregFadedGreen = gregGreen;
-        gregFadedGreen.w = 0.3f;
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.name, entry.second.texturePath, gregGreen);
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, gregFadedGreen);
-    }
-    for (const auto& entry : triforcePieceMapping) {
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.name, entry.second.texturePath, ImVec4(1, 1, 1, 1));
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, ImVec4(1, 1, 1, 0.3f));
-    }
-    for (const auto& entry : questMapping) {
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.name, entry.second.texturePath, ImVec4(1, 1, 1, 1));
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, ImVec4(1, 1, 1, 0.3f));
-    }
-    for (const auto& entry : songMapping) {
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.name, gSongNoteTex, entry.color);
-        ImVec4 fadedCol = entry.color;
-        fadedCol.w = 0.3f;
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.nameFaded, gSongNoteTex, fadedCol);
-    }
-    for (const auto& entry : vanillaSongMapping) {
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.name, gSongNoteTex, entry.color);
-        ImVec4 fadedCol = entry.color;
-        fadedCol.w = 0.3f;
-        LUS::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.nameFaded, gSongNoteTex, fadedCol);
-    }
-}
+void SaveEditorWindow::InitElement() {}
