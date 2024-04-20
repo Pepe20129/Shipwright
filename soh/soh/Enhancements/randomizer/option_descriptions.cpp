@@ -467,6 +467,7 @@ void Settings::CreateOptionDescriptions() {
                                          "\n"
                                          "Onslaught - All junk items will be replaced by Ice Traps, even those "
                                          "in the base pool.";
+    mOptionDescriptions[RSK_RUPOORS] = "Replaces some junk items with rupoors (ruppors take 10 rupees away when collected)";
     mOptionDescriptions[RSK_GOSSIP_STONE_HINTS] =
         "Allows Gossip Stones to provide hints on item locations. Hints mentioning "
         "\"Way of the Hero\" indicate a location that holds an item required to beat "

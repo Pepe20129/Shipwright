@@ -2113,6 +2113,22 @@ void HintTable_Init_Item() {
                        Text{"a fishing pole", /*french*/"canne à pêche", /*spanish*/"caña de pescar"}
     );
 
+    hintTable[RHT_RUPOOR] = HintText::Item({
+                       //obscure text
+                       Text{"a gift from Ganon", /*french*/"un cadeau de Ganon", /*spanish*/"un regalo de Ganon"},
+                       Text{"a poor choice", /*french*/"!!!", /*spanish*/"una pobre eleccion"},
+                     }, {
+                       //ambiguous text
+                       Text{"a Great Fairy's power", /*french*/"le pouvoir d'une grande fée", /*spanish*/"el poder de una Gran Hada"},
+                       Text{"a magic arrow", /*french*/"une flèche magique", /*spanish*/"una flecha mágica"},
+                       Text{"a medallion", /*french*/"un médaillon", /*spanish*/"un medallón"},
+                       Text{"a spiritual stone", /*french*/"une Pierre Ancestrale", /*spanish*/"una piedra espiritual"},
+                       Text{"something that can stun", /*french*/"une chose qui peut paralyser", /*spanish*/"algo que pueda paralizar"},
+                     },
+                       //clear text
+                       Text{"a Rupoor", /*french*/"!!!", /*spanish*/"!!!"}
+    );
+
     hintTable[RHT_EPONA] = HintText::Item({
                        //obscure text
                        Text{"a horse",              /*french*/"un fidèle destrier", /*spanish*/"una yegua"},

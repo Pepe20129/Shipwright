@@ -182,6 +182,7 @@ void Settings::CreateOptions() {
     mOptions[RSK_SUNLIGHT_ARROWS] = Option::Bool("Sunlight Arrows", "gRandomizeSunlightArrows", mOptionDescriptions[RSK_SUNLIGHT_ARROWS]);
     mOptions[RSK_ITEM_POOL] = Option::U8("Item Pool", {"Plentiful", "Balanced", "Scarce", "Minimal"}, OptionCategory::Setting, "gRandomizeItemPool", mOptionDescriptions[RSK_ITEM_POOL], WidgetType::Combobox, RO_ITEM_POOL_BALANCED);
     mOptions[RSK_ICE_TRAPS] = Option::U8("Ice Traps", {"Off", "Normal", "Extra", "Mayhem", "Onslaught"}, OptionCategory::Setting, "gRandomizeIceTraps", mOptionDescriptions[RSK_ICE_TRAPS], WidgetType::Combobox, RO_ICE_TRAPS_NORMAL);
+    mOptions[RSK_RUPOORS] = Option::Bool("Rupoors", "gRandomizeIceTraps", mOptionDescriptions[RSK_RUPOORS]);
     // TODO: Remove Double Defense, Progressive Goron Sword
     mOptions[RSK_STARTING_OCARINA] = Option::U8("Start with Ocarina", {"Off", "Fairy Ocarina", "Ocarina of Time"}, OptionCategory::Setting, "gRandomizeStartingOcarina", "", WidgetType::Combobox, RO_STARTING_OCARINA_OFF);
     mOptions[RSK_STARTING_DEKU_SHIELD] = Option::Bool("Start with Deku Shield", "gRandomizeStartingDekuShield");
@@ -723,6 +724,7 @@ void Settings::CreateOptions() {
     mOptionGroups[RSG_ITEM_POOL_HINTS_IMGUI] = OptionGroup::SubGroup("", {
         &mOptions[RSK_ITEM_POOL],
         &mOptions[RSK_ICE_TRAPS],
+        &mOptions[RSK_RUPOORS],
         &mOptions[RSK_GOSSIP_STONE_HINTS],
         &mOptions[RSK_HINT_CLARITY],
         &mOptions[RSK_HINT_DISTRIBUTION],
@@ -982,7 +984,8 @@ void Settings::CreateOptions() {
     });
     mOptionGroups[RSG_ITEM_POOL] = OptionGroup("Item Pool Settings", std::initializer_list<Option*>({
         &mOptions[RSK_ITEM_POOL],
-        &mOptions[RSK_ICE_TRAPS]
+        &mOptions[RSK_ICE_TRAPS],
+        &mOptions[RSK_RUPOORS],
     }));
     // TODO: Progressive Goron Sword, Remove Double Defense
     mOptionGroups[RSG_EXCLUDES_KOKIRI_FOREST] = OptionGroup::SubGroup("Kokiri Forest", mExcludeLocationsOptionsGroups[GROUP_KOKIRI_FOREST], false);
@@ -1068,6 +1071,7 @@ void Settings::CreateOptions() {
         { "Logic Options:All Locations Reachable", RSK_ALL_LOCATIONS_REACHABLE },
         { "Item Pool Settings:Item Pool", RSK_ITEM_POOL },
         { "Item Pool Settings:Ice Traps", RSK_ICE_TRAPS },
+        { "Item Pool Settings:Rupoors", RSK_RUPOORS },
         { "Open Settings:Forest", RSK_FOREST },
         { "Open Settings:Kakariko Gate", RSK_KAK_GATE },
         { "Open Settings:Door of Time", RSK_DOOR_OF_TIME },
@@ -2324,6 +2328,7 @@ void Settings::ParseJson(nlohmann::json spoilerFileJson) {
                 case RSK_ALL_LOCATIONS_REACHABLE:
                 case RSK_TRIFORCE_HUNT:
                 case RSK_MQ_DUNGEON_SET:
+                case RSK_RUPOORS:
                     if (it.value() == "Off") {
                         mOptions[index].SetSelectedIndex(RO_GENERIC_OFF);
                     } else if (it.value() == "On") {

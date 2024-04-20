@@ -427,6 +427,9 @@ static void AddRandomBottle(std::vector<RandomizerGet>& bottlePool) {
 
 RandomizerGet GetJunkItem() {
   auto ctx = Rando::Context::GetInstance();
+  if (ctx->GetOption(RSK_RUPOORS) && Random(0, 7) == 0) {
+    return RG_RUPOOR;
+  }
   if (ctx->GetOption(RSK_ICE_TRAPS).Is(RO_ICE_TRAPS_MAYHEM) || ctx->GetOption(RSK_ICE_TRAPS).Is(RO_ICE_TRAPS_ONSLAUGHT)) {
       return RG_ICE_TRAP;
   } else if (ctx->GetOption(RSK_ICE_TRAPS).Is(RO_ICE_TRAPS_EXTRA)) {

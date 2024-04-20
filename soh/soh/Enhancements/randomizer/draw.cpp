@@ -12,6 +12,7 @@
 #include "objects/object_gi_compass/object_gi_compass.h"
 #include "objects/object_gi_hearts/object_gi_hearts.h"
 #include "objects/object_gi_scale/object_gi_scale.h"
+#include "objects/object_gi_rupy/object_gi_rupy.h"
 #include "objects/object_gi_fire/object_gi_fire.h"
 #include "objects/object_fish/object_fish.h"
 #include "objects/object_toki_objects/object_toki_objects.h"
@@ -468,6 +469,41 @@ extern "C" void Randomizer_DrawBronzeScale(PlayState* play, GetItemEntry* getIte
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiScaleDL);
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiBronzeScaleWaterColorDL);
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiScaleWaterDL);
+
+    CLOSE_DISPS(play->state.gfxCtx);
+}
+
+
+static Gfx gGiRupoorInnerColorDL[] = {
+    gsDPPipeSync(),
+    gsDPSetPrimColor(0, 0x80, 0, 0, 0, 255),
+    gsDPSetEnvColor(0, 0, 0, 255),
+    gsSPEndDisplayList(),
+};
+
+static Gfx gGiRupoorOuterColorDL[] = {
+    gsDPPipeSync(),
+    gsDPSetPrimColor(0, 0x60, 255, 255, 255, 255),
+    gsDPSetEnvColor(255, 123, 0, 255),
+    gsSPEndDisplayList(),
+};
+
+extern "C" void Randomizer_DrawRupoor(PlayState* play, GetItemEntry* getItemEntry) {
+    OPEN_DISPS(play->state.gfxCtx);
+
+    Matrix_Scale(0.7f, 0.7f, 0.7f, MTXMODE_APPLY);
+
+    Gfx_SetupDL_25Opa(play->state.gfxCtx);
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
+              G_MTX_MODELVIEW | G_MTX_LOAD);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiRupoorInnerColorDL);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiRupeeInnerDL);
+
+    Gfx_SetupDL_25Xlu(play->state.gfxCtx);
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
+              G_MTX_MODELVIEW | G_MTX_LOAD);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupoorOuterColorDL);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

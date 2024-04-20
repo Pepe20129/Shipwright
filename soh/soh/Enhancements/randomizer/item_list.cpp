@@ -287,6 +287,9 @@ void Rando::StaticData::InitItemTable() {
 
     itemTable[RG_BRONZE_SCALE] = Item(RG_BRONZE_SCALE, Text{ "Bronze Scale", "!!!", "!!!" }, ITEMTYPE_ITEM, GI_SCALE_SILVER, true, &logic->ProgressiveWallet, RHT_BRONZE_SCALE, RG_BRONZE_SCALE, OBJECT_GI_SCALE, GID_SCALE_SILVER, TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG, ITEM_CATEGORY_MAJOR, MOD_RANDOMIZER);
     itemTable[RG_BRONZE_SCALE].SetCustomDrawFunc(Randomizer_DrawBronzeScale);
+    
+    itemTable[RG_RUPOOR] = Item(RG_RUPOOR, Text{ "Rupoor", "!!!", "!!!" }, ITEMTYPE_ITEM, GI_RUPEE_RED, false, &logic->noVariable, RHT_RUPOOR, RG_RUPOOR, OBJECT_GI_RUPY, GID_RUPEE_RED, TEXT_RANDOMIZER_CUSTOM_ITEM, 0x80, CHEST_ANIM_LONG, ITEM_CATEGORY_MAJOR, MOD_RANDOMIZER);
+    itemTable[RG_RUPOOR].SetCustomDrawFunc(Randomizer_DrawRupoor);
 
     itemTable[RG_TRIFORCE] =                            Item(RG_TRIFORCE,                         Text{ "Triforce", "Triforce", "Triforce" },                                                                       ITEMTYPE_EVENT,             RG_TRIFORCE,        false, &logic->noVariable,          RHT_NONE);
     itemTable[RG_HINT] =                                Item(RG_HINT,                             Text{ "Hint", "Indice", "Hinweis" },                                                                              ITEMTYPE_EVENT,             RG_HINT,            false, &logic->noVariable,          RHT_NONE);
