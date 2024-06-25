@@ -26,6 +26,7 @@ extern "C" {
 #include "src/overlays/actors/ovl_Bg_Dy_Yoseizo/z_bg_dy_yoseizo.h"
 #include "src/overlays/actors/ovl_En_Dnt_Demo/z_en_dnt_demo.h"
 #include "src/overlays/actors/ovl_En_Po_Sisters/z_en_po_sisters.h"
+#include "src/overlays/actors/ovl_En_Door/z_en_door.h"
 #include <overlays/actors/ovl_Boss_Ganondrof/z_boss_ganondrof.h>
 #include <overlays/actors/ovl_En_Ik/z_en_ik.h>
 #include <objects/object_gnd/object_gnd.h>
@@ -982,6 +983,90 @@ void TimeSaverOnItemReceiveHandler(GetItemEntry receivedItemEntry) {
     }
 }
 
+struct DayTimeGoldSkulltulas {
+    uint16_t scene;
+    uint16_t room;
+    bool forChild;
+    std::vector<ActorEntry> actorEntries;
+};
+
+using DayTimeGoldSkulltulasList = std::vector<DayTimeGoldSkulltulas>;
+
+void RegisterDaytimeGoldSkultullas() {
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneSpawnActors>([]() {
+        if (!CVarGetInteger(CVAR_ENHANCEMENT("NightGSAlwaysSpawn"), 0)) {
+            return;
+        }
+
+        // Gold Skulltulas that are not part of the scene actor list during the day
+        // Actor values copied from the night time scene actor list
+        static const DayTimeGoldSkulltulasList dayTimeGoldSkulltulas = {
+            // Graveyard
+            { SCENE_GRAVEYARD, 1, true, { { ACTOR_EN_SW, { 156, 315, 795 }, { 16384, -32768, 0 }, -20096 } } },
+            // ZF
+            { SCENE_ZORAS_FOUNTAIN, 0, true, { { ACTOR_EN_SW, { -1891, 187, 1911 }, { 16384, 18022, 0 }, -19964 } } },
+            // GF
+            { SCENE_GERUDOS_FORTRESS, 0, false, { { ACTOR_EN_SW, { 1598, 999, -2008 }, { 16384, -16384, 0 }, -19198 } } },
+            { SCENE_GERUDOS_FORTRESS, 1, false, { { ACTOR_EN_SW, { 3377, 1734, -4935 }, { 16384, 0, 0 }, -19199 } } },
+            // Kak
+            { SCENE_KAKARIKO_VILLAGE, 0, false, { { ACTOR_EN_SW, { -18, 540, 1800 }, { 0, -32768, 0 }, -20160 } } },
+            { SCENE_KAKARIKO_VILLAGE,
+              0,
+              true,
+              { { ACTOR_EN_SW, { -465, 377, -888 }, { 0, 28217, 0 }, -20222 },
+                { ACTOR_EN_SW, { 5, 686, -171 }, { 0, -32768, 0 }, -20220 },
+                { ACTOR_EN_SW, { 324, 270, 905 }, { 16384, 0, 0 }, -20216 },
+                { ACTOR_EN_SW, { -602, 120, 1120 }, { 16384, 0, 0 }, -20208 } } },
+            // LLR
+            { SCENE_LON_LON_RANCH,
+              0,
+              true,
+              { { ACTOR_EN_SW, { -2344, 180, 672 }, { 16384, 22938, 0 }, -29695 },
+                { ACTOR_EN_SW, { 808, 48, 326 }, { 16384, 0, 0 }, -29694 },
+                { ACTOR_EN_SW, { 997, 286, -2698 }, { 16384, -16384, 0 }, -29692 } } },
+        };
+
+        for (const auto& dayTimeGS : dayTimeGoldSkulltulas) {
+            if (IS_DAY && dayTimeGS.forChild == LINK_IS_CHILD && dayTimeGS.scene == gPlayState->sceneNum &&
+                dayTimeGS.room == gPlayState->roomCtx.curRoom.num) {
+                for (const auto& actorEntry : dayTimeGS.actorEntries) {
+                    Actor_Spawn(&gPlayState->actorCtx, gPlayState, actorEntry.id, actorEntry.pos.x, actorEntry.pos.y,
+                                actorEntry.pos.z, actorEntry.rot.x, actorEntry.rot.y, actorEntry.rot.z,
+                                actorEntry.params, false);
+                }
+            }
+        }
+    });
+}
+
+void RegisterOpenAllHours() {
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorInit>([](void* refActor) {
+        Actor* actor = static_cast<Actor*>(refActor);
+
+        if (CVarGetInteger(CVAR_ENHANCEMENT("OpenAllHours"), 0) && (actor->id == ACTOR_EN_DOOR)) {
+            switch (actor->params) {
+                case 4753: // Night Market Bazaar
+                case 1678: // Night Potion Shop
+                case 2689: // Day Bombchu Shop
+                case 2703: // Night Slingshot Game
+                case 653:  // Day Chest Game
+                case 6801: // Night Kak Bazaar
+                case 7822: // Night Kak Potion Shop
+                case 4751: // Night Kak Archery Game
+                case 3728: // Night Mask Shop
+                {
+                    actor->params = (actor->params & 0xFC00) | (DOOR_SCENEEXIT << 7) | 0x3F;
+                    EnDoor* enDoor = static_cast<EnDoor*>(refActor);
+                    EnDoor_SetupType(enDoor, gPlayState);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    });
+}
+
 static uint32_t onSceneInitHook = 0;
 static uint32_t onVanillaBehaviorHook = 0;
 static uint32_t onActorInitHook = 0;
@@ -990,6 +1075,9 @@ static uint32_t onFlagSetHook = 0;
 static uint32_t onPlayerUpdateHook = 0;
 static uint32_t onItemReceiveHook = 0;
 void TimeSaverRegisterHooks() {
+    RegisterDaytimeGoldSkultullas();
+    RegisterOpenAllHours();
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadGame>([](int32_t fileNum) mutable {
         vanillaQueuedItemEntry = GET_ITEM_NONE;
 
