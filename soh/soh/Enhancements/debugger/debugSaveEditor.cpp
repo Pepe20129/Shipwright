@@ -794,7 +794,7 @@ void DrawInventoryTab() {
         for (int i = 0; i < ARRAY_COUNT(gCyanBowSlotItems); i++) {
             int itemID = gCyanBowSlotItems[i];
             const ItemMapEntry& slotEntry = itemMapping[itemID];
-            ImGui::Image(LUS::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f), ImVec2(0, 0), ImVec2(1, 1));
+            ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(slotEntry.name), ImVec2(32.0f, 32.0f), ImVec2(0, 0), ImVec2(1, 1));
             ImGui::SameLine();
             int bowIndex;
             switch (itemID) {
