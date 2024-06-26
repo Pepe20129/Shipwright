@@ -817,12 +817,12 @@ void DrawInventoryTab() {
             if (hasItem != shouldHaveItem) {
                 if (shouldHaveItem) {
                     gSaveContext.cyan.bowItems |= (1 << bowIndex);
-                    if (INV_CONTENT(CYAN_SLOT_BOW) == ITEM_NONE) {
-                        INV_CONTENT(CYAN_SLOT_BOW) = itemID;
+                    if (INV_CONTENT(ITEM_BOW) == ITEM_NONE) {
+                        INV_CONTENT(ITEM_BOW) = itemID;
                     }
                 } else {
                     gSaveContext.cyan.bowItems &= ~(1 << bowIndex);
-                    Inventory_ReplaceItem(gPlayState, itemID, Cyan_GetNextBowSlotItem());
+                    INV_CONTENT(ITEM_BOW) = Cyan_GetPrevBowSlotItem();
                 }
             }
         }

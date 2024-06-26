@@ -656,6 +656,42 @@ void KaleidoScope_DrawItemSelect(PlayState* play) {
                 }
             }
 
+            /*
+            switch (pauseCtx->cursorPoint[PAUSE_ITEM]) {
+                case 0:
+                case 1:
+                case 6:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 7;
+                    break;
+                case 2:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 8;
+                    break;
+                case 3:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 9;
+                    break;
+                case 4:
+                case 5:
+                case 11:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 10;
+                    break;
+
+                case 12:
+                case 18:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 13;
+                    break;
+                case 19:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 20;
+                    break;
+                case 22:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 21;
+                    break;
+                case 17:
+                case 23:
+                    pauseCtx->cursorPoint[PAUSE_ITEM] = 16;
+                    break;
+            }
+            */
+
             cursorSlot = pauseCtx->cursorPoint[PAUSE_ITEM];
 
             pauseCtx->cursorColorSet = 4;
@@ -1134,7 +1170,7 @@ void KaleidoScope_UpdateItemEquip(PlayState* play) {
                         pauseCtx->equipTargetItem = ITEM_BOW_ARROW_LIGHT;
                         break;
                 }
-                if (!CVarGetInteger(CVAR_ENHANCEMENT("SeparateArrows"), 0)) {
+                if (!IS_CYAN && !CVarGetInteger(CVAR_ENHANCEMENT("SeparateArrows"), 0)) {
                     pauseCtx->equipTargetSlot = SLOT_BOW;
                 }
             }

@@ -267,7 +267,7 @@ void Cyan_HandleItemCycles(PlayState* play) {
         true,
         Cyan_GetPrevBowSlotItem(),
         Cyan_GetNextBowSlotItem(),
-        false
+        true
     );
 }
 
