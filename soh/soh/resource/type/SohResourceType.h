@@ -2,6 +2,7 @@
 
 namespace SOH {
 enum class ResourceType {
+    SOH_Array = 0x4F415252,           // OARR
     SOH_Animation = 0x4F414E4D,       // OANM
     SOH_PlayerAnimation = 0x4F50414D, // OPAM
     SOH_Room = 0x4F524F4D,            // OROM
@@ -17,6 +18,5 @@ enum class ResourceType {
     SOH_AudioSequence = 0x4F534551,   // OSEQ
     SOH_Background = 0x4F424749,      // OBGI
     SOH_SceneCommand = 0x4F52434D,    // ORCM
-    SOH_RawJson = 0x4A534F4E,         // JSON
 };
 } // namespace SOH
