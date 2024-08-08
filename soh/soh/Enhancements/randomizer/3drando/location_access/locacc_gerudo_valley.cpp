@@ -9,7 +9,8 @@ void AreaTable_Init_GerudoValley() {
                   EventAccess(&logic->BugRock, {[]{return logic->BugRock || logic->IsChild;}}),
                 }, {
                   //Locations
-                  LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS),
+                  LOCATION(RC_GV_GS_SMALL_BRIDGE,           logic->IsChild && logic->HookshotOrBoomerang && logic->AtNight && logic->CanGetNightTimeGS),
+                  LOCATION(RC_SIGN_GERUDO_VALLEY_NO_DIVING, logic->CanReadSigns),
                 }, {
                   //Exits
                   Entrance(RR_HYRULE_FIELD,      {[]{return true;}}),
@@ -100,16 +101,19 @@ void AreaTable_Init_GerudoValley() {
                   EventAccess(&logic->GtG_GateOpen,    {[]{return logic->GtG_GateOpen || (logic->IsAdult && logic->GerudoToken && logic->ChildsWallet);}}),
                 }, {
                   //Locations
-                  LOCATION(RC_GF_CHEST,              logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->CanUse(RG_SCARECROW)) || logic->CanUse(RG_LONGSHOT)),
-                  LOCATION(RC_GF_HBA_1000_POINTS,    logic->ChildsWallet && logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay),
-                  LOCATION(RC_GF_HBA_1500_POINTS,    logic->ChildsWallet && logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay),
-                  LOCATION(RC_GF_NORTH_F1_CARPENTER,  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
-                  LOCATION(RC_GF_NORTH_F2_CARPENTER, (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN))),
-                  LOCATION(RC_GF_SOUTH_F1_CARPENTER,  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
-                  LOCATION(RC_GF_SOUTH_F2_CARPENTER,  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
-                  LOCATION(RC_GF_GERUDO_MEMBERSHIP_CARD,       logic->CanFinishGerudoFortress),
-                  LOCATION(RC_GF_GS_ARCHERY_RANGE,   logic->IsAdult && logic->HookshotOrBoomerang && logic->GerudoToken && logic->AtNight && logic->CanGetNightTimeGS),
-                  LOCATION(RC_GF_GS_TOP_FLOOR,       logic->IsAdult && logic->AtNight && (logic->CanJumpslash || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_DINS_FIRE)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN) || randoCtx->GetTrickOption(RT_GF_JUMP)) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_GF_CHEST,                               logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->CanUse(RG_SCARECROW)) || logic->CanUse(RG_LONGSHOT)),
+                  LOCATION(RC_GF_HBA_1000_POINTS,                     logic->ChildsWallet && logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay),
+                  LOCATION(RC_GF_HBA_1500_POINTS,                     logic->ChildsWallet && logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay),
+                  LOCATION(RC_SIGN_GERUDO_FORTRESS_HORSEBACK_ARCHERY, logic->CanReadSigns && logic->ChildsWallet && logic->GerudoToken && logic->CanRideEpona && logic->Bow && logic->AtDay),
+                  LOCATION(RC_GF_NORTH_F1_CARPENTER,                  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
+                  LOCATION(RC_GF_NORTH_F2_CARPENTER,                  (logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN))),
+                  LOCATION(RC_GF_SOUTH_F1_CARPENTER,                  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
+                  LOCATION(RC_GF_SOUTH_F2_CARPENTER,                  logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_BIGGORON_SWORD)),
+                  LOCATION(RC_GF_GERUDO_MEMBERSHIP_CARD,              logic->CanFinishGerudoFortress),
+                  LOCATION(RC_GF_GS_ARCHERY_RANGE,                    logic->IsAdult && logic->HookshotOrBoomerang && logic->GerudoToken && logic->AtNight && logic->CanGetNightTimeGS),
+                  LOCATION(RC_GF_GS_TOP_FLOOR,                        logic->IsAdult && logic->AtNight && (logic->CanJumpslash || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->HasExplosives || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_DINS_FIRE)) && (logic->GerudoToken || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || randoCtx->GetTrickOption(RT_GF_KITCHEN) || randoCtx->GetTrickOption(RT_GF_JUMP)) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_SIGN_GERUDO_FORTRESS_TRAINING_GROUNDS,  logic->CanReadSigns && logic->GerudoToken),
+                  LOCATION(RC_SIGN_GERUDO_FORTRESS_WASTELAND_WARNING, logic->CanReadSigns && logic->GerudoToken && logic->IsAdult),
                 }, {
                   //Exits
                   Entrance(RR_GV_FORTRESS_SIDE,                 {[]{return true;}}),

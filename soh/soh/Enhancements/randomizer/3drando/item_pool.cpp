@@ -557,6 +557,15 @@ static void PlaceVanillaBossKeys() {
 // TODO: This feels like it could be moved to Dungeons class and probably shorten
 // a few function call chains. Needs investigation.
 
+static void PlaceVanillaSigns() {
+  auto ctx = Rando::Context::GetInstance();
+  for (auto& loc : Rando::StaticData::GetLocationTable()) {
+    if (loc.GetRCType() == RCTYPE_SIGN) {
+      ctx->PlaceItemInLocation(loc.GetRandomizerCheck(), RG_SIGN, false, true);
+    }
+  }
+}
+
 static void PlaceVanillaBeehiveRupees() {
   auto ctx = Rando::Context::GetInstance();
   ctx->PlaceItemInLocation(RC_KF_STORMS_GROTTO_BEEHIVE_LEFT,         RG_BLUE_RUPEE, false, true);
@@ -797,6 +806,16 @@ void GenerateItemPool() {
   } else {
     PlaceVanillaBeehiveRupees();
   }
+
+  if (ctx->GetOption(RSK_SHUFFLE_SIGNS)) {
+    //32 total sign locations but one is disabled
+    AddItemToMainPool(RG_SIGN, 31);
+  } else {
+    PlaceVanillaSigns();
+  }
+
+  //temporarily disabled because the check is at both shooting galleries and the hint system can't deal with that
+  ctx->PlaceItemInLocation(RC_SIGN_SHOOTING_GALLERY, RG_SIGN, false, true);
 
   if (ctx->GetOption(RSK_SHUFFLE_COWS)) {
     //9 total cow locations

@@ -54,6 +54,7 @@ void from_json(const json& j, RandomizerCheckTrackerData& rctd) {
 namespace CheckTracker {
 
 // settings
+bool showSigns;
 bool showShops;
 bool showOverworldTokens;
 bool showDungeonTokens;
@@ -1140,6 +1141,9 @@ void LoadSettings() {
     //If in randomzer (n64ddFlag), then get the setting and check if in general we should be showing the settings
     //If in vanilla, _try_ to show items that at least are needed for 100%
 
+    showSigns = IS_RANDO ?
+        OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SIGNS) == RO_GENERIC_YES
+        : false;
     showShops = IS_RANDO ? (
             OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) != RO_SHOPSANITY_OFF &&
             OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHOPSANITY) != RO_SHOPSANITY_ZERO_ITEMS)
@@ -1277,6 +1281,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                 ) &&
             (loc->GetRCType() != RCTYPE_MERCHANT || showMerchants) &&
             (loc->GetRCType() != RCTYPE_BEEHIVE || showBeehives) &&
+            (loc->GetRCType() != RCTYPE_SIGN || showSigns) &&
             (loc->GetRCType() != RCTYPE_OCARINA || showOcarinas) &&
             (loc->GetRCType() != RCTYPE_SKULL_TOKEN || alwaysShowGS ||
                 (showOverworldTokens && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||

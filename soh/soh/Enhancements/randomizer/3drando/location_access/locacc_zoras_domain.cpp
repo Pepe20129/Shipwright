@@ -106,6 +106,9 @@ void AreaTable_Init_ZorasDomain() {
                   LOCATION(RC_ZD_GOSSIP_STONE,                        true),
                   LOCATION(RC_ZD_IN_FRONT_OF_KING_ZORA_BEEHIVE_LEFT,  logic->CanBreakUpperBeehives),
                   LOCATION(RC_ZD_IN_FRONT_OF_KING_ZORA_BEEHIVE_RIGHT, logic->CanBreakUpperBeehives),
+                  LOCATION(RC_SIGN_ZORAS_DOMAIN_WELCOME,              logic->CanReadSigns),
+                  LOCATION(RC_SIGN_ZORAS_DOMAIN_SHOP,                 logic->CanReadSigns),
+                  LOCATION(RC_SIGN_ZORAS_DOMAIN_THRONE_ROOM,          logic->CanReadSigns),
                 }, {
                   //Exits
                   Entrance(RR_ZR_BEHIND_WATERFALL, {[]{return true;}}),
@@ -160,6 +163,7 @@ void AreaTable_Init_ZorasDomain() {
                   LOCATION(RC_ZF_GS_HIDDEN_CAVE,           logic->CanUse(RG_SILVER_GAUNTLETS) && logic->CanBlastOrSmash && logic->HookshotOrBoomerang && logic->IsAdult && logic->AtNight && logic->CanGetNightTimeGS),
                   LOCATION(RC_ZF_FAIRY_GOSSIP_STONE,       true),
                   LOCATION(RC_ZF_JABU_GOSSIP_STONE,        true),
+                  LOCATION(RC_SIGN_ZORAS_FOUNTAIN,         logic->CanReadSigns && logic->IsChild),
                 }, {
                   //Exits
                   Entrance(RR_ZD_BEHIND_KING_ZORA,       {[]{return true;}}),

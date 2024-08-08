@@ -284,6 +284,8 @@ typedef enum {
     VB_PLAY_RAINBOW_BRIDGE_CS,
     // Opt: *EnBox
     VB_PLAY_SLOW_CHEST_CS,
+    // Vanilla condition: true
+    VB_TALK_WITH_ACTOR,
 
     /*** Give Items ***/
 

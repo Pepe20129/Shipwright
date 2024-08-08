@@ -587,5 +587,8 @@ void Settings::CreateOptionDescriptions() {
         "These cutscenes are only useful for glitched gameplay and can be safely skipped otherwise.";
     mOptionDescriptions[RSK_SHUFFLE_BOSS_SOULS] = "Shuffles 8 boss souls (one for each blue warp dungeon). A boss will not appear until you collect its respective soul."
                 "\n\"On + Ganon\" will also hide Ganon and Ganondorf behind a boss soul.";
+    mOptionDescriptions[RSK_SHUFFLE_SIGNS] = "Reading each square cuttable sign will give you an item, the text they normally have will be placed as items in the pool.\n"
+                "\n"
+                "This setting DOES NOT just shuffle the sign texts among themselves.";
 }
 } // namespace Rando

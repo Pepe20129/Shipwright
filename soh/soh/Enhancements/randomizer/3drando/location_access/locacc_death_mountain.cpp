@@ -10,11 +10,15 @@ void AreaTable_Init_DeathMountain() {
                   EventAccess(&logic->BeanPlantFairy, {[]{return logic->BeanPlantFairy || (CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->HasExplosives || logic->GoronBracelet));}}),
                 }, {
                   //Locations
-                  LOCATION(RC_DMT_CHEST,                    logic->CanBlastOrSmash || (randoCtx->GetTrickOption(RT_DMT_BOMBABLE) && logic->IsChild && logic->GoronBracelet)),
-                  LOCATION(RC_DMT_FREESTANDING_POH,         logic->CanTakeDamage || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL) && (logic->HasExplosives || logic->GoronBracelet))),
-                  LOCATION(RC_DMT_GS_BEAN_PATCH,            logic->CanPlantBugs && (logic->HasExplosives || logic->GoronBracelet || (randoCtx->GetTrickOption(RT_DMT_SOIL_GS) && (logic->CanTakeDamage || logic->CanUse(RG_HOVER_BOOTS)) && logic->CanUse(RG_BOOMERANG)))),
-                  LOCATION(RC_DMT_GS_NEAR_KAK,              logic->CanBlastOrSmash),
-                  LOCATION(RC_DMT_GS_ABOVE_DODONGOS_CAVERN, logic->IsAdult && logic->AtNight && (logic->CanUse(RG_MEGATON_HAMMER) || (randoCtx->GetTrickOption(RT_DMT_HOOKSHOT_LOWER_GS) && logic->CanUse(RG_HOOKSHOT)) || (randoCtx->GetTrickOption(RT_DMT_BEAN_LOWER_GS) && CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL)) || (randoCtx->GetTrickOption(RT_DMT_HOVERS_LOWER_GS) && logic->CanUse(RG_HOVER_BOOTS)) || randoCtx->GetTrickOption(RT_DMT_JS_LOWER_GS)) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_DMT_CHEST,                                          logic->CanBlastOrSmash || (randoCtx->GetTrickOption(RT_DMT_BOMBABLE) && logic->IsChild && logic->GoronBracelet)),
+                  LOCATION(RC_DMT_FREESTANDING_POH,                               logic->CanTakeDamage || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL) && (logic->HasExplosives || logic->GoronBracelet))),
+                  LOCATION(RC_DMT_GS_BEAN_PATCH,                                  logic->CanPlantBugs && (logic->HasExplosives || logic->GoronBracelet || (randoCtx->GetTrickOption(RT_DMT_SOIL_GS) && (logic->CanTakeDamage || logic->CanUse(RG_HOVER_BOOTS)) && logic->CanUse(RG_BOOMERANG)))),
+                  LOCATION(RC_DMT_GS_NEAR_KAK,                                    logic->CanBlastOrSmash),
+                  LOCATION(RC_DMT_GS_ABOVE_DODONGOS_CAVERN,                       logic->IsAdult && logic->AtNight && (logic->CanUse(RG_MEGATON_HAMMER) || (randoCtx->GetTrickOption(RT_DMT_HOOKSHOT_LOWER_GS) && logic->CanUse(RG_HOOKSHOT)) || (randoCtx->GetTrickOption(RT_DMT_BEAN_LOWER_GS) && CanPlantBean(RR_DEATH_MOUNTAIN_TRAIL)) || (randoCtx->GetTrickOption(RT_DMT_HOVERS_LOWER_GS) && logic->CanUse(RG_HOVER_BOOTS)) || randoCtx->GetTrickOption(RT_DMT_JS_LOWER_GS)) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_SIGN_DEATH_MOUNTAIN_TRAIL_START,                    logic->CanReadSigns),
+                  LOCATION(RC_SIGN_DEATH_MOUNTAIN_TRAIL_DODONGOS_CAVERN_ENTRANCE, logic->CanReadSigns),
+                  LOCATION(RC_SIGN_DEATH_MOUNTAIN_TRAIL_GORON_CITY_ENTRANCE,      logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_DEATH_MOUNTAIN_TRAIL_BOMB_FLOWER,              logic->CanReadSigns && logic->IsChild),
                 }, {
                   //Exits
                   Entrance(RR_KAK_BEHIND_GATE,          {[]{return true;}}),
@@ -91,17 +95,18 @@ void AreaTable_Init_DeathMountain() {
                   EventAccess(&logic->StopGCRollingGoronAsAdult, {[]{return logic->StopGCRollingGoronAsAdult || (logic->IsAdult && (logic->GoronBracelet || logic->HasExplosives || logic->Bow || (randoCtx->GetTrickOption(RT_GC_LINK_GORON_DINS) && logic->CanUse(RG_DINS_FIRE))));}}),
                 }, {
                   //Locations
-                  LOCATION(RC_GC_MAZE_LEFT_CHEST,        logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_SILVER_GAUNTLETS) || (randoCtx->GetTrickOption(RT_GC_LEFTMOST) && logic->HasExplosives && logic->CanUse(RG_HOVER_BOOTS))),
-                  LOCATION(RC_GC_MAZE_CENTER_CHEST,      logic->CanBlastOrSmash  || logic->CanUse(RG_SILVER_GAUNTLETS)),
-                  LOCATION(RC_GC_MAZE_RIGHT_CHEST,       logic->CanBlastOrSmash  || logic->CanUse(RG_SILVER_GAUNTLETS)),
-                  LOCATION(RC_GC_POT_FREESTANDING_POH,   logic->IsChild && logic->GoronCityChildFire && (logic->Bombs || (logic->GoronBracelet && randoCtx->GetTrickOption(RT_GC_POT_STRENGTH)) || (logic->HasBombchus && randoCtx->GetTrickOption(RT_GC_POT)))),
-                  LOCATION(RC_GC_ROLLING_GORON_AS_CHILD, logic->IsChild && (logic->HasExplosives || (logic->GoronBracelet && randoCtx->GetTrickOption(RT_GC_ROLLING_STRENGTH)))),
-                  LOCATION(RC_GC_ROLLING_GORON_AS_ADULT, logic->StopGCRollingGoronAsAdult),
-                  LOCATION(RC_GC_GS_BOULDER_MAZE,        logic->IsChild && logic->CanBlastOrSmash),
-                  LOCATION(RC_GC_GS_CENTER_PLATFORM,     logic->CanAdultAttack),
-                  LOCATION(RC_GC_MEDIGORON,              logic->IsAdult && logic->AdultsWallet && (logic->CanBlastOrSmash || logic->GoronBracelet)),
-                  LOCATION(RC_GC_MAZE_GOSSIP_STONE,      logic->CanBlastOrSmash || logic->CanUse(RG_SILVER_GAUNTLETS)),
-                  LOCATION(RC_GC_MEDIGORON_GOSSIP_STONE, logic->CanBlastOrSmash || logic->GoronBracelet),
+                  LOCATION(RC_GC_MAZE_LEFT_CHEST,            logic->CanUse(RG_MEGATON_HAMMER) || logic->CanUse(RG_SILVER_GAUNTLETS) || (randoCtx->GetTrickOption(RT_GC_LEFTMOST) && logic->HasExplosives && logic->CanUse(RG_HOVER_BOOTS))),
+                  LOCATION(RC_GC_MAZE_CENTER_CHEST,          logic->CanBlastOrSmash  || logic->CanUse(RG_SILVER_GAUNTLETS)),
+                  LOCATION(RC_GC_MAZE_RIGHT_CHEST,           logic->CanBlastOrSmash  || logic->CanUse(RG_SILVER_GAUNTLETS)),
+                  LOCATION(RC_GC_POT_FREESTANDING_POH,       logic->IsChild && logic->GoronCityChildFire && (logic->Bombs || (logic->GoronBracelet && randoCtx->GetTrickOption(RT_GC_POT_STRENGTH)) || (logic->HasBombchus && randoCtx->GetTrickOption(RT_GC_POT)))),
+                  LOCATION(RC_GC_ROLLING_GORON_AS_CHILD,     logic->IsChild && (logic->HasExplosives || (logic->GoronBracelet && randoCtx->GetTrickOption(RT_GC_ROLLING_STRENGTH)))),
+                  LOCATION(RC_GC_ROLLING_GORON_AS_ADULT,     logic->StopGCRollingGoronAsAdult),
+                  LOCATION(RC_GC_GS_BOULDER_MAZE,            logic->IsChild && logic->CanBlastOrSmash),
+                  LOCATION(RC_GC_GS_CENTER_PLATFORM,         logic->CanAdultAttack),
+                  LOCATION(RC_GC_MEDIGORON,                  logic->IsAdult && logic->AdultsWallet && (logic->CanBlastOrSmash || logic->GoronBracelet)),
+                  LOCATION(RC_GC_MAZE_GOSSIP_STONE,          logic->CanBlastOrSmash || logic->CanUse(RG_SILVER_GAUNTLETS)),
+                  LOCATION(RC_GC_MEDIGORON_GOSSIP_STONE,     logic->CanBlastOrSmash || logic->GoronBracelet),
+                  LOCATION(RC_SIGN_GORON_CITY_ROLLING_GORON, logic->CanReadSigns && logic->IsChild),
                 }, {
                   //Exits
                   Entrance(RR_DEATH_MOUNTAIN_TRAIL, {[]{return true;}}),

@@ -5,7 +5,7 @@
 namespace Rando {
 void StaticData::HintTable_Init_Exclude_Overworld() {
 
-   hintTextTable[RHT_KF_KOKIRI_SWORD_CHEST] = HintText(CustomMessage("They say that the #hidden treasure of the Kokiri# is #[[1]]#.",
+    hintTextTable[RHT_KF_KOKIRI_SWORD_CHEST] = HintText(CustomMessage("They say that the #hidden treasure of the Kokiri# is #[[1]]#.",
                                                            /*german*/ "",
                                                            /*french*/ "Selon moi, le #trésor des Kokiri# est #[[1]]#.", {QM_RED, QM_GREEN}));
                                                         // /*spanish*/ Según dicen, el #tesoro oculto de los Kokiri# esconde #[[1]]#.
@@ -1487,5 +1487,133 @@ void StaticData::HintTable_Init_Exclude_Overworld() {
                                                               /*german*/ "",
                                                               /*french*/ "Selon moi,  #[[1]]#.", {QM_RED, QM_GREEN}));
                                                            // /*spanish*/ Según dicen, una #colmena detrás del rey de los zoras# esconde #[[1]]#.
+
+    hintTextTable[RHT_SIGN_GORON_CITY_ROLLING_GORON] = HintText(CustomMessage("They say that #a rolling Goron's petition# hoards #[[1]]#",
+                                                                              "",
+                                                                              "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GERUDO_FORTRESS_HORSEBACK_ARCHERY] = HintText(CustomMessage("They say that #a Gerudo's scoreboard# hoards #[[1]]#",
+                                                                                       "",
+                                                                                       "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GERUDO_FORTRESS_TRAINING_GROUNDS] = HintText(CustomMessage("They say that #a Gerudo's no entry sign# hoards #[[1]]#",
+                                                                                      "",
+                                                                                      "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GERUDO_FORTRESS_WASTELAND_WARNING] = HintText(CustomMessage("They say that #a Gerudo's sandy advisory# hoards #[[1]]#",
+                                                                                       "",
+                                                                                       "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_FOREST_STAGE] = HintText(CustomMessage("They say that #the Forest Stage's name# hoards #[[1]]#",
+                                                                  "",
+                                                                  "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_DEATH_MOUNTAIN_TRAIL_START] = HintText(CustomMessage("They say that #the start of a trail# hoards #[[1]]#",
+                                                                                "",
+                                                                                "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_DEATH_MOUNTAIN_TRAIL_DODONGOS_CAVERN_ENTRANCE] = HintText(CustomMessage("They say that #a Goron's no entry sign# hoards #[[1]]#",
+                                                                                                   "",
+                                                                                                   "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_DEATH_MOUNTAIN_TRAIL_GORON_CITY_ENTRANCE] = HintText(CustomMessage("They say that #Goron City's declaration# hoards #[[1]]#",
+                                                                                              "",
+                                                                                              "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_DEATH_MOUNTAIN_TRAIL_BOMB_FLOWER] = HintText(CustomMessage("They say that #a Goron's advisory# hoards #[[1]]#",
+                                                                                      "",
+                                                                                      "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_HYRULE_CASTLE_DEAD_END] = HintText(CustomMessage("They say that #a dead end# hoards #[[1]]#",
+                                                                            "",
+                                                                            "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_ZORAS_FOUNTAIN] = HintText(CustomMessage("They say that #the sixteenth king's advisory# hoards #[[1]]#",
+                                                                    "",
+                                                                    "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_SHOOTING_GALLERY] = HintText(CustomMessage("They say that #the shooting rules# hoards #[[1]]#",
+                                                                      "",
+                                                                      "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_ZORAS_DOMAIN_WELCOME] = HintText(CustomMessage("They say that #the Zoras' declaration# hoards #[[1]]#",
+                                                                          "",
+                                                                          "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_ZORAS_DOMAIN_SHOP] = HintText(CustomMessage("They say that #the Zoras' fresh fish offer# hoards #[[1]]#",
+                                                                       "",
+                                                                       "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_ZORAS_DOMAIN_THRONE_ROOM] = HintText(CustomMessage("They say that #the sixteenth king's proclamation instructions# hoards #[[1]]#",
+                                                                              "",
+                                                                              "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GERUDO_VALLEY_NO_DIVING] = HintText(CustomMessage("They say that #a Gerudo's watery advisory# hoards #[[1]]#",
+                                                                             "",
+                                                                             "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_LAKE_HYLIA_LABORATORY] = HintText(CustomMessage("They say that #the mystery finder's introduction# hoards #[[1]]#",
+                                                                           "",
+                                                                           "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_CHILD] = HintText(CustomMessage("They say that #the gravedigger's schedule# hoards #[[1]]#",
+                                                                                       "",
+                                                                                       "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_ADULT] = HintText(CustomMessage("They say that #the gravedigging game's cancellation# hoards #[[1]]#",
+                                                                                       "",
+                                                                                       "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KAKARIKO_VILLAGE_WELL] = HintText(CustomMessage("They say that #the well's descriptor# hoards #[[1]]#",
+                                                                           "",
+                                                                           "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KAKARIKO_VILLAGE_DEATH_MOUNTAIN_GATE] = HintText(CustomMessage("They say that #the royal blockade# hoards #[[1]]#",
+                                                                                          "",
+                                                                                          "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_EXIT] = HintText(CustomMessage("They say that #a Kokiri's no exit sign# hoards #[[1]]##",
+                                                                        "",
+                                                                        "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_HOLE_OF_Z] = HintText(CustomMessage("They say that #the name changing hole's presentor# hoards #[[1]]#",
+                                                                             "",
+                                                                             "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_Z_TARGET_TUTORIAL] = HintText(CustomMessage("They say that #the Z-targetting tutorial# hoards #[[1]]#",
+                                                                                     "",
+                                                                                     "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_CUT_GRASS] = HintText(CustomMessage("They say that #the grass cutting tutorial# hoards #[[1]]#",
+                                                                             "",
+                                                                             "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_THRUST_ATTACK] = HintText(CustomMessage("They say that #the thrust attacking tutorial# hoards #[[1]]#",
+                                                                                 "",
+                                                                                 "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_LINKS_HOUSE] = HintText(CustomMessage("They say that #the hero's welcoming# hoards #[[1]]#",
+                                                                               "",
+                                                                               "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_STEPPING_STONE] = HintText(CustomMessage("They say that #the stepping stone explainer# hoards #[[1]]#",
+                                                                                  "",
+                                                                                  "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_DEKU_TREE_MEADOW] = HintText(CustomMessage("They say that #the Deku Tree's welcoming# hoards #[[1]]#",
+                                                                                    "",
+                                                                                    "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_KOKIRI_FOREST_SWORD] = HintText(CustomMessage("They say that #the Know it All's advertisement# hoards #[[1]]#",
+                                                                         "",
+                                                                         "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_LAKE_HYLIA_FISHING_CHILD] = HintText(CustomMessage("They say that #the original fishing rules# hoards #[[1]]#",
+                                                                              "",
+                                                                              "", {QM_RED, QM_GREEN}));
+
+    hintTextTable[RHT_SIGN_LAKE_HYLIA_FISHING_ADULT] = HintText(CustomMessage("They say that #the ammended fishing rules# hoards #[[1]]#",
+                                                                              "",
+                                                                              "", {QM_RED, QM_GREEN}));
 }
 }

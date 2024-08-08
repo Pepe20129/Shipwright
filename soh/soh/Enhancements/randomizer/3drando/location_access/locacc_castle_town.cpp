@@ -87,10 +87,11 @@ void AreaTable_Init_CastleTown() {
                   EventAccess(&logic->BugRock,          {[]{return true;}}),
                 }, {
                   //Locations
-                  LOCATION(RC_HC_MALON_EGG,              true),
-                  LOCATION(RC_HC_GS_TREE,                logic->CanChildAttack),
-                  LOCATION(RC_HC_MALON_GOSSIP_STONE,     true),
-                  LOCATION(RC_HC_ROCK_WALL_GOSSIP_STONE, true),
+                  LOCATION(RC_HC_MALON_EGG,                true),
+                  LOCATION(RC_HC_GS_TREE,                  logic->CanChildAttack),
+                  LOCATION(RC_HC_MALON_GOSSIP_STONE,       true),
+                  LOCATION(RC_HC_ROCK_WALL_GOSSIP_STONE,   true),
+                  LOCATION(RC_SIGN_HYRULE_CASTLE_DEAD_END, logic->CanReadSigns),
                 }, {
                   //Exits
                   Entrance(RR_CASTLE_GROUNDS,          {[]{return true;}}),
@@ -203,6 +204,7 @@ void AreaTable_Init_CastleTown() {
   areaTable[RR_MARKET_SHOOTING_GALLERY] = Area("Market Shooting Gallery", "Market Shooting Gallery", RA_NONE, NO_DAY_NIGHT_CYCLE, {}, {
                   //Locations
                   LOCATION(RC_MARKET_SHOOTING_GALLERY_REWARD, logic->IsChild && logic->ChildsWallet),
+                  LOCATION(RC_SIGN_SHOOTING_GALLERY,          logic->CanReadSigns)
                 }, {
                   //Exits
                   Entrance(RR_THE_MARKET, {[]{return true;}}),

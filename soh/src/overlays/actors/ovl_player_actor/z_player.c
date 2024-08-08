@@ -16048,6 +16048,10 @@ void Player_StartTalking(PlayState* play, Actor* actor) {
     Player* this = GET_PLAYER(play);
     s32 pad;
 
+    if (!GameInteractor_Should(VB_TALK_WITH_ACTOR, true, actor)) {
+        return;
+    }
+
     if ((this->targetActor != NULL) || (actor == this->naviActor) ||
         CHECK_FLAG_ALL(actor->flags, ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_NAVI_HAS_INFO)) {
         actor->flags |= ACTOR_FLAG_PLAYER_TALKED_TO;

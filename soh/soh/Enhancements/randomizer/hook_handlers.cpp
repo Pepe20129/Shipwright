@@ -33,6 +33,7 @@ extern "C" {
 #include "src/overlays/actors/ovl_Obj_Comb/z_obj_comb.h"
 #include "src/overlays/actors/ovl_En_Bom_Bowl_Pit/z_en_bom_bowl_pit.h"
 #include "src/overlays/actors/ovl_En_Ge1/z_en_ge1.h"
+#include "src/overlays/actors/ovl_En_Kanban/z_en_kanban.h"
 #include "adult_trade_shuffle.h"
 #include "draw.h"
 
@@ -577,6 +578,63 @@ void Player_Action_8084E6D4_override(Player* player, PlayState* play) {
 void func_8083A434_override(PlayState* play, Player* player) {
     func_80835DAC(play, player, Player_Action_8084E6D4_override, 0);
     player->stateFlags1 |= PLAYER_STATE1_GETTING_ITEM | PLAYER_STATE1_IN_CUTSCENE;
+}
+
+std::map<u16, RandomizerInf> signParamsToRandomizerInfs = {
+    { 0x0325, RAND_INF_SIGN_GORON_CITY_ROLLING_GORON },
+    { 0x031A, RAND_INF_SIGN_GERUDO_FORTRESS_HORSEBACK_ARCHERY },
+    { 0x031B, RAND_INF_SIGN_GERUDO_FORTRESS_TRAINING_GROUNDS },
+    { 0x031C, RAND_INF_SIGN_GERUDO_FORTRESS_WASTELAND_WARNING },
+    { 0x0344, RAND_INF_SIGN_FOREST_STAGE },
+    { 0x0309, RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_START },
+    { 0x030A, RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_DODONGOS_CAVERN_ENTRANCE },
+    { 0x030B, RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_GORON_CITY_ENTRANCE },
+    { 0x0322, RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_BOMB_FLOWER },
+    { 0x0304, RAND_INF_SIGN_HYRULE_CASTLE_DEAD_END },
+    { 0x030F, RAND_INF_SIGN_ZORAS_FOUNTAIN },
+    //temporarily disabled because the check is at both shooting galleries and the hint system can't deal with that
+    //{ 0x0329, RAND_INF_SIGN_SHOOTING_GALLERY },
+    { 0x030E, RAND_INF_SIGN_ZORAS_DOMAIN_WELCOME },
+    { 0x0333, RAND_INF_SIGN_ZORAS_DOMAIN_SHOP },
+    { 0x0324, RAND_INF_SIGN_ZORAS_DOMAIN_THRONE_ROOM },
+    { 0x0342, RAND_INF_SIGN_GERUDO_VALLEY_NO_DIVING },
+    { 0x0318, RAND_INF_SIGN_LAKE_HYLIA_LABORATORY },
+    { 0x0334, RAND_INF_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_CHILD },
+    { 0x0335, RAND_INF_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_ADULT },
+    { 0x0307, RAND_INF_SIGN_KAKARIKO_VILLAGE_WELL },
+    { 0x0308, RAND_INF_SIGN_KAKARIKO_VILLAGE_DEATH_MOUNTAIN_GATE },
+    { 0x0320, RAND_INF_SIGN_KOKIRI_FOREST_EXIT },
+    { 0x0337, RAND_INF_SIGN_KOKIRI_FOREST_HOLE_OF_Z },
+    { 0x0340, RAND_INF_SIGN_KOKIRI_FOREST_Z_TARGET_TUTORIAL },
+    { 0x0338, RAND_INF_SIGN_KOKIRI_FOREST_CUT_GRASS },
+    { 0x0336, RAND_INF_SIGN_KOKIRI_FOREST_THRUST_ATTACK },
+    { 0x031F, RAND_INF_SIGN_KOKIRI_FOREST_LINKS_HOUSE },
+    { 0x0341, RAND_INF_SIGN_KOKIRI_FOREST_STEPPING_STONE },
+    { 0x0312, RAND_INF_SIGN_KOKIRI_FOREST_DEKU_TREE_MEADOW },
+    { 0x0345, RAND_INF_SIGN_KOKIRI_FOREST_SWORD },
+    { 0x409D, RAND_INF_SIGN_LAKE_HYLIA_FISHING_CHILD },
+    { 0x4090, RAND_INF_SIGN_LAKE_HYLIA_FISHING_ADULT },
+};
+
+extern "C" u16 Randomizer_SignShuffle_GetRandomMessage() {
+    return (u16)std::next(std::begin(signParamsToRandomizerInfs), rand() % signParamsToRandomizerInfs.size())->first;
+}
+
+RandomizerInf Randomizer_SignShuffle_GetFlag(u16 textId) {
+    //special case for fishing
+    if (textId == ENKANBAN_FISHING) {
+        if (LINK_IS_CHILD) {
+            textId = 0x409D;
+        } else {
+            textId = 0x4090;
+        }
+    }
+
+    if (signParamsToRandomizerInfs.contains(textId)) {
+        return signParamsToRandomizerInfs[textId];
+    }
+
+    return RAND_INF_MAX;
 }
 
 void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void* optionalArg) {
@@ -1128,6 +1186,17 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, void
                 (item == ITEM_BOMBCHU && Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS))
             ) {
                 *should = false;
+            }
+            break;
+        }
+        case VB_TALK_WITH_ACTOR: {
+            Actor* actor = static_cast<Actor*>(optionalArg);
+            if (RAND_GET_OPTION(RSK_SHUFFLE_SIGNS) && actor->id == ACTOR_EN_KANBAN) {
+                RandomizerInf randomizerInf = Randomizer_SignShuffle_GetFlag(actor->textId);
+                if (randomizerInf != RAND_INF_MAX && !Flags_GetRandomizerInf(randomizerInf)) {
+                    Flags_SetRandomizerInf(randomizerInf);
+                    *should = false;
+                }
             }
             break;
         }

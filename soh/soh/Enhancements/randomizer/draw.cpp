@@ -16,6 +16,8 @@
 #include "objects/object_fish/object_fish.h"
 #include "objects/object_toki_objects/object_toki_objects.h"
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
+#include "objects/gameplay_keep/gameplay_keep.h"
+#include "objects/object_kanban/object_kanban.h"
 #include "soh_assets.h"
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
 
@@ -591,5 +593,23 @@ extern "C" void Randomizer_DrawSkeletonKey(PlayState* play, GetItemEntry* getIte
 
     gSPGrayscale(POLY_OPA_DISP++, false);
     
+    CLOSE_DISPS(play->state.gfxCtx);
+}
+
+extern "C" void Randomizer_DrawSign(PlayState* play, GetItemEntry* getItemEntry) {
+    OPEN_DISPS(play->state.gfxCtx);
+
+    Gfx_SetupDL_25Opa(play->state.gfxCtx);
+    Gfx_SetupDL_25Xlu(play->state.gfxCtx);
+
+    Matrix_Translate(0.0f, -50.0f, 0.0f, MTXMODE_APPLY);
+    Matrix_Scale(0.01f, 0.01f, 0.01f, MTXMODE_APPLY);
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__), G_MTX_MODELVIEW | G_MTX_LOAD);
+
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)object_kanban_DL_000C30);
+    Matrix_Translate(0.0f, 0.0f, -100.0f, MTXMODE_APPLY);
+    gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gSignRectangularDL);
+
     CLOSE_DISPS(play->state.gfxCtx);
 }

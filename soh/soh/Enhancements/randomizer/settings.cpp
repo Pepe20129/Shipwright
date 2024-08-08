@@ -120,6 +120,7 @@ void Settings::CreateOptions() {
     mOptions[RSK_SHUFFLE_CHEST_MINIGAME] = Option::U8("Shuffle Chest Minigame", {"Off", "On (Separate)", "On (Pack)"});
     mOptions[RSK_SHUFFLE_100_GS_REWARD] = Option::Bool("Shuffle 100 GS Reward", CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_SHUFFLE_BOSS_SOULS] = Option::U8("Shuffle Boss Souls", {"Off", "On", "On + Ganon"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleBossSouls"), mOptionDescriptions[RSK_SHUFFLE_BOSS_SOULS], WidgetType::Combobox);
+    mOptions[RSK_SHUFFLE_SIGNS] = Option::Bool("Shuffle Signs", CVAR_RANDOMIZER_SETTING("ShuffleSigns"), mOptionDescriptions[RSK_SHUFFLE_SIGNS]);
     mOptions[RSK_SHUFFLE_DEKU_STICK_BAG] = Option::Bool("Shuffle Deku Stick Bag", CVAR_RANDOMIZER_SETTING("ShuffleDekuStickBag"), mOptionDescriptions[RSK_SHUFFLE_DEKU_STICK_BAG], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_SHUFFLE_DEKU_NUT_BAG] = Option::Bool("Shuffle Deku Nut Bag", CVAR_RANDOMIZER_SETTING("ShuffleDekuNutBag"), mOptionDescriptions[RSK_SHUFFLE_DEKU_NUT_BAG], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_FISHSANITY] = Option::U8("Fishsanity", {"Off", "Shuffle only Hyrule Loach", "Shuffle Fishing Pond", "Shuffle Overworld Fish", "Shuffle Both"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("Fishsanity"), mOptionDescriptions[RSK_FISHSANITY], WidgetType::Combobox, RO_FISHSANITY_OFF);
@@ -686,6 +687,7 @@ void Settings::CreateOptions() {
         &mOptions[RSK_SHUFFLE_ADULT_TRADE],
         &mOptions[RSK_SHUFFLE_100_GS_REWARD],
         &mOptions[RSK_SHUFFLE_BOSS_SOULS],
+        &mOptions[RSK_SHUFFLE_SIGNS],
     }, false, WidgetContainerType::COLUMN);
     mOptionGroups[RSG_SHUFFLE_DUNGEON_ITEMS_IMGUI] = OptionGroup::SubGroup("Shuffle Dungeon Items", {
         &mOptions[RSK_SHUFFLE_DUNGEON_REWARDS],
@@ -899,6 +901,7 @@ void Settings::CreateOptions() {
         &mOptions[RSK_SHUFFLE_CHEST_MINIGAME],
         &mOptions[RSK_SHUFFLE_100_GS_REWARD],
         &mOptions[RSK_SHUFFLE_BOSS_SOULS],
+        &mOptions[RSK_SHUFFLE_SIGNS],
         &mOptions[RSK_SHUFFLE_DEKU_STICK_BAG],
         &mOptions[RSK_SHUFFLE_DEKU_NUT_BAG],
     });
@@ -1132,6 +1135,7 @@ void Settings::CreateOptions() {
         { "Shuffle Settings:Shuffle Merchants", RSK_SHUFFLE_MERCHANTS },
         { "Shuffle Settings:Shuffle 100 GS Reward", RSK_SHUFFLE_100_GS_REWARD },
         { "Shuffle Settings:Shuffle Boss Souls", RSK_SHUFFLE_BOSS_SOULS },
+        { "Shuffle Settings:Shuffle Signs", RSK_SHUFFLE_SIGNS },
         { "Shuffle Settings:Shuffle Deku Stick Bag", RSK_SHUFFLE_DEKU_STICK_BAG },
         { "Shuffle Settings:Shuffle Deku Nut Bag", RSK_SHUFFLE_DEKU_NUT_BAG },
         { "Start with Deku Shield", RSK_STARTING_DEKU_SHIELD },
@@ -2361,6 +2365,7 @@ void Settings::ParseJson(nlohmann::json spoilerFileJson) {
                 case RSK_SHUFFLE_OCARINA_BUTTONS:
                 case RSK_SHUFFLE_SWIM:
                 case RSK_SHUFFLE_CHILD_WALLET:
+                case RSK_SHUFFLE_SIGNS:
                 case RSK_STARTING_DEKU_SHIELD:
                 case RSK_STARTING_KOKIRI_SWORD:
                 case RSK_STARTING_ZELDAS_LULLABY:

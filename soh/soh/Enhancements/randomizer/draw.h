@@ -22,6 +22,7 @@ void Randomizer_DrawOcarinaButton(PlayState* play, GetItemEntry* getItemEntry);
 void Randomizer_DrawBronzeScale(PlayState* play, GetItemEntry* getItemEntry);
 void Randomizer_DrawFishingPoleGI(PlayState* play, GetItemEntry* getItemEntry);
 void Randomizer_DrawSkeletonKey(PlayState* play, GetItemEntry* getItemEntry);
+void Randomizer_DrawSign(PlayState* play, GetItemEntry* getItemEntry);
 void Randomizer_DrawMysteryItem(PlayState* play, GetItemEntry getItemEntry);
 
 #define GET_ITEM_MYSTERY \

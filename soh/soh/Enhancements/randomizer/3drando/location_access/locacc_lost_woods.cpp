@@ -11,11 +11,20 @@ void AreaTable_Init_LostWoods() {
                   EventAccess(&logic->ShowedMidoSwordAndShield, {[]{return logic->ShowedMidoSwordAndShield || (logic->IsChild && logic->KokiriSword && logic->DekuShield);}}),
                 }, {
                   //Locations
-                  LOCATION(RC_KF_KOKIRI_SWORD_CHEST,   logic->IsChild),
-                  LOCATION(RC_KF_GS_KNOW_IT_ALL_HOUSE, logic->IsChild && logic->CanChildAttack && logic->AtNight && (/*TODO: HasNightStart ||*/ logic->CanLeaveForest || logic->CanUse(RG_SUNS_SONG)) && logic->CanGetNightTimeGS),
-                  LOCATION(RC_KF_GS_BEAN_PATCH,        logic->CanPlantBugs && logic->CanChildAttack),
-                  LOCATION(RC_KF_GS_HOUSE_OF_TWINS,    logic->IsAdult && logic->AtNight && (logic->HookshotOrBoomerang || (randoCtx->GetTrickOption(RT_KF_ADULT_GS) && logic->CanUse(RG_HOVER_BOOTS))) && logic->CanGetNightTimeGS),
-                  LOCATION(RC_KF_GOSSIP_STONE,         true),
+                  LOCATION(RC_KF_KOKIRI_SWORD_CHEST,                logic->IsChild),
+                  LOCATION(RC_KF_GS_KNOW_IT_ALL_HOUSE,              logic->IsChild && logic->CanChildAttack && logic->AtNight && (/*TODO: HasNightStart ||*/ logic->CanLeaveForest || logic->CanUse(RG_SUNS_SONG)) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_KF_GS_BEAN_PATCH,                     logic->CanPlantBugs && logic->CanChildAttack),
+                  LOCATION(RC_KF_GS_HOUSE_OF_TWINS,                 logic->IsAdult && logic->AtNight && (logic->HookshotOrBoomerang || (randoCtx->GetTrickOption(RT_KF_ADULT_GS) && logic->CanUse(RG_HOVER_BOOTS))) && logic->CanGetNightTimeGS),
+                  LOCATION(RC_KF_GOSSIP_STONE,                      true),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_EXIT,              logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_HOLE_OF_Z,         logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_Z_TARGET_TUTORIAL, logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_CUT_GRASS,         logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_THRUST_ATTACK,     logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_LINKS_HOUSE,       logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_STEPPING_STONE,    logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_DEKU_TREE_MEADOW,  logic->CanReadSigns && logic->IsChild),
+                  LOCATION(RC_SIGN_KOKIRI_FOREST_SWORD,             logic->CanReadSigns && logic->IsChild),
                 }, {
                   //Exits
                   Entrance(RR_KF_LINKS_HOUSE,        {[]{return true;}}),
@@ -180,6 +189,7 @@ void AreaTable_Init_LostWoods() {
                   //Locations
                   LOCATION(RC_DEKU_THEATER_SKULL_MASK,    logic->IsChild && logic->SkullMask),
                   LOCATION(RC_DEKU_THEATER_MASK_OF_TRUTH, logic->IsChild && logic->MaskOfTruth),
+                  LOCATION(RC_SIGN_FOREST_STAGE,          logic->CanReadSigns),
                 }, {
                   //Exits
                   Entrance(RR_LW_BEYOND_MIDO, {[]{return true;}}),

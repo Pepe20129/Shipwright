@@ -1462,6 +1462,38 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_ZD_FISH_3,                                                   RAND_INF_ZD_FISH_3 },
     { RC_ZD_FISH_4,                                                   RAND_INF_ZD_FISH_4 },
     { RC_ZD_FISH_5,                                                   RAND_INF_ZD_FISH_5 },
+    { RC_SIGN_GORON_CITY_ROLLING_GORON,                               RAND_INF_SIGN_GORON_CITY_ROLLING_GORON },
+    { RC_SIGN_GERUDO_FORTRESS_HORSEBACK_ARCHERY,                      RAND_INF_SIGN_GERUDO_FORTRESS_HORSEBACK_ARCHERY },
+    { RC_SIGN_GERUDO_FORTRESS_TRAINING_GROUNDS,                       RAND_INF_SIGN_GERUDO_FORTRESS_TRAINING_GROUNDS },
+    { RC_SIGN_GERUDO_FORTRESS_WASTELAND_WARNING,                      RAND_INF_SIGN_GERUDO_FORTRESS_WASTELAND_WARNING },
+    { RC_SIGN_FOREST_STAGE,                                           RAND_INF_SIGN_FOREST_STAGE },
+    { RC_SIGN_DEATH_MOUNTAIN_TRAIL_START,                             RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_START },
+    { RC_SIGN_DEATH_MOUNTAIN_TRAIL_DODONGOS_CAVERN_ENTRANCE,          RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_DODONGOS_CAVERN_ENTRANCE },
+    { RC_SIGN_DEATH_MOUNTAIN_TRAIL_GORON_CITY_ENTRANCE,               RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_GORON_CITY_ENTRANCE },
+    { RC_SIGN_DEATH_MOUNTAIN_TRAIL_BOMB_FLOWER,                       RAND_INF_SIGN_DEATH_MOUNTAIN_TRAIL_BOMB_FLOWER },
+    { RC_SIGN_HYRULE_CASTLE_DEAD_END,                                 RAND_INF_SIGN_HYRULE_CASTLE_DEAD_END },
+    { RC_SIGN_ZORAS_FOUNTAIN,                                         RAND_INF_SIGN_ZORAS_FOUNTAIN },
+    { RC_SIGN_SHOOTING_GALLERY,                                       RAND_INF_SIGN_SHOOTING_GALLERY },
+    { RC_SIGN_ZORAS_DOMAIN_WELCOME,                                   RAND_INF_SIGN_ZORAS_DOMAIN_WELCOME },
+    { RC_SIGN_ZORAS_DOMAIN_SHOP,                                      RAND_INF_SIGN_ZORAS_DOMAIN_SHOP },
+    { RC_SIGN_ZORAS_DOMAIN_THRONE_ROOM,                               RAND_INF_SIGN_ZORAS_DOMAIN_THRONE_ROOM },
+    { RC_SIGN_GERUDO_VALLEY_NO_DIVING,                                RAND_INF_SIGN_GERUDO_VALLEY_NO_DIVING },
+    { RC_SIGN_LAKE_HYLIA_LABORATORY,                                  RAND_INF_SIGN_LAKE_HYLIA_LABORATORY },
+    { RC_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_CHILD,                      RAND_INF_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_CHILD },
+    { RC_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_ADULT,                      RAND_INF_SIGN_GRAVEYARD_GRAVEDIGGING_TOUR_ADULT },
+    { RC_SIGN_KAKARIKO_VILLAGE_WELL,                                  RAND_INF_SIGN_KAKARIKO_VILLAGE_WELL },
+    { RC_SIGN_KAKARIKO_VILLAGE_DEATH_MOUNTAIN_GATE,                   RAND_INF_SIGN_KAKARIKO_VILLAGE_DEATH_MOUNTAIN_GATE },
+    { RC_SIGN_KOKIRI_FOREST_EXIT,                                     RAND_INF_SIGN_KOKIRI_FOREST_EXIT },
+    { RC_SIGN_KOKIRI_FOREST_HOLE_OF_Z,                                RAND_INF_SIGN_KOKIRI_FOREST_HOLE_OF_Z },
+    { RC_SIGN_KOKIRI_FOREST_Z_TARGET_TUTORIAL,                        RAND_INF_SIGN_KOKIRI_FOREST_Z_TARGET_TUTORIAL },
+    { RC_SIGN_KOKIRI_FOREST_CUT_GRASS,                                RAND_INF_SIGN_KOKIRI_FOREST_CUT_GRASS },
+    { RC_SIGN_KOKIRI_FOREST_THRUST_ATTACK,                            RAND_INF_SIGN_KOKIRI_FOREST_THRUST_ATTACK },
+    { RC_SIGN_KOKIRI_FOREST_LINKS_HOUSE,                              RAND_INF_SIGN_KOKIRI_FOREST_LINKS_HOUSE },
+    { RC_SIGN_KOKIRI_FOREST_STEPPING_STONE,                           RAND_INF_SIGN_KOKIRI_FOREST_STEPPING_STONE },
+    { RC_SIGN_KOKIRI_FOREST_DEKU_TREE_MEADOW,                         RAND_INF_SIGN_KOKIRI_FOREST_DEKU_TREE_MEADOW },
+    { RC_SIGN_KOKIRI_FOREST_SWORD,                                    RAND_INF_SIGN_KOKIRI_FOREST_SWORD },
+    { RC_SIGN_LAKE_HYLIA_FISHING_CHILD,                               RAND_INF_SIGN_LAKE_HYLIA_FISHING_CHILD },
+    { RC_SIGN_LAKE_HYLIA_FISHING_ADULT,                               RAND_INF_SIGN_LAKE_HYLIA_FISHING_ADULT },
 };
 
 BeehiveIdentity Randomizer::IdentifyBeehive(s32 sceneNum, s16 xPosition, s32 respawnData) {
@@ -3031,7 +3063,7 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
-    const std::array<GetItemMessage, 85> getItemMessages = {{
+    const std::array<GetItemMessage, 86> getItemMessages = {{
         GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, 
 			"You found %gGreg%w!",
 			"%gGreg%w! Du hast ihn wirklich gefunden!",
@@ -3314,6 +3346,7 @@ void Randomizer::CreateCustomMessages() {
         GIMESSAGE_UNTRANSLATED(RG_SKELETON_KEY, ITEM_KEY_SMALL, "You found the %rSkeleton Key%w!"),
         GIMESSAGE_UNTRANSLATED(RG_DEKU_STICK_BAG, ITEM_STICK, "You found the %rDeku Stick Bag%w!&You can now hold deku sticks!"),
         GIMESSAGE_UNTRANSLATED(RG_DEKU_NUT_BAG, ITEM_NUT, "You found the %rDeku Nut Bag%w!&You can now hold deku nuts!"),
+        GIMESSAGE_UNTRANSLATED(RG_SIGN, ITEM_OCARINA_TIME, "SIGN"),
     }};
     CreateGetItemMessages(&getItemMessages);
     CreateRupeeMessages();

@@ -2505,6 +2505,9 @@ CustomMessage Randomizer_GetCustomGetItemMessage(Player* player) {
     return getItemText;
 }
 
+extern "C" void Message_FindMessage(PlayState* play, u16 textId);
+extern "C" u16 Randomizer_SignShuffle_GetRandomMessage();
+
 extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
     MessageContext* msgCtx = &play->msgCtx;
     uint16_t textId = msgCtx->textId;
@@ -2517,7 +2520,14 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
         auto ctx = Rando::Context::GetInstance();
         Player* player = GET_PLAYER(play);
         if (textId == TEXT_RANDOMIZER_CUSTOM_ITEM) {
-            if (player->getItemEntry.getItemId == RG_ICE_TRAP) {
+            if (player->getItemEntry.getItemId == RG_SIGN) {
+                //TODO: Store the specific sign message, temporarily it's just a random one
+                Message_FindMessage(play, Randomizer_SignShuffle_GetRandomMessage());
+                msgCtx->msgLength = font->msgLength;
+                char* src = (char*)(uintptr_t)font->msgOffset;
+                memcpy(font->msgBuf, src, font->msgLength);
+                return true;
+            } else if (player->getItemEntry.getItemId == RG_ICE_TRAP) {
                 u16 iceTrapTextId = Random(0, NUM_ICE_TRAP_MESSAGES);
                 messageEntry = CustomMessageManager::Instance->RetrieveMessage(Randomizer::IceTrapRandoMessageTableID, iceTrapTextId);
                 if (CVarGetInteger(CVAR_GENERAL("LetItSnow"), 0)) {

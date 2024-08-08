@@ -565,6 +565,7 @@ namespace Rando {
         // IsChild = Age == AGE_CHILD;
         // IsAdult = Age == AGE_ADULT;
 
+        CanReadSigns = true;
         CanBlastOrSmash = HasExplosives || CanUse(RG_MEGATON_HAMMER);
         CanChildAttack  = IsChild && (Slingshot || Boomerang || Sticks || KokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
         CanChildDamage  = IsChild && (Slingshot ||              Sticks || KokiriSword || HasExplosives || CanUse(RG_DINS_FIRE) || CanUse(RG_MASTER_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_BIGGORON_SWORD));
@@ -1008,6 +1009,7 @@ namespace Rando {
         IsChild          = false;
         IsAdult          = false;
         IsGlitched       = ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHED);
+        CanReadSigns     = true;
         CanBlastOrSmash  = false;
         CanChildAttack   = false;
         CanChildDamage   = false;

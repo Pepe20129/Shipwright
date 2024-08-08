@@ -259,6 +259,7 @@ class Logic {
     bool IsChild = false;
     bool IsAdult = false;
     bool IsGlitched = false;
+    bool CanReadSigns = true;
     bool CanBlastOrSmash = false;
     bool CanChildAttack = false;
     bool CanChildDamage = false;

@@ -5,7 +5,7 @@
 namespace Rando {
 
 void StaticData::HintTable_Init_Item() {
-    
+
     hintTextTable[RHT_KOKIRI_SWORD] = HintText(CustomMessage("the Kokiri Sword", /*german*/"", /*french*/"l'Épée Kokiri"),
                                                // /*spanish*/la Espada Kokiri
                                                {
@@ -2120,6 +2120,12 @@ void StaticData::HintTable_Init_Item() {
                                          // /*spanish*/una yegua
                                     CustomMessage("a four legged friend", /*german*/"", /*french*/"un puissant animal")});
                                          // /*spanish*/una amiga cuadrúpeda
+
+    hintTextTable[RHT_SIGN] = HintText(CustomMessage("a Sign", /*german*/"", /*french*/""),
+                                       {
+                                       CustomMessage("a text holder", /*german*/"", /*french*/"")
+                                       }, {
+                                       CustomMessage("a text holder", /*german*/"", /*french*/"")});
 
     //What is this used for?
     hintTextTable[RHT_HINT_MYSTERIOUS] = HintText(CustomMessage("something mysterious", /*german*/"etwas Unvorhergesehenes", /*french*/"un sacré mystère"));
