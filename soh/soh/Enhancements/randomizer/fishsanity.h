@@ -85,16 +85,41 @@ class Fishsanity {
      * @brief Get fishsanity fishing pond options from the requested source
     */
     FishsanityPondOptions GetOptions(FishsanityOptionsSource optionsSource = FSO_SOURCE_RANDO);
-    
+
     /**
      * @brief Updates current pond fish according to save data
     */
     void UpdateCurrentPondFish();
-    
+
     /**
      * @brief Initializes internal state from save
     */
     void InitializeFromSave();
+
+    /**
+     * @brief Runs on scene init
+    */
+    void OnSceneInit();
+
+    /**
+     * @brief Runs on actor init
+    */
+    void OnActorInit(Actor* actor);
+
+    /**
+     * @brief Runs on actor update
+    */
+    void OnActorUpdate(Actor* actor);
+
+    /**
+     * @brief Runs on flag set
+    */
+    void OnFlagSet(int16_t flagType, int16_t flag);
+
+    /**
+     * @brief Runs on player update
+    */
+    void OnPlayerUpdate();
 
     /**
      * @brief Returns true if the fishing pond is shuffled
