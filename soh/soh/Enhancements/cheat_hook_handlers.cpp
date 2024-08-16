@@ -172,19 +172,19 @@ void RegisterFreezeTime() {
     });
 }
 
-static uint32_t onVanillaBehaviorHook = 0;
-void CheatsRegisterHooks() {
+void Cheats_Register() {
+    static uint32_t onVanillaBehaviorHook = 0;
+
     RegisterInfiniteCheats();
     RegisterMoonJumpOnL();
     RegisterEasyISG();
     RegisterEasyQPA();
     RegisterUnrestrictedItems();
     RegisterFreezeTime();
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadGame>([](int32_t fileNum) mutable {
 
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadGame>([](int32_t fileNum) mutable {
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnVanillaBehavior>(onVanillaBehaviorHook);
         onVanillaBehaviorHook = 0;
         onVanillaBehaviorHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnVanillaBehavior>(CheatsOnVanillaBehaviorHandler);
-
     });
 }

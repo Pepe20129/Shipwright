@@ -36,7 +36,10 @@ extern "C" {
 #include "src/overlays/actors/ovl_En_Bom_Bowl_Pit/z_en_bom_bowl_pit.h"
 #include "src/overlays/actors/ovl_En_Ge1/z_en_ge1.h"
 #include "src/overlays/actors/ovl_En_Xc/z_en_xc.h"
-#include "src/overlays//actors/ovl_Fishing/z_fishing.h"
+#include "src/overlays/actors/ovl_Door_Shutter/z_door_shutter.h"
+#include "src/overlays/actors/ovl_En_Door/z_en_door.h"
+#include "src/overlays/actors/ovl_Fishing/z_fishing.h"
+#include "objects/object_gi_compass/object_gi_compass.h"
 #include "adult_trade_shuffle.h"
 #include "draw.h"
 
@@ -45,9 +48,9 @@ extern PlayState* gPlayState;
 extern void func_8084DFAC(PlayState* play, Player* player);
 extern void func_80835DAC(PlayState* play, Player* player, PlayerActionFunc actionFunc, s32 flags);
 extern s32 func_80836898(PlayState* play, Player* player, PlayerFuncA74 func);
+void ResourceMgr_PatchGfxByName(const char* path, const char* patchName, int index, Gfx instruction);
+void ResourceMgr_UnpatchGfxByName(const char* path, const char* patchName);
 }
-
-#define RAND_GET_OPTION(option) Rando::Context::GetInstance()->GetOption(option).GetSelectedOptionIndex()
 
 bool LocMatchesQuest(Rando::Location loc) {
     if (loc.GetQuest() == RCQUEST_BOTH) {
@@ -1743,6 +1746,18 @@ void RandomizerOnGameFrameUpdateHandler() {
     }
 }
 
+extern "C" void Randomizer_PatchCompasses() {
+    s8 compassesCanBeOutsideDungeon = IS_RANDO && DUNGEON_ITEMS_CAN_BE_OUTSIDE_DUNGEON(RSK_SHUFFLE_MAPANDCOMPASS);
+    s8 isColoredCompassesEnabled = compassesCanBeOutsideDungeon && CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("MatchCompassColors"), 1);
+    if (isColoredCompassesEnabled) {
+        ResourceMgr_PatchGfxByName(gGiCompassDL, "Compass_PrimColor", 5, gsDPNoOp());
+        ResourceMgr_PatchGfxByName(gGiCompassDL, "Compass_EnvColor", 6, gsDPNoOp());
+    } else {
+        ResourceMgr_UnpatchGfxByName(gGiCompassDL, "Compass_PrimColor");
+        ResourceMgr_UnpatchGfxByName(gGiCompassDL, "Compass_EnvColor");
+    }
+}
+
 void RandomizerRegisterHooks() {
     static uint32_t onFlagSetHook = 0;
     static uint32_t onSceneFlagSetHook = 0;
@@ -1789,6 +1804,8 @@ void RandomizerRegisterHooks() {
         onActorUpdateHook = 0;
         onGameFrameUpdateHook = 0;
         onSceneSpawnActorsHook = 0;
+
+        Randomizer_PatchCompasses();
 
         if (!IS_RANDO) return;
 

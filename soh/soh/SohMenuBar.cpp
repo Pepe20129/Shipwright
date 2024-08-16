@@ -38,6 +38,8 @@
 #include "Enhancements/randomizer/randomizer_settings_window.h"
 #include "Enhancements/resolution-editor/ResolutionEditor.h"
 
+extern "C" void Randomizer_PatchCompasses();
+
 // FA icons are kind of wonky, if they worked how I expected them to the "+ 2.0f" wouldn't be needed, but
 // they don't work how I expect them to so I added that because it looked good when I eyeballed it
 #define FA_ICON_BUTTON_FRAME_PADDING_X(icon) (((optionsButtonSize.x - ImGui::CalcTextSize(icon).x) / 2) + 2.0f)
@@ -2161,7 +2163,7 @@ void DrawRandomizerMenu() {
 
             if (UIWidgets::PaddedEnhancementCheckbox("Compass Colors Match Dungeon", CVAR_RANDOMIZER_ENHANCEMENT("MatchCompassColors"), true, false,
                                                   disableCompassColors, disableCompassColorsText, UIWidgets::CheckboxGraphics::Cross, true)) {
-                PatchCompasses();
+                Randomizer_PatchCompasses();
             }
             UIWidgets::Tooltip(
                 "Matches the color of compasses to the dungeon they belong to. "

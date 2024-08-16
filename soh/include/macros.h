@@ -312,10 +312,24 @@ extern GraphicsContext* __gfxCtx;
 #define GANONS_CASTLE_SMALL_KEY_MAX (ResourceMgr_IsSceneMasterQuest(SCENE_INSIDE_GANONS_CASTLE) ? 3 : 2)
 #define TREASURE_GAME_SMALL_KEY_MAX 6
 
-#define DUNGEON_ITEMS_CAN_BE_OUTSIDE_DUNGEON(randomizerSettingsKey) \
-    (Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_STARTWITH && \
-     Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_VANILLA && \
-     Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_OWN_DUNGEON)
+#ifdef __cplusplus
+
+#define RAND_GET_OPTION(option) Rando::Context::GetInstance()->GetOption(option).GetSelectedOptionIndex()
+
+#define DUNGEON_ITEMS_CAN_BE_OUTSIDE_DUNGEON(randomizerSettingsKey)                \
+    (                                                                              \
+        RAND_GET_OPTION(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_STARTWITH && \
+        RAND_GET_OPTION(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_VANILLA &&   \
+        RAND_GET_OPTION(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_OWN_DUNGEON  \
+    )
+#else
+#define DUNGEON_ITEMS_CAN_BE_OUTSIDE_DUNGEON(randomizerSettingsKey)                           \
+    (                                                                                         \
+        Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_STARTWITH && \
+        Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_VANILLA &&   \
+        Randomizer_GetSettingValue(randomizerSettingsKey) != RO_DUNGEON_ITEM_LOC_OWN_DUNGEON  \
+    )
+#endif //__cplusplus
 // #endregion
 
 #endif

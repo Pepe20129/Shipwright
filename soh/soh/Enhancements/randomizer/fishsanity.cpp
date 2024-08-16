@@ -1,10 +1,17 @@
 #include "3drando/pool_functions.hpp"
 #include "../../OTRGlobals.h"
+#include "../game-interactor/GameInteractor.h"
 #include "fishsanity.h"
 #include "variables.h"
 #include "functions.h"
 #include "macros.h"
 #include <consolevariablebridge.h>
+
+#include "src/overlays/actors/ovl_Fishing/z_fishing.h"
+
+extern "C" {
+    extern PlayState* gPlayState;
+}
 
 #define FSi OTRGlobals::Instance->gRandoContext->GetFishsanity()
 
@@ -246,7 +253,7 @@ namespace Rando {
             actor->params <= 117 && FSi->GetPondFishShuffled()) {
             // Initialize pond fish for fishsanity
             // Initialize fishsanity metadata on this actor
-            Fishing* fishActor = static_cast<Fishing*>(refActor);
+            Fishing* fishActor = reinterpret_cast<Fishing*>(actor);
             fishActor->fishsanityParams = actor->params;
             fish = OTRGlobals::Instance->gRandomizer->IdentifyFish(gPlayState->sceneNum, actor->params);
 
@@ -268,7 +275,7 @@ namespace Rando {
 
         // Detect fish catch
         if (actor->id == ACTOR_FISHING && FSi->GetPondFishShuffled()) {
-            Fishing* fish = static_cast<Fishing*>(refActor);
+            Fishing* fish = reinterpret_cast<Fishing*>(actor);
 
             // State 6 -> Fish caught and hoisted
             FishIdentity pending = FSi->GetPendingFish();
