@@ -5,6 +5,7 @@
 #include "dungeon.h"
 #include "../../OTRGlobals.h"
 #include "../../UIWidgets.hpp"
+#include "3drando/location_access.hpp"
 
 #include <string>
 #include <vector>
@@ -64,6 +65,7 @@ bool showCows;
 bool showAdultTrade;
 bool showKokiriSword;
 bool showMasterSword;
+bool showHyruleLoach;
 bool showWeirdEgg;
 bool showGerudoCard;
 bool showFrogSongRupees;
@@ -136,6 +138,8 @@ u32 areasSpoiled = 0;
 bool showVOrMQ;
 s8 areaChecksGotten[RCAREA_INVALID]; //|     "Kokiri Forest (4/9)"
 s8 areaCheckTotals[RCAREA_INVALID];
+uint16_t totalChecks = 0;
+uint16_t totalChecksGotten = 0;
 bool optCollapseAll; // A bool that will collapse all checks once
 bool optExpandAll;       // A bool that will expand all checks once
 RandomizerCheck lastLocationChecked = RC_UNKNOWN_CHECK;
@@ -258,6 +262,24 @@ void TrySetAreas() {
     }
 }
 
+void CalculateTotals() {
+    totalChecks = 0;
+    totalChecksGotten = 0;
+
+    for (uint8_t i = 0; i < RCAREA_INVALID; i++) {
+        totalChecks += areaCheckTotals[i];
+        totalChecksGotten += areaChecksGotten[i];
+    }
+}
+
+uint16_t GetTotalChecks() {
+    return totalChecks;
+}
+
+uint16_t GetTotalChecksGotten() {
+    return totalChecksGotten;
+}
+
 void RecalculateAreaTotals() {
     for (auto [rcArea, checks] : checksByArea) {
         if (rcArea == RCAREA_INVALID) {
@@ -276,6 +298,9 @@ void RecalculateAreaTotals() {
             }
         }
     }
+
+    totalChecks = 0;
+    totalChecksGotten = 0;
 }
 
 void SetCheckCollected(RandomizerCheck rc) {
@@ -927,6 +952,8 @@ void CheckTrackerWindow::DrawElement() {
         return;
     }
 
+    AreaTable_Init();
+
     ImGui::TableNextRow(0, headerHeight);
     ImGui::TableNextColumn();
     UIWidgets::EnhancementCheckbox(
@@ -950,6 +977,10 @@ void CheckTrackerWindow::DrawElement() {
     }
     UIWidgets::Tooltip("Clear the search field");
     checkSearch.Draw();
+
+    UIWidgets::PaddedSeparator();
+
+    ImGui::Text("Total Checks: %d / %d", totalChecksGotten, totalChecks);
 
     UIWidgets::PaddedSeparator();
 
@@ -1164,6 +1195,9 @@ void LoadSettings() {
     showMasterSword = IS_RANDO ?
         OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_MASTER_SWORD) == RO_GENERIC_YES
         : true;
+    showHyruleLoach = IS_RANDO ?
+        OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_FISHSANITY) == RO_FISHSANITY_HYRULE_LOACH
+        : false;
     showWeirdEgg = IS_RANDO ?
         OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_WEIRD_EGG) == RO_GENERIC_YES
         : true;
@@ -1284,6 +1318,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                 ) &&
             (rc != RC_KF_KOKIRI_SWORD_CHEST || showKokiriSword) &&
             (rc != RC_TOT_MASTER_SWORD || showMasterSword) &&
+            (rc != RC_LH_HYRULE_LOACH || showHyruleLoach) &&
             (rc != RC_ZR_MAGIC_BEAN_SALESMAN || showBeans) &&
             (rc != RC_HC_MALON_EGG || showWeirdEgg) &&
             (loc->GetRCType() != RCTYPE_FROG_SONG || showFrogSongRupees) &&
@@ -1341,6 +1376,8 @@ void UpdateOrdering(RandomizerCheckArea rcArea) {
     if(checksByArea.contains(rcArea)) {
         std::sort(checksByArea.find(rcArea)->second.begin(), checksByArea.find(rcArea)->second.end(), CompareChecks);
     }
+
+    CalculateTotals();
 }
 
 bool IsEoDCheck(RandomizerCheckType type) {
@@ -1561,6 +1598,19 @@ void DrawLocation(RandomizerCheck rc) {
         ImGui::Text(" (%s)", txt.c_str());
         ImGui::PopStyleColor();
     }
+
+    if (CVarGetInteger("gCheckTrackerOptionShowLogic", 0)) {
+        std::vector<LocationAccess> locationsInRegion = areaTable[itemLoc->GetParentRegionKey()].locations;
+        for (auto& locationInRegion : locationsInRegion) {
+            if (locationInRegion.GetLocation() == rc) {
+                std::string conditionStr = locationInRegion.GetConditionStr();
+                if (conditionStr != "true") {
+                    UIWidgets::InsertHelpHoverText(conditionStr);
+                }
+                return;
+            }
+        }
+    }
 }
 
 static std::set<std::string> rainbowCVars = {
@@ -1698,6 +1748,8 @@ void CheckTrackerSettingsWindow::DrawElement() {
         RecalculateAreaTotals();
     }
     UIWidgets::Tooltip("If enabled, will show GS locations in the tracker regardless of tokensanity settings.");
+    UIWidgets::EnhancementCheckbox("Show Logic", "gCheckTrackerOptionShowLogic");
+    UIWidgets::Tooltip("If enabled, will show a check's logic when hovering over it.");
 
     // Filtering settings
     UIWidgets::PaddedSeparator();
