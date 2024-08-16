@@ -1109,46 +1109,6 @@ void RegisterPauseMenuHooks() {
     });
 }
 
-void RegisterInfiniteUpgrades() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>([]() {
-        if (!IS_RANDO) {
-            return;
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_QUIVER)) {
-            AMMO(ITEM_BOW) = CUR_CAPACITY(UPG_QUIVER);
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMB_BAG)) {
-            AMMO(ITEM_BOMB) = CUR_CAPACITY(UPG_BOMB_BAG);
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BULLET_BAG)) {
-            AMMO(ITEM_SLINGSHOT) = CUR_CAPACITY(UPG_BULLET_BAG);
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_STICK_UPGRADE)) {
-            AMMO(ITEM_STICK) = CUR_CAPACITY(UPG_STICKS);
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_NUT_UPGRADE)) {
-            AMMO(ITEM_NUT) = CUR_CAPACITY(UPG_NUTS);
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_MAGIC_METER)) {
-            gSaveContext.magic = gSaveContext.magicCapacity;
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS)) {
-            AMMO(ITEM_BOMBCHU) = 50;
-        }
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_MONEY)) {
-            gSaveContext.rupees = CUR_CAPACITY(UPG_WALLET);
-        }
-    });
-}
-
 extern "C" u8 Randomizer_GetSettingValue(RandomizerSettingKey randoSettingKey);
 
 void PatchCompasses() {
@@ -1166,24 +1126,6 @@ void PatchCompasses() {
 void RegisterRandomizerCompasses() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadFile>([](int32_t _unused) {
         PatchCompasses();
-    });
-}
-
-void RegisterSkeletonKey() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorUpdate>([](void* refActor) {
-        Actor* actor = static_cast<Actor*>(refActor);
-
-        if (Flags_GetRandomizerInf(RAND_INF_HAS_SKELETON_KEY)) {
-            if (actor->id == ACTOR_EN_DOOR) {
-                EnDoor* door = (EnDoor*)actor;
-                door->lockTimer = 0;
-            } else if (actor->id == ACTOR_DOOR_SHUTTER) {
-                DoorShutter* shutterDoor = (DoorShutter*)actor;
-                if (shutterDoor->doorType == SHUTTER_KEY_LOCKED) {
-                    shutterDoor->unk_16E = 0;
-                }
-            }
-        }
     });
 }
 
@@ -1210,12 +1152,10 @@ void InitMods() {
     RegisterAltTrapTypes();
     RegisterRandomizedEnemySizes();
     RegisterToTMedallions();
-    RegisterInfiniteUpgrades();
     RegisterRandomizerCompasses();
     NameTag_RegisterHooks();
     RegisterFloorSwitchesHook();
     RegisterPatchHandHandler();
     RegisterHurtContainerModeHandler();
     RegisterPauseMenuHooks();
-    RegisterSkeletonKey();
 }

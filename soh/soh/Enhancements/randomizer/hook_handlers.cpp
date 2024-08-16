@@ -1323,10 +1323,67 @@ void ObjComb_RandomizerWait(ObjComb* objComb, PlayState* play) {
     }    
 }
 
+//Boss souls require an additional item (represented by a RAND_INF) to spawn a boss in a particular lair
+void OnActorInit_BossSouls(Actor* actor) {
+    if (RAND_GET_OPTION(RSK_SHUFFLE_BOSS_SOULS) == RO_BOSS_SOULS_OFF) {
+        return;
+    }
+
+    RandomizerInf rand_inf = RAND_INF_MAX;
+    switch (gPlayState->sceneNum){
+        case SCENE_DEKU_TREE_BOSS:
+            rand_inf = RAND_INF_GOHMA_SOUL;
+            break;
+        case SCENE_DODONGOS_CAVERN_BOSS:
+            rand_inf = RAND_INF_KING_DODONGO_SOUL;
+            break;
+        case SCENE_JABU_JABU_BOSS:
+            rand_inf = RAND_INF_BARINADE_SOUL;
+            break;
+        case SCENE_FOREST_TEMPLE_BOSS:
+            rand_inf = RAND_INF_PHANTOM_GANON_SOUL;
+            break;
+        case SCENE_FIRE_TEMPLE_BOSS:
+            rand_inf = RAND_INF_VOLVAGIA_SOUL;
+            break;
+        case SCENE_WATER_TEMPLE_BOSS:
+            rand_inf = RAND_INF_MORPHA_SOUL;
+            break;
+        case SCENE_SHADOW_TEMPLE_BOSS:
+            rand_inf = RAND_INF_BONGO_BONGO_SOUL;
+            break;
+        case SCENE_SPIRIT_TEMPLE_BOSS:
+            rand_inf = RAND_INF_TWINROVA_SOUL;
+            break;
+        case SCENE_GANONDORF_BOSS:
+        case SCENE_GANON_BOSS:
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOSS_SOULS) == RO_BOSS_SOULS_ON_PLUS_GANON) {
+                rand_inf = RAND_INF_GANON_SOUL;
+            }
+            break;
+        default: break;
+    }
+
+    //Deletes all actors in the boss category if the soul isn't found.
+    //Some actors, like Dark Link, Arwings, and Zora's Sapphire...?, are in this category despite not being actual bosses,
+    //so ignore any "boss" if `rand_inf` doesn't change from RAND_INF_MAX.
+    if (rand_inf != RAND_INF_MAX) {
+        if (!Flags_GetRandomizerInf(rand_inf) && actor->category == ACTORCAT_BOSS) {
+            Actor_Delete(&gPlayState->actorCtx, actor, gPlayState);
+        }
+        //Special case for Phantom Ganon's horse (and fake), as they're considered "background actors",
+        //but still control the boss fight flow.
+        if (!Flags_GetRandomizerInf(RAND_INF_PHANTOM_GANON_SOUL) && actor->id == ACTOR_EN_FHG) {
+            Actor_Delete(&gPlayState->actorCtx, actor, gPlayState);
+        }
+    }
+}
+
 void RandomizerOnActorInitHandler(void* actorRef) {
     Actor* actor = static_cast<Actor*>(actorRef);
 
     OTRGlobals::Instance->gRandoContext->GetFishsanity()->OnActorInit(actor);
+    OnActorInit_BossSouls(actor);
 
     if (actor->id == ACTOR_EN_SI) {
         RandomizerCheck rc = OTRGlobals::Instance->gRandomizer->GetCheckFromActor(actor->id, gPlayState->sceneNum, actor->params);
@@ -1492,35 +1549,6 @@ void RandomizerOnActorInitHandler(void* actorRef) {
     }
 }
 
-f32 triforcePieceScale;
-
-void RegisterTriforceHunt() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>([]() {
-        if (!GameInteractor::IsGameplayPaused() &&
-            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT)) {
-
-            // Warp to credits
-            if (GameInteractor::State::TriforceHuntCreditsWarpActive) {
-                gPlayState->nextEntranceIndex = ENTR_CHAMBER_OF_THE_SAGES_0;
-                gSaveContext.nextCutsceneIndex = 0xFFF2;
-                gPlayState->transitionTrigger = TRANS_TRIGGER_START;
-                gPlayState->transitionType = TRANS_TYPE_FADE_WHITE;
-                GameInteractor::State::TriforceHuntCreditsWarpActive = 0;
-            }
-
-            // Reset Triforce Piece scale for GI animation. Triforce Hunt allows for multiple triforce models,
-            // and cycles through them based on the amount of triforce pieces collected. It takes a little while
-            // for the count to increase during the GI animation, so the model is entirely hidden until that piece
-            // has been added. That scale has to be reset after the textbox is closed, and this is the best way
-            // to ensure it's done at that point in time specifically.
-            if (GameInteractor::State::TriforceHuntPieceGiven) {
-                triforcePieceScale = 0.0f;
-                GameInteractor::State::TriforceHuntPieceGiven = 0;
-            }
-        }
-    });
-}
-
 void RegisterGrantGanonsBossKey() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>([]() {
         // Triforce Hunt needs the check if the player isn't being teleported to the credits scene.
@@ -1534,10 +1562,8 @@ void RegisterGrantGanonsBossKey() {
     });
 }
 
-void RegisterRandomizerSheikSpawn() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneSpawnActors>([]() {
-        if (!gPlayState) return;
-        if (!IS_RANDO || !LINK_IS_ADULT || !OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHEIK_LA_HINT)) return;
+void RandomizerOnSceneSpawnActorsHandler() {
+    if (LINK_IS_ADULT && RAND_GET_OPTION(RSK_SHEIK_LA_HINT)) {
         switch (gPlayState->sceneNum) {
             case SCENE_TEMPLE_OF_TIME:
                 if (gPlayState->roomCtx.curRoom.num == 1) {
@@ -1545,70 +1571,14 @@ void RegisterRandomizerSheikSpawn() {
                 }
                 break;
             case SCENE_INSIDE_GANONS_CASTLE:
-                if (gPlayState->roomCtx.curRoom.num == 1){
+                if (gPlayState->roomCtx.curRoom.num == 1) {
                     Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_XC, 101, 150, 137, 0, 0, 0, SHEIK_TYPE_RANDO, false);
-                    }
-                break;
-            default: break;
-        }
-    });
-}
-
-//Boss souls require an additional item (represented by a RAND_INF) to spawn a boss in a particular lair
-void RegisterBossSouls() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorInit>([](void* actor) {
-        if (!gPlayState) return;
-        if (!IS_RANDO || !(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOSS_SOULS))) return;
-        RandomizerInf rand_inf = RAND_INF_MAX;
-        Actor* actual = (Actor*)actor;
-        switch (gPlayState->sceneNum){
-            case SCENE_DEKU_TREE_BOSS:
-                rand_inf = RAND_INF_GOHMA_SOUL;
-                break;
-            case SCENE_DODONGOS_CAVERN_BOSS:
-                rand_inf = RAND_INF_KING_DODONGO_SOUL;
-                break;
-            case SCENE_JABU_JABU_BOSS:
-                rand_inf = RAND_INF_BARINADE_SOUL;
-                break;
-            case SCENE_FOREST_TEMPLE_BOSS:
-                rand_inf = RAND_INF_PHANTOM_GANON_SOUL;
-                break;
-            case SCENE_FIRE_TEMPLE_BOSS:
-                rand_inf = RAND_INF_VOLVAGIA_SOUL;
-                break;
-            case SCENE_WATER_TEMPLE_BOSS:
-                rand_inf = RAND_INF_MORPHA_SOUL;
-                break;
-            case SCENE_SHADOW_TEMPLE_BOSS:
-                rand_inf = RAND_INF_BONGO_BONGO_SOUL;
-                break;
-            case SCENE_SPIRIT_TEMPLE_BOSS:
-                rand_inf = RAND_INF_TWINROVA_SOUL;
-                break;
-            case SCENE_GANONDORF_BOSS:
-            case SCENE_GANON_BOSS:
-                if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOSS_SOULS) == RO_BOSS_SOULS_ON_PLUS_GANON) {
-                    rand_inf = RAND_INF_GANON_SOUL;
                 }
                 break;
-            default: break;
+            default:
+                break;
         }
-
-        //Deletes all actors in the boss category if the soul isn't found.
-        //Some actors, like Dark Link, Arwings, and Zora's Sapphire...?, are in this category despite not being actual bosses,
-        //so ignore any "boss" if `rand_inf` doesn't change from RAND_INF_MAX.
-        if (rand_inf != RAND_INF_MAX) {
-            if (!Flags_GetRandomizerInf(rand_inf) && actual->category == ACTORCAT_BOSS) {
-                Actor_Delete(&gPlayState->actorCtx, actual, gPlayState);
-            }
-            //Special case for Phantom Ganon's horse (and fake), as they're considered "background actors",
-            //but still control the boss fight flow.
-            if (!Flags_GetRandomizerInf(RAND_INF_PHANTOM_GANON_SOUL) && actual->id == ACTOR_EN_FHG) {
-                Actor_Delete(&gPlayState->actorCtx, actual, gPlayState);
-            }
-        }
-    });
+    }
 }
 
 //from z_player.c
@@ -1661,47 +1631,116 @@ std::map<s32, SpecialRespawnInfo> swimSpecialRespawnInfo = {
     }
 };
 
-void RegisterNoSwim() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>([]() {
-        if (
-            IS_RANDO &&
-            (GET_PLAYER(gPlayState)->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
-            !Flags_GetRandomizerInf(RAND_INF_CAN_SWIM) &&
-            CUR_EQUIP_VALUE(EQUIP_TYPE_BOOTS) != EQUIP_VALUE_BOOTS_IRON
-        ) {
-            //if you void out in water temple without swim you get instantly kicked out to prevent softlocks
-            if (gPlayState->sceneNum == SCENE_WATER_TEMPLE) {
-                GameInteractor::RawAction::TeleportPlayer(Entrance_OverrideNextIndex(ENTR_LAKE_HYLIA_2));//lake hylia from water temple
-                return;
-            }
-
-            if (swimSpecialRespawnInfo.find(gSaveContext.entranceIndex) != swimSpecialRespawnInfo.end()) {
-                SpecialRespawnInfo* respawnInfo = &swimSpecialRespawnInfo.at(gSaveContext.entranceIndex);
-
-                Play_SetupRespawnPoint(gPlayState, RESPAWN_MODE_DOWN, 0xDFF);
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].pos = respawnInfo->pos;
-                gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = respawnInfo->yaw;
-            }
-
-            Play_TriggerVoidOut(gPlayState);
+void OnPlayerUpdate_NoSwim() {
+    if (
+        (GET_PLAYER(gPlayState)->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
+        !Flags_GetRandomizerInf(RAND_INF_CAN_SWIM) &&
+        CUR_EQUIP_VALUE(EQUIP_TYPE_BOOTS) != EQUIP_VALUE_BOOTS_IRON
+    ) {
+        //if you void out in water temple without swim you get instantly kicked out to prevent softlocks
+        if (gPlayState->sceneNum == SCENE_WATER_TEMPLE) {
+            GameInteractor::RawAction::TeleportPlayer(Entrance_OverrideNextIndex(ENTR_LAKE_HYLIA_2));//lake hylia from water temple
+            return;
         }
-    });
+
+        if (swimSpecialRespawnInfo.find(gSaveContext.entranceIndex) != swimSpecialRespawnInfo.end()) {
+            SpecialRespawnInfo* respawnInfo = &swimSpecialRespawnInfo.at(gSaveContext.entranceIndex);
+
+            Play_SetupRespawnPoint(gPlayState, RESPAWN_MODE_DOWN, 0xDFF);
+            gSaveContext.respawn[RESPAWN_MODE_DOWN].pos = respawnInfo->pos;
+            gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = respawnInfo->yaw;
+        }
+
+        Play_TriggerVoidOut(gPlayState);
+    }
 }
 
-void RegisterNoWallet() {
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>([]() {
-        if (IS_RANDO && !Flags_GetRandomizerInf(RAND_INF_HAS_WALLET)) {
-            gSaveContext.rupees = 0;
-        }
-    });
+void OnGameFrameUpdate_NoWallet() {
+    if (!Flags_GetRandomizerInf(RAND_INF_HAS_WALLET)) {
+        gSaveContext.rupees = 0;
+    }
 }
 
 void RandomizerOnActorUpdateHandler(void* refActor) {
-    OTRGlobals::Instance->gRandoContext->GetFishsanity()->OnActorUpdate(static_cast<Actor*>(refActor));
+    Actor* actor = static_cast<Actor*>(refActor);
+    OTRGlobals::Instance->gRandoContext->GetFishsanity()->OnActorUpdate(actor);
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_SKELETON_KEY)) {
+        if (actor->id == ACTOR_EN_DOOR) {
+            EnDoor* door = (EnDoor*)actor;
+            door->lockTimer = 0;
+        } else if (actor->id == ACTOR_DOOR_SHUTTER) {
+            DoorShutter* shutterDoor = (DoorShutter*)actor;
+            if (shutterDoor->doorType == SHUTTER_KEY_LOCKED) {
+                shutterDoor->unk_16E = 0;
+            }
+        }
+    }
 }
+
+f32 triforcePieceScale;
 
 void RandomizerOnPlayerUpdateHandler() {
     OTRGlobals::Instance->gRandoContext->GetFishsanity()->OnPlayerUpdate();
+    OnPlayerUpdate_NoSwim();
+
+    //triforce hunt
+    if (!GameInteractor::IsGameplayPaused() && RAND_GET_OPTION(RSK_TRIFORCE_HUNT)) {
+        // Warp to credits
+        if (GameInteractor::State::TriforceHuntCreditsWarpActive) {
+            gPlayState->nextEntranceIndex = ENTR_CHAMBER_OF_THE_SAGES_0;
+            gSaveContext.nextCutsceneIndex = 0xFFF2;
+            gPlayState->transitionTrigger = TRANS_TRIGGER_START;
+            gPlayState->transitionType = TRANS_TYPE_FADE_WHITE;
+            GameInteractor::State::TriforceHuntCreditsWarpActive = 0;
+        }
+
+        // Reset Triforce Piece scale for GI animation. Triforce Hunt allows for multiple triforce models,
+        // and cycles through them based on the amount of triforce pieces collected. It takes a little while
+        // for the count to increase during the GI animation, so the model is entirely hidden until that piece
+        // has been added. That scale has to be reset after the textbox is closed, and this is the best way
+        // to ensure it's done at that point in time specifically.
+        if (GameInteractor::State::TriforceHuntPieceGiven) {
+            triforcePieceScale = 0.0f;
+            GameInteractor::State::TriforceHuntPieceGiven = 0;
+        }
+    }
+}
+
+void RandomizerOnGameFrameUpdateHandler() {
+    OnGameFrameUpdate_NoWallet();
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_QUIVER)) {
+        AMMO(ITEM_BOW) = CUR_CAPACITY(UPG_QUIVER);
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMB_BAG)) {
+        AMMO(ITEM_BOMB) = CUR_CAPACITY(UPG_BOMB_BAG);
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BULLET_BAG)) {
+        AMMO(ITEM_SLINGSHOT) = CUR_CAPACITY(UPG_BULLET_BAG);
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_STICK_UPGRADE)) {
+        AMMO(ITEM_STICK) = CUR_CAPACITY(UPG_STICKS);
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_NUT_UPGRADE)) {
+        AMMO(ITEM_NUT) = CUR_CAPACITY(UPG_NUTS);
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_MAGIC_METER)) {
+        gSaveContext.magic = gSaveContext.magicCapacity;
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS)) {
+        AMMO(ITEM_BOMBCHU) = 50;
+    }
+
+    if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_MONEY)) {
+        gSaveContext.rupees = CUR_CAPACITY(UPG_WALLET);
+    }
 }
 
 void RandomizerRegisterHooks() {
@@ -1715,13 +1754,10 @@ void RandomizerRegisterHooks() {
     static uint32_t onSceneInitHook = 0;
     static uint32_t onActorInitHook = 0;
     static uint32_t onActorUpdateHook = 0;
+    static uint32_t onGameFrameUpdateHook = 0;
+    static uint32_t onSceneSpawnActorsHook = 0;
 
-    RegisterTriforceHunt();
     RegisterGrantGanonsBossKey();
-    RegisterRandomizerSheikSpawn();
-    RegisterBossSouls();
-    RegisterNoSwim();
-    RegisterNoWallet();
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnLoadGame>([](int32_t fileNum) {
         randomizerQueuedChecks = std::queue<RandomizerCheck>();
@@ -1738,6 +1774,8 @@ void RandomizerRegisterHooks() {
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneInit>(onSceneInitHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnActorInit>(onActorInitHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnActorUpdate>(onActorUpdateHook);
+        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnGameFrameUpdate>(onGameFrameUpdateHook);
+        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneSpawnActors>(onSceneSpawnActorsHook);
 
         onFlagSetHook = 0;
         onSceneFlagSetHook = 0;
@@ -1749,6 +1787,8 @@ void RandomizerRegisterHooks() {
         onSceneInitHook = 0;
         onActorInitHook = 0;
         onActorUpdateHook = 0;
+        onGameFrameUpdateHook = 0;
+        onSceneSpawnActorsHook = 0;
 
         if (!IS_RANDO) return;
 
@@ -1764,5 +1804,7 @@ void RandomizerRegisterHooks() {
         onSceneInitHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>(RandomizerOnSceneInitHandler);
         onActorInitHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorInit>(RandomizerOnActorInitHandler);
         onActorUpdateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorUpdate>(RandomizerOnActorUpdateHandler);
+        onGameFrameUpdateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>(RandomizerOnGameFrameUpdateHandler);
+        onSceneSpawnActorsHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneSpawnActors>(RandomizerOnSceneSpawnActorsHandler);
     });
 }
