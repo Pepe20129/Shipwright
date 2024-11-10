@@ -158,7 +158,7 @@ void EnExItem_WaitForObject(EnExItem* this, PlayState* play) {
                 this->prizeRotateTimer = 35;
                 this->scale = 0.5f;
                 if (!onCounter) {
-                    func_80078884(NA_SE_SY_PIECE_OF_HEART);
+                    Sfx_PlaySfxCentered(NA_SE_SY_PIECE_OF_HEART);
                     this->actionFunc = EnExItem_BowlPrize;
                 } else {
                     this->actionFunc = EnExItem_SetupBowlCounter;
@@ -390,7 +390,7 @@ void EnExItem_TargetPrizeApproach(EnExItem* this, PlayState* play) {
         this->actor.parent = NULL;
 
         if (!GameInteractor_Should(VB_PLAY_ONEPOINT_ACTOR_CS, true, &this->actor)) {
-            GET_PLAYER(play)->stateFlags1 &= ~(PLAYER_STATE1_GETTING_ITEM | PLAYER_STATE1_ITEM_OVER_HEAD);
+            GET_PLAYER(play)->stateFlags1 &= ~(PLAYER_STATE1_GETTING_ITEM | PLAYER_STATE1_CARRYING_ACTOR);
         }
 
         if (CUR_UPG_VALUE(UPG_BULLET_BAG) == 1) {
