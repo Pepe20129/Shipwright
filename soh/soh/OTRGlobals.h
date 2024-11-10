@@ -6,12 +6,6 @@
 #include "SaveManager.h"
 #include <soh/Enhancements/item-tables/ItemTableTypes.h>
 
-#define GAME_REGION_NTSC 0
-#define GAME_REGION_PAL 1
-
-#define GAME_PLATFORM_N64 0
-#define GAME_PLATFORM_GC 1
-
 #define BTN_CUSTOM_MODIFIER1 0x0040
 #define BTN_CUSTOM_MODIFIER2 0x0080
 

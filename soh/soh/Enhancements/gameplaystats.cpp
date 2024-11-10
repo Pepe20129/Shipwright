@@ -1,6 +1,4 @@
-//extern "C" {
 #include "gameplaystats.h"
-//}
 #include "gameplaystatswindow.h"
 
 #include "soh/SaveManager.h"
