@@ -205,7 +205,7 @@ void Demo6K_Destroy(Actor* thisx, PlayState* play) {
 
 void func_80966DB0(Demo6K* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objBankIndex)) {
-        this->actor.objBankIndex = this->objBankIndex;
+        this->actor.objectSlot = this->objBankIndex;
         this->actor.draw = this->drawFunc;
         this->actionFunc = this->initActionFunc;
     }

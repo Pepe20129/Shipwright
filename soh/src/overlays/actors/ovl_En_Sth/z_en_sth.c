@@ -197,7 +197,7 @@ void EnSth_Destroy(Actor* thisx, PlayState* play) {
 
 void EnSth_WaitForObjectLoaded(EnSth* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objectBankIdx)) {
-        this->actor.objBankIndex = this->objectBankIdx;
+        this->actor.objectSlot = this->objectBankIdx;
         this->actionFunc = EnSth_SetupAfterObjectLoaded;
     }
 }

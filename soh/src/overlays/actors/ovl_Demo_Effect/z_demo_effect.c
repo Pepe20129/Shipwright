@@ -541,7 +541,7 @@ void DemoEffect_Destroy(Actor* thisx, PlayState* play) {
  */
 void DemoEffect_Wait(DemoEffect* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->initObjectBankIndex)) {
-        this->actor.objBankIndex = this->initObjectBankIndex;
+        this->actor.objectSlot = this->initObjectBankIndex;
         this->actor.draw = this->initDrawFunc;
         this->updateFunc = this->initUpdateFunc;
 

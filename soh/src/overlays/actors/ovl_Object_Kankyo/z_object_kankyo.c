@@ -783,7 +783,7 @@ void ObjectKankyo_WaitForSunGraveSparkObject(ObjectKankyo* this, PlayState* play
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjBankIndex)) {
         this->requiredObjectLoaded = true;
         this->effects[0].alpha = 0;
-        this->actor.objBankIndex = this->requiredObjBankIndex;
+        this->actor.objectSlot = this->requiredObjBankIndex;
         this->effects[0].size = 7.0f;
         ObjectKankyo_SetupAction(this, ObjectKankyo_SunGraveSpark);
     }
@@ -883,7 +883,7 @@ void ObjectKankyo_InitBeams(ObjectKankyo* this, PlayState* play) {
 void ObjectKankyo_WaitForBeamObject(ObjectKankyo* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjBankIndex)) {
         this->requiredObjectLoaded = true;
-        this->actor.objBankIndex = this->requiredObjBankIndex;
+        this->actor.objectSlot = this->requiredObjBankIndex;
         ObjectKankyo_SetupAction(this, ObjectKankyo_Beams);
     }
 }

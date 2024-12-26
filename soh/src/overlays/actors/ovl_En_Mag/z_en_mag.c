@@ -666,7 +666,7 @@ void EnMag_DrawInnerMq(Actor* thisx, PlayState* play, Gfx** gfxp) {
     u16 copy_xh;
     EnMag_SetCopyValues(&copy_tex, &copy_width, &copy_xl, &copy_xh);
 
-    gSPSegment(gfx++, 0x06, play->objectCtx.status[this->actor.objBankIndex].segment);
+    gSPSegment(gfx++, 0x06, play->objectCtx.status[this->actor.objectSlot].segment);
 
     Gfx_SetupDL_39Ptr(&gfx);
 
@@ -866,7 +866,7 @@ void EnMag_DrawInnerVanilla(Actor* thisx, PlayState* play, Gfx** gfxp) {
     u16 copy_xh;
     EnMag_SetCopyValues(&copy_tex, &copy_width, &copy_xl, &copy_xh);
 
-    gSPSegment(gfx++, 0x06, play->objectCtx.status[this->actor.objBankIndex].segment);
+    gSPSegment(gfx++, 0x06, play->objectCtx.status[this->actor.objectSlot].segment);
 
     Gfx_SetupDL_39Ptr(&gfx);
 

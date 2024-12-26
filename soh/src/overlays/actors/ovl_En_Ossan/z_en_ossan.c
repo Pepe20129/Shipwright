@@ -2183,7 +2183,7 @@ void EnOssan_InitActionFunc(EnOssan* this, PlayState* play) {
 
     if (EnOssan_AreShopkeeperObjectsLoaded(this, play)) {
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
-        this->actor.objBankIndex = this->objBankIndex1;
+        this->actor.objectSlot = this->objBankIndex1;
         Actor_SetObjectDependency(play, &this->actor);
 
         this->shelves = (EnTana*)Actor_Find(&play->actorCtx, ACTOR_EN_TANA, ACTORCAT_PROP);

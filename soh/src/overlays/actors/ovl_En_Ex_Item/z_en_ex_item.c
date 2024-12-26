@@ -130,7 +130,7 @@ void EnExItem_WaitForObject(EnExItem* this, PlayState* play) {
         osSyncPrintf(VT_FGCOL(BLUE) "☆☆☆☆☆ 転送終了 ☆☆☆☆☆ %d\n" VT_RST, this->actor.params, this);
         osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ 転送終了 ☆☆☆☆☆ %d\n" VT_RST, this->actor.params, this);
         osSyncPrintf(VT_FGCOL(CYAN) "☆☆☆☆☆ 転送終了 ☆☆☆☆☆ %d\n\n" VT_RST, this->actor.params, this);
-        this->actor.objBankIndex = this->objectIdx;
+        this->actor.objectSlot = this->objectIdx;
         this->actor.draw = EnExItem_Draw;
         this->stopRotate = false;
         onCounter = false;

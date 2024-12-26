@@ -90,7 +90,7 @@ void func_8087DB24(BgHakaMegane* this, PlayState* play) {
     CollisionHeader* collision;
 
     if (Object_IsLoaded(&play->objectCtx, this->objBankIndex)) {
-        this->dyna.actor.objBankIndex = this->objBankIndex;
+        this->dyna.actor.objectSlot = this->objBankIndex;
         this->dyna.actor.draw = BgHakaMegane_Draw;
         Actor_SetObjectDependency(play, &this->dyna.actor);
         if (play->roomCtx.curRoom.lensMode != LENS_MODE_HIDE_ACTORS) {

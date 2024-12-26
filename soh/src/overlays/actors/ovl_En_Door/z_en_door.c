@@ -111,7 +111,7 @@ void EnDoor_Init(Actor* thisx, PlayState* play2) {
 
     this->requiredObjBankIndex = objBankIndex;
     this->dListIndex = objectInfo->dListIndex;
-    if (this->actor.objBankIndex == this->requiredObjBankIndex) {
+    if (this->actor.objectSlot == this->requiredObjBankIndex) {
         EnDoor_SetupType(this, play);
     } else {
         this->actionFunc = EnDoor_SetupType;
@@ -154,7 +154,7 @@ void EnDoor_SetupType(EnDoor* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjBankIndex)) {
         doorType = this->actor.params >> 7 & 7;
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
-        this->actor.objBankIndex = this->requiredObjBankIndex;
+        this->actor.objectSlot = this->requiredObjBankIndex;
         this->actionFunc = EnDoor_Idle;
         if (doorType == DOOR_EVENING) {
             doorType =
@@ -335,7 +335,7 @@ s32 EnDoor_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* 
 void EnDoor_Draw(Actor* thisx, PlayState* play) {
     EnDoor* this = (EnDoor*)thisx;
 
-    if (this->actor.objBankIndex == this->requiredObjBankIndex) {
+    if (this->actor.objectSlot == this->requiredObjBankIndex) {
         OPEN_DISPS(play->state.gfxCtx);
 
         Gfx_SetupDL_25Opa(play->state.gfxCtx);

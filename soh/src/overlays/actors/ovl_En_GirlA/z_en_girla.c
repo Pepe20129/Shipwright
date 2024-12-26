@@ -1252,7 +1252,7 @@ void EnGirlA_WaitForObject(EnGirlA* this, PlayState* play) {
 
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjectSlot)) {
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
-        this->actor.objBankIndex = this->requiredObjectSlot;
+        this->actor.objectSlot = this->requiredObjectSlot;
         switch (this->actor.params) {
             case SI_KEATON_MASK:
                 if (Flags_GetItemGetInf(ITEMGETINF_38)) {

@@ -202,7 +202,7 @@ void EnGSwitch_Break(EnGSwitch* this, PlayState* play) {
 void EnGSwitch_WaitForObject(EnGSwitch* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objIndex)) {
         gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->objIndex].segment);
-        this->actor.objBankIndex = this->objIndex;
+        this->actor.objectSlot = this->objIndex;
         this->actor.draw = EnGSwitch_DrawPot;
         this->actionFunc = EnGSwitch_ArcheryPot;
     }

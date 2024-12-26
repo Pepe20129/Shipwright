@@ -906,8 +906,8 @@ void EnHy_Destroy(Actor* thisx, PlayState* play) {
 
 void EnHy_InitImpl(EnHy* this, PlayState* play) {
     if (EnHy_IsOsAnimeObjectLoaded(this, play) && EnHy_AreSkelAndHeadObjectsLoaded(this, play)) {
-        this->actor.objBankIndex = this->objBankIndexSkel1;
-        gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->actor.objBankIndex].segment);
+        this->actor.objectSlot = this->objBankIndexSkel1;
+        gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->actor.objectSlot].segment);
         SkelAnime_InitFlex(play, &this->skelAnime,
                            sSkeletonInfo[sModelInfo[this->actor.params & 0x7F].skelInfoIndex1].skeleton, NULL,
                            this->jointTable, this->morphTable, 16);

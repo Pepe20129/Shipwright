@@ -2126,7 +2126,7 @@ void BossGoma_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* r
                                                 sDeadLimbLifetime[limbIndex] + 100);
         if (babyGohma != NULL) {
             babyGohma->bossLimbDL = *dList;
-            babyGohma->actor.objBankIndex = this->actor.objBankIndex;
+            babyGohma->actor.objectSlot = this->actor.objectSlot;
         }
     }
 

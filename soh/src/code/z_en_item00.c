@@ -337,9 +337,9 @@ void EnItem00_SetObjectDependency(EnItem00* this, PlayState* play, s16 objectInd
     // Remove object dependency for Enemy Randomizer and Crowd Control to allow Like-likes to
     // drop equipment correctly in rooms where Like-likes normally don't spawn.
     if (CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0) || (CVarGetInteger(CVAR_REMOTE_CROWD_CONTROL("Enabled"), 0))) {
-        this->actor.objBankIndex = 0;
+        this->actor.objectSlot = 0;
     } else {
-        this->actor.objBankIndex = Object_GetIndex(&play->objectCtx, objectIndex);
+        this->actor.objectSlot = Object_GetIndex(&play->objectCtx, objectIndex);
         Actor_SetObjectDependency(play, &this->actor);
     }
 }
@@ -1062,7 +1062,7 @@ void EnItem00_Draw(Actor* thisx, PlayState* play) {
                         if (this->unk_15A == -1) {
                             s8 bankIndex = Object_GetIndex(&play->objectCtx, OBJECT_GI_HEART);
                             if (Object_IsLoaded(&play->objectCtx, bankIndex)) {
-                                this->actor.objBankIndex = bankIndex;
+                                this->actor.objectSlot = bankIndex;
                                 Actor_SetObjectDependency(play, &this->actor);
                                 this->unk_15A = -2;
                             }

@@ -487,7 +487,7 @@ void DoorKiller_UpdateTexture(Actor* thisx, PlayState* play) {
 
     gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->doorObjBankIndex].segment);
     this->texture = SEGMENTED_TO_VIRTUAL(this->texture);
-    gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[thisx->objBankIndex].segment);
+    gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[thisx->objectSlot].segment);
 }
 
 /**

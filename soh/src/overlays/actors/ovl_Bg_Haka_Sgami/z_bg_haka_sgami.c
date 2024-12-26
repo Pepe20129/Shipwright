@@ -198,7 +198,7 @@ void BgHakaSgami_Destroy(Actor* thisx, PlayState* play) {
 
 void BgHakaSgami_SetupSpin(BgHakaSgami* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjBankIndex)) {
-        this->actor.objBankIndex = this->requiredObjBankIndex;
+        this->actor.objectSlot = this->requiredObjBankIndex;
         this->actor.draw = BgHakaSgami_Draw;
         this->timer = SCYTHE_SPIN_TIME;
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;

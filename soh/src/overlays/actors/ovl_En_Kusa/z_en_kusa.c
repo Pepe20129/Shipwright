@@ -289,7 +289,7 @@ void EnKusa_WaitObject(EnKusa* this, PlayState* play) {
         }
 
         this->actor.draw = EnKusa_Draw;
-        this->actor.objBankIndex = this->objBankIndex;
+        this->actor.objectSlot = this->objBankIndex;
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
     }
 }

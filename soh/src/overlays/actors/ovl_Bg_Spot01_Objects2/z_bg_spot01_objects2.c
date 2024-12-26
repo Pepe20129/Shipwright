@@ -97,7 +97,7 @@ void func_808AC2BC(BgSpot01Objects2* this, PlayState* play) {
         osSyncPrintf("-----バンク切り換え成功！！\n");
         gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->objBankIndex].segment);
 
-        this->dyna.actor.objBankIndex = this->objBankIndex;
+        this->dyna.actor.objectSlot = this->objBankIndex;
         DynaPolyActor_Init(&this->dyna, DPM_PLAYER);
 
         switch (this->dyna.actor.params & 7) {

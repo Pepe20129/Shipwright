@@ -120,7 +120,7 @@ void func_808A39FC(BgMoriHineri* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->moriHineriObjIdx) &&
         Object_IsLoaded(&play->objectCtx, this->moriTexObjIdx) &&
         ((this->boxObjIdx < 0) || Object_IsLoaded(&play->objectCtx, this->boxObjIdx))) {
-        this->dyna.actor.objBankIndex = this->moriHineriObjIdx;
+        this->dyna.actor.objectSlot = this->moriHineriObjIdx;
         if (this->dyna.actor.params >= 4) {
             this->dyna.actor.params -= 4;
             if (this->dyna.actor.params == 0) {
@@ -213,8 +213,8 @@ void func_808A3E54(BgMoriHineri* this, PlayState* play) {
 
     if (play->activeCamera == sBgMoriHineriNextCamIdx) {
         if (sBgMoriHineriNextCamIdx != MAIN_CAM) {
-            objBankIndex = this->dyna.actor.objBankIndex;
-            this->dyna.actor.objBankIndex = this->moriHineriObjIdx;
+            objBankIndex = this->dyna.actor.objectSlot;
+            this->dyna.actor.objectSlot = this->moriHineriObjIdx;
             this->moriHineriObjIdx = objBankIndex;
             this->dyna.actor.params ^= 1;
             sBgMoriHineriNextCamIdx = MAIN_CAM;

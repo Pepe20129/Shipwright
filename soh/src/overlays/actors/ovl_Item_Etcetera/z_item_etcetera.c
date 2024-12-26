@@ -113,7 +113,7 @@ void ItemEtcetera_Destroy(Actor* thisx, PlayState* play) {
 
 void func_80B857D0(ItemEtcetera* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objBankIndex)) {
-        this->actor.objBankIndex = this->objBankIndex;
+        this->actor.objectSlot = this->objBankIndex;
         this->actor.draw = this->drawFunc;
         this->actionFunc = this->futureActionFunc;
     }

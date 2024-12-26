@@ -230,7 +230,7 @@ void ObjTsubo_WaitForObject(ObjTsubo* this, PlayState* play) {
         if (GameInteractor_Should(VB_POT_SETUP_DRAW, true, this)) {
             this->actor.draw = ObjTsubo_Draw;
         }
-        this->actor.objBankIndex = this->objTsuboBankIndex;
+        this->actor.objectSlot = this->objTsuboBankIndex;
         ObjTsubo_SetupIdle(this);
         this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
     }

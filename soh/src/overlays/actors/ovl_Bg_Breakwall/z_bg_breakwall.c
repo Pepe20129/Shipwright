@@ -243,7 +243,7 @@ void BgBreakwall_WaitForObject(BgBreakwall* this, PlayState* play) {
         CollisionHeader* colHeader = NULL;
         s32 wallType = ((this->dyna.actor.params >> 13) & 3) & 0xFF;
 
-        this->dyna.actor.objBankIndex = this->bankIndex;
+        this->dyna.actor.objectSlot = this->bankIndex;
         Actor_SetObjectDependency(play, &this->dyna.actor);
         this->dyna.actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
         this->dyna.actor.draw = BgBreakwall_Draw;

@@ -96,7 +96,7 @@ void EnNutsball_Destroy(Actor* thisx, PlayState* play) {
 
 void func_80ABBB34(EnNutsball* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objBankIndex)) {
-        this->actor.objBankIndex = this->objBankIndex;
+        this->actor.objectSlot = this->objBankIndex;
         this->actor.draw = EnNutsball_Draw;
         this->actor.shape.rot.y = 0;
         this->timer = 30;

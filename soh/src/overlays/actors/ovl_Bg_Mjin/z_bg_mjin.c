@@ -83,7 +83,7 @@ void func_808A0850(BgMjin* this, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, this->objBankIndex)) {
         colHeader = NULL;
         this->dyna.actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
-        this->dyna.actor.objBankIndex = this->objBankIndex;
+        this->dyna.actor.objectSlot = this->objBankIndex;
         Actor_SetObjectDependency(play, &this->dyna.actor);
         DynaPolyActor_Init(&this->dyna, 0);
         collision = this->dyna.actor.params != 0 ? &gWarpPadCol : &gOcarinaWarpPadCol;

@@ -183,7 +183,7 @@ void EnViewer_InitImpl(EnViewer* this, PlayState* play) {
     }
 
     this->isVisible = true;
-    this->actor.objBankIndex = skelObjBankIndex;
+    this->actor.objectSlot = skelObjBankIndex;
     Actor_SetObjectDependency(play, &this->actor);
     Actor_SetScale(&this->actor, initData->scale / 100.0f);
     ActorShape_Init(&this->actor.shape, initData->yOffset * 100, sShadowDrawFuncs[initData->shadowType],

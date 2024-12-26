@@ -771,7 +771,7 @@ void EnHorse_Init(Actor* thisx, PlayState* play2) {
         do {
         } while (!Object_IsLoaded(&play->objectCtx, this->bankIndex));
 
-        this->actor.objBankIndex = this->bankIndex;
+        this->actor.objectSlot = this->bankIndex;
         Actor_SetObjectDependency(play, &this->actor);
         this->boostSpeed = 12;
     } else {

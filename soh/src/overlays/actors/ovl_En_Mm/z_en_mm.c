@@ -181,7 +181,7 @@ void EnMm_Init(Actor* thisx, PlayState* play) {
     this->actor.targetMode = 2;
     this->actor.gravity = -1.0f;
     this->speedXZ = 3.0f;
-    this->unk_204 = this->actor.objBankIndex;
+    this->unk_204 = this->actor.objectSlot;
 
     if (func_80AADA70() == 1) {
         this->mouthTexIndex = RM_MOUTH_OPEN;
@@ -556,7 +556,7 @@ void EnMm_Draw(Actor* thisx, PlayState* play) {
             MATRIX_TOMTX(mtx);
 
             gSPDisplayList(POLY_OPA_DISP++, gLinkChildBunnyHoodDL);
-            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.status[this->actor.objBankIndex].segment);
+            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.status[this->actor.objectSlot].segment);
         }
     }
 
