@@ -133,7 +133,7 @@ void EnToryo_Init(Actor* thisx, PlayState* play) {
                      Animation_GetLastFrame(sEnToryoAnimation.animation), sEnToryoAnimation.mode,
                      sEnToryoAnimation.morphFrames);
     this->stateFlags |= 8;
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
     this->actionFunc = func_80B20914;
 }
 

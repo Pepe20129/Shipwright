@@ -106,7 +106,7 @@ void EnReeba_Init(Actor* thisx, PlayState* play) {
     s32 surfaceType;
 
     this->actor.naviEnemyId = 0x47;
-    this->actor.targetMode = 3;
+    this->actor.attentionRangeType = 3;
     this->actor.gravity = -3.5f;
     this->actor.focus.pos = this->actor.world.pos;
     SkelAnime_Init(play, &this->skelanime, &object_reeba_Skel_001EE8, &object_reeba_Anim_0001E4, this->jointTable,

@@ -154,7 +154,7 @@ void EnSth_Init(Actor* thisx, PlayState* play) {
     EnSth_SetupAction(this, EnSth_WaitForObjectLoaded);
     this->actor.draw = NULL;
     this->unk_2B2 = 0;
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
 }
 
 void EnSth_SetupShapeColliderUpdate2AndDraw(EnSth* this, PlayState* play) {

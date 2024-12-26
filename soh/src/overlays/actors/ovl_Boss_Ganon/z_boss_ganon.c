@@ -328,7 +328,7 @@ void BossGanon_SetAnimationObject(BossGanon* this, PlayState* play, s32 objectId
 }
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_U8(targetMode, 5, ICHAIN_CONTINUE),
+    ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x3D, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, 0, ICHAIN_CONTINUE),
     ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),

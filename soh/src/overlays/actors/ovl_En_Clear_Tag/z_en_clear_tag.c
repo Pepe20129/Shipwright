@@ -267,7 +267,7 @@ void EnClearTag_Init(Actor* thisx, PlayState* play) {
         }
 
         this->actor.flags |= ACTOR_FLAG_TARGETABLE;
-        this->actor.targetMode = 5;
+        this->actor.attentionRangeType = 5;
         Collider_SetCylinder(play, &this->collider, &this->actor, &sArwingCylinderInit);
         this->actor.colChkInfo.health = 3;
 

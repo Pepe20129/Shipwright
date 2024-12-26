@@ -64,7 +64,7 @@ void EnNiwGirl_Init(Actor* thisx, PlayState* play) {
                        17);
     Collider_InitCylinder(play, &this->collider);
     Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
     if (this->actor.params < 0) {
         this->actor.params = 0;
     }

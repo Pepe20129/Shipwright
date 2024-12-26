@@ -1219,7 +1219,7 @@ void Actor_Init(Actor* actor, PlayState* play) {
     Actor_SetFocus(actor, 0.0f);
     Math_Vec3f_Copy(&actor->prevPos, &actor->world.pos);
     Actor_SetScale(actor, 0.01f);
-    actor->targetMode = 3;
+    actor->attentionRangeType = 3;
     actor->minVelocityY = -20.0f;
     actor->xyzDistToPlayerSq = FLT_MAX;
     actor->naviEnemyId = 0xFF;
@@ -1886,7 +1886,7 @@ TargetRangeParams D_80115FF8[] = {
 };
 
 u32 func_8002F090(Actor* actor, f32 arg1) {
-    return arg1 < D_80115FF8[actor->targetMode].rangeSq;
+    return arg1 < D_80115FF8[actor->attentionRangeType].rangeSq;
 }
 
 s32 func_8002F0C8(Actor* actor, Player* player, s32 flag) {
@@ -1905,7 +1905,7 @@ s32 func_8002F0C8(Actor* actor, Player* player, s32 flag) {
             dist = actor->xyzDistToPlayerSq;
         }
 
-        return !func_8002F090(actor, D_80115FF8[actor->targetMode].leashScale * dist);
+        return !func_8002F090(actor, D_80115FF8[actor->attentionRangeType].leashScale * dist);
     }
 
     return false;

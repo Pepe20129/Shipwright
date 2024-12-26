@@ -86,7 +86,7 @@ void EnZl1_Init(Actor* thisx, PlayState* play) {
     Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
     Actor_SetScale(&this->actor, 0.01f);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 24.0f);
-    this->actor.targetMode = 0;
+    this->actor.attentionRangeType = 0;
 
     if (gSaveContext.sceneSetupIndex >= 4) {
         frameCount = Animation_GetLastFrame(&gChildZelda1Anim_00438);

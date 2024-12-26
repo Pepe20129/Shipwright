@@ -120,7 +120,7 @@ void EnGe1_Init(Actor* thisx, PlayState* play) {
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     this->animation = &gGerudoWhiteIdleAnim;
     this->animFunc = EnGe1_CueUpAnimation;
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
     Actor_SetScale(&this->actor, 0.01f);
 
     // In Gerudo Valley
@@ -169,7 +169,7 @@ void EnGe1_Init(Actor* thisx, PlayState* play) {
                 Actor_Kill(&this->actor);
                 return;
             }
-            this->actor.targetMode = 3;
+            this->actor.attentionRangeType = 3;
             this->hairstyle = GE1_HAIR_BOB;
             // "Horseback archery Gerudo EVENT_INF(0) ="
             osSyncPrintf(VT_FGCOL(CYAN) "やぶさめ ゲルド EVENT_INF(0) = %x\n" VT_RST, gSaveContext.eventInf[0]);

@@ -163,7 +163,7 @@ void EnAObj_Init(Actor* thisx, PlayState* play) {
             Collider_InitCylinder(play, &this->collider);
             Collider_SetCylinder(play, &this->collider, thisx, &sCylinderInit);
             thisx->colChkInfo.mass = MASS_IMMOVABLE;
-            thisx->targetMode = 0;
+            thisx->attentionRangeType = 0;
             break;
         case A_OBJ_BOULDER_FRAGMENT:
             thisx->gravity = -1.5f;

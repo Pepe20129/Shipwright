@@ -327,7 +327,7 @@ typedef struct {
     /* 0x00 */ f32 shadowScale;
     /* 0x04 */ Vec3f modelOffset;
     /* 0x10 */ f32 scale;
-    /* 0x14 */ s8 targetMode;
+    /* 0x14 */ s8 attentionRangeType;
     /* 0x18 */ f32 unkRange;
 } EnHyInit2Info; // size = 0x1C
 
@@ -705,7 +705,7 @@ void EnHy_InitSetProperties(EnHy* this) {
 
     this->actor.shape.shadowScale = sInit2Info[type].shadowScale;
     Actor_SetScale(&this->actor, sInit2Info[type].scale);
-    this->actor.targetMode = sInit2Info[type].targetMode;
+    this->actor.attentionRangeType = sInit2Info[type].attentionRangeType;
     this->modelOffset = sInit2Info[type].modelOffset;
     this->unkRange = sInit2Info[type].unkRange;
     this->unkRange += this->collider.dim.radius;

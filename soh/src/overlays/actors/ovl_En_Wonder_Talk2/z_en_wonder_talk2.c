@@ -60,13 +60,13 @@ void EnWonderTalk2_Init(Actor* thisx, PlayState* play) {
             rangeIndex = 0;
         }
 
-        this->actor.targetMode = D_80B3A8E0[rangeIndex];
+        this->actor.attentionRangeType = D_80B3A8E0[rangeIndex];
 
         osSyncPrintf("\n\n");
         // "originally?"
         osSyncPrintf(VT_FGCOL(YELLOW) "☆☆☆☆☆ 元は？       ☆☆☆☆☆ %d\n" VT_RST, this->actor.world.rot.z);
         // "The range is?"
-        osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ レンジは？   ☆☆☆☆☆ %d\n" VT_RST, this->actor.targetMode);
+        osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ レンジは？   ☆☆☆☆☆ %d\n" VT_RST, this->actor.attentionRangeType);
         // "Is the range?"
         osSyncPrintf(VT_FGCOL(CYAN) "☆☆☆☆☆ は、範囲わ？ ☆☆☆☆☆ %f\n" VT_RST, this->triggerRange);
         osSyncPrintf("\n\n");
@@ -237,7 +237,7 @@ void func_80B3A4F8(EnWonderTalk2* this, PlayState* play) {
                 // "Processing range"
                 osSyncPrintf(VT_FGCOL(YELLOW) "☆☆☆☆☆ 処理範囲               %f\n" VT_RST, this->triggerRange);
                 // "What is your range?"
-                osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ レンジは？ \t\t   %d\n" VT_RST, this->actor.targetMode);
+                osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ レンジは？ \t\t   %d\n" VT_RST, this->actor.attentionRangeType);
                 osSyncPrintf("\n\n");
                 osSyncPrintf("\n\n");
                 switch (this->talkMode) {

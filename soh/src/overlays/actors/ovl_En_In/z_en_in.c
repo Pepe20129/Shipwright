@@ -523,7 +523,7 @@ void func_80A79FB0(EnIn* this, PlayState* play) {
             return;
         }
         Actor_SetScale(&this->actor, 0.01f);
-        this->actor.targetMode = 6;
+        this->actor.attentionRangeType = 6;
         this->interactInfo.talkState = NPC_TALK_STATE_IDLE;
         this->actionFunc = func_80A7A4BC;
 
@@ -582,7 +582,7 @@ void func_80A79FB0(EnIn* this, PlayState* play) {
                         gSaveContext.eventInf[0] = 0;
                         break;
                     case 1:
-                        this->actor.targetMode = 3;
+                        this->actor.attentionRangeType = 3;
                         EnIn_ChangeAnim(this, ENIN_ANIM_2);
                         this->actionFunc = func_80A7A568;
                         func_80088B34(0x3C);
@@ -598,7 +598,7 @@ void func_80A79FB0(EnIn* this, PlayState* play) {
                         break;
                     case 5:
                     case 6:
-                        this->actor.targetMode = 3;
+                        this->actor.attentionRangeType = 3;
                         EnIn_ChangeAnim(this, ENIN_ANIM_6);
                         this->unk_1EC = 8;
                         this->actionFunc = func_80A7AA40;
@@ -932,7 +932,7 @@ void EnIn_Update(Actor* thisx, PlayState* play) {
             if (Actor_ProcessTalkRequest(&this->actor, play)) {}
         } else {
             Npc_UpdateTalking(play, &this->actor, &this->interactInfo.talkState,
-                          ((this->actor.targetMode == 6) ? 80.0f : 320.0f) + this->collider.dim.radius, func_80A79168,
+                          ((this->actor.attentionRangeType == 6) ? 80.0f : 320.0f) + this->collider.dim.radius, func_80A79168,
                           func_80A79500);
             if (this->interactInfo.talkState != NPC_TALK_STATE_IDLE) {
                 this->unk_1FA = this->unk_1F8;

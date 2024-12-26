@@ -193,7 +193,7 @@ void EnDaiku_Init(Actor* thisx, PlayState* play) {
 
     Actor_UpdateBgCheckInfo(play, &this->actor, 0.0f, 0.0f, 0.0f, 4);
 
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
     this->currentAnimIndex = -1;
     this->runSpeed = 5.0f;
     this->initRot = this->actor.world.rot;

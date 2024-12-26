@@ -171,7 +171,7 @@ void func_80AB9F24(EnNiwLady* this, PlayState* play) {
         Collider_InitCylinder(play, &this->collider);
         Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
         this->unk_272 = 0;
-        this->actor.targetMode = 6;
+        this->actor.attentionRangeType = 6;
         this->actor.draw = EnNiwLady_Draw;
         switch (this->unk_278) {
             case 0:

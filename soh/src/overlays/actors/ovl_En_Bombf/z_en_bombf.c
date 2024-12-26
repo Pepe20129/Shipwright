@@ -110,7 +110,7 @@ void EnBombf_Init(Actor* thisx, PlayState* play) {
 
     thisx->colChkInfo.cylRadius = 10.0f;
     thisx->colChkInfo.cylHeight = 10;
-    thisx->targetMode = 0;
+    thisx->attentionRangeType = 0;
 
     if (thisx->params == BOMBFLOWER_BODY) {
         this->timer = 140;

@@ -131,7 +131,7 @@ void EnCow_Init(Actor* thisx, PlayState* play) {
                                 this->actor.world.pos.y, this->actor.world.pos.z, 0, this->actor.shape.rot.y, 0, 1);
             this->unk_278 = Rand_ZeroFloat(1000.0f) + 40.0f;
             this->unk_27A = 0;
-            this->actor.targetMode = 6;
+            this->actor.attentionRangeType = 6;
             DREG(53) = 0;
             break;
         case 1:

@@ -178,7 +178,7 @@ void EnMm_Init(Actor* thisx, PlayState* play) {
     this->path = this->actor.params & 0xFF;
     this->unk_1F0 = 2;
     this->unk_1E8 = 0;
-    this->actor.targetMode = 2;
+    this->actor.attentionRangeType = 2;
     this->actor.gravity = -1.0f;
     this->speedXZ = 3.0f;
     this->unk_204 = this->actor.objectSlot;

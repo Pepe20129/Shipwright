@@ -127,7 +127,7 @@ void EnRd_Init(Actor* thisx, PlayState* play) {
     EnRd* this = (EnRd*)thisx;
 
     Actor_ProcessInitChain(thisx, sInitChain);
-    thisx->targetMode = 0;
+    thisx->attentionRangeType = 0;
     thisx->colChkInfo.damageTable = &sDamageTable;
     ActorShape_Init(&thisx->shape, 0.0f, NULL, 0.0f);
     this->unk_310 = this->unk_30E = 0;
@@ -414,7 +414,7 @@ void func_80AE2FD0(EnRd* this, PlayState* play) {
          PLAYER_STATE1_JUMPING | PLAYER_STATE1_FREEFALL | PLAYER_STATE1_CLIMBING_LADDER)) && 
          !(player->stateFlags2 & PLAYER_STATE2_GRABBED_BY_ENEMY) &&
         (Actor_WorldDistXYZToPoint(&player->actor, &this->actor.home.pos) < 150.0f)) {
-        this->actor.targetMode = 0;
+        this->actor.attentionRangeType = 0;
         func_80AE2B90(this, play);
     } else if (this->actor.params > 0) {
         if (this->actor.parent != NULL) {
@@ -547,7 +547,7 @@ void func_80AE3454(EnRd* this, PlayState* play) {
             if (!LINK_IS_ADULT) {
                 Math_SmoothStepToF(&this->actor.shape.yOffset, 0, 1.0f, 400.0f, 0.0f);
             }
-            this->actor.targetMode = 0;
+            this->actor.attentionRangeType = 0;
             this->actor.flags |= ACTOR_FLAG_TARGETABLE;
             this->unk_306 = 0xA;
             this->unk_307 = 0xF;

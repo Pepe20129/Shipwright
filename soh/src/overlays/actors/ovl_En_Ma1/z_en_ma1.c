@@ -287,7 +287,7 @@ void EnMa1_Init(Actor* thisx, PlayState* play) {
 
     Actor_UpdateBgCheckInfo(play, &this->actor, 0.0f, 0.0f, 0.0f, 4);
     Actor_SetScale(&this->actor, 0.01f);
-    this->actor.targetMode = 6;
+    this->actor.attentionRangeType = 6;
     this->interactInfo.talkState = NPC_TALK_STATE_IDLE;
 
     if (!malonReturnedFromCastle || malonTaughtEponasSong) {

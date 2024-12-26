@@ -326,7 +326,7 @@ void EnDu_Init(Actor* thisx, PlayState* play) {
     }
     Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENDU_ANIM_0);
     Actor_SetScale(&this->actor, 0.01f);
-    this->actor.targetMode = 1;
+    this->actor.attentionRangeType = 1;
     this->interactInfo.talkState = NPC_TALK_STATE_IDLE;
 
     if (gSaveContext.cutsceneIndex >= 0xFFF0) {

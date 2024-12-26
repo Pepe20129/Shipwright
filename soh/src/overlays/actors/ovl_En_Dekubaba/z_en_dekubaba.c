@@ -253,7 +253,7 @@ void EnDekubaba_Init(Actor* thisx, PlayState* play) {
         CollisionCheck_SetInfo(&this->actor.colChkInfo, &sBigDekuBabaDamageTable, &sColChkInfoInit);
         this->actor.colChkInfo.health = 4;
         this->actor.naviEnemyId = 0x08; // Big Deku Baba
-        this->actor.targetMode = 2;
+        this->actor.attentionRangeType = 2;
     } else {
         this->size = 1.0f;
 
@@ -267,7 +267,7 @@ void EnDekubaba_Init(Actor* thisx, PlayState* play) {
 
         CollisionCheck_SetInfo(&this->actor.colChkInfo, &sDekuBabaDamageTable, &sColChkInfoInit);
         this->actor.naviEnemyId = 0x07; // Deku Baba
-        this->actor.targetMode = 1;
+        this->actor.attentionRangeType = 1;
     }
 
     EnDekubaba_SetupWait(this);
