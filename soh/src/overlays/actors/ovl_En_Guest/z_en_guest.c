@@ -162,7 +162,7 @@ void func_80A505CC(Actor* thisx, PlayState* play) {
     }
     Npc_TrackPoint(&this->actor, &this->interactInfo, 6, NPC_TRACKING_HEAD_AND_TORSO);
 
-    func_80034F54(play, this->unk_2CC, this->unk_2EC, 16);
+    Actor_UpdateFidgetTables(play, this->unk_2CC, this->unk_2EC, 16);
 
     gSegments[6] = VIRTUAL_TO_PHYSICAL(play->objectCtx.status[this->osAnimeBankIndex].segment);
 

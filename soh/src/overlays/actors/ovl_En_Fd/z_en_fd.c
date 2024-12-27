@@ -229,7 +229,7 @@ s32 EnFd_SpawnCore(EnFd* this, PlayState* play) {
     }
 
     if (CHECK_FLAG_ALL(this->actor.flags, ACTOR_FLAG_HOOKSHOT_ATTACHED)) {
-        func_8002DE04(play, &this->actor, this->actor.child);
+        Actor_SwapHookshotAttachment(play, &this->actor, this->actor.child);
     }
 
     this->coreActive = true;

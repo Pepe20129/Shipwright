@@ -684,7 +684,7 @@ void EnMd_Destroy(Actor* thisx, PlayState* play) {
 
 void func_80AAB874(EnMd* this, PlayState* play) {
     if (this->skelAnime.animation == &gMidoHandsOnHipsIdleAnim) {
-        func_80034F54(play, this->unk_214, this->unk_236, 17);
+        Actor_UpdateFidgetTables(play, this->unk_214, this->unk_236, 17);
     } else if ((this->interactInfo.talkState == NPC_TALK_STATE_IDLE) && (this->unk_20B != 7)) {
         func_80AAA92C(this, 7);
     }
@@ -694,7 +694,7 @@ void func_80AAB874(EnMd* this, PlayState* play) {
 
 void func_80AAB8F8(EnMd* this, PlayState* play) {
     if (this->skelAnime.animation == &gMidoHandsOnHipsIdleAnim) {
-        func_80034F54(play, this->unk_214, this->unk_236, 17);
+        Actor_UpdateFidgetTables(play, this->unk_214, this->unk_236, 17);
     }
     func_80AAA93C(this);
 }
@@ -749,7 +749,7 @@ void func_80AAB948(EnMd* this, PlayState* play) {
     }
 
     if (this->skelAnime.animation == &gMidoHandsOnHipsIdleAnim) {
-        func_80034F54(play, this->unk_214, this->unk_236, 17);
+        Actor_UpdateFidgetTables(play, this->unk_214, this->unk_236, 17);
     }
 
     if ((this->interactInfo.talkState == NPC_TALK_STATE_IDLE) && (play->sceneNum == SCENE_LOST_WOODS)) {
@@ -786,7 +786,7 @@ void func_80AABC10(EnMd* this, PlayState* play) {
 }
 
 void func_80AABD0C(EnMd* this, PlayState* play) {
-    func_80034F54(play, this->unk_214, this->unk_236, 17);
+    Actor_UpdateFidgetTables(play, this->unk_214, this->unk_236, 17);
     func_80AAA93C(this);
 
     if (!(EnMd_FollowPath(this, play)) || (this->waypoint != 0)) {

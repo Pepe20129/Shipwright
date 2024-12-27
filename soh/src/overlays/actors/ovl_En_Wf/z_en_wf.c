@@ -357,7 +357,7 @@ s32 EnWf_ChangeAction(PlayState* play, EnWf* this, s16 mustChoose) {
 
         playerFacingAngleDiff = player->actor.shape.rot.y - this->actor.shape.rot.y;
 
-        if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsTargeted(play, &this->actor) &&
+        if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsLockedOn(play, &this->actor) &&
             (((play->gameplayFrames % 8) != 0) || (ABS(playerFacingAngleDiff) < 0x38E0))) {
             EnWf_SetupSlash(this);
             return true;
@@ -507,7 +507,7 @@ void EnWf_RunAtPlayer(EnWf* this, PlayState* play) {
         Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 1, 0x2EE, 0);
         this->actor.world.rot.y = this->actor.shape.rot.y;
 
-        if (Actor_OtherIsTargeted(play, &this->actor)) {
+        if (Actor_OtherIsLockedOn(play, &this->actor)) {
             baseRange = 150.0f;
         }
 
@@ -547,10 +547,10 @@ void EnWf_RunAtPlayer(EnWf* this, PlayState* play) {
         } else if (this->actor.xzDistToPlayer < (90.0f + baseRange)) {
             s16 temp_v1 = player->actor.shape.rot.y - this->actor.shape.rot.y;
 
-            if (!Actor_OtherIsTargeted(play, &this->actor) &&
+            if (!Actor_OtherIsLockedOn(play, &this->actor) &&
                 ((Rand_ZeroOne() > 0.03f) || ((this->actor.xzDistToPlayer <= 80.0f) && (ABS(temp_v1) < 0x38E0)))) {
                 EnWf_SetupSlash(this);
-            } else if (Actor_OtherIsTargeted(play, &this->actor) && (Rand_ZeroOne() > 0.5f)) {
+            } else if (Actor_OtherIsLockedOn(play, &this->actor) && (Rand_ZeroOne() > 0.5f)) {
                 EnWf_SetupBackflipAway(this);
             } else {
                 EnWf_SetupRunAroundPlayer(this);
@@ -662,7 +662,7 @@ void EnWf_RunAroundPlayer(EnWf* this, PlayState* play) {
             }
         }
 
-        if (Actor_OtherIsTargeted(play, &this->actor)) {
+        if (Actor_OtherIsLockedOn(play, &this->actor)) {
             baseRange = 150.0f;
         }
 
@@ -701,14 +701,14 @@ void EnWf_RunAroundPlayer(EnWf* this, PlayState* play) {
             Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
         }
 
-        if ((Math_CosS(angle1 - this->actor.shape.rot.y) < -0.85f) && !Actor_OtherIsTargeted(play, &this->actor) &&
+        if ((Math_CosS(angle1 - this->actor.shape.rot.y) < -0.85f) && !Actor_OtherIsLockedOn(play, &this->actor) &&
             (this->actor.xzDistToPlayer <= 80.0f)) {
             EnWf_SetupSlash(this);
         } else {
             this->actionTimer--;
 
             if (this->actionTimer == 0) {
-                if (Actor_OtherIsTargeted(play, &this->actor) && (Rand_ZeroOne() > 0.5f)) {
+                if (Actor_OtherIsLockedOn(play, &this->actor) && (Rand_ZeroOne() > 0.5f)) {
                     EnWf_SetupBackflipAway(this);
                 } else {
                     EnWf_SetupWait(this);
@@ -752,7 +752,7 @@ void EnWf_Slash(EnWf* this, PlayState* play) {
         this->slashStatus = 0;
     }
 
-    if (((curFrame == 15) && !Actor_IsTargeted(play, &this->actor) &&
+    if (((curFrame == 15) && !Actor_IsLockedOn(play, &this->actor) &&
          (!Actor_IsFacingPlayer(&this->actor, 0x2000) || (this->actor.xzDistToPlayer >= 100.0f))) ||
         SkelAnime_Update(&this->skelAnime)) {
         if ((curFrame != 15) && (this->actionTimer != 0)) {
@@ -855,7 +855,7 @@ void EnWf_SetupBackflipAway(EnWf* this) {
 
 void EnWf_BackflipAway(EnWf* this, PlayState* play) {
     if (SkelAnime_Update(&this->skelAnime)) {
-        if (!Actor_OtherIsTargeted(play, &this->actor) && (this->actor.xzDistToPlayer < 170.0f) &&
+        if (!Actor_OtherIsLockedOn(play, &this->actor) && (this->actor.xzDistToPlayer < 170.0f) &&
             (this->actor.xzDistToPlayer > 140.0f) && (Rand_ZeroOne() < 0.2f)) {
             EnWf_SetupRunAtPlayer(this, play);
         } else if ((play->gameplayFrames % 2) != 0) {
@@ -944,7 +944,7 @@ void EnWf_Damaged(EnWf* this, PlayState* play) {
             if ((this->actor.bgCheckFlags & 8) && (ABS(angleToWall) < 12000) && (this->actor.xzDistToPlayer < 120.0f)) {
                 EnWf_SetupSomersaultAndAttack(this);
             } else if (!EnWf_DodgeRanged(play, this)) {
-                if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsTargeted(play, &this->actor) &&
+                if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsLockedOn(play, &this->actor) &&
                     ((play->gameplayFrames % 8) != 0)) {
                     EnWf_SetupSlash(this);
                 } else if (Rand_ZeroOne() > 0.5f) {
@@ -988,7 +988,7 @@ void EnWf_SomersaultAndAttack(EnWf* this, PlayState* play) {
         this->actor.speed = this->actor.velocity.y = 0.0f;
         this->actor.world.pos.y = this->actor.floorHeight;
 
-        if (!Actor_OtherIsTargeted(play, &this->actor)) {
+        if (!Actor_OtherIsLockedOn(play, &this->actor)) {
             EnWf_SetupSlash(this);
         } else {
             EnWf_SetupWait(this);
@@ -1038,7 +1038,7 @@ void EnWf_Blocking(EnWf* this, PlayState* play) {
             } else {
                 s16 angleFacingLink = player->actor.shape.rot.y - this->actor.shape.rot.y;
 
-                if (!Actor_OtherIsTargeted(play, &this->actor) &&
+                if (!Actor_OtherIsLockedOn(play, &this->actor) &&
                     (((play->gameplayFrames % 2) != 0) || (ABS(angleFacingLink) < 0x38E0))) {
                     EnWf_SetupSlash(this);
                 } else {
@@ -1116,7 +1116,7 @@ void EnWf_Sidestep(EnWf* this, PlayState* play) {
 
     this->actor.world.rot.y = this->actor.shape.rot.y;
 
-    if (Actor_OtherIsTargeted(play, &this->actor)) {
+    if (Actor_OtherIsLockedOn(play, &this->actor)) {
         baseRange = 150.0f;
     }
 
@@ -1162,7 +1162,7 @@ void EnWf_Sidestep(EnWf* this, PlayState* play) {
 
                 this->actor.world.rot.y = this->actor.shape.rot.y;
 
-                if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsTargeted(play, &this->actor) &&
+                if ((this->actor.xzDistToPlayer <= 80.0f) && !Actor_OtherIsLockedOn(play, &this->actor) &&
                     (((play->gameplayFrames % 4) == 0) || (ABS(angleDiff2) < 0x38E0))) {
                     EnWf_SetupSlash(this);
                 } else {

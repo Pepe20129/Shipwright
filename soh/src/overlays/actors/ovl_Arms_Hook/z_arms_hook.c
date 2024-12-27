@@ -135,7 +135,7 @@ s32 ArmsHook_CheckForCancel(ArmsHook* this) {
 void ArmsHook_AttachHookToActor(ArmsHook* this, Actor* actor) {
     actor->flags |= ACTOR_FLAG_HOOKSHOT_ATTACHED;
     this->grabbed = actor;
-    Math_Vec3f_Diff(&actor->world.pos, &this->actor.world.pos, &this->grabbedDistDiff);
+    Math_Vec3f_Diff(&actor->world.pos, &this->actor.world.pos, &this->attachPointOffset);
 }
 
 void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
@@ -191,8 +191,8 @@ void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
                 this->grabbed = NULL;
             } else if (this->actor.child != NULL) {
                 sp94 = Actor_WorldDistXYZToActor(&this->actor, grabbed);
-                sp90 = sqrtf(SQ(this->grabbedDistDiff.x) + SQ(this->grabbedDistDiff.y) + SQ(this->grabbedDistDiff.z));
-                Math_Vec3f_Diff(&grabbed->world.pos, &this->grabbedDistDiff, &this->actor.world.pos);
+                sp90 = sqrtf(SQ(this->attachPointOffset.x) + SQ(this->attachPointOffset.y) + SQ(this->attachPointOffset.z));
+                Math_Vec3f_Diff(&grabbed->world.pos, &this->attachPointOffset, &this->actor.world.pos);
                 if (50.0f < (sp94 - sp90)) {
                     ArmsHook_DetachHookFromActor(this);
                     grabbed = NULL;
@@ -225,12 +225,12 @@ void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
 
         if (this->actor.child == NULL) {
             if ((grabbed != NULL) && (grabbed->id == ACTOR_BG_SPOT06_OBJECTS)) {
-                Math_Vec3f_Diff(&grabbed->world.pos, &this->grabbedDistDiff, &this->actor.world.pos);
+                Math_Vec3f_Diff(&grabbed->world.pos, &this->attachPointOffset, &this->actor.world.pos);
                 phi_f16 = 1.0f;
             } else {
                 Math_Vec3f_Sum(&player->unk_3C8, &newPos, &this->actor.world.pos);
                 if (grabbed != NULL) {
-                    Math_Vec3f_Sum(&this->actor.world.pos, &this->grabbedDistDiff, &grabbed->world.pos);
+                    Math_Vec3f_Sum(&this->actor.world.pos, &this->attachPointOffset, &grabbed->world.pos);
                 }
             }
         } else {

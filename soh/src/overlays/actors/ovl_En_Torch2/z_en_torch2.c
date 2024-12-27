@@ -263,7 +263,7 @@ void EnTorch2_Update(Actor* thisx, PlayState* play2) {
             this->skelAnime.playSpeed = 0.0f;
             this->actor.world.pos.x = (Math_SinS(this->actor.world.rot.y) * 25.0f) + sSpawnPoint.x;
             this->actor.world.pos.z = (Math_CosS(this->actor.world.rot.y) * 25.0f) + sSpawnPoint.z;
-            if ((this->actor.xzDistToPlayer <= 120.0f) || Actor_IsTargeted(play, &this->actor) ||
+            if ((this->actor.xzDistToPlayer <= 120.0f) || Actor_IsLockedOn(play, &this->actor) ||
                 (attackItem != NULL)) {
                 if (attackItem != NULL) {
                     sDodgeRollState = 1;
@@ -400,7 +400,7 @@ void EnTorch2_Update(Actor* thisx, PlayState* play2) {
 
                             if ((this->meleeWeaponState == 0) && (sCounterState == 0) && (player->invincibilityTimer == 0) &&
                                 (player->meleeWeaponAnimation == STAB_1H) && (this->actor.xzDistToPlayer <= 85.0f) &&
-                                Actor_IsTargeted(play, &this->actor)) {
+                                Actor_IsLockedOn(play, &this->actor)) {
 
                                 sStickTilt = 0.0f;
                                 sSwordJumpState = 1;

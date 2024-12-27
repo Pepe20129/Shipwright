@@ -5238,11 +5238,11 @@ s32 Camera_Unique9(Camera* camera) {
                 } else if ((anim->curKeyFrame->unk_01 & 0xF0) == 0xC0) {
                     Camera_UpdateInterface(0xF000 | ((anim->curKeyFrame->unk_01 & 0xF) << 8));
                 } else if (camera->player->stateFlags1 & PLAYER_STATE1_IN_WATER && player->currentBoots != PLAYER_BOOTS_IRON) {
-                    func_8002DF38(camera->play, camera->target, 8);
+                    Player_SetCsAction(camera->play, camera->target, 8);
                     osSyncPrintf("camera: demo: player demo set WAIT\n");
                 } else {
                     osSyncPrintf("camera: demo: player demo set %d\n", anim->curKeyFrame->unk_01);
-                    func_8002DF38(camera->play, camera->target, anim->curKeyFrame->unk_01);
+                    Player_SetCsAction(camera->play, camera->target, anim->curKeyFrame->unk_01);
                 }
             }
         } else {

@@ -3492,7 +3492,7 @@ void Player_UseItem(PlayState* play, Player* this, s32 item) {
                 // Handle "cutscene items"
                 if (!Player_CheckHostileLockOn(this) ||
                     ((itemAction >= PLAYER_IA_BOTTLE_POTION_RED) && (itemAction <= PLAYER_IA_BOTTLE_FAIRY))) {
-                    func_8002D53C(play, &play->actorCtx.titleCtx);
+                    TitleCard_Clear(play, &play->actorCtx.titleCtx);
                     this->unk_6AD = 4;
                     this->itemAction = itemAction;
                 }
@@ -7271,7 +7271,7 @@ s32 Player_ActionHandler_2(Player* this, PlayState* play) {
     }
 
     if (iREG(67) || (((interactedActor = this->interactRangeActor) != NULL) &&
-                     func_8002D53C(play, &play->actorCtx.titleCtx))) {
+                     TitleCard_Clear(play, &play->actorCtx.titleCtx))) {
         if (iREG(67) || (this->getItemId > GI_NONE)) {
             if (iREG(67)) {
                 this->getItemId = iREG(68);
@@ -12041,7 +12041,7 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
         }
 
         Math_ScaledStepToS(&this->unk_6C2, 0, 400);
-        func_80032CB4(this->unk_3A8, 20, 80, 6);
+        FaceChange_UpdateBlinking(this->unk_3A8, 20, 80, 6);
 
         this->actor.shape.face = this->unk_3A8[0] + ((play->gameplayFrames & 32) ? 0 : 3);
 
@@ -13722,7 +13722,7 @@ void Player_Action_8084CC98(Player* this, PlayState* play) {
         }
 
         if (LinkAnimation_OnFrame(&this->skelAnime, arr[1])) {
-            func_8002DE74(play, this);
+            Actor_RequestHorseCameraSetting(play, this);
             Player_PlaySfx(this, NA_SE_PL_SIT_ON_HORSE);
             return;
         }
@@ -13730,7 +13730,7 @@ void Player_Action_8084CC98(Player* this, PlayState* play) {
         return;
     }
 
-    func_8002DE74(play, this);
+    Actor_RequestHorseCameraSetting(play, this);
     this->skelAnime.prevTransl = D_8085499C;
 
     if ((rideActor->animationIdx != this->av2.actionVar2) &&

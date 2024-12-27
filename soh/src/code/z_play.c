@@ -641,7 +641,7 @@ void Play_Init(GameState* thisx) {
     Environment_PlaySceneSequence(play);
     gSaveContext.seqId = play->sequenceCtx.seqId;
     gSaveContext.natureAmbienceId = play->sequenceCtx.natureAmbienceId;
-    func_8002DF18(play, GET_PLAYER(play));
+    Actor_InitPlayerHorse(play, GET_PLAYER(play));
     AnimationContext_Update(play, &play->animationCtx);
     gSaveContext.respawnFlag = 0;
 

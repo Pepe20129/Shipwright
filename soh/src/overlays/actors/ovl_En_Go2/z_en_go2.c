@@ -2006,7 +2006,7 @@ void EnGo2_Update(Actor* thisx, PlayState* play) {
     }
     this->actionFunc(this, play);
     if (this->unk_211 == true) {
-        func_80034F54(play, this->unk_226, this->unk_24A, 18);
+        Actor_UpdateFidgetTables(play, this->unk_226, this->unk_24A, 18);
     }
     func_80A45288(this, play);
     EnGo2_EyeMouthTexState(this);

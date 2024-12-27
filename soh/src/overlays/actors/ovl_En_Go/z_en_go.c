@@ -1031,7 +1031,7 @@ void EnGo_Update(Actor* thisx, PlayState* play) {
 
     if (this->actionFunc == EnGo_BiggoronActionFunc || this->actionFunc == EnGo_FireGenericActionFunc ||
         this->actionFunc == func_80A40B1C) {
-        func_80034F54(play, this->jointTable, this->morphTable, 18);
+        Actor_UpdateFidgetTables(play, this->jointTable, this->morphTable, 18);
     }
 
     EnGo_UpdateShadow(this);

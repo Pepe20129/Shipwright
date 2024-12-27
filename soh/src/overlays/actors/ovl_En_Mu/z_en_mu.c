@@ -149,7 +149,7 @@ void EnMu_Destroy(Actor* thisx, PlayState* play) {
 }
 
 void EnMu_Pose(EnMu* this, PlayState* play) {
-    func_80034F54(play, this->unk_20A, this->unk_22A, 16);
+    Actor_UpdateFidgetTables(play, this->unk_20A, this->unk_22A, 16);
 }
 
 void EnMu_Update(Actor* thisx, PlayState* play) {

@@ -3644,7 +3644,7 @@ void Interface_DrawEnemyHealthBar(TargetContext* targetCtx, PlayState* play) {
 
         if (anchorType == ENEMYHEALTH_ANCHOR_ACTOR) {
             // Get actor projected position
-            func_8002BE04(play, &targetCtx->targetCenterPos, &projTargetCenter, &projTargetCappedInvW);
+            Actor_ProjectPos(play, &targetCtx->targetCenterPos, &projTargetCenter, &projTargetCappedInvW);
 
             projTargetCenter.x = (SCREEN_WIDTH / 2) * (projTargetCenter.x * projTargetCappedInvW);
             projTargetCenter.x = projTargetCenter.x * (CVarGetInteger(CVAR_ENHANCEMENT("MirroredWorld"), 0) ? -1 : 1);

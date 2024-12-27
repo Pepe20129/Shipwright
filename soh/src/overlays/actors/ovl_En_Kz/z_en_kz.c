@@ -424,7 +424,7 @@ void EnKz_PreMweepWait(EnKz* this, PlayState* play) {
         this->interactInfo.talkState = NPC_TALK_STATE_IDLE;
         this->actionFunc = EnKz_SetupMweep;
     } else {
-        func_80034F54(play, this->unk_2A6, this->unk_2BE, 12);
+        Actor_UpdateFidgetTables(play, this->unk_2A6, this->unk_2BE, 12);
     }
 }
 
@@ -497,7 +497,7 @@ void EnKz_Wait(EnKz* this, PlayState* play) {
         this->actionFunc = EnKz_SetupGetItem;
         EnKz_SetupGetItem(this, play);
     } else {
-        func_80034F54(play, this->unk_2A6, this->unk_2BE, 12);
+        Actor_UpdateFidgetTables(play, this->unk_2A6, this->unk_2BE, 12);
     }
 }
 

@@ -539,7 +539,7 @@ s32 EnZf_CanAttack(PlayState* play, EnZf* this) {
             return true;
         }
     } else {
-        if (!Actor_OtherIsTargeted(play, &this->actor)) {
+        if (!Actor_OtherIsLockedOn(play, &this->actor)) {
             return true;
         }
         if (this->actor.params == ENZF_TYPE_DINOLFOS) {
@@ -824,7 +824,7 @@ void EnZf_ApproachPlayer(EnZf* this, PlayState* play) {
             }
         }
 
-        if (Actor_OtherIsTargeted(play, &this->actor)) {
+        if (Actor_OtherIsLockedOn(play, &this->actor)) {
             sp40 = 100.0f;
         }
 
@@ -885,7 +885,7 @@ void EnZf_ApproachPlayer(EnZf* this, PlayState* play) {
 
             if ((this->actor.xzDistToPlayer < 180.0f) && (this->actor.xzDistToPlayer > 160.0f) &&
                 Actor_IsFacingPlayer(&this->actor, 0x71C)) {
-                if (Actor_IsTargeted(play, &this->actor)) {
+                if (Actor_IsLockedOn(play, &this->actor)) {
                     if (Rand_ZeroOne() < 0.1f) {
                         this->actor.world.rot.y = this->actor.shape.rot.y = this->actor.yawTowardsPlayer;
                         EnZf_SetupJumpForward(this);
@@ -1100,7 +1100,7 @@ void func_80B463E4(EnZf* this, PlayState* play) {
             }
         }
 
-        if (Actor_OtherIsTargeted(play, &this->actor)) {
+        if (Actor_OtherIsLockedOn(play, &this->actor)) {
             baseRange = 100.0f;
         }
 
@@ -1807,7 +1807,7 @@ void EnZf_CircleAroundPlayer(EnZf* this, PlayState* play) {
 
     this->actor.world.rot.y = this->actor.shape.rot.y + 0x4000;
 
-    if (Actor_OtherIsTargeted(play, &this->actor)) {
+    if (Actor_OtherIsLockedOn(play, &this->actor)) {
         baseRange = 100.0f;
     }
 

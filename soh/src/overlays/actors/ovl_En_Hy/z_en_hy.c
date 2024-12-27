@@ -1008,7 +1008,7 @@ void func_80A711B4(EnHy* this, PlayState* play) {
 }
 
 void func_80A7127C(EnHy* this, PlayState* play) {
-    func_80034F54(play, this->unk_21C, this->unk_23C, 16);
+    Actor_UpdateFidgetTables(play, this->unk_21C, this->unk_23C, 16);
 }
 
 void EnHy_DoNothing(EnHy* this, PlayState* play) {
@@ -1021,7 +1021,7 @@ void func_80A712C0(EnHy* this, PlayState* play) {
         this->actionFunc = func_80A7134C;
     }
 
-    func_80034F54(play, this->unk_21C, this->unk_23C, 16);
+    Actor_UpdateFidgetTables(play, this->unk_21C, this->unk_23C, 16);
 }
 
 void func_80A7134C(EnHy* this, PlayState* play) {
