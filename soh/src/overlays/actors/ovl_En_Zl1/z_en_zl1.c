@@ -140,7 +140,7 @@ void func_80B4AF18(EnZl1* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     s32 pad;
 
-    func_80038290(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
+    Actor_TrackPlayer(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
 
     if (this->unk_1E6 != 0) {
         if (Actor_TextboxIsClosing(&this->actor, play)) {
@@ -328,7 +328,7 @@ void func_80B4B240(EnZl1* this, PlayState* play) {
         frameCount = Animation_GetLastFrame(animHeaderSeg);
         Animation_Change(&this->skelAnime, animHeaderSeg, 1.0f, 0.0f, frameCount, sp54[sp3C], -10.0f);
     }
-    func_80038290(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
+    Actor_TrackPlayer(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
 }
 
 void func_80B4B7F4(CsCmdActorCue* npcAction, Vec3f* pos) {
@@ -409,7 +409,7 @@ void func_80B4B8B4(EnZl1* this, PlayState* play) {
             }
             this->actor.velocity.z = (sp68.z - sp74.z) / actionLength;
         }
-        func_80038290(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
+        Actor_TrackPlayer(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
         Play_CameraSetAtEye(play, this->unk_1E8, &sp98, &sp8C);
         Play_CameraSetFov(play, this->unk_1E8, 70.0f);
     }
@@ -561,7 +561,7 @@ void func_80B4BF2C(EnZl1* this, PlayState* play) {
             }
             break;
     }
-    func_80038290(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
+    Actor_TrackPlayer(play, &this->actor, &this->unk_200, &this->unk_206, this->actor.focus.pos);
 }
 
 void EnZl1_Update(Actor* thisx, PlayState* play) {
