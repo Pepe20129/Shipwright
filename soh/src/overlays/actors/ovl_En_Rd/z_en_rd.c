@@ -100,7 +100,7 @@ static DamageTable sDamageTable = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_CONTINUE),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_CONTINUE),
     ICHAIN_VEC3F_DIV1000(scale, 10, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -3500, ICHAIN_STOP),
 };
@@ -208,7 +208,7 @@ void func_80AE269C(EnRd* this) {
 
     this->unk_31B = 0;
     this->unk_30C = (Rand_ZeroOne() * 10.0f) + 5.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.world.rot.y = this->actor.shape.rot.y;
     EnRd_SetupAction(this, func_80AE2744);
 }
@@ -279,7 +279,7 @@ void func_80AE2970(EnRd* this) {
     this->actor.shape.rot.x = -0x4000;
     this->actor.gravity = 0.0f;
     this->actor.shape.yOffset = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnRd_SetupAction(this, func_80AE2A10);
 }
 
@@ -298,8 +298,8 @@ void func_80AE2A10(EnRd* this, PlayState* play) {
         if (Math_SmoothStepToF(&this->actor.world.pos.y, this->actor.home.pos.y + 50.0f, 0.3f, 2.0f, 0.3f) == 0.0f) {
             if (this->unk_30C != 0) {
                 this->unk_30C--;
-                Math_SmoothStepToF(&this->actor.speedXZ, 6.0f, 0.3f, 1.0f, 0.3f);
-            } else if (Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 0.3f, 1.0f, 0.3f) == 0.0f) {
+                Math_SmoothStepToF(&this->actor.speed, 6.0f, 0.3f, 1.0f, 0.3f);
+            } else if (Math_SmoothStepToF(&this->actor.speed, 0.0f, 0.3f, 1.0f, 0.3f) == 0.0f) {
                 Math_SmoothStepToS(&this->actor.shape.rot.x, 0, 1, 0x7D0, 0);
             }
         }
@@ -309,7 +309,7 @@ void func_80AE2A10(EnRd* this, PlayState* play) {
 void func_80AE2B90(EnRd* this, PlayState* play) {
     Animation_Change(&this->skelAnime, &gGibdoRedeadWalkAnim, 1.0f, 4.0f,
                      Animation_GetLastFrame(&gGibdoRedeadWalkAnim), ANIMMODE_LOOP_INTERP, -4.0f);
-    this->actor.speedXZ = 0.4f;
+    this->actor.speed = 0.4f;
     this->unk_31B = 4;
     EnRd_SetupAction(this, func_80AE2C1C);
 }
@@ -322,7 +322,7 @@ void func_80AE2C1C(EnRd* this, PlayState* play) {
     s32 pad;
     s16 sp32 = this->actor.yawTowardsPlayer - this->actor.shape.rot.y - this->unk_30E - this->unk_310;
 
-    this->skelAnime.playSpeed = this->actor.speedXZ;
+    this->skelAnime.playSpeed = this->actor.speed;
     Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 1, 0xFA, 0);
     Math_SmoothStepToS(&this->unk_30E, 0, 1, 0x64, 0);
     Math_SmoothStepToS(&this->unk_310, 0, 1, 0x64, 0);
@@ -394,7 +394,7 @@ void func_80AE2FD0(EnRd* this, PlayState* play) {
     if (Actor_WorldDistXYZToPoint(&this->actor, &this->actor.home.pos) >= 5.0f) {
         Math_SmoothStepToS(&this->actor.shape.rot.y, targetY, 1, 0x1C2, 0);
     } else {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         if (Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.home.rot.y, 1, 0x1C2, 0) == 0) {
             if (this->actor.params != 2) {
                 func_80AE269C(this);
@@ -450,9 +450,9 @@ void func_80AE3260(EnRd* this, PlayState* play) {
         Math_SmoothStepToS(&this->actor.shape.rot.y, targetY, 1, 0xFA, 0);
 
         if (Actor_WorldDistXYZToPoint(&this->actor, &thisPos) >= 45.0f) {
-            this->actor.speedXZ = 0.4f;
+            this->actor.speed = 0.4f;
         } else {
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
 
             if (this->actor.params != 2) {
                 func_80AE269C(this);
@@ -482,7 +482,7 @@ void func_80AE33F0(EnRd* this) {
     this->unk_30C = this->unk_304 = 0;
     this->unk_319 = 200;
     this->unk_31B = 8;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnRd_SetupAction(this, func_80AE3454);
 }
 
@@ -614,7 +614,7 @@ void func_80AE3A8C(EnRd* this) {
     Animation_MorphToPlayOnce(&this->skelAnime, &gGibdoRedeadDamageAnim, -6.0f);
 
     if (this->actor.bgCheckFlags & 1) {
-        this->actor.speedXZ = -2.0f;
+        this->actor.speed = -2.0f;
     }
 
     this->actor.flags |= ACTOR_FLAG_TARGETABLE;
@@ -626,8 +626,8 @@ void func_80AE3A8C(EnRd* this) {
 void func_80AE3B18(EnRd* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if (this->actor.speedXZ < 0.0f) {
-        this->actor.speedXZ += 0.15f;
+    if (this->actor.speed < 0.0f) {
+        this->actor.speed += 0.15f;
     }
 
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
@@ -653,7 +653,7 @@ void func_80AE3C20(EnRd* this) {
     this->unk_31B = 10;
     this->unk_30C = 300;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_REDEAD_DEAD);
     EnRd_SetupAction(this, func_80AE3C98);
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
@@ -693,7 +693,7 @@ void func_80AE3C98(EnRd* this, PlayState* play) {
 
 void func_80AE3DE4(EnRd* this) {
     this->unk_31B = 1;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.world.rot.y = this->actor.shape.rot.y;
     if (gSaveContext.sunsSongState != SUNSSONG_INACTIVE) {
         this->unk_318 = 1;
@@ -823,11 +823,11 @@ void EnRd_Update(Actor* thisx, PlayState* play) {
         }
 
         this->actionFunc(this, play);
-        if (this->unk_31B != 8 && this->actor.speedXZ != 0.0f) {
+        if (this->unk_31B != 8 && this->actor.speed != 0.0f) {
             Actor_MoveXZGravity(&this->actor);
         }
 
-        if ((this->actor.shape.rot.x == 0) && (this->unk_31B != 8) && (this->actor.speedXZ != 0.0f)) {
+        if ((this->actor.shape.rot.x == 0) && (this->unk_31B != 8) && (this->actor.speed != 0.0f)) {
             Actor_UpdateBgCheckInfo(play, &this->actor, 30.0f, 20.0f, 35.0f, 0x1D);
         }
 

@@ -333,7 +333,7 @@ s32 EnZl4_SetupFromLegendCs(EnZl4* this, PlayState* play) {
     playerx->world.pos.x += 56.0f * Math_SinS(rotY);
     playerx->world.pos.z += 56.0f * Math_CosS(rotY);
 
-    player->linearVelocity = playerx->speedXZ = 0.0f;
+    player->linearVelocity = playerx->speed = 0.0f;
 
     EnZl4_SetCsCameraMove(play, 5);
     ShrinkWindow_SetVal(0x20);
@@ -448,7 +448,7 @@ s32 EnZl4_CsWaitForPlayer(EnZl4* this, PlayState* play) {
     rotY = this->actor.shape.rot.y;
     playerx->world.pos.x += 56.0f * Math_SinS(rotY);
     playerx->world.pos.z += 56.0f * Math_CosS(rotY);
-    playerx->speedXZ = 0.0f;
+    playerx->speed = 0.0f;
     player->linearVelocity = 0.0f;
     return true;
 }

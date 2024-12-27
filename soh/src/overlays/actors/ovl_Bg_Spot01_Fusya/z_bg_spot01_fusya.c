@@ -31,9 +31,9 @@ const ActorInit Bg_Spot01_Fusya_InitVars = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 12800, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 1300, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1300, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 12800, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 1300, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1300, ICHAIN_STOP),
 };
 
 void BgSpot01Fusya_SetupAction(BgSpot01Fusya* this, BgSpot01FusyaActionFunc actionFunc) {

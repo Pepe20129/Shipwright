@@ -73,7 +73,7 @@ void EnBx_Init(Actor* thisx, PlayState* play) {
     Vec3f sp48 = { 0.015f, 0.015f, 0.015f };
     Vec3f sp3C = { 0.0f, 0.0f, 0.0f };
     static InitChainEntry sInitChain[] = {
-        ICHAIN_F32(targetArrowOffset, 5300, ICHAIN_STOP),
+        ICHAIN_F32(lockOnArrowOffset, 5300, ICHAIN_STOP),
     };
     s32 i;
     s32 pad;
@@ -99,7 +99,7 @@ void EnBx_Init(Actor* thisx, PlayState* play) {
     Collider_SetQuad(play, &this->colliderQuad, &this->actor, &sQuadInit);
     thisx->colChkInfo.mass = MASS_IMMOVABLE;
     this->unk_14C = 0;
-    thisx->uncullZoneDownward = 2000.0f;
+    thisx->cullingVolumeDownward = 2000.0f;
     if (Flags_GetSwitch(play, (thisx->params >> 8) & 0xFF)) {
         Actor_Kill(&this->actor);
     }

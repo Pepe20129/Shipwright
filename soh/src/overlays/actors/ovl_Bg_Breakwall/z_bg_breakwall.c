@@ -92,9 +92,9 @@ static BombableWallInfo sBombableWallInfo[] = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 4000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 400, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 4000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 400, ICHAIN_STOP),
 };
 
 bool blueFireArrowsEnabledOnMudwallLoad = false;
@@ -218,7 +218,7 @@ Actor* BgBreakwall_SpawnFragments(PlayState* play, BgBreakwall* this, Vec3f* pos
                 }
 
                 if (actor != NULL) {
-                    actor->speedXZ = Rand_ZeroOne() + (accel * 0.6f);
+                    actor->speed = Rand_ZeroOne() + (accel * 0.6f);
                     actor->velocity.y = Rand_ZeroOne() + (accel * 0.6f);
                     actor->world.rot.y += (s16)((Rand_ZeroOne() - 0.5f) * 3000.0f);
                     actor->world.rot.x = (s16)(Rand_ZeroOne() * 3500.0f) + 2000;

@@ -84,7 +84,7 @@ void BgHakaZou_Init(Actor* thisx, PlayState* play) {
     if (thisx->params == STA_UNKNOWN) {
         Actor_SetScale(thisx, (Rand_ZeroOne() * 0.005f) + 0.025f);
 
-        thisx->speedXZ = Rand_ZeroOne();
+        thisx->speed = Rand_ZeroOne();
         thisx->world.rot.y = thisx->shape.rot.y * ((Rand_ZeroOne() < 0.5f) ? -1 : 1) + Rand_CenteredFloat(0x1000);
         this->timer = 20;
         thisx->world.rot.x = Rand_S16Offset(0x100, 0x300) * ((Rand_ZeroOne() < 0.5f) ? -1 : 1);
@@ -97,9 +97,9 @@ void BgHakaZou_Init(Actor* thisx, PlayState* play) {
         DynaPolyActor_Init(&this->dyna, 0);
 
         if (thisx->params == STA_GIANT_BIRD_STATUE) {
-            thisx->uncullZoneForward = 2000.0f;
-            thisx->uncullZoneScale = 3000.0f;
-            thisx->uncullZoneDownward = 3000.0f;
+            thisx->cullingVolumeDistance = 2000.0f;
+            thisx->cullingVolumeScale = 3000.0f;
+            thisx->cullingVolumeDownward = 3000.0f;
         }
     }
 
@@ -177,7 +177,7 @@ void BgHakaZou_Wait(BgHakaZou* this, PlayState* play) {
                 this->collider.dim.yShift = -30;
                 this->collider.dim.pos.x -= 56;
                 this->collider.dim.pos.z += 56;
-                this->dyna.actor.uncullZoneScale = 1500.0f;
+                this->dyna.actor.cullingVolumeScale = 1500.0f;
             } else if (this->dyna.actor.params == STA_BOMBABLE_SKULL_WALL) {
                 CollisionHeader_GetVirtual(&object_haka_objects_Col_005E30, &colHeader);
                 this->collider.dim.yShift = -50;
@@ -210,7 +210,7 @@ void func_80882BDC(BgHakaZou* this, PlayState* play) {
             this->dyna.actor.velocity.y *= -0.6f;
             this->dyna.actor.velocity.y = CLAMP_MAX(this->dyna.actor.velocity.y, 10.0f);
             this->dyna.actor.bgCheckFlags &= ~3;
-            this->dyna.actor.speedXZ = 2.0f;
+            this->dyna.actor.speed = 2.0f;
         } else {
             Actor_Kill(&this->dyna.actor);
         }

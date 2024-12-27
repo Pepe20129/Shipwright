@@ -238,7 +238,7 @@ void func_80AE5054(EnReeba* this, PlayState* play) {
                 this->actionfunc = func_80AE538C;
             } else {
                 this->unk_272 = 130;
-                this->actor.speedXZ = Rand_ZeroFloat(4.0f) + 6.0f;
+                this->actor.speed = Rand_ZeroFloat(4.0f) + 6.0f;
                 this->actionfunc = func_80AE5270;
             }
         }
@@ -257,7 +257,7 @@ void func_80AE5270(EnReeba* this, PlayState* play) {
     surfaceType = func_80041D4C(&play->colCtx, this->actor.floorPoly, this->actor.floorBgId);
 
     if ((surfaceType != 4) && (surfaceType != 7)) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actionfunc = func_80AE5688;
     } else if ((this->unk_272 == 0) || (this->actor.xzDistToPlayer < 30.0f) || (this->actor.xzDistToPlayer > 400.0f) ||
                (this->actor.bgCheckFlags & 8)) {
@@ -296,12 +296,12 @@ void func_80AE53AC(EnReeba* this, PlayState* play) {
         }
 
         speed = (this->actor.xzDistToPlayer - 20.0f) / ((Rand_ZeroOne() * 50.0f) + 150.0f);
-        this->actor.speedXZ += speed * 1.8f;
-        if (this->actor.speedXZ >= 3.0f) {
-            this->actor.speedXZ = 3.0f;
+        this->actor.speed += speed * 1.8f;
+        if (this->actor.speed >= 3.0f) {
+            this->actor.speed = 3.0f;
         }
-        if (this->actor.speedXZ < -3.0f) {
-            this->actor.speedXZ = -3.0f;
+        if (this->actor.speed < -3.0f) {
+            this->actor.speed = -3.0f;
         }
 
         yawDiff = (this->unk_270 == 0) ? this->actor.yawTowardsPlayer : -this->actor.yawTowardsPlayer;
@@ -317,7 +317,7 @@ void func_80AE53AC(EnReeba* this, PlayState* play) {
 }
 
 void func_80AE561C(EnReeba* this, PlayState* play) {
-    Math_ApproachZeroF(&this->actor.speedXZ, 1.0f, 0.3f);
+    Math_ApproachZeroF(&this->actor.speed, 1.0f, 0.3f);
 
     if (this->unk_272 == 0) {
         if (this->isBig) {
@@ -338,7 +338,7 @@ void func_80AE5688(EnReeba* this, PlayState* play) {
 
 void func_80AE56E0(EnReeba* this, PlayState* play) {
     Math_ApproachZeroF(&this->actor.shape.shadowScale, 1.0f, 0.3f);
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.1f, 0.3f);
+    Math_ApproachZeroF(&this->actor.speed, 0.1f, 0.3f);
     SkelAnime_Update(&this->skelanime);
 
     if ((this->unk_284 + 10.0f) <= this->actor.shape.yOffset) {
@@ -356,7 +356,7 @@ void func_80AE56E0(EnReeba* this, PlayState* play) {
 
 void func_80AE57F0(EnReeba* this, PlayState* play) {
     this->unk_276 = 14;
-    this->actor.speedXZ = -8.0f;
+    this->actor.speed = -8.0f;
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
     Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
     this->actionfunc = func_80AE5854;
@@ -365,8 +365,8 @@ void func_80AE57F0(EnReeba* this, PlayState* play) {
 void func_80AE5854(EnReeba* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
 
-    if (this->actor.speedXZ < 0.0f) {
-        this->actor.speedXZ += 1.0f;
+    if (this->actor.speed < 0.0f) {
+        this->actor.speed += 1.0f;
     }
 
     if (this->unk_276 == 0) {
@@ -382,7 +382,7 @@ void func_80AE5854(EnReeba* this, PlayState* play) {
 void func_80AE58EC(EnReeba* this, PlayState* play) {
     this->unk_278 = 14;
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-    this->actor.speedXZ = -8.0f;
+    this->actor.speed = -8.0f;
     this->actor.flags |= ACTOR_FLAG_NO_LOCKON;
     this->actor.flags &= ~(ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE);
     this->actionfunc = func_80AE5938;
@@ -393,11 +393,11 @@ void func_80AE5938(EnReeba* this, PlayState* play) {
     f32 scale;
 
     if (this->unk_278 != 0) {
-        if (this->actor.speedXZ < 0.0f) {
-            this->actor.speedXZ += 1.0f;
+        if (this->actor.speed < 0.0f) {
+            this->actor.speed += 1.0f;
         }
     } else {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
 
         if ((this->unk_27E == 4) || (this->actor.colChkInfo.health != 0)) {
             if (this->unk_27E == 2) {
@@ -448,7 +448,7 @@ void func_80AE5A9C(EnReeba* this, PlayState* play) {
 }
 
 void func_80AE5BC4(EnReeba* this, PlayState* play) {
-    this->actor.speedXZ = -8.0f;
+    this->actor.speed = -8.0f;
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
     Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 8);
     this->unk_278 = 14;
@@ -462,11 +462,11 @@ void func_80AE5C38(EnReeba* this, PlayState* play) {
     Vec3f velocity = { 0.0f, 0.0f, 0.0f };
 
     if (this->unk_278 != 0) {
-        if (this->actor.speedXZ < 0.0f) {
-            this->actor.speedXZ += 1.0f;
+        if (this->actor.speed < 0.0f) {
+            this->actor.speed += 1.0f;
         }
     } else {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         Math_ApproachZeroF(&this->scale, 0.1f, 0.01f);
 
         if (this->scale < 0.01f) {
@@ -615,7 +615,7 @@ void EnReeba_Update(Actor* thisx, PlayState* play2) {
         this->collider.base.atFlags &= ~AT_BOUNCED;
 
         if ((this->actionfunc == func_80AE5270) || (this->actionfunc == func_80AE53AC)) {
-            this->actor.speedXZ = 8.0f;
+            this->actor.speed = 8.0f;
             this->actor.world.rot.y *= -1.0f;
             this->unk_272 = 14;
             this->actionfunc = func_80AE561C;

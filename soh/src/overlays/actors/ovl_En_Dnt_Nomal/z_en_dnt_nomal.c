@@ -300,7 +300,7 @@ void EnDntNomal_TargetUnburrow(EnDntNomal* this, PlayState* play) {
 void EnDntNomal_SetupTargetWalk(EnDntNomal* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gHintNutsRunAnim);
     Animation_Change(&this->skelAnime, &gHintNutsRunAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_LOOP, -10.0f);
-    this->actor.speedXZ = 1.0f;
+    this->actor.speed = 1.0f;
     this->actor.colChkInfo.mass = 0;
     this->actionFunc = EnDntNomal_TargetWalk;
 }
@@ -318,7 +318,7 @@ void EnDntNomal_TargetWalk(EnDntNomal* this, PlayState* play) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_WALK);
     }
     if (this->actor.world.pos.z > -30.0f) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actionFunc = EnDntNomal_TargetFacePlayer;
     }
 }
@@ -393,7 +393,7 @@ void EnDntNomal_TargetReturn(EnDntNomal* this, PlayState* play) {
 
     Math_SmoothStepToS(&this->actor.shape.rot.y, Math_FAtan2F(dx, dz) * (0x8000 / M_PI), 3, 0x1388, 0);
     if (fabsf(this->actor.shape.rot.y - (s16)(Math_FAtan2F(dx, dz) * (0x8000 / M_PI))) < 20.0f) {
-        this->actor.speedXZ = 1.0f;
+        this->actor.speed = 1.0f;
     }
     if (Animation_OnFrame(&this->skelAnime, 0.0f) || Animation_OnFrame(&this->skelAnime, 6.0f)) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_WALK);
@@ -403,7 +403,7 @@ void EnDntNomal_TargetReturn(EnDntNomal* this, PlayState* play) {
         this->endFrame = (f32)Animation_GetLastFrame(&gHintNutsBurrowAnim);
         Animation_Change(&this->skelAnime, &gHintNutsBurrowAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_ONCE, -10.0f);
         this->actor.world.pos.z = -173.0f;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actionFunc = EnDntNomal_TargetBurrow;
     }
 }
@@ -517,7 +517,7 @@ void EnDntNomal_StageUnburrow(EnDntNomal* this, PlayState* play) {
 void EnDntNomal_SetupStageCelebrate(EnDntNomal* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntStageWalkAnim);
     Animation_Change(&this->skelAnime, &gDntStageWalkAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_LOOP, -10.0f);
-    this->actor.speedXZ = 3.0f;
+    this->actor.speed = 3.0f;
     this->isSolid = true;
     this->actionFunc = EnDntNomal_StageCelebrate;
 }
@@ -531,7 +531,7 @@ void EnDntNomal_StageCelebrate(EnDntNomal* this, PlayState* play) {
         if ((fabsf(dx) < 10.0f) && (fabsf(dz) < 10.0f) && (Message_GetState(&play->msgCtx) != TEXT_STATE_NONE)) {
             this->action = DNT_ACTION_PRIZE;
             this->actionFunc = EnDntNomal_SetupStageDance;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             return;
         }
         Math_SmoothStepToS(&this->actor.shape.rot.y, Math_FAtan2F(dx, dz) * (0x8000 / M_PI), 1, 0xBB8, 0);
@@ -718,7 +718,7 @@ void EnDntNomal_StageAttack(EnDntNomal* this, PlayState* play) {
 void EnDntNomal_StageSetupReturn(EnDntNomal* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntStageWalkAnim);
     Animation_Change(&this->skelAnime, &gDntStageWalkAnim, 1.5f, 0.0f, this->endFrame, ANIMMODE_LOOP, -10.0f);
-    this->actor.speedXZ = 4.0f;
+    this->actor.speed = 4.0f;
     this->isSolid = false;
     this->actionFunc = EnDntNomal_StageReturn;
 }
@@ -739,7 +739,7 @@ void EnDntNomal_StageReturn(EnDntNomal* this, PlayState* play) {
     if ((fabsf(sp2C) < 7.0f) && (fabsf(sp28) < 7.0f)) {
         this->actor.world.pos.x = this->flowerPos.x;
         this->actor.world.pos.z = this->flowerPos.z;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actionFunc = EnDntNomal_SetupStageHide;
     }
 }

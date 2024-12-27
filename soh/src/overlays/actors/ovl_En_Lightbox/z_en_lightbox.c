@@ -77,20 +77,20 @@ void EnLightbox_Update(Actor* thisx, PlayState* play) {
         if (Actor_HasParent(thisx, play)) {
             this->dyna.unk_162++;
         } else {
-            if (thisx->speedXZ) {
+            if (thisx->speed) {
                 if (thisx->bgCheckFlags & 8) {
                     thisx->world.rot.y = (thisx->world.rot.y + thisx->wallYaw) - thisx->world.rot.y;
                     Audio_PlaySoundGeneral(NA_SE_EV_BOMB_BOUND, &thisx->projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                            &gSfxDefaultReverb);
-                    thisx->speedXZ *= 0.7f;
+                    thisx->speed *= 0.7f;
                     thisx->bgCheckFlags &= ~0x8;
                 }
             }
 
             if ((thisx->bgCheckFlags & 1) == 0) {
-                Math_StepToF(&thisx->speedXZ, 0, IREG(57) / 100.0f);
+                Math_StepToF(&thisx->speed, 0, IREG(57) / 100.0f);
             } else {
-                Math_StepToF(&thisx->speedXZ, 0, IREG(58) / 100.0f);
+                Math_StepToF(&thisx->speed, 0, IREG(58) / 100.0f);
                 if ((thisx->bgCheckFlags & 2) && (thisx->velocity.y < IREG(59) / 100.0f)) {
                     Audio_PlaySoundGeneral(NA_SE_EV_BOMB_BOUND, &thisx->projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                            &gSfxDefaultReverb);

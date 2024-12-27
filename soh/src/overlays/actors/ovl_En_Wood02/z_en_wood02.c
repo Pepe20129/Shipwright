@@ -71,7 +71,7 @@ static f32 sSpawnDistance[] = { 707.0f, 525.0f, 510.0f, 500.0f, 566.0f, 141.0f }
 static s16 sSpawnAngle[] = { 0x1FFF, 0x4C9E, 0x77F5, 0xA5C9, 0xD6C3, 0xA000 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 5600, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 5600, ICHAIN_STOP),
 };
 
 static Gfx* D_80B3BF54[] = {
@@ -116,11 +116,11 @@ s32 EnWood02_SpawnZoneCheck(EnWood02* this, PlayState* play, Vec3f* pos) {
 
     phi_f12 = ((this->actor.projectedW == 0.0f) ? 1000.0f : fabsf(1.0f / this->actor.projectedW));
 
-    if ((-this->actor.uncullZoneScale < this->actor.projectedPos.z) &&
-        (this->actor.projectedPos.z < (this->actor.uncullZoneForward + this->actor.uncullZoneScale)) &&
-        (((fabsf(this->actor.projectedPos.x) - this->actor.uncullZoneScale) * phi_f12) < 1.0f) &&
-        (((this->actor.projectedPos.y + this->actor.uncullZoneDownward) * phi_f12) > -1.0f) &&
-        (((this->actor.projectedPos.y - this->actor.uncullZoneScale) * phi_f12) < 1.0f)) {
+    if ((-this->actor.cullingVolumeScale < this->actor.projectedPos.z) &&
+        (this->actor.projectedPos.z < (this->actor.cullingVolumeDistance + this->actor.cullingVolumeScale)) &&
+        (((fabsf(this->actor.projectedPos.x) - this->actor.cullingVolumeScale) * phi_f12) < 1.0f) &&
+        (((this->actor.projectedPos.y + this->actor.cullingVolumeDownward) * phi_f12) > -1.0f) &&
+        (((this->actor.projectedPos.y - this->actor.cullingVolumeScale) * phi_f12) < 1.0f)) {
         return true;
     }
     return false;
@@ -219,9 +219,9 @@ void EnWood02_Init(Actor* thisx, PlayState* play2) {
         case WOOD_BUSH_GREEN_LARGE:
         case WOOD_BUSH_BLACK_LARGE:
             actorScale = 1.5f;
-            this->actor.uncullZoneForward = 4000.0f;
-            this->actor.uncullZoneScale = 2000.0f;
-            this->actor.uncullZoneDownward = 2400.0f;
+            this->actor.cullingVolumeDistance = 4000.0f;
+            this->actor.cullingVolumeScale = 2000.0f;
+            this->actor.cullingVolumeDownward = 2400.0f;
             break;
         case WOOD_TREE_CONICAL_SPAWNER:
         case WOOD_TREE_OVAL_YELLOW_SPAWNER:
@@ -240,15 +240,15 @@ void EnWood02_Init(Actor* thisx, PlayState* play2) {
         case WOOD_TREE_KAKARIKO_ADULT:
         case WOOD_BUSH_GREEN_SMALL:
         case WOOD_BUSH_BLACK_SMALL:
-            this->actor.uncullZoneForward = 4000.0f;
-            this->actor.uncullZoneScale = 800.0f;
-            this->actor.uncullZoneDownward = 1800.0f;
+            this->actor.cullingVolumeDistance = 4000.0f;
+            this->actor.cullingVolumeScale = 800.0f;
+            this->actor.cullingVolumeDownward = 1800.0f;
             break;
         case WOOD_TREE_CONICAL_SMALL:
             actorScale = 0.6f;
-            this->actor.uncullZoneForward = 4000.0f;
-            this->actor.uncullZoneScale = 400.0f;
-            this->actor.uncullZoneDownward = 1000.0f;
+            this->actor.cullingVolumeDistance = 4000.0f;
+            this->actor.cullingVolumeScale = 400.0f;
+            this->actor.cullingVolumeDownward = 1000.0f;
             break;
         case WOOD_LEAF_GREEN:
         case WOOD_LEAF_YELLOW:
@@ -408,7 +408,7 @@ void EnWood02_Update(Actor* thisx, PlayState* play2) {
             if (((player->rideActor == NULL) && (sqrt(this->actor.xyzDistToPlayerSq) < 20.0) &&
                  (player->linearVelocity != 0.0f)) ||
                 ((player->rideActor != NULL) && (sqrt(this->actor.xyzDistToPlayerSq) < 60.0) &&
-                 (player->rideActor->speedXZ != 0.0f))) {
+                 (player->rideActor->speed != 0.0f))) {
                 if ((this->unk_14C >= 0) && (this->unk_14C < 0x64)) {
                     Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos,
                                                ((this->unk_14C << 4) | 0x8000));

@@ -53,9 +53,9 @@ static CollisionHeader* D_8089EB70[] = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneScale, 1500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 1500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1100, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_STOP),
 };
 
@@ -324,11 +324,11 @@ void func_8089E650(BgMizuMovebg* this, PlayState* play) {
     f32 dy;
     f32 dz;
 
-    this->dyna.actor.speedXZ = MOVEBG_SPEED(this->dyna.actor.params) * 0.1f;
+    this->dyna.actor.speed = MOVEBG_SPEED(this->dyna.actor.params) * 0.1f;
     func_8089E108(play->setupPathList, &waypoint, MOVEBG_PATH_ID(this->dyna.actor.params), this->waypointId);
     dist = Actor_WorldDistXYZToPoint(&this->dyna.actor, &waypoint);
-    if (dist < this->dyna.actor.speedXZ) {
-        this->dyna.actor.speedXZ = dist;
+    if (dist < this->dyna.actor.speed) {
+        this->dyna.actor.speed = dist;
     }
     func_80035844(&this->dyna.actor.world.pos, &waypoint, &this->dyna.actor.world.rot, 1);
     Actor_MoveXYZ(&this->dyna.actor);

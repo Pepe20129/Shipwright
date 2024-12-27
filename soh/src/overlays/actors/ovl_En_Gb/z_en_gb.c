@@ -127,7 +127,7 @@ static ColliderCylinderInitType1 sBottlesCylindersInit[] = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 6, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2200, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2200, ICHAIN_STOP),
 };
 
 // relative positions of poe souls
@@ -182,7 +182,7 @@ void EnGb_Init(Actor* thisx, PlayState* play) {
     ActorShape_Init(&this->dyna.actor.shape, 0.0f, ActorShadow_DrawCircle, 35.0f);
     Actor_SetScale(&this->dyna.actor, 0.01f);
     this->dyna.actor.colChkInfo.mass = 0xFF;
-    this->dyna.actor.speedXZ = 0.0f;
+    this->dyna.actor.speed = 0.0f;
     this->dyna.actor.velocity.y = 0.0f;
     this->dyna.actor.gravity = -1.0f;
     this->actionTimer = (s16)Rand_ZeroFloat(100.0f) + 100;

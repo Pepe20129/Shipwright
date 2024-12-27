@@ -79,7 +79,7 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x0C, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -3000.0f, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 8200.0f, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 8200.0f, ICHAIN_STOP),
 };
 
 void BossDodongo_RegisterBlendedLavaTextureUpdate() {
@@ -461,7 +461,7 @@ void BossDodongo_IntroCutscene(BossDodongo* this, PlayState* play) {
                 player->actor.world.pos.x = -890.0f;
                 player->actor.world.pos.z = -2804.0f;
 
-                player->actor.speedXZ = 0.0f;
+                player->actor.speed = 0.0f;
                 player->actor.shape.rot.y = player->actor.world.rot.y = 0x3FFF;
 
                 this->cameraEye.x = -890.0f;
@@ -664,7 +664,7 @@ void BossDodongo_SetupRoll(BossDodongo* this) {
 }
 
 void BossDodongo_SetupBlowFire(BossDodongo* this) {
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->unk_1E4 = 0.0f;
     Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_0061D4, 1.0f, 0.0f,
                      Animation_GetLastFrame(&object_kingdodongo_Anim_0061D4), ANIMMODE_ONCE, 0.0f);
@@ -674,7 +674,7 @@ void BossDodongo_SetupBlowFire(BossDodongo* this) {
 }
 
 void BossDodongo_SetupInhale(BossDodongo* this) {
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_008EEC, 1.0f, 0.0f,
                      Animation_GetLastFrame(&object_kingdodongo_Anim_008EEC), ANIMMODE_ONCE, -5.0f);
     this->actionFunc = BossDodongo_Inhale;
@@ -1520,7 +1520,7 @@ void BossDodongo_UpdateDamage(BossDodongo* this, PlayState* play) {
 }
 
 void BossDodongo_SetupDeathCutscene(BossDodongo* this) {
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->unk_1E4 = 0.0f;
     Animation_Change(&this->skelAnime, &object_kingdodongo_Anim_002D0C, 1.0f, 0.0f,
                      Animation_GetLastFrame(&object_kingdodongo_Anim_002D0C), ANIMMODE_ONCE, -5.0f);
@@ -1612,7 +1612,7 @@ void BossDodongo_DeathCutscene(BossDodongo* this, PlayState* play) {
             Math_SmoothStepToF(&this->unk_204, 1.0f, 1.0f, 0.1f, 0.0f);
             if (this->unk_1DA == 1) {
                 this->csState = 8;
-                this->actor.speedXZ = this->unk_1E4 / 1.5f;
+                this->actor.speed = this->unk_1E4 / 1.5f;
                 if (this->unk_1A2 == 0) {
                     this->unk_238 = 250.0f;
                 } else {
@@ -1775,7 +1775,7 @@ void BossDodongo_DeathCutscene(BossDodongo* this, PlayState* play) {
                                              false);
                 }
             }
-            Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 0.2f, 0.1f, 0.0f);
+            Math_SmoothStepToF(&this->actor.speed, 0.0f, 0.2f, 0.1f, 0.0f);
             this->actor.world.rot.y += (s16)this->unk_238;
             this->unk_1C4 += (s16)this->unk_234;
             if (this->unk_1DA >= 0x367) {

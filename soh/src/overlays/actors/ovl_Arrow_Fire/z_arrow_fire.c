@@ -34,7 +34,7 @@ const ActorInit Arrow_Fire_InitVars = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 2000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 2000, ICHAIN_STOP),
 };
 
 void ArrowFire_SetupAction(ArrowFire* this, ArrowFireActionFunc actionFunc) {

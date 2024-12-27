@@ -114,7 +114,7 @@ static DamageTable sDamageTable = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x42, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 6500, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 6500, ICHAIN_STOP),
 };
 
 void EnOkuta_Init(Actor* thisx, PlayState* play) {
@@ -157,7 +157,7 @@ void EnOkuta_Init(Actor* thisx, PlayState* play) {
         this->timer = 30;
         thisx->shape.rot.y = 0;
         this->actionFunc = EnOkuta_ProjectileFly;
-        thisx->speedXZ = 10.0f;
+        thisx->speed = 10.0f;
     }
 }
 
@@ -487,8 +487,8 @@ void EnOkuta_ProjectileFly(EnOkuta* this, PlayState* play) {
     this->actor.home.rot.z += 0x1554;
     if (this->actor.bgCheckFlags & 0x20) {
         this->actor.gravity = -1.0f;
-        this->actor.speedXZ -= 0.1f;
-        this->actor.speedXZ = CLAMP_MIN(this->actor.speedXZ, 1.0f);
+        this->actor.speed -= 0.1f;
+        this->actor.speed = CLAMP_MIN(this->actor.speed, 1.0f);
     }
     if ((this->actor.bgCheckFlags & 8) || (this->actor.bgCheckFlags & 1) || (this->collider.base.atFlags & AT_HIT) ||
         this->collider.base.acFlags & AC_HIT || this->collider.base.ocFlags1 & OC1_HIT ||

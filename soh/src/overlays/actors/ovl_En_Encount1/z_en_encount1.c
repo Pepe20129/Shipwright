@@ -281,8 +281,8 @@ void EnEncount1_SpawnStalchildOrWolfos(EnEncount1* this, PlayState* play) {
                 if (floorY <= BGCHECK_Y_MIN) {
                     break;
                 }
-                if ((player->actor.yDistToWater != BGCHECK_Y_MIN) &&
-                    (floorY < (player->actor.world.pos.y + player->actor.yDistToWater*(CVarGetInteger(CVAR_ENHANCEMENT("EnemySpawnsOverWaterboxes"), 0) ? 1 : -1)))) {
+                if ((player->actor.depthInWater != BGCHECK_Y_MIN) &&
+                    (floorY < (player->actor.world.pos.y + player->actor.depthInWater*(CVarGetInteger(CVAR_ENHANCEMENT("EnemySpawnsOverWaterboxes"), 0) ? 1 : -1)))) {
                     break;
                 }
                 spawnPos.y = floorY;

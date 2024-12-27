@@ -35,7 +35,7 @@ const ActorInit Arrow_Ice_InitVars = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 2000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 2000, ICHAIN_STOP),
 };
 
 void ArrowIce_SetupAction(ArrowIce* this, ArrowIceActionFunc actionFunc) {

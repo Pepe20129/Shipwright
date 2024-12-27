@@ -58,7 +58,7 @@ static u16 sOfferTextIDs[] = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 500, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 500, ICHAIN_STOP),
 };
 
 void EnMs_SetOfferText(EnMs* this, PlayState* play) {
@@ -89,7 +89,7 @@ void EnMs_Init(Actor* thisx, PlayState* play) {
     Actor_SetScale(&this->actor, 0.015f);
 
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = -1.0f;
 
@@ -172,7 +172,7 @@ void EnMs_Update(Actor* thisx, PlayState* play) {
 
     this->activeTimer += 1;
     Actor_SetFocus(&this->actor, 20.0f);
-    this->actor.targetArrowOffset = 500.0f;
+    this->actor.lockOnArrowOffset = 500.0f;
     Actor_SetScale(&this->actor, 0.015f);
     SkelAnime_Update(&this->skelAnime);
     this->actionFunc(this, play);

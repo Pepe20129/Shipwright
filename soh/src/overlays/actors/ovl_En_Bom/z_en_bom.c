@@ -82,7 +82,7 @@ static ColliderJntSphInit sJntSphInit = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F(scale, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_CONTINUE),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -4000, ICHAIN_STOP),
 };
 
@@ -157,20 +157,20 @@ void EnBom_Move(EnBom* this, PlayState* play) {
     }
 
     // rebound bomb off the wall it hits
-    if ((this->actor.speedXZ != 0.0f) && (this->actor.bgCheckFlags & 8)) {
+    if ((this->actor.speed != 0.0f) && (this->actor.bgCheckFlags & 8)) {
         if (ABS((s16)(this->actor.wallYaw - this->actor.world.rot.y)) > 0x4000) {
             this->actor.world.rot.y = ((this->actor.wallYaw - this->actor.world.rot.y) + this->actor.wallYaw) - 0x8000;
         }
         Audio_PlayActorSound2(&this->actor, NA_SE_EV_BOMB_BOUND);
         Actor_MoveXZGravity(&this->actor);
-        this->actor.speedXZ *= 0.7f;
+        this->actor.speed *= 0.7f;
         this->actor.bgCheckFlags &= ~8;
     }
 
     if (!(this->actor.bgCheckFlags & 1)) {
-        Math_StepToF(&this->actor.speedXZ, 0.0f, 0.08f);
+        Math_StepToF(&this->actor.speed, 0.0f, 0.08f);
     } else {
-        Math_StepToF(&this->actor.speedXZ, 0.0f, 1.0f);
+        Math_StepToF(&this->actor.speed, 0.0f, 1.0f);
         if ((this->actor.bgCheckFlags & 2) && (this->actor.velocity.y < -3.0f)) {
             func_8002F850(play, &this->actor);
             this->actor.velocity.y *= -0.3f;
@@ -376,7 +376,7 @@ void EnBom_Update(Actor* thisx, PlayState* play2) {
     }
 
     if ((thisx->scale.x >= 0.01f) && (thisx->params != BOMB_EXPLOSION)) {
-        if (thisx->yDistToWater >= 20.0f) {
+        if (thisx->depthInWater >= 20.0f) {
             EffectSsDeadSound_SpawnStationary(play, &thisx->projectedPos, NA_SE_IT_BOMB_UNEXPLOSION, true,
                                               DEADSOUND_REPEAT_MODE_OFF, 10);
             Actor_Kill(thisx);

@@ -304,7 +304,7 @@ void EnDodongo_SpawnBombSmoke(EnDodongo* this, PlayState* play) {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x0D, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2800, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2800, ICHAIN_STOP),
 };
 
 void EnDodongo_Init(Actor* thisx, PlayState* play) {
@@ -361,7 +361,7 @@ void EnDodongo_Destroy(Actor* thisx, PlayState* play) {
 
 void EnDodongo_SetupIdle(EnDodongo* this) {
     Animation_MorphToLoop(&this->skelAnime, &gDodongoWaitAnim, -4.0f);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->timer = Rand_S16Offset(30, 50);
     this->actionState = DODONGO_IDLE;
     EnDodongo_SetupAction(this, EnDodongo_Idle);
@@ -371,7 +371,7 @@ void EnDodongo_SetupWalk(EnDodongo* this) {
     f32 frames = Animation_GetLastFrame(&gDodongoWalkAnim);
 
     Animation_Change(&this->skelAnime, &gDodongoWalkAnim, 0.0f, 0.0f, frames, ANIMMODE_LOOP, -4.0f);
-    this->actor.speedXZ = 1.5f;
+    this->actor.speed = 1.5f;
     this->timer = Rand_S16Offset(50, 70);
     this->rightFootStep = true;
     this->actionState = DODONGO_WALK;
@@ -381,14 +381,14 @@ void EnDodongo_SetupWalk(EnDodongo* this) {
 void EnDodongo_SetupBreatheFire(EnDodongo* this) {
     Animation_MorphToPlayOnce(&this->skelAnime, &gDodongoBreatheFireAnim, -4.0f);
     this->actionState = DODONGO_BREATHE_FIRE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnDodongo_SetupAction(this, EnDodongo_BreatheFire);
 }
 
 void EnDodongo_SetupEndBreatheFire(EnDodongo* this) {
     Animation_PlayOnce(&this->skelAnime, &gDodongoAfterBreatheFireAnim);
     this->actionState = DODONGO_END_BREATHE_FIRE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnDodongo_SetupAction(this, EnDodongo_EndBreatheFire);
 }
 
@@ -396,14 +396,14 @@ void EnDodongo_SetupSwallowBomb(EnDodongo* this) {
     Animation_Change(&this->skelAnime, &gDodongoBreatheFireAnim, -1.0f, 35.0f, 0.0f, ANIMMODE_ONCE, -4.0f);
     this->actionState = DODONGO_SWALLOW_BOMB;
     this->timer = 25;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnDodongo_SetupAction(this, EnDodongo_SwallowBomb);
 }
 
 void EnDodongo_SetupStunned(EnDodongo* this) {
     Animation_Change(&this->skelAnime, &gDodongoBreatheFireAnim, 0.0f, 25.0f, 0.0f, ANIMMODE_ONCE, -4.0f);
     this->actionState = DODONGO_STUNNED;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     if (this->damageEffect == 0xF) {
         this->iceTimer = 36;
     }
@@ -536,10 +536,10 @@ void EnDodongo_Walk(EnDodongo* this, PlayState* play) {
 
     yawDiff = ABS(yawDiff);
 
-    Math_SmoothStepToF(&this->actor.speedXZ, 1.5f, 0.1f, 1.0f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 1.5f, 0.1f, 1.0f, 0.0f);
 
-    playbackSpeed = this->actor.speedXZ * 0.75f;
-    if (this->actor.speedXZ >= 0.0f) {
+    playbackSpeed = this->actor.speed * 0.75f;
+    if (this->actor.speed >= 0.0f) {
         if (playbackSpeed > 3.0f / 2) {
             playbackSpeed = 3.0f / 2;
         }
@@ -600,7 +600,7 @@ void EnDodongo_SetupSweepTail(EnDodongo* this) {
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_J_DAMAGE);
     this->actionState = DODONGO_SWEEP_TAIL;
     this->timer = 0;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnDodongo_SetupAction(this, EnDodongo_SweepTail);
 }
 
@@ -668,7 +668,7 @@ void EnDodongo_SetupDeath(EnDodongo* this, PlayState* play) {
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_J_DEAD);
     this->actionState = DODONGO_DEATH;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnDodongo_SetupAction(this, EnDodongo_Death);
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
 }

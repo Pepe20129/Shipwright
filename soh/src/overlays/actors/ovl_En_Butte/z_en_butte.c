@@ -142,9 +142,9 @@ void EnButte_DrawTransformationEffect(EnButte* this, PlayState* play) {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 10, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 700, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 20, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 600, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 700, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 20, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 600, ICHAIN_STOP),
 };
 
 void EnButte_Init(Actor* thisx, PlayState* play) {
@@ -157,7 +157,7 @@ void EnButte_Init(Actor* thisx, PlayState* play) {
     Actor_ProcessInitChain(&this->actor, sInitChain);
 
     if ((this->actor.params & 1) == 1) {
-        this->actor.uncullZoneScale = 200.0f;
+        this->actor.cullingVolumeScale = 200.0f;
     }
 
     SkelAnime_Init(play, &this->skelAnime, &gButterflySkel, &gButterflyAnim, this->jointTable, this->morphTable,
@@ -229,7 +229,7 @@ void EnButte_FlyAround(EnButte* this, PlayState* play) {
     distSqFromHome = Math3D_Dist2DSq(this->actor.world.pos.x, this->actor.world.pos.z, this->actor.home.pos.x,
                                      this->actor.home.pos.z);
     func_809CD56C(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, flightParams->speedXZTarget, flightParams->speedXZScale,
+    Math_SmoothStepToF(&this->actor.speed, flightParams->speedXZTarget, flightParams->speedXZScale,
                        flightParams->speedXZStep, 0.0f);
 
     if (this->unk_257 == 1) {
@@ -264,7 +264,7 @@ void EnButte_FlyAround(EnButte* this, PlayState* play) {
 
     EnButte_Turn(this);
 
-    animSpeed = this->actor.speedXZ / 2.0f + Rand_ZeroOne() * 0.2f + (1.0f - Math_SinS(this->unk_260)) * 0.15f +
+    animSpeed = this->actor.speed / 2.0f + Rand_ZeroOne() * 0.2f + (1.0f - Math_SinS(this->unk_260)) * 0.15f +
                 (1.0f - Math_SinS(this->unk_25E)) * 0.3f + minAnimSpeed;
     this->skelAnime.playSpeed = CLAMP(animSpeed, 0.2f, 1.5f);
     SkelAnime_Update(&this->skelAnime);
@@ -304,7 +304,7 @@ void EnButte_FollowLink(EnButte* this, PlayState* play) {
     s16 yaw;
 
     func_809CD634(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, flightParams->speedXZTarget, flightParams->speedXZScale,
+    Math_SmoothStepToF(&this->actor.speed, flightParams->speedXZTarget, flightParams->speedXZScale,
                        flightParams->speedXZStep, 0.0f);
     minAnimSpeed = 0.0f;
 
@@ -327,7 +327,7 @@ void EnButte_FollowLink(EnButte* this, PlayState* play) {
 
     EnButte_Turn(this);
 
-    animSpeed = this->actor.speedXZ / 2.0f + Rand_ZeroOne() * 0.2f + (1.0f - Math_SinS(this->unk_260)) * 0.15f +
+    animSpeed = this->actor.speed / 2.0f + Rand_ZeroOne() * 0.2f + (1.0f - Math_SinS(this->unk_260)) * 0.15f +
                 (1.0f - Math_SinS(this->unk_25E)) * 0.3f + minAnimSpeed;
     this->skelAnime.playSpeed = CLAMP(animSpeed, 0.2f, 1.5f);
     SkelAnime_Update(&this->skelAnime);
@@ -339,7 +339,7 @@ void EnButte_FollowLink(EnButte* this, PlayState* play) {
 
     distSqFromHome = Math3D_Dist2DSq(this->actor.world.pos.x, this->actor.world.pos.z, this->actor.home.pos.x,
                                      this->actor.home.pos.z);
-    if (!((player->heldItemAction == PLAYER_IA_DEKU_STICK) && (fabsf(player->actor.speedXZ) < 1.8f) &&
+    if (!((player->heldItemAction == PLAYER_IA_DEKU_STICK) && (fabsf(player->actor.speed) < 1.8f) &&
           (this->swordDownTimer <= 0) && (distSqFromHome < SQ(320.0f)))) {
         EnButte_SetupFlyAround(this);
     } else if (distSqFromHome > SQ(240.0f)) {

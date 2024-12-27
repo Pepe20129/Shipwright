@@ -110,7 +110,7 @@ static DamageTable sDamageTable = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x19, ICHAIN_CONTINUE),
     ICHAIN_VEC3F_DIV1000(scale, 5, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2500, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2500, ICHAIN_STOP),
 };
 
 /**
@@ -191,7 +191,7 @@ void EnEiyer_SetupAppearFromGround(EnEiyer* this) {
     this->actor.world.pos.y = this->actor.home.pos.y - 40.0f;
     this->actor.world.pos.z = this->actor.home.pos.z;
     this->actor.velocity.y = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 
     if (this->actor.params != 0xA) {
         if (this->actor.params == 0) {
@@ -214,7 +214,7 @@ void EnEiyer_SetupAppearFromGround(EnEiyer* this) {
 
 void EnEiyer_SetupUnderground(EnEiyer* this) {
     if (this->actor.params == 0xA) {
-        this->actor.speedXZ = -0.5f;
+        this->actor.speed = -0.5f;
         this->actionFunc = EnEiyer_WanderUnderground;
     } else {
         this->actionFunc = EnEiyer_CircleUnderground;
@@ -232,7 +232,7 @@ void EnEiyer_SetupInactive(EnEiyer* this) {
 }
 
 void EnEiyer_SetupAmbush(EnEiyer* this, PlayState* play) {
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_PlayOnce(&this->skelanime, &gStingerBackflipAnim);
     this->collider.info.bumper.dmgFlags = ~0x00300000;
     this->basePos = this->actor.world.pos;
@@ -286,7 +286,7 @@ void EnEiyer_SetupHurt(EnEiyer* this) {
     this->timer = 40;
     this->actor.gravity = 0.0f;
     this->actor.velocity.y = 0.0f;
-    this->actor.speedXZ = 5.0f;
+    this->actor.speed = 5.0f;
     Actor_SetColorFilter(&this->actor, 0x4000, 200, 0, 40);
     this->collider.base.acFlags &= ~AC_ON;
     this->actionFunc = EnEiyer_Hurt;
@@ -297,10 +297,10 @@ void EnEiyer_SetupDie(EnEiyer* this) {
     Actor_SetColorFilter(&this->actor, 0x4000, 200, 0, 40);
 
     if (this->collider.info.bumper.dmgFlags != 0x19) {
-        this->actor.speedXZ = 6.0f;
+        this->actor.speed = 6.0f;
         Animation_MorphToLoop(&this->skelanime, &gStingerHitAnim, -3.0f);
     } else {
-        this->actor.speedXZ -= 6.0f;
+        this->actor.speed -= 6.0f;
     }
 
     this->collider.info.bumper.dmgFlags = ~0x00300000;
@@ -311,7 +311,7 @@ void EnEiyer_SetupDie(EnEiyer* this) {
 
 void EnEiyer_SetupDead(EnEiyer* this) {
     this->actor.colorFilterParams |= 0x2000;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actionFunc = EnEiyer_Dead;
 }
@@ -319,7 +319,7 @@ void EnEiyer_SetupDead(EnEiyer* this) {
 void EnEiyer_SetupStunned(EnEiyer* this) {
     Animation_Change(&this->skelanime, &gStingerPopOutAnim, 2.0f, 0.0f, 0.0f, 0, -8.0f);
     this->timer = 80;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = -1.0f;
     this->collider.dim.height = sColCylInit.dim.height + 8;
@@ -401,7 +401,7 @@ void EnEiyer_Ambush(EnEiyer* this, PlayState* play) {
         this->actor.world.pos.z = (Math_CosS(this->actor.shape.rot.y) * xzOffset) + this->basePos.z;
     } else {
         Math_StepToF(&this->actor.world.pos.y, this->actor.home.pos.y + 80.0f, 0.5f);
-        this->actor.speedXZ = 0.8f;
+        this->actor.speed = 0.8f;
     }
 
     if (animFinished) {
@@ -425,13 +425,13 @@ void EnEiyer_Glide(EnEiyer* this, PlayState* play) {
     }
 
     curFrame = this->skelanime.curFrame;
-    Math_ApproachF(&this->basePos.y, this->actor.floorHeight + 80.0f + 5.0f, 0.3f, this->actor.speedXZ);
+    Math_ApproachF(&this->basePos.y, this->actor.floorHeight + 80.0f + 5.0f, 0.3f, this->actor.speed);
     this->actor.world.pos.y = this->basePos.y - cosf((curFrame - 5.0f) * (M_PI / 40)) * 5.0f;
 
     if (curFrame <= 45.0f) {
-        Math_StepToF(&this->actor.speedXZ, 1.0f, 0.03f);
+        Math_StepToF(&this->actor.speed, 1.0f, 0.03f);
     } else {
-        Math_StepToF(&this->actor.speedXZ, 1.5f, 0.03f);
+        Math_StepToF(&this->actor.speed, 1.5f, 0.03f);
     }
 
     if (this->actor.bgCheckFlags & 8) {
@@ -473,14 +473,14 @@ void EnEiyer_StartAttack(EnEiyer* this, PlayState* play) {
     }
 
     this->actor.world.rot.x = -this->actor.shape.rot.x;
-    Math_StepToF(&this->actor.speedXZ, 5.0f, 0.3f);
+    Math_StepToF(&this->actor.speed, 5.0f, 0.3f);
     Math_ApproachS(&this->actor.world.rot.y, this->actor.yawTowardsPlayer, 2, 0x71C);
     func_8002F974(&this->actor, NA_SE_EN_EIER_FLY - SFX_FLAG);
 }
 
 void EnEiyer_DiveAttack(EnEiyer* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
-    this->actor.speedXZ *= 1.1f;
+    this->actor.speed *= 1.1f;
 
     if (this->actor.bgCheckFlags & 8 || this->actor.bgCheckFlags & 1) {
         EnEiyer_SetupLand(this);
@@ -496,7 +496,7 @@ void EnEiyer_DiveAttack(EnEiyer* this, PlayState* play) {
 void EnEiyer_Land(EnEiyer* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
     Math_ScaledStepToS(&this->actor.world.rot.x, -0x4000, 0x450);
-    Math_StepToF(&this->actor.speedXZ, 7.0f, 1.0f);
+    Math_StepToF(&this->actor.speed, 7.0f, 1.0f);
 
     if (this->timer == -1) {
         if (this->actor.bgCheckFlags & 8 || this->actor.bgCheckFlags & 1) {
@@ -527,7 +527,7 @@ void EnEiyer_Hurt(EnEiyer* this, PlayState* play) {
         this->timer--;
     }
 
-    Math_ApproachF(&this->basePos.y, this->actor.floorHeight + 80.0f + 5.0f, 0.5f, this->actor.speedXZ);
+    Math_ApproachF(&this->basePos.y, this->actor.floorHeight + 80.0f + 5.0f, 0.5f, this->actor.speed);
     this->actor.world.pos.y = this->basePos.y - 5.0f;
 
     if (this->actor.bgCheckFlags & 8) {
@@ -552,7 +552,7 @@ void EnEiyer_Hurt(EnEiyer* this, PlayState* play) {
 void EnEiyer_Die(EnEiyer* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
 
-    if (this->actor.speedXZ > 0.0f) {
+    if (this->actor.speed > 0.0f) {
         Math_ScaledStepToS(&this->actor.shape.rot.x, -0x4000, 0x400);
     } else {
         Math_ScaledStepToS(&this->actor.shape.rot.x, 0x4000, 0x400);

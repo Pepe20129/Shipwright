@@ -59,9 +59,9 @@ static CollisionCheckInfoInit sCCInfoInit = { 0, 12, 60, MASS_HEAVY };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 60, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 60, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 void ObjKibako_SpawnCollectible(ObjKibako* this, PlayState* play) {
@@ -155,7 +155,7 @@ void ObjKibako_WaterBreak(ObjKibako* this, PlayState* play) {
     Vec3f velocity;
 
     pos = *breakPos;
-    pos.y += this->actor.yDistToWater;
+    pos.y += this->actor.depthInWater;
     EffectSsGSplash_Spawn(play, &pos, NULL, NULL, 0, 500);
 
     for (i = 0, angle = 0; i < 12; i++, angle += 0x4E20) {
@@ -191,7 +191,7 @@ void ObjKibako_Idle(ObjKibako* this, PlayState* play) {
 
     if (Actor_HasParent(&this->actor, play)) {
         ObjKibako_SetupHeld(this);
-    } else if ((this->actor.bgCheckFlags & 0x20) && (this->actor.yDistToWater > 19.0f)) {
+    } else if ((this->actor.bgCheckFlags & 0x20) && (this->actor.depthInWater > 19.0f)) {
         ObjKibako_WaterBreak(this, play);
         SoundSource_PlaySfxAtFixedWorldPos(play, &this->actor.world.pos, 20, NA_SE_EV_WOODBOX_BREAK);
         ObjKibako_SpawnCollectible(this, play);
@@ -229,7 +229,7 @@ void ObjKibako_SetupHeld(ObjKibako* this) {
 void ObjKibako_Held(ObjKibako* this, PlayState* play) {
     if (Actor_HasNoParent(&this->actor, play)) {
         this->actor.room = play->roomCtx.curRoom.num;
-        if (fabsf(this->actor.speedXZ) < 0.1f) {
+        if (fabsf(this->actor.speed) < 0.1f) {
             Audio_PlayActorSound2(&this->actor, NA_SE_EV_PUT_DOWN_WOODBOX);
             ObjKibako_SetupIdle(this);
             this->collider.base.ocFlags1 &= ~OC1_TYPE_PLAYER;
@@ -243,8 +243,8 @@ void ObjKibako_Held(ObjKibako* this, PlayState* play) {
 }
 
 void ObjKibako_SetupThrown(ObjKibako* this) {
-    this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speedXZ;
-    this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speedXZ;
+    this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speed;
+    this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speed;
     this->actor.colChkInfo.mass = 240;
     this->actionFunc = ObjKibako_Thrown;
 }

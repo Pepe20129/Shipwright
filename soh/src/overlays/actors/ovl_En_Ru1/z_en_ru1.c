@@ -350,7 +350,7 @@ void func_80AEB1D8(EnRu1* this) {
     this->actor.velocity.x = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.velocity.z = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
     func_80AEB0EC(this, 0);
@@ -431,7 +431,7 @@ void EnRu1_SpawnRipple(EnRu1* this, PlayState* play, s16 radiusMax, s16 life) {
     Actor* thisx = &this->actor;
 
     pos.x = this->actor.world.pos.x;
-    pos.y = this->actor.world.pos.y + this->actor.yDistToWater;
+    pos.y = this->actor.world.pos.y + this->actor.depthInWater;
     pos.z = this->actor.world.pos.z;
     EffectSsGRipple_Spawn(play, &pos, 100, radiusMax, life);
 }
@@ -454,7 +454,7 @@ void EnRu1_SpawnSplash(EnRu1* this, PlayState* play) {
     Vec3f pos;
 
     pos.x = this->actor.world.pos.x;
-    pos.y = this->actor.world.pos.y + this->actor.yDistToWater;
+    pos.y = this->actor.world.pos.y + this->actor.depthInWater;
     pos.z = this->actor.world.pos.z;
 
     EffectSsGSplash_Spawn(play, &pos, 0, 0, 1, 0);
@@ -796,9 +796,9 @@ void func_80AEC40C(EnRu1* this) {
     f32 unk_26C = this->unk_26C;
 
     if (unk_26C < 8.0f) {
-        this->actor.speedXZ = (((kREG(3) * 0.01f) + 2.7f) / 8.0f) * unk_26C;
+        this->actor.speed = (((kREG(3) * 0.01f) + 2.7f) / 8.0f) * unk_26C;
     } else {
-        this->actor.speedXZ = (kREG(3) * 0.01f) + 2.7f;
+        this->actor.speed = (kREG(3) * 0.01f) + 2.7f;
     }
     this->actor.velocity.y = -1.0f;
     Actor_MoveXZGravity(&this->actor);
@@ -810,15 +810,15 @@ void func_80AEC4CC(EnRu1* this) {
 }
 
 void func_80AEC4F4(EnRu1* this) {
-    f32* speedXZ = &this->actor.speedXZ;
+    f32* speed = &this->actor.speed;
     f32* unk_26C = &this->unk_26C;
 
     if (this->unk_26C < 8.0f) {
         *unk_26C += 1.0f;
-        *speedXZ *= (8.0f - *unk_26C) / 8.0f;
+        *speed *= (8.0f - *unk_26C) / 8.0f;
         this->actor.velocity.y = -*unk_26C * (((kREG(4) * 0.01f) + 13.0f) / 8.0f);
     } else {
-        *speedXZ = 0.0f;
+        *speed = 0.0f;
         this->actor.velocity.y = -((kREG(4) * 0.01f) + 13.0f);
     }
     Actor_MoveXZGravity(&this->actor);
@@ -1057,7 +1057,7 @@ s32 func_80AECF6C(EnRu1* this, PlayState* play) {
     s32 pad2[5];
 
     this->unk_26C += 1.0f;
-    if ((player->actor.speedXZ == 0.0f) && (this->unk_26C >= 3.0f)) {
+    if ((player->actor.speed == 0.0f) && (this->unk_26C >= 3.0f)) {
         otherPlayer = GET_PLAYER(play);
         player->actor.world.pos.x = otherPlayer->unk_450.x;
         player->actor.world.pos.y = otherPlayer->unk_450.y;
@@ -1213,7 +1213,7 @@ void func_80AED520(EnRu1* this, PlayState* play) {
 }
 
 void func_80AED57C(EnRu1* this) {
-    if (this->actor.speedXZ != 0.0f) {
+    if (this->actor.speed != 0.0f) {
         Sfx_PlaySfxAtPos(&this->actor.projectedPos, NA_SE_VO_RT_THROW);
     }
 }
@@ -1237,7 +1237,7 @@ s32 func_80AED624(EnRu1* this, PlayState* play) {
         Actor_Kill(&this->actor);
         return false;
     } else if (((this->roomNum1 != curRoomNum) || (this->roomNum2 != curRoomNum)) &&
-               (this->actor.yDistToWater > kREG(16) + 50.0f) && (this->action != 33)) {
+               (this->actor.depthInWater > kREG(16) + 50.0f) && (this->action != 33)) {
         this->action = 33;
         this->drawConfig = 2;
         this->alpha = 0xFF;
@@ -1335,7 +1335,7 @@ void func_80AEDAE0(EnRu1* this, PlayState* play) {
 void func_80AEDB30(EnRu1* this, PlayState* play) {
     DynaPolyActor* dynaPolyActor;
     f32* velocityY;
-    f32* speedXZ;
+    f32* speed;
     f32* gravity;
     s16 wallYaw;
     s16 rotY;
@@ -1347,16 +1347,16 @@ void func_80AEDB30(EnRu1* this, PlayState* play) {
         velocityY = &this->actor.velocity.y;
         dynaPolyActor = DynaPoly_GetActor(&play->colCtx, this->actor.floorBgId);
         if (*velocityY <= 0.0f) {
-            speedXZ = &this->actor.speedXZ;
+            speed = &this->actor.speed;
             if (dynaPolyActor != NULL) {
                 if (dynaPolyActor->actor.id != ACTOR_EN_BOX) {
-                    *speedXZ = 0.0f;
+                    *speed = 0.0f;
                 }
             } else {
-                if (*speedXZ >= (kREG(27) * 0.01f) + 3.0f) {
-                    *speedXZ *= (kREG(19) * 0.01f) + 0.8f;
+                if (*speed >= (kREG(27) * 0.01f) + 3.0f) {
+                    *speed *= (kREG(19) * 0.01f) + 0.8f;
                 } else {
-                    *speedXZ = 0.0f;
+                    *speed = 0.0f;
                 }
             }
             gravity = &this->actor.gravity;
@@ -1380,12 +1380,12 @@ void func_80AEDB30(EnRu1* this, PlayState* play) {
         }
     }
     if (this->actor.bgCheckFlags & 0x10) {
-        speedXZ = &this->actor.speedXZ;
+        speed = &this->actor.speed;
         velocityY = &this->actor.velocity.y;
-        if (*speedXZ >= (kREG(27) * 0.01f) + 3.0f) {
-            *speedXZ *= (kREG(19) * 0.01f) + 0.8f;
+        if (*speed >= (kREG(27) * 0.01f) + 3.0f) {
+            *speed *= (kREG(19) * 0.01f) + 0.8f;
         } else {
-            *speedXZ = 0.0f;
+            *speed = 0.0f;
         }
         if (*velocityY >= 0.0f) {
             *velocityY *= -((kREG(20) * 0.01f) + 0.6f);
@@ -1393,8 +1393,8 @@ void func_80AEDB30(EnRu1* this, PlayState* play) {
         }
     }
     if (this->actor.bgCheckFlags & 8) {
-        speedXZ = &this->actor.speedXZ;
-        if (*speedXZ != 0.0f) {
+        speed = &this->actor.speed;
+        if (*speed != 0.0f) {
             rotY = this->actor.world.rot.y;
             wallYaw = this->actor.wallYaw;
             temp_a0 = (wallYaw * 2) - rotY;
@@ -1405,10 +1405,10 @@ void func_80AEDB30(EnRu1* this, PlayState* play) {
                 phi_v1 = -(s16)(temp_a1_2 - wallYaw);
             }
             if (phi_v1 < 0x4001) {
-                if (*speedXZ >= (kREG(27) * 0.01f) + 3.0f) {
-                    *speedXZ *= (kREG(21) * 0.01f) + 0.6f;
+                if (*speed >= (kREG(27) * 0.01f) + 3.0f) {
+                    *speed *= (kREG(21) * 0.01f) + 0.6f;
                 } else {
-                    *speedXZ = 0.0f;
+                    *speed = 0.0f;
                 }
                 this->actor.world.rot.y = temp_a1_2;
                 func_80AED4FC(this);
@@ -1419,20 +1419,20 @@ void func_80AEDB30(EnRu1* this, PlayState* play) {
 }
 
 void func_80AEDEF4(EnRu1* this, PlayState* play) {
-    f32* speedXZ = &this->actor.speedXZ;
+    f32* speed = &this->actor.speed;
     DynaPolyActor* dynaPolyActor = DynaPoly_GetActor(&play->colCtx, this->actor.floorBgId);
 
     if (dynaPolyActor != NULL && dynaPolyActor->actor.id == ACTOR_EN_BOX) {
-        if (*speedXZ != 0.0f) {
-            *speedXZ *= 1.1f;
+        if (*speed != 0.0f) {
+            *speed *= 1.1f;
         } else {
-            *speedXZ = 1.0f;
+            *speed = 1.0f;
         }
     }
-    if (*speedXZ >= (kREG(27) * 0.01f) + 3.0f) {
-        *speedXZ *= (kREG(22) * 0.01f) + 0.98f;
+    if (*speed >= (kREG(27) * 0.01f) + 3.0f) {
+        *speed *= (kREG(22) * 0.01f) + 0.98f;
     } else {
-        *speedXZ = 0.0f;
+        *speed = 0.0f;
     }
 }
 
@@ -1446,7 +1446,7 @@ void func_80AEE02C(EnRu1* this) {
     this->actor.velocity.x = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.velocity.z = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.gravity = 0.0f;
     this->actor.minVelocityY = 0.0f;
 }
@@ -1459,11 +1459,11 @@ void func_80AEE050(EnRu1* this) {
     EnRu1* thisx = this; // necessary to match
 
     if (this->unk_350 == 0) {
-        if ((this->actor.minVelocityY == 0.0f) && (this->actor.speedXZ == 0.0f)) {
+        if ((this->actor.minVelocityY == 0.0f) && (this->actor.speed == 0.0f)) {
             this->unk_350 = 1;
             func_80AEE02C(this);
             this->unk_35C = 0;
-            this->unk_358 = (this->actor.yDistToWater - 10.0f) * 0.5f;
+            this->unk_358 = (this->actor.depthInWater - 10.0f) * 0.5f;
             this->unk_354 = this->actor.world.pos.y + thisx->unk_358; // thisx only used here
         } else {
             this->actor.gravity = 0.0f;
@@ -1473,12 +1473,12 @@ void func_80AEE050(EnRu1* this) {
                 this->actor.minVelocityY = 0.0f;
                 this->actor.velocity.y = 0.0f;
             }
-            this->actor.speedXZ *= 0.5f;
-            if (this->actor.speedXZ <= 0.1f) {
-                this->actor.speedXZ = 0.0f;
+            this->actor.speed *= 0.5f;
+            if (this->actor.speed <= 0.1f) {
+                this->actor.speed = 0.0f;
             }
-            this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speedXZ;
-            this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speedXZ;
+            this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speed;
+            this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speed;
             Actor_UpdatePos(&this->actor);
         }
     } else {
@@ -1581,12 +1581,12 @@ void func_80AEE488(EnRu1* this, PlayState* play) {
 
 void func_80AEE568(EnRu1* this, PlayState* play) {
     if (!func_80AEE394(this, play)) {
-        if ((this->actor.bgCheckFlags & 1) && (this->actor.speedXZ == 0.0f) && (this->actor.minVelocityY == 0.0f)) {
+        if ((this->actor.bgCheckFlags & 1) && (this->actor.speed == 0.0f) && (this->actor.minVelocityY == 0.0f)) {
             func_80AEE02C(this);
             Actor_OfferCarry(&this->actor, play);
             this->action = 27;
             func_80AEADD8(this);
-        } else if (this->actor.yDistToWater > 0.0f) {
+        } else if (this->actor.depthInWater > 0.0f) {
             this->action = 29;
             this->unk_350 = 0;
         }
@@ -1637,7 +1637,7 @@ void func_80AEE7C4(EnRu1* this, PlayState* play) {
         frameCount = Animation_GetLastFrame(&gRutoChildSittingAnim);
         Animation_Change(&this->skelAnime, &gRutoChildSittingAnim, 1.0f, 0, frameCount, ANIMMODE_LOOP, -8.0f);
         func_80AED6DC(this, play);
-        this->actor.speedXZ *= (kREG(25) * 0.01f) + 1.0f;
+        this->actor.speed *= (kREG(25) * 0.01f) + 1.0f;
         this->actor.velocity.y *= (kREG(26) * 0.01f) + 1.0f;
         this->actor.minVelocityY = -((kREG(24) * 0.01f) + 6.8f);
         this->actor.gravity = -((kREG(23) * 0.01f) + 1.3f);

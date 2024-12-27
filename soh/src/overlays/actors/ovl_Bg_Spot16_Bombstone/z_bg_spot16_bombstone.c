@@ -124,17 +124,17 @@ const ActorInit Bg_Spot16_Bombstone_InitVars = {
 };
 
 static InitChainEntry sInitChainBoulder[] = {
-    ICHAIN_F32(uncullZoneForward, 2000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 2000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 static InitChainEntry sInitChainDebris[] = {
     ICHAIN_F32(gravity, -1, ICHAIN_CONTINUE),
     ICHAIN_F32(minVelocityY, -10, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 200, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 200, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 static Vec3f sVelocity = { 0.0f, 0.0f, 0.0f };
@@ -198,7 +198,7 @@ s32 func_808B4E58(BgSpot16Bombstone* this, PlayState* play) {
 
     Actor_ProcessInitChain(actor, sInitChainDebris);
 
-    actor->speedXZ = D_808B5DD8[actor->params][0];
+    actor->speed = D_808B5DD8[actor->params][0];
     actor->velocity.y = D_808B5DD8[actor->params][1];
 
     Actor_SetScale(actor, D_808B5DD8[actor->params][2] * scaleFactor);

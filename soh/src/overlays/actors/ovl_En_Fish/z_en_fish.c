@@ -80,9 +80,9 @@ const ActorInit En_Fish_InitVars = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 10, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 900, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 40, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 700, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 900, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 40, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 700, ICHAIN_STOP),
 };
 
 f32 EnFish_XZDistanceSquared(Vec3f* v1, Vec3f* v2) {
@@ -205,8 +205,8 @@ void EnFish_Respawning_SetupSlowDown(EnFish* this) {
 
 void EnFish_Respawning_SlowDown(EnFish* this, PlayState* play) {
     EnFish_SetYOffset(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 0.05f, 0.3f, 0.0f);
-    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speedXZ * 1.4f + 0.8f, 2.0f);
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 0.05f, 0.3f, 0.0f);
+    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speed * 1.4f + 0.8f, 2.0f);
     SkelAnime_Update(&this->skelAnime);
     this->actor.shape.rot.y = this->actor.world.rot.y;
 
@@ -234,7 +234,7 @@ void EnFish_Respawning_FollowChild(EnFish* this, PlayState* play) {
     s32 pad;
 
     EnFish_SetYOffset(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, 1.8f, 0.08f, 0.4f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 1.8f, 0.08f, 0.4f, 0.0f);
 
     if ((EnFish_XZDistanceSquared(&this->actor.world.pos, &this->actor.home.pos) > SQ(80.0f)) || (this->timer < 4)) {
         Math_StepToAngleS(&this->actor.world.rot.y, Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos),
@@ -245,7 +245,7 @@ void EnFish_Respawning_FollowChild(EnFish* this, PlayState* play) {
     }
 
     this->actor.shape.rot.y = this->actor.world.rot.y;
-    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speedXZ * 1.5f + 0.8f, 4.0f);
+    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speed * 1.5f + 0.8f, 4.0f);
     SkelAnime_Update(&this->skelAnime);
 
     if (this->timer <= 0) {
@@ -275,7 +275,7 @@ void EnFish_Respawning_FleePlayer(EnFish* this, PlayState* play) {
 
     EnFish_SetYOffset(this);
     playerClose = EnFish_CheckXZDistanceToPlayer(this, play);
-    Math_SmoothStepToF(&this->actor.speedXZ, 4.2f, 0.08f, 1.4f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 4.2f, 0.08f, 1.4f, 0.0f);
 
     if (EnFish_XZDistanceSquared(&this->actor.world.pos, &this->actor.home.pos) > SQ(160.0f)) {
         yaw = Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos);
@@ -301,7 +301,7 @@ void EnFish_Respawning_FleePlayer(EnFish* this, PlayState* play) {
     }
 
     this->actor.shape.rot.y = this->actor.world.rot.y;
-    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speedXZ * 1.5f + 0.8f, 4.0f);
+    this->skelAnime.playSpeed = CLAMP_MAX(this->actor.speed * 1.5f + 0.8f, 4.0f);
 
     SkelAnime_Update(&this->skelAnime);
 
@@ -330,7 +330,7 @@ void EnFish_Respawning_ApproachPlayer(EnFish* this, PlayState* play) {
     s16 temp_a0_2;
 
     EnFish_SetYOffset(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, 1.8f, 0.1f, 0.5f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 1.8f, 0.1f, 0.5f, 0.0f);
 
     if (EnFish_XZDistanceSquared(&this->actor.world.pos, &this->actor.home.pos) > SQ(80.0f)) {
         yaw = Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos);
@@ -351,7 +351,7 @@ void EnFish_Respawning_ApproachPlayer(EnFish* this, PlayState* play) {
     }
 
     this->actor.shape.rot.y = this->actor.world.rot.y;
-    this->skelAnime.playSpeed = CLAMP_MAX((this->actor.speedXZ * 1.5f) + 0.8f, 4.0f);
+    this->skelAnime.playSpeed = CLAMP_MAX((this->actor.speed * 1.5f) + 0.8f, 4.0f);
 
     SkelAnime_Update(&this->skelAnime);
 
@@ -373,7 +373,7 @@ void EnFish_Dropped_SetupFall(EnFish* this) {
 }
 
 void EnFish_Dropped_Fall(EnFish* this, PlayState* play) {
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 0.1f, 0.1f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 0.1f, 0.1f, 0.0f);
     Math_StepToAngleS(&this->actor.world.rot.x, 0x4000, 100);
     Math_StepToAngleS(&this->actor.world.rot.z, -0x4000, 100);
     this->actor.shape.rot.x = this->actor.world.rot.x;
@@ -440,7 +440,7 @@ void EnFish_Dropped_FlopOnGround(EnFish* this, PlayState* play) {
     s16 frames = play->state.frames;
     s16 targetXRot;
 
-    Math_SmoothStepToF(&this->actor.speedXZ, Rand_ZeroOne() * 0.2f, 0.1f, 0.1f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, Rand_ZeroOne() * 0.2f, 0.1f, 0.1f, 0.0f);
 
     targetXRot = (s16)((((frames >> 5) & 2) | ((frames >> 2) & 1)) << 0xB) * 0.3f;
 
@@ -490,12 +490,12 @@ void EnFish_Dropped_SetupSwimAway(EnFish* this) {
 void EnFish_Dropped_SwimAway(EnFish* this, PlayState* play) {
     s32 pad;
 
-    Math_SmoothStepToF(&this->actor.speedXZ, 2.8f, 0.1f, 0.4f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 2.8f, 0.1f, 0.4f, 0.0f);
 
     // If touching wall or not in water, turn back and slow down for one frame.
     if ((this->actor.bgCheckFlags & 8) || !(this->actor.bgCheckFlags & 0x20)) {
         this->actor.home.rot.y = Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos);
-        this->actor.speedXZ *= 0.5f;
+        this->actor.speed *= 0.5f;
     }
 
     Math_StepToAngleS(&this->actor.world.rot.x, 0, 1500);
@@ -516,7 +516,7 @@ void EnFish_Dropped_SwimAway(EnFish* this, PlayState* play) {
         Actor_SetScale(&this->actor, this->actor.scale.x * 0.982f);
     }
 
-    this->skelAnime.playSpeed = CLAMP_MAX((this->actor.speedXZ * 1.5f) + 1.0f, 4.0f);
+    this->skelAnime.playSpeed = CLAMP_MAX((this->actor.speed * 1.5f) + 1.0f, 4.0f);
     SkelAnime_Update(&this->skelAnime);
 
     if (this->timer <= 0) {
@@ -560,7 +560,7 @@ void EnFish_Unique_SwimIdle(EnFish* this, PlayState* play) {
     }
 
     EnFish_SetYOffset(this);
-    Math_SmoothStepToF(&this->actor.speedXZ, speed[0], speed[1], speed[2], 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, speed[0], speed[1], speed[2], 0.0f);
 
     extraPlaySpeed = 0.0f;
 
@@ -574,7 +574,7 @@ void EnFish_Unique_SwimIdle(EnFish* this, PlayState* play) {
     }
 
     this->actor.shape.rot.y = this->actor.world.rot.y;
-    playSpeed = (this->actor.speedXZ * 1.2f) + 0.2f + extraPlaySpeed;
+    playSpeed = (this->actor.speed * 1.2f) + 0.2f + extraPlaySpeed;
     this->skelAnime.playSpeed = CLAMP(playSpeed, 1.5f, 0.5);
     SkelAnime_Update(&this->skelAnime);
 

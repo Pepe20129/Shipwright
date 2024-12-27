@@ -238,7 +238,7 @@ static ColliderJntSphInit sJntSphInit = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 10, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 10, ICHAIN_STOP),
 };
 
 void EnBb_SetupAction(EnBb* this, EnBbActionFunc actionFunc) {
@@ -415,7 +415,7 @@ void EnBb_SetupFlameTrail(EnBb* this) {
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnBb_SetupAction(this, EnBb_FlameTrail);
 }
 
@@ -459,7 +459,7 @@ void EnBb_FlameTrail(EnBb* this, PlayState* play) {
 void EnBb_SetupDeath(EnBb* this, PlayState* play) {
     if (this->actor.params <= ENBB_BLUE) {
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-        this->actor.speedXZ = -7.0f;
+        this->actor.speed = -7.0f;
         this->timer = 5;
         this->actor.shape.rot.x += 0x4E20;
         EffectSsDeadSound_SpawnStationary(play, &this->actor.projectedPos, NA_SE_EN_BUBLE_DEAD, 1, 1, 0x28);
@@ -515,7 +515,7 @@ void EnBb_SetupDamage(EnBb* this) {
     if (this->actor.params > ENBB_GREEN) {
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
         if ((this->actor.bgCheckFlags & 8) == 0) {
-            this->actor.speedXZ = -7.0f;
+            this->actor.speed = -7.0f;
         }
         this->actor.shape.yOffset = 1500.0f;
     }
@@ -528,8 +528,8 @@ void EnBb_SetupDamage(EnBb* this) {
 }
 
 void EnBb_Damage(EnBb* this, PlayState* play) {
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.5f, 0.0f);
-    if (this->actor.speedXZ == 0.0f) {
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.5f, 0.0f);
+    if (this->actor.speed == 0.0f) {
         this->actor.shape.yOffset = 200.0f;
         EnBb_SetupDown(this);
     }
@@ -537,7 +537,7 @@ void EnBb_Damage(EnBb* this, PlayState* play) {
 
 void EnBb_SetupBlue(EnBb* this) {
     Animation_PlayLoop(&this->skelAnime, &object_Bb_Anim_000444);
-    this->actor.speedXZ = (Rand_ZeroOne() * 0.5f) + 0.5f;
+    this->actor.speed = (Rand_ZeroOne() * 0.5f) + 0.5f;
     this->timer = (Rand_ZeroOne() * 20.0f) + 40.0f;
     this->unk_264 = (Rand_ZeroOne() * 30.0f) + 180.0f;
     this->targetActor = NULL;
@@ -567,7 +567,7 @@ void EnBb_Blue(EnBb* this, PlayState* play) {
     }
     this->actor.world.pos.y += Math_CosF(this->bobPhase) * (1.0f + this->bobSpeedMod);
     this->bobPhase += 0.2f;
-    Math_SmoothStepToF(&this->actor.speedXZ, this->maxSpeed, 1.0f, 0.5f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, this->maxSpeed, 1.0f, 0.5f, 0.0f);
 
     if (Math_Vec3f_DistXZ(&this->actor.world.pos, &this->actor.home.pos) > 300.0f) {
         this->vMoveAngleY = Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos);
@@ -577,7 +577,7 @@ void EnBb_Blue(EnBb* this, PlayState* play) {
         if (this->timer <= 0) {
             this->charge ^= true;
             this->flyHeightMod = (s16)(Math_CosF(this->bobPhase) * 10.0f);
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             if (this->charge && (this->targetActor == NULL)) {
                 this->vMoveAngleY = this->actor.world.rot.y;
                 if (this->actor.xzDistToPlayer < 200.0f) {
@@ -617,7 +617,7 @@ void EnBb_Blue(EnBb* this, PlayState* play) {
             if ((this->vBombHopPhase == 0) && (explosive != this->targetActor)) {
                 this->vBombHopPhase = -0x8000;
                 this->targetActor = explosive;
-                this->actor.speedXZ *= 0.5f;
+                this->actor.speed *= 0.5f;
             }
             Math_SmoothStepToS(&this->actor.world.rot.y, this->vMoveAngleY, 1, 0x1388, 0);
             Math_SmoothStepToF(&this->actor.world.pos.x, explosive->world.pos.x, 1.0f, 1.5f, 0.0f);
@@ -679,7 +679,7 @@ void EnBb_SetupDown(EnBb* this) {
     this->timer = 200;
     this->actor.colorFilterTimer = 0;
     this->actor.bgCheckFlags &= ~1;
-    this->actor.speedXZ = 3.0f;
+    this->actor.speed = 3.0f;
     this->flameScaleX = 0.0f;
     this->flameScaleY = 0.0f;
     this->actor.gravity = -2.0f;
@@ -754,7 +754,7 @@ void EnBb_Down(EnBb* this, PlayState* play) {
 void EnBb_SetupRed(PlayState* play, EnBb* this) {
     Animation_PlayLoop(&this->skelAnime, &object_Bb_Anim_000184);
     if (this->action == BB_DOWN) {
-        this->actor.speedXZ = 5.0f;
+        this->actor.speed = 5.0f;
         this->actor.gravity = -1.0f;
         this->actor.velocity.y = 16.0f;
         this->actionState = BBRED_ATTACK;
@@ -768,7 +768,7 @@ void EnBb_SetupRed(PlayState* play, EnBb* this) {
         this->moveMode = BBMOVE_HIDDEN;
         this->actor.world.pos.y -= 80.0f;
         this->actor.home.pos = this->actor.world.pos;
-        this->actor.velocity.y = this->actor.gravity = this->actor.speedXZ = 0.0f;
+        this->actor.velocity.y = this->actor.gravity = this->actor.speed = 0.0f;
         this->actor.bgCheckFlags &= ~1;
         this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
     }
@@ -791,7 +791,7 @@ void EnBb_Red(EnBb* this, PlayState* play) {
         case BBRED_WAIT:
             if ((Actor_WorldDistXYZToActor(&this->actor, &player->actor) <= 250.0f) && (ABS(yawDiff) <= 0x4000) &&
                 (this->timer == 0)) {
-                this->actor.speedXZ = 5.0f;
+                this->actor.speed = 5.0f;
                 this->actor.gravity = -1.0f;
                 this->actor.velocity.y = 18.0f;
                 this->moveMode = BBMOVE_NOCLIP;
@@ -840,7 +840,7 @@ void EnBb_Red(EnBb* this, PlayState* play) {
             break;
         case BBRED_HIDE:
             if (this->timer == 0) {
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
                 this->actor.gravity = 0.0f;
                 this->actor.velocity.y = 0.0f;
                 this->actionState = BBRED_WAIT;
@@ -880,7 +880,7 @@ void EnBb_SetWaypoint(EnBb* this, PlayState* play) {
 
 void EnBb_SetupWhite(PlayState* play, EnBb* this) {
     Animation_PlayLoop(&this->skelAnime, &object_Bb_Anim_000444);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.world.pos.y += 60.0f;
     this->flameScaleX = 100.0f;
     this->action = BB_WHITE;
@@ -891,7 +891,7 @@ void EnBb_SetupWhite(PlayState* play, EnBb* this) {
 }
 
 void EnBb_White(EnBb* this, PlayState* play) {
-    if (this->actor.speedXZ == 0.0f) {
+    if (this->actor.speed == 0.0f) {
         f32 distL1;
         f32 vx;
         f32 vz;
@@ -929,7 +929,7 @@ void EnBb_White(EnBb* this, PlayState* play) {
             this->collider.base.atFlags &= ~AT_HIT;
         }
         this->actor.shape.rot.y = this->actor.world.rot.y;
-    } else if (Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.5f, 0.0f) == 0.0f) {
+    } else if (Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.5f, 0.0f) == 0.0f) {
         EnBb_FaceWaypoint(this);
     }
     SkelAnime_Update(&this->skelAnime);
@@ -964,7 +964,7 @@ void EnBb_InitGreen(EnBb* this, PlayState* play) {
     Matrix_MultVec3f(&bobOffset, &this->actor.world.pos);
     this->targetActor = NULL;
     this->action = BB_GREEN;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->vFlameTimer = (Rand_ZeroOne() * 30.0f) + 180.0f;
     EnBb_SetupAction(this, EnBb_Green);
 }
@@ -975,7 +975,7 @@ void EnBb_SetupGreen(EnBb* this) {
     this->actionState = BBGREEN_FLAME_ON;
     this->targetActor = NULL;
     this->action = BB_GREEN;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->vFlameTimer = (Rand_ZeroOne() * 30.0f) + 180.0f;
     this->actor.shape.rot.z = 0;
     this->actor.shape.rot.y = this->actor.yawTowardsPlayer;
@@ -989,7 +989,7 @@ void EnBb_Green(EnBb* this, PlayState* play) {
 
     nextPos.y += 30.0f;
     if (this->actor.params == ENBB_GREEN_BIG) {
-        if (this->actor.speedXZ == 0.0f) {
+        if (this->actor.speed == 0.0f) {
             s16 pitch = Math_Vec3f_Pitch(&this->actor.home.pos, &this->waypointPos);
             s16 yaw = Math_Vec3f_Yaw(&this->actor.home.pos, &this->waypointPos);
             f32 vy = Math_SinS(pitch) * this->maxSpeed;
@@ -1023,7 +1023,7 @@ void EnBb_Green(EnBb* this, PlayState* play) {
                 }
             }
             this->actor.shape.rot.y = this->actor.world.rot.y;
-        } else if (Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.5f, 0.0f) == 0.0f) {
+        } else if (Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.5f, 0.0f) == 0.0f) {
             EnBb_FaceWaypoint(this);
         }
     } else {
@@ -1080,7 +1080,7 @@ void EnBb_SetupStunned(EnBb* this) {
                 this->actor.gravity = -2.0f;
                 this->actor.shape.yOffset = 1500.0f;
             }
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->flameScaleX = 0.0f;
             this->flameScaleY = 0.0f;
         } else {
@@ -1210,7 +1210,7 @@ void EnBb_CollisionCheck(EnBb* this, PlayState* play) {
                 } else if ((this->actor.params == ENBB_WHITE) &&
                            ((this->action == BB_WHITE) || (this->action == BB_STUNNED))) {
                     Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0xC);
-                    this->actor.speedXZ = -8.0f;
+                    this->actor.speed = -8.0f;
                     this->maxSpeed = 0.0f;
                     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
                     Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_DAMAGE);
@@ -1238,7 +1238,7 @@ void EnBb_Update(Actor* thisx, PlayState* play2) {
     }
     if (this->actor.colChkInfo.damageEffect != 0xD) {
         this->actionFunc(this, play);
-        if ((this->actor.params <= ENBB_BLUE) && (this->actor.speedXZ >= -6.0f) &&
+        if ((this->actor.params <= ENBB_BLUE) && (this->actor.speed >= -6.0f) &&
             ((this->actor.flags & ACTOR_FLAG_DRAGGED_BY_ARROW) == 0)) {
             Actor_MoveXZGravity(&this->actor);
         }
@@ -1254,7 +1254,7 @@ void EnBb_Update(Actor* thisx, PlayState* play2) {
             this->actor.world.pos.y + (this->actor.shape.yOffset * this->actor.scale.y);
         this->collider.elements->dim.worldSphere.center.z = this->actor.world.pos.z;
 
-        if ((this->action > BB_KILL) && ((this->actor.speedXZ != 0.0f) || (this->action == BB_GREEN))) {
+        if ((this->action > BB_KILL) && ((this->actor.speed != 0.0f) || (this->action == BB_GREEN))) {
             CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);
         }
         if ((this->action > BB_FLAME_TRAIL) &&

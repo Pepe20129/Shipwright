@@ -71,7 +71,7 @@ static s32 D_80AD8D24 = 0;
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x4F, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 1500, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 1500, ICHAIN_STOP),
 };
 
 static Vec3f D_80AD8D30 = { 0.0f, 1.5f, 0.0f };
@@ -155,7 +155,7 @@ void EnPoRelay_SetupRace(EnPoRelay* this) {
 void EnPoRelay_SetupEndRace(EnPoRelay* this) {
     this->actor.world.rot.y = this->actor.home.rot.y + 0xC000;
     this->actor.flags &= ~ACTOR_FLAG_NO_LOCKON;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actionFunc = EnPoRelay_EndRace;
 }
 
@@ -225,11 +225,11 @@ void EnPoRelay_Race(EnPoRelay* this, PlayState* play) {
                                     player->actor.world.pos.z) != 0) ||
             (Math3D_PointInSquare2D(1580.0f, 2090.0f, -3030.0f, -2500.0f, player->actor.world.pos.x,
                                     player->actor.world.pos.z) != 0)) {
-            speed = (this->hookshotSlotFull) ? player->actor.speedXZ * 1.4f : player->actor.speedXZ * 1.2f;
+            speed = (this->hookshotSlotFull) ? player->actor.speed * 1.4f : player->actor.speed * 1.2f;
         } else if (this->actor.xzDistToPlayer < 150.0f) {
-            speed = (this->hookshotSlotFull) ? player->actor.speedXZ * 1.2f : player->actor.speedXZ;
+            speed = (this->hookshotSlotFull) ? player->actor.speed * 1.2f : player->actor.speed;
         } else if (this->actor.xzDistToPlayer < 300.0f) {
-            speed = (this->hookshotSlotFull) ? player->actor.speedXZ : player->actor.speedXZ * 0.8f;
+            speed = (this->hookshotSlotFull) ? player->actor.speed : player->actor.speed * 0.8f;
         } else if (this->hookshotSlotFull) {
             speed = 4.5f;
         } else {
@@ -238,9 +238,9 @@ void EnPoRelay_Race(EnPoRelay* this, PlayState* play) {
         multiplier = 250.0f - this->actor.xzDistToPlayer;
         multiplier = CLAMP_MIN(multiplier, 0.0f);
         speed += multiplier * 0.02f + 1.0f;
-        Math_ApproachF(&this->actor.speedXZ, speed, 0.5f, 1.5f);
+        Math_ApproachF(&this->actor.speed, speed, 0.5f, 1.5f);
     } else {
-        Math_ApproachF(&this->actor.speedXZ, 3.5f, 0.5f, 1.5f);
+        Math_ApproachF(&this->actor.speed, 3.5f, 0.5f, 1.5f);
     }
     EnPoRelay_Vec3sToVec3f(&vec, &D_80AD8C30[this->pathIndex]);
     if (Actor_WorldDistXZToPoint(&this->actor, &vec) < 40.0f) {

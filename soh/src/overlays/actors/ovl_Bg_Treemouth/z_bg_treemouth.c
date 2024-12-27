@@ -47,9 +47,9 @@ const ActorInit Bg_Treemouth_InitVars = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_VEC3F(scale, 1, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 8000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 300, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 300, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 8000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 300, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 300, ICHAIN_STOP),
 };
 
 // unused
@@ -146,7 +146,7 @@ void func_808BC8B8(BgTreemouth* this, PlayState* play) {
             if (Flags_GetEventChkInf(EVENTCHKINF_MET_DEKU_TREE)) {
                 if (Actor_IsFacingAndNearPlayer(&this->dyna.actor, 1658.0f, 0x7530)) {
                     this->dyna.actor.flags |= ACTOR_FLAG_TARGETABLE;
-                    if (this->dyna.actor.isTargeted) {
+                    if (this->dyna.actor.isLockedOn) {
                         this->dyna.actor.flags &= ~ACTOR_FLAG_TARGETABLE;
                         play->csCtx.segment = D_808BD2A0;
                         gSaveContext.cutsceneTrigger = 1;

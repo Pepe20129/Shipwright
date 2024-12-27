@@ -290,7 +290,7 @@ void func_80A74714(EnIk* this) {
 
     Animation_Change(&this->skelAnime, &gIronKnuckleStandUpAnim, 0.0f, frame, frames, ANIMMODE_ONCE, 0.0f);
     this->unk_2F8 = 3;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnIk_SetupAction(this, func_80A747C0);
 }
 
@@ -323,7 +323,7 @@ void func_80A7489C(EnIk* this) {
 
     this->actor.flags |= ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE;
     this->unk_2F8 = 4;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &object_ik_Anim_00DD50, 0.0f, 0.0f, frames, ANIMMODE_LOOP, 4.0f);
     EnIk_SetupAction(this, func_80A7492C);
 }
@@ -353,12 +353,12 @@ void func_80A74AAC(EnIk* this) {
     if (this->unk_2FB == 0) {
         Animation_Change(&this->skelAnime, &gIronKnuckleWalkAnim, 1.0f, 0.0f,
                          Animation_GetLastFrame(&gIronKnuckleWalkAnim), ANIMMODE_LOOP, -4.0f);
-        this->actor.speedXZ = 0.9f;
+        this->actor.speed = 0.9f;
     } else {
         Animation_Change(&this->skelAnime, &gIronKnuckleRunAnim, 1.0f, 0.0f,
                          Animation_GetLastFrame(&gIronKnuckleRunAnim), ANIMMODE_LOOP, -4.0f);
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_IRONNACK_DASH);
-        this->actor.speedXZ = 2.5f;
+        this->actor.speed = 2.5f;
     }
     this->actor.world.rot.y = this->actor.shape.rot.y;
     EnIk_SetupAction(this, func_80A74BA4);
@@ -427,7 +427,7 @@ void func_80A74E2C(EnIk* this) {
 
     this->unk_2FF = 1;
     this->unk_2F8 = 6;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &gIronKnuckleVerticalAttackAnim, 1.5f, 0.0f, frames, ANIMMODE_ONCE, -4.0f);
     EnIk_SetupAction(this, func_80A74EBC);
 }
@@ -494,7 +494,7 @@ void func_80A751C8(EnIk* this) {
     this->unk_2FF = 2;
     this->unk_300 = 0;
     this->unk_2F8 = 6;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &gIronKnuckleHorizontalAttackAnim, 0.0f, 0.0f, frames, ANIMMODE_ONCE_INTERP, -6.0f);
     this->unk_2FC = 0;
     EnIk_SetupAction(this, func_80A75260);
@@ -549,7 +549,7 @@ void func_80A754A0(EnIk* this) {
 
     this->unk_2F8 = 1;
     this->unk_2FF = 3;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &gIronKnuckleHorizontalAttackAnim, 0.5f, 13.0f, frames, ANIMMODE_ONCE_INTERP, -4.0f);
     EnIk_SetupAction(this, func_80A75530);
 }
@@ -576,7 +576,7 @@ void func_80A755F0(EnIk* this) {
 
     this->unk_2FE = 0;
     this->unk_2F8 = 9;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &gIronKnuckleBlockAnim, 1.0f, 0.0f, frames, ANIMMODE_ONCE_INTERP, -4.0f);
     EnIk_SetupAction(this, func_80A7567C);
 }
@@ -607,18 +607,18 @@ void func_80A75790(EnIk* this) {
     if (ABS(yawDiff) <= 0x4000) {
         Animation_Change(&this->skelAnime, &gIronKnuckleFrontHitAnim, 1.0f, 0.0f,
                          Animation_GetLastFrame(&gIronKnuckleFrontHitAnim), ANIMMODE_ONCE, -4.0f);
-        this->actor.speedXZ = -6.0f;
+        this->actor.speed = -6.0f;
     } else {
         Animation_Change(&this->skelAnime, &gIronKnuckleBackHitAnim, 1.0f, 0.0f,
                          Animation_GetLastFrame(&gIronKnuckleBackHitAnim), ANIMMODE_ONCE, -4.0f);
-        this->actor.speedXZ = 6.0f;
+        this->actor.speed = 6.0f;
     }
     this->unk_2FE = 0;
     EnIk_SetupAction(this, func_80A758B0);
 }
 
 void func_80A758B0(EnIk* this, PlayState* play) {
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 1.0f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 1.0f, 0.0f);
     if (BodyBreak_SpawnParts(&this->actor, &this->bodyBreak, play, this->actor.params + 4)) {
         this->bodyBreak.val = BODYBREAK_STATUS_FINISHED;
     }
@@ -637,7 +637,7 @@ void func_80A7598C(EnIk* this) {
 
     this->unk_2FE = 0;
     this->unk_2F8 = 2;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_Change(&this->skelAnime, &gIronKnuckleDeathAnim, 1.0f, 0.0f, frames, ANIMMODE_ONCE, -4.0f);
     this->unk_2F9 = 0x18;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_IRONNACK_DEAD);

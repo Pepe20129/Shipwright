@@ -88,8 +88,8 @@ static s16 sFragmentScales[] = { 108, 102, 96, 84, 66, 55, 42, 38 };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 400, ICHAIN_CONTINUE),         ICHAIN_F32_DIV1000(gravity, -3200, ICHAIN_CONTINUE),
-    ICHAIN_F32_DIV1000(minVelocityY, -17000, ICHAIN_CONTINUE), ICHAIN_F32(uncullZoneForward, 1200, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 100, ICHAIN_CONTINUE),         ICHAIN_F32(uncullZoneDownward, 120, ICHAIN_STOP),
+    ICHAIN_F32_DIV1000(minVelocityY, -17000, ICHAIN_CONTINUE), ICHAIN_F32(cullingVolumeDistance, 1200, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 100, ICHAIN_CONTINUE),         ICHAIN_F32(cullingVolumeDownward, 120, ICHAIN_STOP),
 };
 
 void EnKusa_SetupAction(EnKusa* this, EnKusaActionFunc actionFunc) {
@@ -238,7 +238,7 @@ void EnKusa_Init(Actor* thisx, PlayState* play) {
     Actor_ProcessInitChain(&this->actor, sInitChain);
 
     if (play->csCtx.state != CS_STATE_IDLE) {
-        this->actor.uncullZoneForward += 1000.0f;
+        this->actor.cullingVolumeDistance += 1000.0f;
     }
 
     EnKusa_InitCollider(thisx, play);
@@ -352,8 +352,8 @@ void EnKusa_LiftedUp(EnKusa* this, PlayState* play) {
     if (Actor_HasNoParent(&this->actor, play)) {
         this->actor.room = play->roomCtx.curRoom.num;
         EnKusa_SetupFall(this);
-        this->actor.velocity.x = this->actor.speedXZ * Math_SinS(this->actor.world.rot.y);
-        this->actor.velocity.z = this->actor.speedXZ * Math_CosS(this->actor.world.rot.y);
+        this->actor.velocity.x = this->actor.speed * Math_SinS(this->actor.world.rot.y);
+        this->actor.velocity.z = this->actor.speed * Math_CosS(this->actor.world.rot.y);
         this->actor.colChkInfo.mass = 240;
         this->actor.gravity = -0.1f;
         EnKusa_UpdateVelY(this);
@@ -398,7 +398,7 @@ void EnKusa_Fall(EnKusa* this, PlayState* play) {
 
     if (this->actor.bgCheckFlags & 0x40) {
         contactPos.x = this->actor.world.pos.x;
-        contactPos.y = this->actor.world.pos.y + this->actor.yDistToWater;
+        contactPos.y = this->actor.world.pos.y + this->actor.depthInWater;
         contactPos.z = this->actor.world.pos.z;
         EffectSsGSplash_Spawn(play, &contactPos, NULL, NULL, 0, 400);
         EffectSsGRipple_Spawn(play, &contactPos, 150, 650, 0);

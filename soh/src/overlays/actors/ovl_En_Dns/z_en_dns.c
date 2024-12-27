@@ -121,7 +121,7 @@ static DnsItemEntry* sItemEntries[] = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x4E, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 typedef enum {
@@ -163,7 +163,7 @@ void EnDns_Init(Actor* thisx, PlayState* play) {
     this->maintainCollider = 1;
     this->standOnGround = 1;
     this->dropCollectible = 0;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = -1.0f;
     this->actor.textId = D_809F040C[this->actor.params];
@@ -331,7 +331,7 @@ void EnDns_Wait(EnDns* this, PlayState* play) {
     if (Actor_ProcessTalkRequest(&this->actor, play)) {
         this->actionFunc = EnDns_Talk;
     } else {
-        if ((this->collider.base.ocFlags1 & OC1_HIT) || this->actor.isTargeted) {
+        if ((this->collider.base.ocFlags1 & OC1_HIT) || this->actor.isLockedOn) {
             this->actor.flags |= ACTOR_FLAG_WILL_TALK;
         } else {
             this->actor.flags &= ~ACTOR_FLAG_WILL_TALK;

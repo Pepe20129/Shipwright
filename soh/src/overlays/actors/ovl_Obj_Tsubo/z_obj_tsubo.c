@@ -80,8 +80,8 @@ static CollisionCheckInfoInit sColChkInfoInit[] = { 0, 12, 60, MASS_IMMOVABLE };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_F32_DIV1000(gravity, -1200, ICHAIN_CONTINUE), ICHAIN_F32_DIV1000(minVelocityY, -20000, ICHAIN_CONTINUE),
-    ICHAIN_VEC3F_DIV1000(scale, 150, ICHAIN_CONTINUE),   ICHAIN_F32(uncullZoneForward, 900, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 100, ICHAIN_CONTINUE),   ICHAIN_F32(uncullZoneDownward, 800, ICHAIN_STOP),
+    ICHAIN_VEC3F_DIV1000(scale, 150, ICHAIN_CONTINUE),   ICHAIN_F32(cullingVolumeDistance, 900, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 100, ICHAIN_CONTINUE),   ICHAIN_F32(cullingVolumeDownward, 800, ICHAIN_STOP),
 };
 
 void ObjTsubo_SpawnCollectible(ObjTsubo* this, PlayState* play) {
@@ -200,7 +200,7 @@ void ObjTsubo_WaterBreak(ObjTsubo* this, PlayState* play) {
     s32 phi_s0;
     s32 i;
 
-    pos.y += this->actor.yDistToWater;
+    pos.y += this->actor.depthInWater;
     EffectSsGSplash_Spawn(play, &pos, NULL, NULL, 0, 400);
     for (i = 0, angle = 0; i < 15; i++, angle += 0x4E20) {
         f32 sins = Math_SinS(angle);
@@ -247,7 +247,7 @@ void ObjTsubo_Idle(ObjTsubo* this, PlayState* play) {
 
     if (Actor_HasParent(&this->actor, play)) {
         ObjTsubo_SetupLiftedUp(this);
-    } else if ((this->actor.bgCheckFlags & 0x20) && (this->actor.yDistToWater > 15.0f)) {
+    } else if ((this->actor.bgCheckFlags & 0x20) && (this->actor.depthInWater > 15.0f)) {
         ObjTsubo_WaterBreak(this, play);
         SoundSource_PlaySfxAtFixedWorldPos(play, &this->actor.world.pos, 20, NA_SE_EV_POT_BROKEN);
         ObjTsubo_SpawnCollectible(this, play);
@@ -296,8 +296,8 @@ void ObjTsubo_LiftedUp(ObjTsubo* this, PlayState* play) {
 }
 
 void ObjTsubo_SetupThrown(ObjTsubo* this) {
-    this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speedXZ;
-    this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speedXZ;
+    this->actor.velocity.x = Math_SinS(this->actor.world.rot.y) * this->actor.speed;
+    this->actor.velocity.z = Math_CosS(this->actor.world.rot.y) * this->actor.speed;
     this->actor.colChkInfo.mass = 240;
     D_80BA1B50 = (Rand_ZeroOne() - 0.7f) * 2800.0f;
     D_80BA1B58 = (Rand_ZeroOne() - 0.5f) * 2000.0f;

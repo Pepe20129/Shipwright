@@ -921,7 +921,7 @@ void EnHy_InitImpl(EnHy* this, PlayState* play) {
 
         if ((play->sceneNum == SCENE_BACK_ALLEY_DAY) || (play->sceneNum == SCENE_MARKET_DAY)) {
             this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
-            this->actor.uncullZoneScale = 0.0f;
+            this->actor.cullingVolumeScale = 0.0f;
         }
 
         if (play->sceneNum == SCENE_KAKARIKO_CENTER_GUEST_HOUSE) {
@@ -934,7 +934,7 @@ void EnHy_InitImpl(EnHy* this, PlayState* play) {
         switch (this->actor.params & 0x7F) {
             case ENHY_TYPE_BOJ_3:
                 if (this->path != NULL) {
-                    this->actor.speedXZ = 3.0f;
+                    this->actor.speed = 3.0f;
                 }
                 this->actionFunc = func_80A711B4;
                 break;
@@ -1017,7 +1017,7 @@ void EnHy_DoNothing(EnHy* this, PlayState* play) {
 void func_80A712C0(EnHy* this, PlayState* play) {
     if ((this->actor.xzDistToPlayer <= 100.0f) && (this->path != NULL)) {
         Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENHY_ANIM_7);
-        this->actor.speedXZ = 0.4f;
+        this->actor.speed = 0.4f;
         this->actionFunc = func_80A7134C;
     }
 
@@ -1036,7 +1036,7 @@ void func_80A7134C(EnHy* this, PlayState* play) {
         Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENHY_ANIM_7);
     }
 
-    this->actor.speedXZ = 0.4f;
+    this->actor.speed = 0.4f;
     distSq = Path_OrientAndGetDistSq(&this->actor, this->path, this->waypoint, &yaw);
     Math_SmoothStepToS(&this->actor.world.rot.y, yaw, 10, 1000, 1);
     this->actor.shape.rot = this->actor.world.rot;

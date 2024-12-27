@@ -73,7 +73,7 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x21, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 0, ICHAIN_STOP),
 };
 
 void BossFd2_SpawnDebris(PlayState* play, BossFdEffect* effect, Vec3f* position, Vec3f* velocity,

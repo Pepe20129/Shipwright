@@ -49,8 +49,8 @@ void EnPubox_Init(Actor* thisx, PlayState* play) {
     this->unk_164 = 1;
     thisx->colChkInfo.cylRadius = 20;
     thisx->colChkInfo.cylHeight = 50;
-    thisx->uncullZoneDownward = 1200.0f;
-    thisx->uncullZoneScale = 720.0f;
+    thisx->cullingVolumeDownward = 1200.0f;
+    thisx->cullingVolumeScale = 720.0f;
     ActorShape_Init(&thisx->shape, 0.0f, ActorShadow_DrawCircle, 6.0f);
     this->dyna.interactFlags = 0;
     this->dyna.transformFlags = DPM_UNK;
@@ -69,11 +69,11 @@ void EnPubox_Destroy(Actor* thisx, PlayState* play) {
 void EnPubox_Update(Actor* thisx, PlayState* play) {
     EnPubox* this = (EnPubox*)thisx;
 
-    thisx->speedXZ += this->dyna.unk_150;
+    thisx->speed += this->dyna.unk_150;
     thisx->world.rot.y = this->dyna.unk_158;
-    thisx->speedXZ = (thisx->speedXZ < -2.5f) ? -2.5f : ((thisx->speedXZ > 2.5f) ? 2.5f : thisx->speedXZ);
-    Math_SmoothStepToF(&thisx->speedXZ, 0.0f, 1.0f, 1.0f, 0.0f);
-    if (thisx->speedXZ != 0.0f) {
+    thisx->speed = (thisx->speed < -2.5f) ? -2.5f : ((thisx->speed > 2.5f) ? 2.5f : thisx->speed);
+    Math_SmoothStepToF(&thisx->speed, 0.0f, 1.0f, 1.0f, 0.0f);
+    if (thisx->speed != 0.0f) {
         Audio_PlaySoundGeneral(NA_SE_EV_ROCK_SLIDE - SFX_FLAG, &thisx->projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
     }

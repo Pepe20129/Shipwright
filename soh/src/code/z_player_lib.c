@@ -1408,7 +1408,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
             } else if ((sLeftHandType == PLAYER_MODELTYPE_LH_BOOMERANG) && (this->stateFlags1 & PLAYER_STATE1_BOOMERANG_THROWN)) {
                 dLists = &gPlayerLeftHandOpenDLs[gSaveContext.linkAge];
                 sLeftHandType = PLAYER_MODELTYPE_LH_OPEN;
-            } else if ((this->leftHandType == PLAYER_MODELTYPE_LH_OPEN) && (this->actor.speedXZ > 2.0f) && !(this->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
+            } else if ((this->leftHandType == PLAYER_MODELTYPE_LH_OPEN) && (this->actor.speed > 2.0f) && !(this->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
                 dLists = &gPlayerLeftHandClosedDLs[gSaveContext.linkAge];
                 sLeftHandType = PLAYER_MODELTYPE_LH_CLOSED;
             }
@@ -1419,7 +1419,7 @@ s32 Player_OverrideLimbDrawGameplayDefault(PlayState* play, s32 limbIndex, Gfx**
 
             if (sRightHandType == PLAYER_MODELTYPE_RH_SHIELD) {
                 dLists += this->currentShield * 4;
-            } else if ((this->rightHandType == PLAYER_MODELTYPE_RH_OPEN) && (this->actor.speedXZ > 2.0f) && !(this->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
+            } else if ((this->rightHandType == PLAYER_MODELTYPE_RH_OPEN) && (this->actor.speed > 2.0f) && !(this->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
                 dLists = &sPlayerRightHandClosedDLs[gSaveContext.linkAge];
                 sRightHandType = PLAYER_MODELTYPE_RH_CLOSED;
             }

@@ -139,7 +139,7 @@ void EnSkb_SpawnDebris(PlayState* play, EnSkb* this, Vec3f* spawnPos) {
 }
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_CONTINUE),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -2000, ICHAIN_STOP),
 };
 
@@ -234,7 +234,7 @@ void func_80AFCF48(EnSkb* this) {
     this->unk_280 = 0;
     this->unk_281 = 0;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_AKINDONUTS_HIDE);
     EnSkb_SetupAction(this, func_80AFCFF0);
 }
@@ -255,7 +255,7 @@ void func_80AFD0A4(EnSkb* this) {
                      Animation_GetLastFrame(&gStalchildWalkingAnim), ANIMMODE_LOOP, -4.0f);
     this->unk_280 = 4;
     this->unk_288 = 0;
-    this->actor.speedXZ = this->actor.scale.y * 160.0f;
+    this->actor.speed = this->actor.scale.y * 160.0f;
     EnSkb_SetupAction(this, EnSkb_Advance);
 }
 
@@ -304,7 +304,7 @@ void func_80AFD33C(EnSkb* this) {
                      Animation_GetLastFrame(&gStalchildAttackingAnim), ANIMMODE_ONCE_INTERP, 4.0f);
     this->collider.base.atFlags &= ~4;
     this->unk_280 = 3;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnSkb_SetupAction(this, EnSkb_SetupAttack);
 }
 
@@ -343,7 +343,7 @@ void func_80AFD508(EnSkb* this, PlayState* play) {
 
 void EnSkb_SetupStunned(EnSkb* this) {
     if (this->actor.bgCheckFlags & 1) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     this->unk_281 = 0;
@@ -353,11 +353,11 @@ void EnSkb_SetupStunned(EnSkb* this) {
 
 void func_80AFD59C(EnSkb* this, PlayState* play) {
     if (this->actor.bgCheckFlags & 2) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
     if (this->actor.bgCheckFlags & 1) {
-        if (this->actor.speedXZ < 0.0f) {
-            this->actor.speedXZ += 0.05f;
+        if (this->actor.speed < 0.0f) {
+            this->actor.speed += 0.05f;
         }
     }
     if ((this->actor.colorFilterTimer == 0) && (this->actor.bgCheckFlags & 1)) {
@@ -372,7 +372,7 @@ void func_80AFD59C(EnSkb* this, PlayState* play) {
 void func_80AFD644(EnSkb* this) {
     Animation_MorphToPlayOnce(&this->skelAnime, &gStalchildDamagedAnim, -4.0f);
     if (this->actor.bgCheckFlags & 1) {
-        this->actor.speedXZ = -4.0f;
+        this->actor.speed = -4.0f;
     }
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_STALKID_DAMAGE);
@@ -390,11 +390,11 @@ void func_80AFD6CC(EnSkb* this, PlayState* play) {
             this->unk_283 = (*new_var) | 2;
         }
         if (this->actor.bgCheckFlags & 2) {
-            this->actor.speedXZ = 0;
+            this->actor.speed = 0;
         }
         if (this->actor.bgCheckFlags & 1) {
-            if (this->actor.speedXZ < 0.0f) {
-                this->actor.speedXZ += 0.05f;
+            if (this->actor.speed < 0.0f) {
+                this->actor.speed += 0.05f;
             }
         }
 
@@ -410,7 +410,7 @@ void func_80AFD7B4(EnSkb* this, PlayState* play) {
     this->actor.shape.rot.y = this->actor.yawTowardsPlayer;
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
     if (this->actor.bgCheckFlags & 1) {
-        this->actor.speedXZ = -6.0f;
+        this->actor.speed = -6.0f;
     }
     this->unk_280 = 1;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
@@ -446,7 +446,7 @@ void func_80AFD968(EnSkb* this, PlayState* play) {
     s16 phi_v1;
     Player* player;
 
-    if ((this->unk_280 != 1) && (this->actor.bgCheckFlags & 0x60) && (this->actor.yDistToWater >= 40.0f)) {
+    if ((this->unk_280 != 1) && (this->actor.bgCheckFlags & 0x60) && (this->actor.depthInWater >= 40.0f)) {
         this->actor.colChkInfo.health = 0;
         this->unk_281 = 0;
         func_80AFD7B4(this, play);

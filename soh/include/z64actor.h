@@ -132,23 +132,23 @@ typedef struct Actor {
     /* 0x01C */ s16 params; // Configurable variable set by the actor's spawn data; original name: "args_data"
     /* 0x01E */ s8 objectSlot; // Object slot (in ObjectContext) corresponding to the actor's object; original name: "bank"
     /* 0x01F */ s8 attentionRangeType; // Controls the attention actor range and the lock-on leash range. See `AttentionRangeType`.
-    /* 0x020 */ u16 sfx; // SFX ID to play. Sound plays when value is set, then is cleared the following update cycle
+    /* 0x020 */ u16 sfx; // SFX ID to play. Sfx plays when value is set, then is cleared the following update cycle
     /* 0x024 */ PosRot world; // Position/rotation in the world
-    /* 0x038 */ PosRot focus; // Target reticle focuses on this position. For player this represents head pos and rot
-    /* 0x04C */ f32 targetArrowOffset; // Height offset of the target arrow relative to `focus` position
+    /* 0x038 */ PosRot focus; // Player + camera focus pos during lock-on, among other uses. For player this represents head pos and rot.
+    /* 0x04C */ f32 lockOnArrowOffset; // Height offset of the lock-on arrow relative to `focus` position
     /* 0x050 */ Vec3f scale; // Scale of the actor in each axis
     /* 0x05C */ Vec3f velocity; // Velocity of the actor in each axis
-    /* 0x068 */ f32 speedXZ; // How fast the actor is traveling along the XZ plane
+    /* 0x068 */ f32 speed; // Context dependent speed value. Can be used for XZ or XYZ depending on which move function is used
     /* 0x06C */ f32 gravity; // Acceleration due to gravity. Value is added to Y velocity every frame
-    /* 0x070 */ f32 minVelocityY; // Sets the lower bounds cap on velocity along the Y axis
+    /* 0x070 */ f32 minVelocityY; // Sets the lower bounds cap for velocity along the Y axis. Only relevant when moved with gravity.
     /* 0x074 */ CollisionPoly* wallPoly; // Wall polygon the actor is touching
     /* 0x078 */ CollisionPoly* floorPoly; // Floor polygon directly below the actor
     /* 0x07C */ u8 wallBgId; // Bg ID of the wall polygon the actor is touching
     /* 0x07D */ u8 floorBgId; // Bg ID of the floor polygon directly below the actor
     /* 0x07E */ s16 wallYaw; // Y rotation of the wall polygon the actor is touching
     /* 0x080 */ f32 floorHeight; // Y position of the floor polygon directly below the actor
-    /* 0x084 */ f32 yDistToWater; // Distance to the surface of active waterbox. Negative value means above water
-    /* 0x088 */ u16 bgCheckFlags; // See comments below actor struct for wip docs. TODO: macros for these flags
+    /* 0x084 */ f32 depthInWater; // Distance below the surface of active waterbox. Positive value means under water, negative value means above water
+    /* 0x088 */ u16 bgCheckFlags; // Flags indicating how the actor is interacting with collision
     /* 0x08A */ s16 yawTowardsPlayer; // Y rotation difference between the actor and the player
     /* 0x08C */ f32 xyzDistToPlayerSq; // Squared distance between the actor and the player
     /* 0x090 */ f32 xzDistToPlayer; // Distance between the actor and the player in the XZ plane
@@ -157,13 +157,13 @@ typedef struct Actor {
     /* 0x0B4 */ ActorShape shape; // Variables related to the physical shape of the actor
     /* 0x0E4 */ Vec3f projectedPos; // Position of the actor in projected space
     /* 0x0F0 */ f32 projectedW; // w component of the projected actor position
-    /* 0x0F4 */ f32 uncullZoneForward; // Amount to increase the uncull zone forward by (in projected space)
-    /* 0x0F8 */ f32 uncullZoneScale; // Amount to increase the uncull zone scale by (in projected space)
-    /* 0x0FC */ f32 uncullZoneDownward; // Amount to increase uncull zone downward by (in projected space)
+    /* 0x0F4 */ f32 cullingVolumeDistance; // Forward distance of the culling volume (in projected space). See `Actor_CullingCheck` and `Actor_CullingVolumeTest` for more information.
+    /* 0x0F8 */ f32 cullingVolumeScale; // Scale of the culling volume (in projected space). See `Actor_CullingCheck` and `Actor_CullingVolumeTest` for more information.
+    /* 0x0FC */ f32 cullingVolumeDownward; // Downward height of the culling volume (in projected space). See `Actor_CullingCheck` and `Actor_CullingVolumeTest` for more information.
     /* 0x100 */ Vec3f prevPos; // World position from the previous update cycle
-    /* 0x10C */ u8 isTargeted; // Set to true if the actor is currently being targeted by the player
-    /* 0x10D */ u8 targetPriority; // Lower values have higher priority. Resets to 0 when player stops targeting
-    /* 0x10E */ u16 textId; // Text ID to pass to link/display when interacting with the actor
+    /* 0x10C */ u8 isLockedOn; // Set to true if the actor is currently locked-on by Player
+    /* 0x10D */ u8 attentionPriority; // Lower values have higher priority. Resets to 0 when lock-on is released.
+    /* 0x10E */ u16 textId; // Text ID to pass to player/display when interacting with the actor
     /* 0x110 */ u16 freezeTimer; // Actor does not update when set. Timer decrements automatically
     /* 0x112 */ u16 colorFilterParams; // Set color filter to red, blue, or white. Toggle opa or xlu
     /* 0x114 */ u8 colorFilterTimer; // A non-zero value enables the color filter. Decrements automatically
@@ -178,9 +178,13 @@ typedef struct Actor {
     /* 0x12C */ ActorFunc destroy; // Destruction Routine. Called by `Actor_Destroy`
     /* 0x130 */ ActorFunc update; // Update Routine. Called by `Actor_UpdateAll`
     /* 0x134 */ ActorFunc draw; // Draw Routine. Called by `Actor_Draw`
-    /* 0x138 */ ActorResetFunc reset;
+    // SOH: Removed during the ActorDB refactor
+    // /* 0x138 */ ActorOverlay* overlayEntry; // Pointer to the overlay table entry for this actor
     /* 0x13C */ char dbgPad[0x10]; // Padding that only exists in the debug rom
     // #region SOH [General]
+    /*       */ ActorResetFunc reset; // In console, when the last instance of an actor is killed,
+                                      // the entire overlay is deallocated, resetting static variables
+                                      // We need to do this resetting manually as in ship the code is never unloaded
     /*       */ u8 maximumHealth; // Max health value for use with health bars, set on actor init
     // #endregion
 } Actor; // size = 0x14C

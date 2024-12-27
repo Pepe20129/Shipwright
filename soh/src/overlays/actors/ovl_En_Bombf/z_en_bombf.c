@@ -127,8 +127,8 @@ void EnBombf_Init(Actor* thisx, PlayState* play) {
         EnBombf_SetupGrowBomb(this, thisx->params);
     }
 
-    thisx->uncullZoneScale += 31000.0f;
-    thisx->uncullZoneForward += 31000.0f;
+    thisx->cullingVolumeScale += 31000.0f;
+    thisx->cullingVolumeDistance += 31000.0f;
 }
 
 void EnBombf_Destroy(Actor* thisx, PlayState* play) {
@@ -237,9 +237,9 @@ void EnBombf_Move(EnBombf* this, PlayState* play) {
     this->flowerBombScale = 1.0f;
 
     if (!(this->actor.bgCheckFlags & 1)) {
-        Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.025f, 0.0f);
+        Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.025f, 0.0f);
     } else {
-        Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 1.5f, 0.0f);
+        Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 1.5f, 0.0f);
         if ((this->actor.bgCheckFlags & 2) && (this->actor.velocity.y < -6.0f)) {
             func_8002F850(play, &this->actor);
             this->actor.velocity.y *= -0.5f;
@@ -351,7 +351,7 @@ void EnBombf_Update(Actor* thisx, PlayState* play) {
         }
 
         // rebound bomb off the wall it hits
-        if ((thisx->speedXZ != 0.0f) && (thisx->bgCheckFlags & 8)) {
+        if ((thisx->speed != 0.0f) && (thisx->bgCheckFlags & 8)) {
 
             if (ABS((s16)(thisx->wallYaw - thisx->world.rot.y)) > 0x4000) {
                 thisx->world.rot.y = ((thisx->wallYaw - thisx->world.rot.y) + thisx->wallYaw) - 0x8000;
@@ -361,7 +361,7 @@ void EnBombf_Update(Actor* thisx, PlayState* play) {
             DREG(6) = 1;
             Actor_UpdateBgCheckInfo(play, thisx, 5.0f, 10.0f, 0.0f, 0x1F);
             DREG(6) = 0;
-            thisx->speedXZ *= 0.7f;
+            thisx->speed *= 0.7f;
             thisx->bgCheckFlags &= ~8;
         }
 
@@ -451,7 +451,7 @@ void EnBombf_Update(Actor* thisx, PlayState* play) {
     }
 
     if ((thisx->scale.x >= 0.01f) && (thisx->params != BOMBFLOWER_EXPLOSION)) {
-        if (thisx->yDistToWater >= 20.0f) {
+        if (thisx->depthInWater >= 20.0f) {
             EffectSsDeadSound_SpawnStationary(play, &thisx->projectedPos, NA_SE_IT_BOMB_UNEXPLOSION, true,
                                               DEADSOUND_REPEAT_MODE_OFF, 10);
             Actor_Kill(thisx);

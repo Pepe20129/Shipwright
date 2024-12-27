@@ -132,7 +132,7 @@ static EnMmPathInfo sPathInfo[] = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 4000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 4000, ICHAIN_STOP),
 };
 
 void EnMm_ChangeAnim(EnMm* this, s32 index, s32* currentIndex) {
@@ -180,7 +180,7 @@ void EnMm_Init(Actor* thisx, PlayState* play) {
     this->unk_1E8 = 0;
     this->actor.attentionRangeType = 2;
     this->actor.gravity = -1.0f;
-    this->speedXZ = 3.0f;
+    this->speed = 3.0f;
     this->unk_204 = this->actor.objectSlot;
 
     if (func_80AADA70() == 1) {
@@ -391,7 +391,7 @@ s32 func_80AADEF0(EnMm* this, PlayState* play) {
 
     Math_SmoothStepToS(&this->actor.shape.rot.y, this->yawToWaypoint, 1, 2500, 0);
     this->actor.world.rot.y = this->actor.shape.rot.y;
-    Math_SmoothStepToF(&this->actor.speedXZ, this->speedXZ, 0.6f, this->distToWaypoint, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, this->speed, 0.6f, this->distToWaypoint, 0.0f);
     Actor_MoveXZGravity(&this->actor);
     Actor_UpdateBgCheckInfo(play, &this->actor, 0.0f, 0.0f, 0.0f, 4);
 
@@ -405,7 +405,7 @@ void func_80AAE224(EnMm* this, PlayState* play) {
         this->mouthTexIndex = RM_MOUTH_CLOSED;
         this->unk_254 |= 1;
         this->unk_1E0 = 0;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         EnMm_ChangeAnim(this, RM_ANIM_SIT_WAIT, &this->curAnimIndex);
     }
 }
@@ -432,10 +432,10 @@ void func_80AAE294(EnMm* this, PlayState* play) {
         }
 
         if (Flags_GetItemGetInf(ITEMGETINF_3B)) {
-            this->speedXZ = 10.0f;
+            this->speed = 10.0f;
             this->skelAnime.playSpeed = 2.0f;
         } else {
-            this->speedXZ = 3.0f;
+            this->speed = 3.0f;
             this->skelAnime.playSpeed = 1.0f;
         }
 

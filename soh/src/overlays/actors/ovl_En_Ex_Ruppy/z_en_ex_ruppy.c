@@ -216,7 +216,7 @@ void EnExRuppy_DropIntoWater(EnExRuppy* this, PlayState* play) {
     if ((divingGame != NULL) && (divingGame->actor.update != NULL) &&
         ((divingGame->unk_296 == 0) || (this->actor.bgCheckFlags & 0x20) || (this->timer == 0))) {
         this->invisible = true;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actor.velocity.x = this->actor.velocity.y = this->actor.velocity.z = 0.0f;
         this->actor.gravity = 0.0f;
         Sfx_PlaySfxAtPos(&this->actor.projectedPos, NA_SE_EV_BOMB_DROP_WATER);
@@ -250,9 +250,9 @@ void EnExRuppy_Sink(EnExRuppy* this, PlayState* play) {
     Vec3f pos;
     s32 pad;
 
-    if ((this->actor.bgCheckFlags & 0x20) && (this->actor.yDistToWater > 15.0f)) {
+    if ((this->actor.bgCheckFlags & 0x20) && (this->actor.depthInWater > 15.0f)) {
         pos = this->actor.world.pos;
-        pos.y += this->actor.yDistToWater;
+        pos.y += this->actor.depthInWater;
         this->actor.velocity.y = -1.0f;
         this->actor.gravity = -0.2f;
         EffectSsGSplash_Spawn(play, &pos, 0, 0, 0, 800);

@@ -64,7 +64,7 @@ static ColliderCylinderInitType1 sCylinderInit = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 void EnGm_Init(Actor* thisx, PlayState* play) {
@@ -128,7 +128,7 @@ void func_80A3D838(EnGm* this, PlayState* play) {
         this->actor.textId = 0x3049;
         this->updateFunc = func_80A3DFBC;
         this->actionFunc = func_80A3DB04;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actor.gravity = -1.0f;
         this->actor.velocity.y = 0.0f;
     }

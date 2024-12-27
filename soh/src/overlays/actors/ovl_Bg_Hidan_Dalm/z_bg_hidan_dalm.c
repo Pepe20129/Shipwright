@@ -143,7 +143,7 @@ void BgHidanDalm_Wait(BgHidanDalm* this, PlayState* play) {
         this->actionFunc = BgHidanDalm_Shrink;
         this->dyna.actor.bgCheckFlags &= ~2;
         this->dyna.actor.bgCheckFlags &= ~8;
-        this->dyna.actor.speedXZ = 10.0f;
+        this->dyna.actor.speed = 10.0f;
         Flags_SetSwitch(play, this->switchFlag);
         Player_PlaySfx(&GET_PLAYER(play)->actor, NA_SE_IT_HAMMER_HIT);
         Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_DARUMA_VANISH);

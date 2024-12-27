@@ -130,9 +130,9 @@ void EnGe2_Init(Actor* thisx, PlayState* play) {
     Actor_SetScale(&this->actor, 0.01f);
 
     if (play->sceneNum == SCENE_GERUDO_VALLEY) {
-        this->actor.uncullZoneForward = 1000.0f;
+        this->actor.cullingVolumeDistance = 1000.0f;
     } else {
-        this->actor.uncullZoneForward = 1200.0f;
+        this->actor.cullingVolumeDistance = 1200.0f;
     }
 
     this->yDetectRange = (this->actor.world.rot.z + 1) * 40.0f;
@@ -268,7 +268,7 @@ void EnGe2_CaptureCharge(EnGe2* this, PlayState* play) {
     this->actor.shape.rot.y = this->actor.world.rot.y;
     if (this->actor.xzDistToPlayer < 50.0f) {
         EnGe2_ChangeAction(this, GE2_ACTION_CAPTURECLOSE);
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 
     if (this->timer > 0) {
@@ -300,7 +300,7 @@ void EnGe2_CaptureTurn(EnGe2* this, PlayState* play) {
     if (this->actor.world.rot.y == this->actor.yawTowardsPlayer) {
         EnGe2_ChangeAction(this, GE2_ACTION_CAPTURECHARGE);
         this->timer = 50;
-        this->actor.speedXZ = 4.0f;
+        this->actor.speed = 4.0f;
     }
 }
 
@@ -326,7 +326,7 @@ void EnGe2_KnockedOut(EnGe2* this, PlayState* play) {
 void EnGe2_TurnPlayerSpotted(EnGe2* this, PlayState* play) {
     s32 playerSpotted;
 
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 
     if (this->stateFlags & GE2_STATE_TALKED) {
         this->stateFlags &= ~GE2_STATE_TALKED;
@@ -362,7 +362,7 @@ void EnGe2_TurnPlayerSpotted(EnGe2* this, PlayState* play) {
 void EnGe2_AboutTurn(EnGe2* this, PlayState* play) {
     s32 playerSpotted;
 
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     playerSpotted = Ge2_DetectPlayerInAction(play, this);
 
     if (playerSpotted != 0) {
@@ -385,7 +385,7 @@ void EnGe2_Walk(EnGe2* this, PlayState* play) {
 
     playerSpotted = Ge2_DetectPlayerInAction(play, this);
     if (playerSpotted != 0) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         EnGe2_ChangeAction(this, GE2_ACTION_TURNPLAYERSPOTTED);
         this->timer = 100;
         this->playerSpottedParam = playerSpotted;
@@ -394,10 +394,10 @@ void EnGe2_Walk(EnGe2* this, PlayState* play) {
         this->walkTimer = 0;
         this->walkDirection += 0x8000;
         EnGe2_ChangeAction(this, GE2_ACTION_ABOUTTURN);
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     } else {
         this->walkTimer++;
-        this->actor.speedXZ = 2.0f;
+        this->actor.speed = 2.0f;
     }
 }
 
@@ -495,7 +495,7 @@ void EnGe2_ForceTalk(EnGe2* this, PlayState* play) {
 
 void EnGe2_SetupCapturePlayer(EnGe2* this, PlayState* play) {
     this->stateFlags |= GE2_STATE_CAPTURING;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     EnGe2_ChangeAction(this, GE2_ACTION_CAPTURETURN);
     Player_SetCsActionWithHaltedActors(play, &this->actor, 95);
     Sfx_PlaySfxCentered(NA_SE_SY_FOUND);
@@ -538,7 +538,7 @@ void EnGe2_UpdateFriendly(Actor* thisx, PlayState* play) {
 
     if (Actor_ProcessTalkRequest(&this->actor, play)) {
         if ((this->actor.params & 0xFF) == GE2_TYPE_PATROLLING) {
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             EnGe2_ChangeAction(this, GE2_ACTION_WAITLOOKATPLAYER);
         }
         this->actionFunc = EnGe2_SetActionAfterTalk;
@@ -580,7 +580,7 @@ void EnGe2_Update(Actor* thisx, PlayState* play) {
         EnGe2_ChangeAction(this, GE2_ACTION_KNOCKEDOUT);
         this->timer = 100;
         this->stateFlags |= GE2_STATE_KO;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         Audio_PlayActorSound2(&this->actor, NA_SE_VO_SK_CRASH);
     } else {
         this->actionFunc(this, play);
@@ -627,7 +627,7 @@ void EnGe2_UpdateStunned(Actor* thisx, PlayState* play2) {
         EnGe2_ChangeAction(this, GE2_ACTION_KNOCKEDOUT);
         this->timer = 100;
         this->stateFlags |= GE2_STATE_KO;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         Audio_PlayActorSound2(&this->actor, NA_SE_VO_SK_CRASH);
     }
     CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider.base);

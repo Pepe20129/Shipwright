@@ -1599,7 +1599,7 @@ static LinkAnimationHeader* D_808543D4[] = {
 };
 
 BAD_RETURN(s32) Player_ZeroSpeedXZ(Player* this) {
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->linearVelocity = 0.0f;
 }
 
@@ -3881,7 +3881,7 @@ void Player_UpdateZTargeting(Player* this, PlayState* play) {
                     Player_ReleaseLockOn(this);
                     this->stateFlags1 |= PLAYER_STATE1_LOCK_ON_FORCED_TO_RELEASE;
                 } else if (this->focusActor != NULL) {
-                    this->focusActor->targetPriority = 40;
+                    this->focusActor->attentionPriority = 40;
                 }
             } else if (this->autoLockOnActor != NULL) {
                 // Because of the previous if condition above, `autoLockOnActor` does not take precedence
@@ -4595,14 +4595,14 @@ void func_80837C0C(PlayState* play, Player* this, s32 damageResponseType, f32 sp
             if (damageResponseType == PLAYER_HIT_RESPONSE_KNOCKBACK_SMALL) {
                 this->av2.actionVar2 = 4;
 
-                this->actor.speedXZ = 3.0f;
+                this->actor.speed = 3.0f;
                 this->linearVelocity = 3.0f;
                 this->actor.velocity.y = 6.0f;
 
                 Player_AnimChangeFreeze(play, this, GET_PLAYER_ANIM(PLAYER_ANIMGROUP_damage_run, this->modelAnimType));
                 Player_PlayVoiceSfx(this, NA_SE_VO_LI_DAMAGE_S);
             } else {
-                this->actor.speedXZ = speed;
+                this->actor.speed = speed;
                 this->linearVelocity = speed;
                 this->actor.velocity.y = yVelocity;
 
@@ -4924,7 +4924,7 @@ s32 Player_ActionHandler_12(Player* this, PlayState* play) {
         sp3C = 0;
 
         if (func_808332B8(this)) {
-            if (this->actor.yDistToWater < 50.0f) {
+            if (this->actor.depthInWater < 50.0f) {
                 if ((this->ledgeClimbType < 2) || (this->yDistToLedge > this->ageProperties->unk_10)) {
                     return 0;
                 }
@@ -5100,7 +5100,7 @@ s32 Player_HandleExitsAndVoids(PlayState* play, Player* this, CollisionPoly* pol
     s32 exitIndex;
     s32 temp;
     s32 sp34;
-    f32 speedXZ;
+    f32 speed;
     s32 yaw;
 
     if (this->actor.category == ACTORCAT_PLAYER) {
@@ -5169,17 +5169,17 @@ s32 Player_HandleExitsAndVoids(PlayState* play, Player* this, CollisionPoly* pol
                     gSaveContext.seqId = (u8)NA_BGM_DISABLED;
                     gSaveContext.natureAmbienceId = NATURE_ID_DISABLED;
                 } else {
-                    speedXZ = this->linearVelocity;
+                    speed = this->linearVelocity;
 
-                    if (speedXZ < 0.0f) {
+                    if (speed < 0.0f) {
                         this->actor.world.rot.y += 0x8000;
-                        speedXZ = -speedXZ;
+                        speed = -speed;
                     }
 
-                    if (speedXZ > R_RUN_SPEED_LIMIT / 100.0f) {
+                    if (speed > R_RUN_SPEED_LIMIT / 100.0f) {
                         gSaveContext.entranceSpeed = R_RUN_SPEED_LIMIT / 100.0f;
                     } else {
-                        gSaveContext.entranceSpeed = speedXZ;
+                        gSaveContext.entranceSpeed = speed;
                     }
 
                     if (sConveyorSpeed != 0) {
@@ -5668,7 +5668,7 @@ s32 func_8083A6AC(Player* this, PlayState* play) {
     //! @bug `floorPitch` and `floorPitchAlt` are cleared to 0 before this function is called, because the player
     //! left the ground. The angles will always be zero and therefore will always pass these checks.
     //! The intention seems to be to prevent ledge hanging or vine grabbing when walking off of a steep enough slope.
-    if ((this->actor.yDistToWater < -80.0f) && (ABS(this->floorPitch) < 2730) && (ABS(this->floorPitchAlt) < 2730)) {
+    if ((this->actor.depthInWater < -80.0f) && (ABS(this->floorPitch) < 2730) && (ABS(this->floorPitchAlt) < 2730)) {
         CollisionPoly* sp84;
         s32 sp80;
         Vec3f sp74;
@@ -6198,7 +6198,7 @@ s32 func_8083B8F4(Player* this, PlayState* play) {
     if (!(this->stateFlags1 & (PLAYER_STATE1_CARRYING_ACTOR | PLAYER_STATE1_ON_HORSE)) &&
         Camera_CheckValidMode(Play_GetCamera(play, 0), 6)) {
         if ((this->actor.bgCheckFlags & 1) ||
-            (func_808332B8(this) && (this->actor.yDistToWater < this->ageProperties->unk_2C))) {
+            (func_808332B8(this) && (this->actor.depthInWater < this->ageProperties->unk_2C))) {
             this->unk_6AD = 1;
             return 1;
         }
@@ -6536,7 +6536,7 @@ s32 func_8083C6B8(PlayState* play, Player* this) {
         if (Player_GetBottleHeld(this) >= 0) {
             Player_SetupAction(play, this, Player_Action_SwingBottle, 0);
 
-            if (this->actor.yDistToWater > 12.0f) {
+            if (this->actor.depthInWater > 12.0f) {
                 this->av2.inWater = true;
             }
 
@@ -6786,7 +6786,7 @@ s32 func_8083D12C(PlayState* play, Player* this, Input* arg2) {
 
     if ((this->stateFlags1 & PLAYER_STATE1_GETTING_ITEM) || (this->stateFlags2 & PLAYER_STATE2_UNDERWATER)) {
         if (this->actor.velocity.y > 0.0f) {
-            if (this->actor.yDistToWater < this->ageProperties->unk_30) {
+            if (this->actor.depthInWater < this->ageProperties->unk_30) {
 
                 this->stateFlags2 &= ~PLAYER_STATE2_UNDERWATER;
 
@@ -6849,7 +6849,7 @@ void func_8083D36C(PlayState* play, Player* this) {
         }
     }
 
-    if (!(this->stateFlags1 & PLAYER_STATE1_IN_WATER) || (this->actor.yDistToWater < this->ageProperties->unk_2C)) {
+    if (!(this->stateFlags1 & PLAYER_STATE1_IN_WATER) || (this->actor.depthInWater < this->ageProperties->unk_2C)) {
         if (func_8083CFA8(play, this, this->actor.velocity.y, 500)) {
             Player_PlaySfx(this, NA_SE_EV_DIVE_INTO_WATER);
 
@@ -6868,7 +6868,7 @@ void func_8083D36C(PlayState* play, Player* this) {
 }
 
 void func_8083D53C(PlayState* play, Player* this) {
-    if (this->actor.yDistToWater < this->ageProperties->unk_2C) {
+    if (this->actor.depthInWater < this->ageProperties->unk_2C) {
         Audio_SetBaseFilter(0);
         this->underwaterTimer = 0;
     } else {
@@ -6879,7 +6879,7 @@ void func_8083D53C(PlayState* play, Player* this) {
     }
 
     if ((Player_Action_80845668 != this->actionFunc) && (Player_Action_8084BDFC != this->actionFunc)) {
-        if (this->ageProperties->unk_2C < this->actor.yDistToWater) {
+        if (this->ageProperties->unk_2C < this->actor.depthInWater) {
             if (!(this->stateFlags1 & PLAYER_STATE1_IN_WATER) ||
                 (!((this->currentBoots == PLAYER_BOOTS_IRON) && (this->actor.bgCheckFlags & 1)) &&
                  (Player_Action_8084E30C != this->actionFunc) && (Player_Action_8084E368 != this->actionFunc) &&
@@ -6889,7 +6889,7 @@ void func_8083D53C(PlayState* play, Player* this) {
                 func_8083D36C(play, this);
                 return;
             }
-        } else if ((this->stateFlags1 & PLAYER_STATE1_IN_WATER) && (this->actor.yDistToWater < this->ageProperties->unk_24)) {
+        } else if ((this->stateFlags1 & PLAYER_STATE1_IN_WATER) && (this->actor.depthInWater < this->ageProperties->unk_24)) {
             if ((this->skelAnime.moveFlags == 0) && (this->currentBoots != PLAYER_BOOTS_IRON)) {
                 Player_SetupTurnInPlace(play, this, this->actor.shape.rot.y);
             }
@@ -6949,7 +6949,7 @@ void func_8083D6EC(PlayState* play, Player* this) {
     }
 
     if (this->actor.bgCheckFlags & 0x20) {
-        if (this->actor.yDistToWater < 50.0f) {
+        if (this->actor.depthInWater < 50.0f) {
             temp4 = fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].x - this->unk_A88.x) +
                     fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].y - this->unk_A88.y) +
                     fabsf(this->bodyPartsPos[PLAYER_BODYPART_WAIST].z - this->unk_A88.z);
@@ -6962,20 +6962,20 @@ void func_8083D6EC(PlayState* play, Player* this) {
                 this->unk_854 = 0.0f;
 
                 ripplePos.x = (Rand_ZeroOne() * 10.0f) + this->actor.world.pos.x;
-                ripplePos.y = this->actor.world.pos.y + this->actor.yDistToWater;
+                ripplePos.y = this->actor.world.pos.y + this->actor.depthInWater;
                 ripplePos.z = (Rand_ZeroOne() * 10.0f) + this->actor.world.pos.z;
                 EffectSsGRipple_Spawn(play, &ripplePos, 100, 500, 0);
 
                 if ((this->linearVelocity > 4.0f) && !func_808332B8(this) &&
-                    ((this->actor.world.pos.y + this->actor.yDistToWater) <
+                    ((this->actor.world.pos.y + this->actor.depthInWater) <
                      this->bodyPartsPos[PLAYER_BODYPART_WAIST].y)) {
                     func_8083CFA8(play, this, 20.0f,
-                                  (fabsf(this->linearVelocity) * 50.0f) + (this->actor.yDistToWater * 5.0f));
+                                  (fabsf(this->linearVelocity) * 50.0f) + (this->actor.depthInWater * 5.0f));
                 }
             }
         }
 
-        if (this->actor.yDistToWater > 40.0f) {
+        if (this->actor.depthInWater > 40.0f) {
             s32 numBubbles = 0;
             s32 i;
 
@@ -7468,7 +7468,7 @@ s32 Player_ActionHandler_9(Player* this, PlayState* play) {
 s32 func_8083EC18(Player* this, PlayState* play, u32 wallFlags) {
     if (this->yDistToLedge >= 79.0f) {
         if (!(this->stateFlags1 & PLAYER_STATE1_IN_WATER) || (this->currentBoots == PLAYER_BOOTS_IRON) ||
-            (this->actor.yDistToWater < this->ageProperties->unk_2C)) {
+            (this->actor.depthInWater < this->ageProperties->unk_2C)) {
             s32 sp8C = (wallFlags & 8) ? 2 : 0;
 
             if ((sp8C != 0) || (wallFlags & 2) ||
@@ -9623,12 +9623,12 @@ s32 func_80843E64(PlayState* play, Player* this) {
     return 0;
 }
 
-void func_8084409C(PlayState* play, Player* this, f32 speedXZ, f32 velocityY) {
+void func_8084409C(PlayState* play, Player* this, f32 speed, f32 velocityY) {
     Actor* heldActor = this->heldActor;
 
     if (!func_80835644(play, this, heldActor)) {
         heldActor->world.rot.y = this->actor.shape.rot.y;
-        heldActor->speedXZ = speedXZ;
+        heldActor->speed = speed;
         heldActor->velocity.y = velocityY;
         func_80834644(play, this);
         Player_PlaySfx(this, NA_SE_PL_THROW);
@@ -10441,7 +10441,7 @@ void Player_Action_80846120(Player* this, PlayState* play) {
         Actor* heldActor = this->heldActor;
 
         if (GameInteractor_Should(VB_MOVE_THROWN_ACTOR, true, heldActor)) {
-            heldActor->speedXZ = Math_SinS(heldActor->shape.rot.x) * 40.0f;
+            heldActor->speed = Math_SinS(heldActor->shape.rot.x) * 40.0f;
             heldActor->velocity.y = Math_CosS(heldActor->shape.rot.x) * 40.0f;
             heldActor->gravity = -2.0f;
             heldActor->minVelocityY = -30.0f;
@@ -10497,7 +10497,7 @@ void Player_Action_80846358(Player* this, PlayState* play) {
         Actor* heldActor = this->heldActor;
 
         heldActor->world.rot.y = this->actor.shape.rot.y;
-        heldActor->speedXZ = 10.0f;
+        heldActor->speed = 10.0f;
         heldActor->velocity.y = 20.0f;
         func_80834644(play, this);
         Player_PlaySfx(this, NA_SE_PL_THROW);
@@ -10535,7 +10535,7 @@ void Player_Action_808464B0(Player* this, PlayState* play) {
 
         if (!func_80835644(play, this, heldActor)) {
             heldActor->velocity.y = 0.0f;
-            heldActor->speedXZ = 0.0f;
+            heldActor->speed = 0.0f;
             func_80834644(play, this);
             if (heldActor->id == ACTOR_EN_BOM_CHU && !CVarGetInteger(CVAR_ENHANCEMENT("DisableFirstPersonChus"), 0)) {
                 func_8083B8F4(this, play);
@@ -10713,7 +10713,7 @@ void func_80846A68(PlayState* play, Player* this) {
 }
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 500, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 500, ICHAIN_STOP),
 };
 
 static EffectBlureInit2 blureSword = {
@@ -11039,7 +11039,7 @@ void Player_UpdateInterface(PlayState* play, Player* this) {
                     static u8 sDiveNumberDoActions[] = { DO_ACTION_1, DO_ACTION_2, DO_ACTION_3, DO_ACTION_4,
                                                          DO_ACTION_5, DO_ACTION_6, DO_ACTION_7, DO_ACTION_8 };
 
-                    sp24 = (D_80854784[CUR_UPG_VALUE(UPG_SCALE)] - this->actor.yDistToWater) / 40.0f;
+                    sp24 = (D_80854784[CUR_UPG_VALUE(UPG_SCALE)] - this->actor.depthInWater) / 40.0f;
                     sp24 = CLAMP(sp24, 0, 7);
                     doAction = sDiveNumberDoActions[sp24];
                 } else if (sp1C && !(this->stateFlags2 & PLAYER_STATE2_UNDERWATER)) {
@@ -11117,7 +11117,7 @@ s32 Player_UpdateHoverBoots(Player* this) {
 
     canHoverOnGround =
         (this->currentBoots == PLAYER_BOOTS_HOVER || (CVarGetInteger(CVAR_ENHANCEMENT("IvanCoopModeEnabled"), 0) && this->ivanFloating)) &&
-        ((this->actor.yDistToWater >= 0.0f) || (func_80838144(sFloorType) >= 0) || func_8083816C(sFloorType));
+        ((this->actor.depthInWater >= 0.0f) || (func_80838144(sFloorType) >= 0) || func_8083816C(sFloorType));
 
     if (canHoverOnGround && (this->actor.bgCheckFlags & 1) && (this->hoverBootsTimer != 0)) {
         this->actor.bgCheckFlags &= ~1;
@@ -11216,7 +11216,7 @@ void Player_ProcessSceneCollision(PlayState* play, Player* this) {
         this->prevFloorSfxOffset = this->floorSfxOffset;
 
         if (this->actor.bgCheckFlags & 0x20) {
-            if (this->actor.yDistToWater < 20.0f) {
+            if (this->actor.depthInWater < 20.0f) {
                 this->floorSfxOffset = 4;
             } else {
                 this->floorSfxOffset = 5;
@@ -11243,7 +11243,7 @@ void Player_ProcessSceneCollision(PlayState* play, Player* this) {
         sConveyorSpeed = SurfaceType_GetConveyorSpeed(&play->colCtx, floorPoly, this->actor.floorBgId);
         if (sConveyorSpeed != 0) {
             sIsFloorConveyor = SurfaceType_IsConveyor(&play->colCtx, floorPoly, this->actor.floorBgId);
-            if (((sIsFloorConveyor == 0) && (this->actor.yDistToWater > 20.0f) &&
+            if (((sIsFloorConveyor == 0) && (this->actor.depthInWater > 20.0f) &&
                  (this->currentBoots != PLAYER_BOOTS_IRON)) ||
                 ((sIsFloorConveyor != 0) && (this->actor.bgCheckFlags & 1))) {
                 sConveyorYaw = SurfaceType_GetConveyorDirection(&play->colCtx, floorPoly, this->actor.floorBgId) << 10;
@@ -11549,7 +11549,7 @@ void Player_UpdateCamAndSeqModes(PlayState* play, Player* this) {
             } else {
                 camMode = CAM_MODE_NORMAL;
                 if ((this->linearVelocity == 0.0f) &&
-                    (!(this->stateFlags1 & PLAYER_STATE1_ON_HORSE) || (this->rideActor->speedXZ == 0.0f))) {
+                    (!(this->stateFlags1 & PLAYER_STATE1_ON_HORSE) || (this->rideActor->speed == 0.0f))) {
                     // not moving
                     seqMode = SEQ_MODE_STILL;
                 }
@@ -12007,7 +12007,7 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
             if (this->currentBoots == PLAYER_BOOTS_IRON) {
                 if (this->stateFlags1 & PLAYER_STATE1_IN_WATER) {
                     func_80832340(play, this);
-                    if (this->ageProperties->unk_2C < this->actor.yDistToWater) {
+                    if (this->ageProperties->unk_2C < this->actor.depthInWater) {
                         this->stateFlags2 |= PLAYER_STATE2_UNDERWATER;
                     }
                 }
@@ -12062,29 +12062,29 @@ void Player_UpdateCommon(Player* this, PlayState* play, Input* input) {
                 s16 yawDiff = this->actor.world.rot.y - sp6E;
                 s32 pad;
 
-                if ((ABS(yawDiff) > 0x6000) && (this->actor.speedXZ != 0.0f)) {
+                if ((ABS(yawDiff) > 0x6000) && (this->actor.speed != 0.0f)) {
                     sp70 = 0.0f;
                     sp6E += 0x8000;
                 }
 
-                if (Math_StepToF(&this->actor.speedXZ, sp70, 0.35f) && (sp70 == 0.0f)) {
+                if (Math_StepToF(&this->actor.speed, sp70, 0.35f) && (sp70 == 0.0f)) {
                     this->actor.world.rot.y = this->yaw;
                 }
 
                 if (this->linearVelocity != 0.0f) {
                     s32 phi_v0;
 
-                    phi_v0 = (fabsf(this->linearVelocity) * 700.0f) - (fabsf(this->actor.speedXZ) * 100.0f);
+                    phi_v0 = (fabsf(this->linearVelocity) * 700.0f) - (fabsf(this->actor.speed) * 100.0f);
                     phi_v0 = CLAMP(phi_v0, 0, 1350);
 
                     Math_ScaledStepToS(&this->actor.world.rot.y, sp6E, phi_v0);
                 }
 
-                if ((this->linearVelocity == 0.0f) && (this->actor.speedXZ != 0.0f)) {
-                    func_800F4138(&this->actor.projectedPos, 0xD0, this->actor.speedXZ);
+                if ((this->linearVelocity == 0.0f) && (this->actor.speed != 0.0f)) {
+                    func_800F4138(&this->actor.projectedPos, 0xD0, this->actor.speed);
                 }
             } else {
-                this->actor.speedXZ = this->linearVelocity;
+                this->actor.speed = this->linearVelocity;
                 this->actor.world.rot.y = this->yaw;
             }
 
@@ -12905,7 +12905,7 @@ void func_8084B000(Player* this) {
     f32 phi_f18;
     f32 phi_f16;
     f32 phi_f14;
-    f32 yDistToWater;
+    f32 depthInWater;
 
     phi_f14 = -5.0f;
 
@@ -12914,7 +12914,7 @@ void func_8084B000(Player* this) {
         phi_f16 += 1.0f;
     }
 
-    if (this->actor.yDistToWater < phi_f16) {
+    if (this->actor.depthInWater < phi_f16) {
         if (this->actor.velocity.y <= 0.0f) {
             phi_f16 = 0.0f;
         } else {
@@ -12935,8 +12935,8 @@ void func_8084B000(Player* this) {
             phi_f18 = phi_f16 + 0.1f;
         }
 
-        yDistToWater = this->actor.yDistToWater;
-        if (yDistToWater > 100.0f) {
+        depthInWater = this->actor.depthInWater;
+        if (depthInWater > 100.0f) {
             this->stateFlags2 |= PLAYER_STATE2_UNDERWATER;
         }
     }
@@ -13793,7 +13793,7 @@ void Player_Action_8084CC98(Player* this, PlayState* play) {
     this->yaw = this->actor.shape.rot.y = rideActor->actor.shape.rot.y;
 
     if ((this->csAction != 0) ||
-        (!Player_IsTalking(play) && ((rideActor->actor.speedXZ != 0.0f) || !Player_ActionHandler_Talk(this, play)) &&
+        (!Player_IsTalking(play) && ((rideActor->actor.speed != 0.0f) || !Player_ActionHandler_Talk(this, play)) &&
          !Player_ActionHandler_Roll(this, play))) {
         if (!sUpperBodyIsBusy) {
             if (this->av1.actionVar1 != 0) {
@@ -14116,7 +14116,7 @@ void Player_Action_8084DC48(Player* this, PlayState* play) {
             this->unk_6C2 = 16000;
 
             if (CHECK_BTN_ALL(sControlInput->cur.button, BTN_A) && !Player_ActionHandler_2(this, play) &&
-                !(this->actor.bgCheckFlags & 1) && (this->actor.yDistToWater < D_80854784[CUR_UPG_VALUE(UPG_SCALE)])) {
+                !(this->actor.bgCheckFlags & 1) && (this->actor.depthInWater < D_80854784[CUR_UPG_VALUE(UPG_SCALE)])) {
                 func_8084DBC4(play, this, -2.0f);
             } else {
                 this->av1.actionVar1++;
@@ -14128,7 +14128,7 @@ void Player_Action_8084DC48(Player* this, PlayState* play) {
 
             if (this->unk_6C2 < 10000) {
                 this->av1.actionVar1++;
-                this->av2.actionVar2 = this->actor.yDistToWater;
+                this->av2.actionVar2 = this->actor.depthInWater;
                 Player_AnimChangeLoopSlowMorph(play, this, &gPlayerAnim_link_swimer_swim);
             }
         } else if (!func_8083D12C(play, this, sControlInput)) {
@@ -14905,7 +14905,7 @@ void Player_Action_SlideOnSlope(Player* this, PlayState* play) {
     this->stateFlags2 |= PLAYER_STATE2_DISABLE_ROTATION_Z_TARGET | PLAYER_STATE2_DISABLE_ROTATION_ALWAYS;
     LinkAnimation_Update(play, &this->skelAnime);
     func_8084269C(play, this);
-    func_800F4138(&this->actor.projectedPos, NA_SE_PL_SLIP_LEVEL - SFX_FLAG, this->actor.speedXZ);
+    func_800F4138(&this->actor.projectedPos, NA_SE_PL_SLIP_LEVEL - SFX_FLAG, this->actor.speed);
 
     if (Player_ActionHandler_13(this, play) == 0) {
         CollisionPoly* floorPoly = this->actor.floorPoly;
@@ -15235,8 +15235,8 @@ void Player_UpdateBunnyEars(Player* this) {
 
     // Forcing from motion relative to shape frame
     angle = this->actor.world.rot.y - this->actor.shape.rot.y;
-    force.x = (s32)(this->actor.speedXZ * -200.0f * Math_CosS(angle) * (Rand_CenteredFloat(2.0f) + 10.0f)) & 0xFFFF;
-    force.y = (s32)(this->actor.speedXZ * 100.0f * Math_SinS(angle) * (Rand_CenteredFloat(2.0f) + 10.0f)) & 0xFFFF;
+    force.x = (s32)(this->actor.speed * -200.0f * Math_CosS(angle) * (Rand_CenteredFloat(2.0f) + 10.0f)) & 0xFFFF;
+    force.y = (s32)(this->actor.speed * 100.0f * Math_SinS(angle) * (Rand_CenteredFloat(2.0f) + 10.0f)) & 0xFFFF;
 
     sBunnyEarKinematics.angVel.x += force.x >> 2;
     sBunnyEarKinematics.angVel.y += force.y >> 2;

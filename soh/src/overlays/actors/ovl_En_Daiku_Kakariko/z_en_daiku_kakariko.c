@@ -174,7 +174,7 @@ void EnDaikuKakariko_Init(Actor* thisx, PlayState* play) {
 
     this->actor.gravity = 0.0f;
     this->runSpeed = 3.0f;
-    this->actor.uncullZoneForward = 1200.0f;
+    this->actor.cullingVolumeDistance = 1200.0f;
     this->actor.attentionRangeType = 6;
     this->currentAnimIndex = -1;
 
@@ -425,12 +425,12 @@ void EnDaikuKakariko_Run(EnDaikuKakariko* this, PlayState* play) {
         if (angleStepDiff == 0) {
             this->run = true;
         } else {
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
         }
     }
 
     if (this->run == true) {
-        Math_SmoothStepToF(&this->actor.speedXZ, this->runSpeed, 0.8f, runDist, 0.0f);
+        Math_SmoothStepToF(&this->actor.speed, this->runSpeed, 0.8f, runDist, 0.0f);
     }
 
     Actor_MoveXZGravity(&this->actor);

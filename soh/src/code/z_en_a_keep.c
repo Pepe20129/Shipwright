@@ -124,8 +124,8 @@ void EnAObj_Init(Actor* thisx, PlayState* play) {
     this->dyna.bgId = BGACTOR_NEG_ONE;
     this->dyna.interactFlags = 0;
     this->dyna.transformFlags = DPM_UNK;
-    thisx->uncullZoneDownward = 1200.0f;
-    thisx->uncullZoneScale = 200.0f;
+    thisx->cullingVolumeDownward = 1200.0f;
+    thisx->cullingVolumeScale = 200.0f;
 
     switch (thisx->params) {
         case A_OBJ_BLOCK_LARGE:
@@ -156,7 +156,7 @@ void EnAObj_Init(Actor* thisx, PlayState* play) {
         case A_OBJ_SIGNPOST_ARROW:
             thisx->textId = (this->textId & 0xFF) | 0x300;
             // clang-format off
-            thisx->flags |= ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY; thisx->targetArrowOffset = 500.0f;
+            thisx->flags |= ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY; thisx->lockOnArrowOffset = 500.0f;
             // clang-format on
             this->focusYoffset = 45.0f;
             EnAObj_SetupWaitTalk(this, thisx->params);
@@ -276,11 +276,11 @@ void EnAObj_SetupBoulderFragment(EnAObj* this, s16 type) {
 }
 
 void EnAObj_BoulderFragment(EnAObj* this, PlayState* play) {
-    Math_SmoothStepToF(&this->dyna.actor.speedXZ, 1.0f, 1.0f, 0.5f, 0.0f);
+    Math_SmoothStepToF(&this->dyna.actor.speed, 1.0f, 1.0f, 0.5f, 0.0f);
     this->dyna.actor.shape.rot.x += this->dyna.actor.world.rot.x >> 1;
     this->dyna.actor.shape.rot.z += this->dyna.actor.world.rot.z >> 1;
 
-    if (this->dyna.actor.speedXZ != 0.0f && this->dyna.actor.bgCheckFlags & 0x8) {
+    if (this->dyna.actor.speed != 0.0f && this->dyna.actor.bgCheckFlags & 0x8) {
         this->dyna.actor.world.rot.y =
             this->dyna.actor.wallYaw - this->dyna.actor.world.rot.y + this->dyna.actor.wallYaw - 0x8000;
         this->dyna.actor.bgCheckFlags &= ~0x8;
@@ -289,7 +289,7 @@ void EnAObj_BoulderFragment(EnAObj* this, PlayState* play) {
     if (this->dyna.actor.bgCheckFlags & 0x2) {
         if (this->dyna.actor.velocity.y < -8.0f) {
             this->dyna.actor.velocity.y *= -0.6f;
-            this->dyna.actor.speedXZ *= 0.6f;
+            this->dyna.actor.speed *= 0.6f;
             this->dyna.actor.bgCheckFlags &= ~0x3;
         } else {
             Actor_Kill(&this->dyna.actor);
@@ -298,19 +298,19 @@ void EnAObj_BoulderFragment(EnAObj* this, PlayState* play) {
 }
 
 void EnAObj_SetupBlock(EnAObj* this, s16 type) {
-    this->dyna.actor.uncullZoneDownward = 1200.0f;
-    this->dyna.actor.uncullZoneScale = 720.0f;
+    this->dyna.actor.cullingVolumeDownward = 1200.0f;
+    this->dyna.actor.cullingVolumeScale = 720.0f;
     EnAObj_SetupAction(this, EnAObj_Block);
 }
 
 void EnAObj_Block(EnAObj* this, PlayState* play) {
-    this->dyna.actor.speedXZ += this->dyna.unk_150;
+    this->dyna.actor.speed += this->dyna.unk_150;
     this->dyna.actor.world.rot.y = this->dyna.unk_158;
-    this->dyna.actor.speedXZ = CLAMP(this->dyna.actor.speedXZ, -2.5f, 2.5f);
+    this->dyna.actor.speed = CLAMP(this->dyna.actor.speed, -2.5f, 2.5f);
 
-    Math_SmoothStepToF(&this->dyna.actor.speedXZ, 0.0f, 1.0f, 1.0f, 0.0f);
+    Math_SmoothStepToF(&this->dyna.actor.speed, 0.0f, 1.0f, 1.0f, 0.0f);
 
-    if (this->dyna.actor.speedXZ != 0.0f) {
+    if (this->dyna.actor.speed != 0.0f) {
         Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
     }
 

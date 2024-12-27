@@ -36,7 +36,7 @@ const ActorInit En_Attack_Niw_InitVars = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 1, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -2000, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 0, ICHAIN_STOP),
 };
 
 void EnAttackNiw_Init(Actor* thisx, PlayState* play) {
@@ -189,7 +189,7 @@ void func_809B5670(EnAttackNiw* this, PlayState* play) {
     f32 tmpf3;
     Vec3f sp34;
 
-    this->actor.speedXZ = 10.0f;
+    this->actor.speed = 10.0f;
 
     tmpf1 = (this->unk_298.x + play->view.lookAt.x) - play->view.eye.x;
     tmpf2 = (this->unk_298.y + play->view.lookAt.y) - play->view.eye.y;
@@ -270,7 +270,7 @@ void func_809B59B0(EnAttackNiw* this, PlayState* play) {
     Math_SmoothStepToS(&this->actor.world.rot.y, this->unk_2D4, 2, this->unk_2DC, 0);
     Math_SmoothStepToS(&this->actor.world.rot.x, this->unk_2D0, 2, this->unk_2DC, 0);
     Math_ApproachF(&this->unk_2DC, 10000.0f, 1.0f, 1000.0f);
-    Math_ApproachF(&this->actor.speedXZ, this->unk_2E0, 0.9f, 1.0f);
+    Math_ApproachF(&this->actor.speed, this->unk_2E0, 0.9f, 1.0f);
     if ((this->actor.gravity == -2.0f) && (this->unk_262 == 0) &&
         ((this->actor.bgCheckFlags & 8) || (this->unk_25C == 0))) {
         this->unk_2E0 = 0.0f;
@@ -346,7 +346,7 @@ void EnAttackNiw_Update(Actor* thisx, PlayState* play) {
 
     if ((this->actor.bgCheckFlags & 0x20) && (this->actionFunc != func_809B5C18)) {
         Math_Vec3f_Copy(&sp30, &this->actor.world.pos);
-        sp30.y += this->actor.yDistToWater;
+        sp30.y += this->actor.depthInWater;
         EffectSsGSplash_Spawn(play, &sp30, 0, 0, 0, 0x190);
         this->unk_2DC = 0.0f;
         this->actor.gravity = 0.0f;

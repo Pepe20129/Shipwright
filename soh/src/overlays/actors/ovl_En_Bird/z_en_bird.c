@@ -33,7 +33,7 @@ const ActorInit En_Bird_InitVars = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 5600, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 5600, ICHAIN_STOP),
 };
 
 void EnBird_SetupAction(EnBird* this, EnBirdActionFunc actionFunc) {
@@ -81,10 +81,10 @@ void func_809C1D60(EnBird* this, PlayState* play) {
     f32 fVar2 = sinf(this->unk_1B4);
 
     this->actor.shape.yOffset = this->actor.shape.yOffset + fVar2 * this->unk_1A0;
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 0.1f, 0.5f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 0.1f, 0.5f, 0.0f);
 
     if (this->unk_19C != 0) {
-        this->skelAnime.playSpeed = this->actor.speedXZ + this->actor.speedXZ;
+        this->skelAnime.playSpeed = this->actor.speed + this->actor.speed;
     }
 
     SkelAnime_Update(&this->skelAnime);
@@ -104,7 +104,7 @@ void func_809C1E40(EnBird* this, PlayState* play) {
     f32 fVar4 = sinf(this->unk_1B4);
 
     this->actor.shape.yOffset += fVar4 * this->unk_1A0;
-    Math_SmoothStepToF(&this->actor.speedXZ, this->unk_1A8, 0.1f, this->unk_1AC, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, this->unk_1A8, 0.1f, this->unk_1AC, 0.0f);
 
     if (this->unk_1B0 < Math_Vec3f_DistXZ(&this->actor.world.pos, &this->actor.home.pos) || this->unk_198 < 4) {
         Math_StepToAngleS(&this->actor.world.rot.y, Math_Vec3f_Yaw(&this->actor.world.pos, &this->actor.home.pos),

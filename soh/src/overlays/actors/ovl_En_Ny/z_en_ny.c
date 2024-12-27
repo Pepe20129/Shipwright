@@ -103,7 +103,7 @@ static DamageTable sDamageTable = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x28, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 void EnNy_Init(Actor* thisx, PlayState* play) {
@@ -119,7 +119,7 @@ void EnNy_Init(Actor* thisx, PlayState* play) {
     this->unk_1CA = 0;
     this->unk_1D0 = 0;
     Actor_SetScale(&this->actor, 0.01f);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.shape.rot.y = 0;
     this->actor.gravity = -0.4f;
     this->hitPlayer = 0;
@@ -156,7 +156,7 @@ void EnNy_Destroy(Actor* thisx, PlayState* play) {
 void func_80ABCD40(EnNy* this) {
     f32 temp;
 
-    temp = (this->actor.yDistToWater > 0.0f) ? 0.7f : 1.0f;
+    temp = (this->actor.depthInWater > 0.0f) ? 0.7f : 1.0f;
     this->unk_1E8 = 2.8f * temp;
 }
 
@@ -228,7 +228,7 @@ void EnNy_Move(EnNy* this, PlayState* play) {
     f32 yawDiff;
     s32 stoneTimer;
 
-    if (!(this->unk_1F0 < this->actor.yDistToWater)) {
+    if (!(this->unk_1F0 < this->actor.depthInWater)) {
         func_8002F974(&this->actor, NA_SE_EN_NYU_MOVE - SFX_FLAG);
     }
     func_80ABCD40(this);
@@ -241,8 +241,8 @@ void EnNy_Move(EnNy* this, PlayState* play) {
         Math_ApproachF(&this->unk_1F4, 2000.0f, 1.0f, 100.0f);
         this->actor.world.rot.y = this->actor.shape.rot.y;
         yawDiff = Math_FAtan2F(this->actor.yDistToPlayer, this->actor.xzDistToPlayer);
-        this->actor.speedXZ = fabsf(cosf(yawDiff) * this->unk_1E8);
-        if (this->unk_1F0 < this->actor.yDistToWater) {
+        this->actor.speed = fabsf(cosf(yawDiff) * this->unk_1E8);
+        if (this->unk_1F0 < this->actor.depthInWater) {
             this->unk_1EC = sinf(yawDiff) * this->unk_1E8;
         }
     }
@@ -256,11 +256,11 @@ void EnNy_TurnToStone(EnNy* this, PlayState* play) {
     if (phi_f0 <= 0.25f) {
         phi_f0 = 0.25f;
         if (this->actor.bgCheckFlags & 2) {
-            if (!(this->unk_1F0 < this->actor.yDistToWater)) {
+            if (!(this->unk_1F0 < this->actor.depthInWater)) {
                 Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
             }
             this->actor.bgCheckFlags &= ~2;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->actor.world.rot.y = this->actor.shape.rot.y;
             func_80ABCE38(this);
         }
@@ -299,7 +299,7 @@ s32 EnNy_CollisionCheck(EnNy* this, PlayState* play) {
         this->collider.base.atFlags &= ~4;
         this->hitPlayer = 1;
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-        this->actor.speedXZ = -4.0f;
+        this->actor.speed = -4.0f;
         return 0;
     }
     if (this->collider.base.atFlags & 2) {
@@ -349,9 +349,9 @@ s32 EnNy_CollisionCheck(EnNy* this, PlayState* play) {
 void func_80ABD3B8(EnNy* this, f32 arg1, f32 arg2) {
     if (this->unk_1E8 == 0.0f) {
         this->actor.gravity = -0.4f;
-    } else if (!(arg1 < this->actor.yDistToWater)) {
+    } else if (!(arg1 < this->actor.depthInWater)) {
         this->actor.gravity = -0.4f;
-    } else if (arg2 < this->actor.yDistToWater) {
+    } else if (arg2 < this->actor.depthInWater) {
         this->actor.gravity = 0.0;
         if (this->unk_1EC < this->actor.velocity.y) {
             this->actor.velocity.y -= 0.4f;
@@ -419,7 +419,7 @@ void EnNy_SetupDie(EnNy* this, PlayState* play) {
     Vec3f effectAccel = { 0.0f, 0.1f, 0.0f };
 
     if (this->timer >= 2) {
-        if (this->actor.yDistToWater > 0.0f) {
+        if (this->actor.depthInWater > 0.0f) {
             for (i = 0; i < 10; i++) {
                 effectPos.x = Rand_CenteredFloat(30.0f) + this->actor.world.pos.x;
                 effectPos.y = Rand_CenteredFloat(30.0f) + this->actor.world.pos.y;
@@ -455,7 +455,7 @@ void EnNy_SetupDie(EnNy* this, PlayState* play) {
 void EnNy_Die(EnNy* this, PlayState* play) {
     s32 i;
 
-    if (this->actor.yDistToWater > 0.0f) {
+    if (this->actor.depthInWater > 0.0f) {
         for (i = 0; i < 8; i += 1) {
             this->unk_1F8[i].x += this->unk_1F8[i + 8].x;
             this->unk_1F8[i].y += this->unk_1F8[i + 8].y;

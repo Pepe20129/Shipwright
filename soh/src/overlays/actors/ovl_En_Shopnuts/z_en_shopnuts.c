@@ -57,7 +57,7 @@ static CollisionCheckInfoInit sColChkInfoInit = { 1, 20, 40, 0xFE };
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x4E, ICHAIN_CONTINUE),
     ICHAIN_F32(gravity, -1, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2600, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2600, ICHAIN_STOP),
 };
 
 void EnShopnuts_Init(Actor* thisx, PlayState* play) {

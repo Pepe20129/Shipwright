@@ -42,9 +42,9 @@ const ActorInit Bg_Heavy_Block_InitVars = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F(scale, 1, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 4000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 400, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 4000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 400, ICHAIN_STOP),
 };
 
 void BgHeavyBlock_SetPieceRandRot(BgHeavyBlock* this, f32 scale) {
@@ -445,7 +445,7 @@ void BgHeavyBlock_Fly(BgHeavyBlock* this, PlayState* play) {
                 this->actionFunc = BgHeavyBlock_Land;
         }
     }
-    this->dyna.actor.shape.rot.x = Math_Atan2S(this->dyna.actor.velocity.y, this->dyna.actor.speedXZ);
+    this->dyna.actor.shape.rot.x = Math_Atan2S(this->dyna.actor.velocity.y, this->dyna.actor.speed);
 }
 
 void BgHeavyBlock_DoNothing(BgHeavyBlock* this, PlayState* play) {
@@ -455,7 +455,7 @@ void BgHeavyBlock_Land(BgHeavyBlock* this, PlayState* play) {
     s32 pad;
 
     if (Math_SmoothStepToS(&this->dyna.actor.shape.rot.x, 0x8AD0, 6, 2000, 100) != 0) {
-        Math_StepToF(&this->dyna.actor.speedXZ, 0.0f, 20.0f);
+        Math_StepToF(&this->dyna.actor.speed, 0.0f, 20.0f);
         Math_StepToF(&this->dyna.actor.velocity.y, 0.0f, 3.0f);
         this->dyna.actor.gravity = 0.0f;
         this->dyna.actor.world.pos = this->dyna.actor.home.pos;

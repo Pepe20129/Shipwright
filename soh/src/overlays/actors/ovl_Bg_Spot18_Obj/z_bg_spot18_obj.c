@@ -69,14 +69,14 @@ static BgSpot18ObjInitFunc D_808B910C[] = {
 
 static InitChainEntry sInitChain1[] = {
     ICHAIN_F32(minVelocityY, -10, ICHAIN_CONTINUE),       ICHAIN_F32(gravity, -4, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1400, ICHAIN_CONTINUE), ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 800, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1400, ICHAIN_CONTINUE), ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 800, ICHAIN_STOP),
 };
 
 static InitChainEntry sInitChain2[] = {
-    ICHAIN_F32(uncullZoneForward, 1200, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 700, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1200, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 700, ICHAIN_STOP),
 };
 
 static BgSpot18ObjInitFunc D_808B913C[] = {
@@ -236,7 +236,7 @@ void func_808B8E7C(BgSpot18Obj* this, PlayState* play) {
 void func_808B8EE0(BgSpot18Obj* this) {
     this->actionFunc = func_808B8F08;
     this->dyna.actor.world.rot.y = 0;
-    this->dyna.actor.speedXZ = 0.0f;
+    this->dyna.actor.speed = 0.0f;
     this->dyna.actor.velocity.z = 0.0f;
     this->dyna.actor.velocity.y = 0.0f;
     this->dyna.actor.velocity.x = 0.0f;
@@ -246,7 +246,7 @@ void func_808B8F08(BgSpot18Obj* this, PlayState* play) {
     s32 pad;
     Player* player = GET_PLAYER(play);
 
-    Math_StepToF(&this->dyna.actor.speedXZ, 1.2f, 0.1f);
+    Math_StepToF(&this->dyna.actor.speed, 1.2f, 0.1f);
     Actor_MoveXZGravity(&this->dyna.actor);
     func_808B8DDC(this, play);
 

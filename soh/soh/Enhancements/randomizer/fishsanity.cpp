@@ -527,7 +527,7 @@ extern "C" {
         velocity.y = 0.05f;
         accel.y = 0.025f;
         Math_Vec3f_Copy(&ripplePos, &pos);
-        ripplePos.y += actor->yDistToWater;
+        ripplePos.y += actor->depthInWater;
 
         if (Rand_ZeroOne() < 0.3f) {
             EffectSsKiraKira_SpawnDispersed(play, &pos, &velocity, &accel, &primColor, &envColor, 1800, 10);

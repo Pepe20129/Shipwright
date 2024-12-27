@@ -311,7 +311,7 @@ s32 EnFd_ColliderCheck(EnFd* this, PlayState* play) {
         }
         this->attackTimer = 30;
         Audio_PlayActorSound2(&player->actor, NA_SE_PL_BODY_HIT);
-        func_8002F71C(play, &this->actor, this->actor.speedXZ + 2.0f, this->actor.yawTowardsPlayer, 6.0f);
+        func_8002F71C(play, &this->actor, this->actor.speed + 2.0f, this->actor.yawTowardsPlayer, 6.0f);
     }
     return false;
 }
@@ -447,7 +447,7 @@ void EnFd_Fade(EnFd* this, PlayState* play) {
             this->invincibilityTimer = 0;
             this->spinTimer = 0;
             this->actionFunc = EnFd_WaitForCore;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
         }
     }
 }
@@ -496,7 +496,7 @@ void EnFd_SpinAndGrow(EnFd* this, PlayState* play) {
         this->actor.scale.y = 0.01f;
         this->actor.world.rot.y ^= 0x8000;
         this->actor.flags |= ACTOR_FLAG_TARGETABLE;
-        this->actor.speedXZ = 8.0f;
+        this->actor.speed = 8.0f;
         Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENFD_ANIM_1);
         this->actionFunc = EnFd_JumpToGround;
     } else {
@@ -509,7 +509,7 @@ void EnFd_SpinAndGrow(EnFd* this, PlayState* play) {
 void EnFd_JumpToGround(EnFd* this, PlayState* play) {
     if ((this->actor.bgCheckFlags & 1) && !(this->actor.velocity.y > 0.0f)) {
         this->actor.velocity.y = 0.0f;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actor.world.rot.y = this->actor.shape.rot.y;
         Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENFD_ANIM_2);
         this->actionFunc = EnFd_Land;
@@ -594,7 +594,7 @@ void EnFd_Run(EnFd* this, PlayState* play) {
         if (this->invincibilityTimer == 0) {
             this->actor.world.rot.y ^= 0x8000;
             this->actor.velocity.y = 6.0f;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENFD_ANIM_1);
             this->actionFunc = EnFd_JumpToGround;
             return;
@@ -631,7 +631,7 @@ void EnFd_Run(EnFd* this, PlayState* play) {
     if (this->skelAnime.curFrame == 6.0f || this->skelAnime.curFrame == 13.0f || this->skelAnime.curFrame == 28.0f) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLAME_KICK);
     }
-    Math_SmoothStepToF(&this->actor.speedXZ, 8.0f, 0.1f, 1.0f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 8.0f, 0.1f, 1.0f, 0.0f);
 }
 
 /**

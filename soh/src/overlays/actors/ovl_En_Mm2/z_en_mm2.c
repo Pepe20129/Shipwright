@@ -77,7 +77,7 @@ static AnimationSpeedInfo sAnimationInfo[] = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 4000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 4000, ICHAIN_STOP),
 };
 
 void EnMm2_ChangeAnim(EnMm2* this, s32 index, s32* currentIndex) {
@@ -186,7 +186,7 @@ void func_80AAF2BC(EnMm2* this, PlayState* play) {
     }
     SkelAnime_Update(&this->skelAnime);
     this->unk_1F6++;
-    Math_SmoothStepToF(&this->actor.speedXZ, 10.0f, 0.6f, 2.0f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 10.0f, 0.6f, 2.0f, 0.0f);
 }
 
 void func_80AAF330(EnMm2* this, PlayState* play) {

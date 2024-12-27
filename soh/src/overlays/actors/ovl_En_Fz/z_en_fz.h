@@ -40,7 +40,7 @@ typedef struct EnFz {
     /* 0x0249 */ u8 unusedCounter; // Incremented when Freezard takes damage
     /* 0x024C */ f32 iceSmokeFreezingSpawnHeight; // Height for Ice Smoke Spawn, only when freezing
     /* 0x0250 */ f32 unusedFloat; // Set to 135.0f
-    /* 0x0254 */ f32 speedXZ; // Set to 4.0f when moving
+    /* 0x0254 */ f32 speed; // Set to 4.0f when moving
     /* 0x0258 */ u32 envAlpha; // transparency in RGBA colour system
     /* 0x025C */ u16 unusedNum1; // Only set to 0
     /* 0x025E */ u16 unusedNum2; // Set to either 0 when hidden or 4000 when growing

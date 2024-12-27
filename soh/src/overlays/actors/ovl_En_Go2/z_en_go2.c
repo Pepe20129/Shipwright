@@ -902,7 +902,7 @@ s32 func_80A44AB0(EnGo2* this, PlayState* play) {
             if (this->collider.base.ocFlags2 & 1) {
                 this->collider.base.ocFlags2 &= ~1;
 
-                arg2 = this->actionFunc == EnGo2_ContinueRolling ? 1.5f : this->actor.speedXZ * 1.5f;
+                arg2 = this->actionFunc == EnGo2_ContinueRolling ? 1.5f : this->actor.speed * 1.5f;
 
                 play->damagePlayer(play, -4);
                 func_8002F71C(play, &this->actor, arg2, this->actor.yawTowardsPlayer, 6.0f);
@@ -1111,17 +1111,17 @@ void func_80A45360(EnGo2* this, f32* alpha) {
 }
 
 void EnGo2_RollForward(EnGo2* this) {
-    f32 speedXZ = this->actor.speedXZ;
+    f32 speed = this->actor.speed;
 
     if (this->interactInfo.talkState != NPC_TALK_STATE_IDLE) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 
     if (this->actionFunc != EnGo2_ContinueRolling) {
         Actor_MoveXZGravity(&this->actor);
     }
 
-    this->actor.speedXZ = speedXZ;
+    this->actor.speed = speed;
 }
 
 void func_80A454CC(EnGo2* this) {
@@ -1347,21 +1347,21 @@ void EnGo2_GetItemAnimation(EnGo2* this, PlayState* play) {
     this->unk_211 = true;
     this->actionFunc = func_80A46B40;
     this->skelAnime.playSpeed = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->skelAnime.curFrame = this->skelAnime.endFrame;
 }
 
 void EnGo2_SetupRolling(EnGo2* this, PlayState* play) {
     if ((this->actor.params & 0x1F) == GORON_CITY_ROLLING_BIG || (this->actor.params & 0x1F) == GORON_CITY_LINK) {
         this->collider.info.bumperFlags = 1;
-        this->actor.speedXZ = Flags_GetInfTable(INFTABLE_11E) ? 6.0f : 3.6000001f;
+        this->actor.speed = Flags_GetInfTable(INFTABLE_11E) ? 6.0f : 3.6000001f;
     } else {
-        this->actor.speedXZ = 6.0f;
+        this->actor.speed = 6.0f;
     }
     this->actor.flags |= ACTOR_FLAG_PLAY_HIT_SFX;
     this->animTimer = 10;
     this->actor.shape.yOffset = 1800.0f;
-    this->actor.speedXZ += this->actor.speedXZ; // Speeding up
+    this->actor.speed += this->actor.speed; // Speeding up
     this->actionFunc = EnGo2_ContinueRolling;
 }
 
@@ -1385,7 +1385,7 @@ void EnGo2_StopRolling(EnGo2* this, PlayState* play) {
     this->unk_590 = 0;
     this->actionFunc = EnGo2_GroundRolling;
     this->actor.shape.yOffset = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 s32 EnGo2_IsFreeingGoronInFire(EnGo2* this, PlayState* play) {
@@ -1442,7 +1442,7 @@ s32 EnGo2_IsGoronLinkReversing(EnGo2* this) {
 }
 
 s32 EnGo2_IsRolling(EnGo2* this) {
-    if (this->interactInfo.talkState == NPC_TALK_STATE_IDLE || this->actor.speedXZ < 1.0f) {
+    if (this->interactInfo.talkState == NPC_TALK_STATE_IDLE || this->actor.speed < 1.0f) {
         return false;
     }
     if (EnGo2_IsRollingOnGround(this, 2, 20.0 / 3.0f, 0)) {
@@ -1709,7 +1709,7 @@ void EnGo2_GoronDmtBombFlowerAnimation(EnGo2* this, PlayState* play) {
     f32 float1 = this->skelAnime.endFrame;
     f32 float2 = this->skelAnime.curFrame * ((f32)0x8000 / float1);
 
-    this->actor.speedXZ = Math_SinS(float2);
+    this->actor.speed = Math_SinS(float2);
     if ((EnGo2_Orient(this, play)) && (this->waypoint == 0)) {
         EnGo2_GetItemAnimation(this, play);
     }
@@ -1729,7 +1729,7 @@ void EnGo2_ContinueRolling(EnGo2* this, PlayState* play) {
     if (((this->actor.params & 0x1F) != GORON_DMT_ROLLING_SMALL || !(this->actor.xyzDistToPlayerSq > SQ(float1))) &&
         DECR(this->animTimer) == 0) {
         this->actionFunc = EnGo2_SlowRolling;
-        this->actor.speedXZ *= 0.5f; // slowdown
+        this->actor.speed *= 0.5f; // slowdown
     }
     EnGo2_GetDustData(this, 2);
 }
@@ -1757,7 +1757,7 @@ void EnGo2_SlowRolling(EnGo2* this, PlayState* play) {
             EnGo2_StopRolling(this, play);
             return;
         }
-        Math_ApproachF(&this->actor.speedXZ, EnGo2_GetTargetXZSpeed(this), 0.4f, 0.6f);
+        Math_ApproachF(&this->actor.speed, EnGo2_GetTargetXZSpeed(this), 0.4f, 0.6f);
         this->actor.shape.rot = this->actor.world.rot;
     }
 }
@@ -1785,11 +1785,11 @@ void EnGo2_GroundRolling(EnGo2* this, PlayState* play) {
 
 void EnGo2_ReverseRolling(EnGo2* this, PlayState* play) {
     if (!EnGo2_IsRolling(this)) {
-        Math_ApproachF(&this->actor.speedXZ, 0.0f, 0.6f, 0.8f);
-        if (this->actor.speedXZ >= 1.0f) {
+        Math_ApproachF(&this->actor.speed, 0.0f, 0.6f, 0.8f);
+        if (this->actor.speed >= 1.0f) {
             EnGo2_GetDustData(this, 3);
         }
-        if ((s32)this->actor.speedXZ == 0) {
+        if ((s32)this->actor.speed == 0) {
             this->actor.world.rot.y ^= 0x8000;
             this->actor.shape.rot.y = this->actor.world.rot.y;
             this->reverse ^= 1;
@@ -1932,7 +1932,7 @@ void EnGo2_GoronFireGenericAction(EnGo2* this, PlayState* play) {
                 this->actor.shape.rot = this->actor.world.rot;
                 this->animTimer = 60;
                 this->actor.gravity = 0.0f;
-                this->actor.speedXZ = 2.0f;
+                this->actor.speed = 2.0f;
                 this->interactInfo.headRot = D_80A4854C;
                 this->interactInfo.torsoRot = D_80A4854C;
                 this->goronState++;
@@ -1957,7 +1957,7 @@ void EnGo2_GoronFireGenericAction(EnGo2* this, PlayState* play) {
                 Actor_MoveXZGravity(&this->actor);
             } else {
                 this->animTimer = 0;
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
                 if ((((this->actor.params & 0xFC00) >> 0xA) != 1) && (((this->actor.params & 0xFC00) >> 0xA) != 2) &&
                     (((this->actor.params & 0xFC00) >> 0xA) != 4) && (((this->actor.params & 0xFC00) >> 0xA) != 5) &&
                     (((this->actor.params & 0xFC00) >> 0xA) != 9) && (((this->actor.params & 0xFC00) >> 0xA) != 11)) {
@@ -2030,12 +2030,12 @@ s32 EnGo2_DrawCurledUp(EnGo2* this, PlayState* play) {
 s32 EnGo2_DrawRolling(EnGo2* this, PlayState* play) {
     s32 pad;
     Vec3f D_80A48560 = { 0.0f, 0.0f, 0.0f };
-    f32 speedXZ;
+    f32 speed;
 
     OPEN_DISPS(play->state.gfxCtx);
     Gfx_SetupDL_25Opa(play->state.gfxCtx);
-    speedXZ = this->actionFunc == EnGo2_ReverseRolling ? 0.0f : this->actor.speedXZ;
-    Matrix_RotateZYX((play->state.frames * ((s16)speedXZ * 1400)), 0, this->actor.shape.rot.z, MTXMODE_APPLY);
+    speed = this->actionFunc == EnGo2_ReverseRolling ? 0.0f : this->actor.speed;
+    Matrix_RotateZYX((play->state.frames * ((s16)speed * 1400)), 0, this->actor.shape.rot.z, MTXMODE_APPLY);
     gSPMatrix(POLY_OPA_DISP++, MATRIX_NEWMTX(play->state.gfxCtx),
               G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gSPDisplayList(POLY_OPA_DISP++, gGoronDL_00C140);

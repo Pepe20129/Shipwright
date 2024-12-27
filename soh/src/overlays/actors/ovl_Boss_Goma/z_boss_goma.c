@@ -404,7 +404,7 @@ void BossGoma_SetupDefeated(BossGoma* this, PlayState* play) {
     this->framesUntilNextAction = 1200;
     this->actionState = 0;
     this->actor.flags &= ~(ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.shape.shadowScale = 0.0f;
     Audio_QueueSeqCmd(0x1 << 28 | SEQ_PLAYER_BGM_MAIN << 24 | 0x100FF);
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_DEAD);
@@ -456,7 +456,7 @@ void BossGoma_SetupFallJump(BossGoma* this) {
     }
     Animation_Change(&this->skelanime, &gGohmaLandAnim, 1.0f, 0.0f, 0.0f, ANIMMODE_ONCE, -5.0f);
     this->actionFunc = BossGoma_FallJump;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = -2.0f;
 }
@@ -467,7 +467,7 @@ void BossGoma_SetupFallJump(BossGoma* this) {
 void BossGoma_SetupFallStruckDown(BossGoma* this) {
     Animation_Change(&this->skelanime, &gGohmaCrashAnim, 1.0f, 0.0f, 0.0f, ANIMMODE_ONCE, -5.0f);
     this->actionFunc = BossGoma_FallStruckDown;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = -2.0f;
 }
@@ -490,7 +490,7 @@ void BossGoma_SetupWallClimb(BossGoma* this) {
     Animation_Change(&this->skelanime, &gGohmaClimbAnim, 1.0f, 0.0f, Animation_GetLastFrame(&gGohmaClimbAnim),
                      ANIMMODE_LOOP, -10.0f);
     this->actionFunc = BossGoma_WallClimb;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = 0.0f;
 }
@@ -502,7 +502,7 @@ void BossGoma_SetupCeilingMoveToCenter(BossGoma* this) {
     Animation_Change(&this->skelanime, &gGohmaWalkAnim, 1.0f, 0.0f, Animation_GetLastFrame(&gGohmaWalkAnim),
                      ANIMMODE_LOOP, -5.0f);
     this->actionFunc = BossGoma_CeilingMoveToCenter;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = 0.0f;
     this->framesUntilNextAction = Rand_S16Offset(30, 60);
@@ -599,7 +599,7 @@ void BossGoma_UpdateCeilingMovement(BossGoma* this, PlayState* play, f32 dz, f32
 
     roomCenter.z += dz; // dz is always 0
     SkelAnime_Update(&this->skelanime);
-    Math_ApproachF(&this->actor.speedXZ, targetSpeedXZ, 0.5f, 2.0f);
+    Math_ApproachF(&this->actor.speed, targetSpeedXZ, 0.5f, 2.0f);
 
     if (rotateTowardsCenter) {
         Math_ApproachS(&this->actor.world.rot.y, Math_Vec3f_Yaw(&this->actor.world.pos, &roomCenter) + 0x8000, 3,
@@ -679,7 +679,7 @@ void BossGoma_Encounter(BossGoma* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     s32 pad[2];
 
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
 
     switch (this->actionState) {
         case 0: // wait for the player to enter the room
@@ -730,7 +730,7 @@ void BossGoma_Encounter(BossGoma* this, PlayState* play) {
             player->actor.world.pos.x = 150.0f;
             player->actor.world.pos.z = 300.0f;
             player->actor.world.rot.y = player->actor.shape.rot.y;
-            player->actor.speedXZ = 0.0f;
+            player->actor.speed = 0.0f;
 
             if (this->framesUntilNextAction == 0) {
                 // (-20, 25, -65) is towards room center
@@ -782,7 +782,7 @@ void BossGoma_Encounter(BossGoma* this, PlayState* play) {
             if (fabsf(this->actor.projectedPos.x) < 150.0f && fabsf(this->actor.projectedPos.y) < 250.0f &&
                 this->actor.projectedPos.z < 800.0f && this->actor.projectedPos.z > 0.0f) {
                 this->lookedAtFrames++;
-                Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+                Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
                 Math_ApproachS(&this->actor.world.rot.y,
                                Actor_WorldYawTowardActor(&this->actor, &GET_PLAYER(play)->actor) + 0x8000, 2,
                                0xBB8);
@@ -851,7 +851,7 @@ void BossGoma_Encounter(BossGoma* this, PlayState* play) {
             if (this->framesUntilNextAction < 0) {
                 //! @bug ? unreachable, timer is >= 0
                 SkelAnime_Update(&this->skelanime);
-                Math_ApproachZeroF(&this->actor.speedXZ, 1.0f, 2.0f);
+                Math_ApproachZeroF(&this->actor.speed, 1.0f, 2.0f);
             } else {
                 BossGoma_UpdateCeilingMovement(this, play, 0.0f, -7.5f, false);
             }
@@ -863,7 +863,7 @@ void BossGoma_Encounter(BossGoma* this, PlayState* play) {
 
             if (this->framesUntilNextAction == 0) {
                 this->actionState = 9;
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
                 this->actor.velocity.y = 0.0f;
                 this->actor.gravity = -2.0f;
                 Animation_Change(&this->skelanime, &gGohmaInitialLandingAnim, 1.0f, 0.0f,
@@ -1266,7 +1266,7 @@ void BossGoma_Defeated(BossGoma* this, PlayState* play) {
  */
 void BossGoma_FloorAttackPosture(BossGoma* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
 
     if (this->skelanime.curFrame >= (19.0f + 1.0f / 3.0f) && this->skelanime.curFrame <= 30.0f) {
         Math_ApproachS(&this->actor.world.rot.y, Actor_WorldYawTowardActor(&this->actor, &GET_PLAYER(play)->actor),
@@ -1417,7 +1417,7 @@ void BossGoma_FloorStunned(BossGoma* this, PlayState* play) {
         Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 55.0f, 4, 8.0f, 500, 10, true);
     }
 
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 1.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 1.0f);
 
     if (this->framesUntilNextAction == 0) {
         BossGoma_SetupFloorMain(this);
@@ -1479,7 +1479,7 @@ void BossGoma_CeilingSpawnGohmas(BossGoma* this, PlayState* play) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_UNARI);
     }
 
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
     this->spawnGohmasActionTimer++;
 
     switch (this->spawnGohmasActionTimer) {
@@ -1541,7 +1541,7 @@ void BossGoma_CeilingPrepareSpawnGohmas(BossGoma* this, PlayState* play) {
  */
 void BossGoma_FloorIdle(BossGoma* this, PlayState* play) {
     SkelAnime_Update(&this->skelanime);
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
     Math_ApproachS(&this->actor.shape.rot.x, 0, 2, 0xBB8);
 
     if (this->framesUntilNextAction == 0) {
@@ -1558,7 +1558,7 @@ void BossGoma_CeilingIdle(BossGoma* this, PlayState* play) {
     s16 i;
 
     SkelAnime_Update(&this->skelanime);
-    Math_ApproachZeroF(&this->actor.speedXZ, 0.5f, 2.0f);
+    Math_ApproachZeroF(&this->actor.speed, 0.5f, 2.0f);
 
     if (this->framesUntilNextAction == 0) {
         Actor* nearbyEnTest = NULL;
@@ -1628,19 +1628,19 @@ void BossGoma_FloorMain(BossGoma* this, PlayState* play) {
                 BossGoma_SetupFloorAttackPosture(this);
             }
 
-            Math_ApproachF(&this->actor.speedXZ, 10.0f / 3.0f, 0.5f, 2.0f);
+            Math_ApproachF(&this->actor.speed, 10.0f / 3.0f, 0.5f, 2.0f);
             Math_ApproachS(&this->actor.world.rot.y, rot, 5, 0x3E8);
         } else {
             if (this->timer != 0) {
                 // move away from the player, walking backwards
-                Math_ApproachF(&this->actor.speedXZ, -10.0f, 0.5f, 2.0f);
+                Math_ApproachF(&this->actor.speed, -10.0f, 0.5f, 2.0f);
                 this->skelanime.playSpeed = -3.0f;
                 if (this->timer == 1) {
-                    this->actor.speedXZ = 0.0f;
+                    this->actor.speed = 0.0f;
                 }
             } else {
                 // move away from the player, walking forwards
-                Math_ApproachF(&this->actor.speedXZ, 20.0f / 3.0f, 0.5f, 2.0f);
+                Math_ApproachF(&this->actor.speed, 20.0f / 3.0f, 0.5f, 2.0f);
                 this->skelanime.playSpeed = 2.0f;
                 rot += 0x8000;
             }

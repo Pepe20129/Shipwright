@@ -168,7 +168,7 @@ u8 sTwInitalized = false;
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 0, ICHAIN_STOP),
 };
 
 static s8 sEnvType;
@@ -594,7 +594,7 @@ void BossTw_TurnToPlayer(BossTw* this, PlayState* play) {
     BossTw* otherTw = (BossTw*)this->actor.parent;
 
     SkelAnime_Update(&this->skelAnime);
-    Math_ApproachF(&this->actor.speedXZ, 0.0f, 1.0f, 1.0f);
+    Math_ApproachF(&this->actor.speed, 0.0f, 1.0f, 1.0f);
     Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 5, this->rotateSpeed);
     Math_ApproachS(&this->actor.shape.rot.x, 0, 5, this->rotateSpeed);
     Math_ApproachF(&this->rotateSpeed, 4096.0f, 1.0f, 200.0f);
@@ -604,7 +604,7 @@ void BossTw_TurnToPlayer(BossTw* this, PlayState* play) {
         if ((otherTw->actionFunc != BossTw_ShootBeam) && this->work[CAN_SHOOT]) {
             this->work[CAN_SHOOT] = false;
             BossTw_SetupShootBeam(this, play);
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
         } else {
             BossTw_SetupFlyTo(this, play);
         }
@@ -669,7 +669,7 @@ void BossTw_FlyTo(BossTw* this, PlayState* play) {
     Math_ApproachS(&this->actor.shape.rot.y, yawTarget, 0xA, this->rotateSpeed);
     Math_ApproachS(&this->actor.shape.rot.x, pitchTarget, 0xA, this->rotateSpeed);
     Math_ApproachF(&this->rotateSpeed, 4096.0f, 1.0f, 100.0f);
-    Math_ApproachF(&this->actor.speedXZ, 10.0f, 1.0f, 1.0f);
+    Math_ApproachF(&this->actor.speed, 10.0f, 1.0f, 1.0f);
     Actor_UpdateVelocityXYZ(&this->actor);
     Actor_UpdatePos(&this->actor);
 
@@ -944,8 +944,8 @@ void BossTw_ShootBeam(BossTw* this, PlayState* play) {
     BossTw* otherTw = (BossTw*)this->actor.parent;
     Input* input = &play->state.input[0];
 
-    Math_ApproachF(&this->actor.world.pos.y, 400.0f, 0.05f, this->actor.speedXZ);
-    Math_ApproachF(&this->actor.speedXZ, 5.0f, 1.0f, 0.25f);
+    Math_ApproachF(&this->actor.world.pos.y, 400.0f, 0.05f, this->actor.speed);
+    Math_ApproachF(&this->actor.speed, 5.0f, 1.0f, 0.25f);
     SkelAnime_Update(&this->skelAnime);
     this->beamRoll += -0.3f;
 
@@ -1315,7 +1315,7 @@ void BossTw_SetupHitByBeam(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_HitByBeam;
     Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaKotakeKoumeDamageStartAnim, 0.0f);
     this->timers[0] = 53;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 
     if (this->actor.params == 0) {
         this->work[FOG_TIMER] = 20;
@@ -1355,15 +1355,15 @@ void BossTw_HitByBeam(BossTw* this, PlayState* play) {
     }
 
     Math_ApproachF(&this->actor.world.pos.y, ((Math_SinS(this->work[CS_TIMER_1] * 1500) * 20.0f) + 350.0f) + 50.0f,
-                   0.1f, this->actor.speedXZ);
-    Math_ApproachF(&this->actor.speedXZ, 5.0f, 1.0f, 1.0f);
+                   0.1f, this->actor.speed);
+    Math_ApproachF(&this->actor.speed, 5.0f, 1.0f, 1.0f);
 
     this->actor.world.pos.y -= 50.0f;
     Actor_UpdateBgCheckInfo(play, &this->actor, 50.0f, 50.0f, 100.0f, 4);
     this->actor.world.pos.y += 50.0f;
 
     if (this->actor.bgCheckFlags & 1) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 
     if (this->timers[0] == 1) {
@@ -1380,7 +1380,7 @@ void BossTw_SetupLaugh(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_Laugh;
     Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaKotakeKoumeLaughAnim, 0.0f);
     this->workf[ANIM_SW_TGT] = Animation_GetLastFrame(&gTwinrovaKotakeKoumeLaughAnim);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 void BossTw_Laugh(BossTw* this, PlayState* play) {
@@ -1403,7 +1403,7 @@ void BossTw_SetupSpin(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_Spin;
     Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaKotakeKoumeSpinAnim, -3.0f);
     this->workf[ANIM_SW_TGT] = Animation_GetLastFrame(&gTwinrovaKotakeKoumeSpinAnim);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     SkelAnime_Update(&this->skelAnime);
     this->timers[0] = 20;
 }
@@ -1429,7 +1429,7 @@ void BossTw_Spin(BossTw* this, PlayState* play) {
 void BossTw_SetupMergeCS(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_MergeCS;
     this->rotateSpeed = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Animation_MorphToLoop(&this->skelAnime, &gTwinrovaKotakeKoumeFlyAnim, -10.0f);
 }
 
@@ -1887,7 +1887,7 @@ void BossTw_TwinrovaIntroCS(BossTw* this, PlayState* play) {
 
             if (this->work[CS_TIMER_1] > 80) {
                 this->csState2 = 4;
-                this->actor.speedXZ = 0;
+                this->actor.speed = 0;
 
                 this->subCamEyeTarget.x = -80.0f;
                 this->subCamEyeTarget.y = 260.0f;
@@ -1915,8 +1915,8 @@ void BossTw_TwinrovaIntroCS(BossTw* this, PlayState* play) {
             updateCam = 1;
             SkelAnime_Update(&sKoumePtr->skelAnime);
             this->subCamAtTarget.y = 20.0f + sKoumePtr->actor.world.pos.y;
-            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 350, 0.1f, this->actor.speedXZ);
-            Math_ApproachF(&this->actor.speedXZ, 9.0f, 1.0f, 0.9f);
+            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 350, 0.1f, this->actor.speed);
+            Math_ApproachF(&this->actor.speed, 9.0f, 1.0f, 0.9f);
             Math_ApproachF(&this->subCamUpdateRate, 1.0f, 1.0f, 0.02f);
 
             if (this->work[CS_TIMER_1] >= 30) {
@@ -2051,7 +2051,7 @@ void BossTw_TwinrovaIntroCS(BossTw* this, PlayState* play) {
 
             if (this->work[CS_TIMER_1] > 80) {
                 this->csState2 = 12;
-                this->actor.speedXZ = 0;
+                this->actor.speed = 0;
 
                 this->subCamEyeTarget.y = 260.0f;
                 this->subCamEyeTarget.x = -80.0f;
@@ -2079,8 +2079,8 @@ void BossTw_TwinrovaIntroCS(BossTw* this, PlayState* play) {
             updateCam = 1;
             SkelAnime_Update(&sKotakePtr->skelAnime);
             this->subCamAtTarget.y = sKotakePtr->actor.world.pos.y + 20.0f;
-            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 350, 0.1f, this->actor.speedXZ);
-            Math_ApproachF(&this->actor.speedXZ, 9.0f, 1.0f, 0.9f);
+            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 350, 0.1f, this->actor.speed);
+            Math_ApproachF(&this->actor.speed, 9.0f, 1.0f, 0.9f);
             Math_ApproachF(&this->subCamUpdateRate, 1.0f, 1.0f, 0.02f);
 
             if (this->work[CS_TIMER_1] >= 30) {
@@ -2299,7 +2299,7 @@ void BossTw_DeathBall(BossTw* this, PlayState* play) {
 
         this->timers[1] = 10;
         this->rotateSpeed = 8192.0f;
-        this->actor.speedXZ = 5.0f;
+        this->actor.speed = 5.0f;
     } else {
         if (this->timers[1] == 9) {
             this->targetPos.y = 413.0f;
@@ -2321,7 +2321,7 @@ void BossTw_DeathBall(BossTw* this, PlayState* play) {
         Math_ApproachF(&this->targetPos.y, 263.0f, 1.0f, 2.0f);
 
         if (this->targetPos.y == 263.0f) {
-            Math_ApproachF(&this->actor.speedXZ, 0.0f, 1.0f, 0.2f);
+            Math_ApproachF(&this->actor.speed, 0.0f, 1.0f, 0.2f);
             if (sTwinrovaPtr->csState2 == 3) {
                 Actor_Kill(&this->actor);
             }
@@ -2571,9 +2571,9 @@ void BossTw_DeathCSMsgSfx(BossTw* this, PlayState* play) {
                        0.01f);
 
         if (this->work[CS_TIMER_2] >= 880) {
-            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 2000.0f, 1.0f, this->actor.speedXZ);
-            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 2000.0f, 1.0f, this->actor.speedXZ);
-            Math_ApproachF(&this->actor.speedXZ, 10.0f, 1.0f, 0.25f);
+            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 2000.0f, 1.0f, this->actor.speed);
+            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 2000.0f, 1.0f, this->actor.speed);
+            Math_ApproachF(&this->actor.speed, 10.0f, 1.0f, 0.25f);
 
             if (this->work[CS_TIMER_2] >= 930) {
                 Math_ApproachF(&this->workf[UNK_F19], 5.0f, 1.0f, 0.05f);
@@ -2583,10 +2583,10 @@ void BossTw_DeathCSMsgSfx(BossTw* this, PlayState* play) {
             Audio_PlayActorSound2(&this->actor, NA_SE_EV_GOTO_HEAVEN - SFX_FLAG);
         } else {
             f32 yTarget = Math_CosS(this->work[CS_TIMER_2] * 1700) * 4.0f;
-            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 20.0f + (263.0f + yTarget), 0.1f, this->actor.speedXZ);
+            Math_ApproachF(&sKotakePtr->actor.world.pos.y, 20.0f + (263.0f + yTarget), 0.1f, this->actor.speed);
             yTarget = Math_SinS(this->work[CS_TIMER_2] * 1500) * 4.0f;
-            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 20.0f + (263.0f + yTarget), 0.1f, this->actor.speedXZ);
-            Math_ApproachF(&this->actor.speedXZ, 1.0f, 1.0f, 0.05f);
+            Math_ApproachF(&sKoumePtr->actor.world.pos.y, 20.0f + (263.0f + yTarget), 0.1f, this->actor.speed);
+            Math_ApproachF(&this->actor.speed, 1.0f, 1.0f, 0.05f);
         }
     }
 }
@@ -2627,13 +2627,13 @@ void BossTw_TwinrovaDeathCS(BossTw* this, PlayState* play) {
                 play->envCtx.unk_BD = 0;
                 Math_ApproachF(&play->envCtx.unk_D8, 1.0f, 1.0f, 0.015f);
                 Math_ApproachF(&this->actor.scale.x, 0.00024999998f, 0.1f, 0.00005f);
-                this->actor.shape.rot.y += (s16)this->actor.speedXZ;
-                this->workf[UNK_F13] += this->actor.speedXZ;
+                this->actor.shape.rot.y += (s16)this->actor.speed;
+                this->workf[UNK_F13] += this->actor.speed;
                 if (this->workf[UNK_F13] > 65536.0f) {
                     this->workf[UNK_F13] -= 65536.0f;
                     Audio_PlayActorSound2(&this->actor, NA_SE_EN_TWINROBA_ROLL);
                 }
-                Math_ApproachF(&this->actor.speedXZ, 12288.0f, 1.0f, 256.0f);
+                Math_ApproachF(&this->actor.speed, 12288.0f, 1.0f, 256.0f);
                 if (this->work[CS_TIMER_1] == 135) {
                     Vec3f spBC;
                     Vec3f spB0;
@@ -2755,7 +2755,7 @@ void BossTw_TwinrovaDeathCS(BossTw* this, PlayState* play) {
                 Audio_QueueSeqCmd(SEQ_PLAYER_BGM_MAIN << 24 | NA_BGM_KOTAKE_KOUME);
                 this->csState2 = 3;
                 this->work[CS_TIMER_2] = 0;
-                this->subCamYaw = this->subCamYawStep = this->actor.speedXZ = this->subCamDistStep = 0.0f;
+                this->subCamYaw = this->subCamYawStep = this->actor.speed = this->subCamDistStep = 0.0f;
             }
             break;
         case 3:
@@ -3917,7 +3917,7 @@ void BossTw_BlastFire(BossTw* this, PlayState* play) {
                     // pitch
                     distXZ = sqrtf(SQ(xDiff) + SQ(zDiff));
                     this->actor.world.rot.x = Math_FAtan2F(yDiff, distXZ) * (32768 / M_PI);
-                    this->actor.speedXZ = 20.0f;
+                    this->actor.speed = 20.0f;
 
                     for (i = 0; i < 50; i++) {
                         this->blastTailPos[i] = this->actor.world.pos;
@@ -4106,7 +4106,7 @@ void BossTw_BlastIce(BossTw* this, PlayState* play) {
                     this->actor.world.rot.y = Math_FAtan2F(xDiff, zDiff) * (32768 / M_PI);
                     xzDist = sqrtf(SQ(xDiff) + SQ(zDiff));
                     this->actor.world.rot.x = Math_FAtan2F(yDiff, xzDist) * (32768 / M_PI);
-                    this->actor.speedXZ = 20.0f;
+                    this->actor.speed = 20.0f;
                     for (i = 0; i < 50; i++) {
                         this->blastTailPos[i] = this->actor.world.pos;
                     }
@@ -5408,7 +5408,7 @@ void BossTw_TwinrovaSetupFly(BossTw* this, PlayState* play) {
     zDiff = this->targetPos.z - this->actor.world.pos.z;
     this->actionFunc = BossTw_TwinrovaFly;
     this->rotateSpeed = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.world.rot.y = Math_FAtan2F(xDiff, zDiff) * (32768 / M_PI);
     xzDist = sqrtf(SQ(xDiff) + SQ(zDiff));
     this->actor.world.rot.x = Math_FAtan2F(yDiff, xzDist) * (32768 / M_PI);
@@ -5437,7 +5437,7 @@ void BossTw_TwinrovaFly(BossTw* this, PlayState* play) {
     Math_ApproachS(&this->actor.world.rot.y, yaw, 0xA, this->rotateSpeed);
     Math_ApproachS(&this->actor.shape.rot.y, yaw, 0xA, this->rotateSpeed);
     Math_ApproachF(&this->rotateSpeed, 2000.0f, 1.0f, 100.0f);
-    Math_ApproachF(&this->actor.speedXZ, 30.0f, 1.0f, 2.0f);
+    Math_ApproachF(&this->actor.speed, 30.0f, 1.0f, 2.0f);
     Actor_UpdateVelocityXYZ(&this->actor);
     Math_ApproachF(&this->actor.world.pos.x, this->targetPos.x, 0.1f, fabsf(this->actor.velocity.x) * 1.5f);
     Math_ApproachF(&this->actor.world.pos.y, this->targetPos.y, 0.1f, fabsf(this->actor.velocity.y) * 1.5f);
@@ -5453,7 +5453,7 @@ void BossTw_TwinrovaSetupSpin(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_TwinrovaSpin;
     Animation_MorphToLoop(&this->skelAnime, &gTwinrovaHoverAnim, 0.0f);
     this->timers[0] = 20;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 void BossTw_TwinrovaSpin(BossTw* this, PlayState* play) {
@@ -5474,7 +5474,7 @@ void BossTw_TwinrovaSetupLaugh(BossTw* this, PlayState* play) {
     this->actionFunc = BossTw_TwinrovaLaugh;
     Animation_MorphToPlayOnce(&this->skelAnime, &gTwinrovaLaughAnim, 0.0f);
     this->workf[ANIM_SW_TGT] = Animation_GetLastFrame(&gTwinrovaLaughAnim);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 void BossTw_TwinrovaLaugh(BossTw* this, PlayState* play) {

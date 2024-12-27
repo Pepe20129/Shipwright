@@ -136,7 +136,7 @@ void EnTuboTrap_SpawnEffectsInWater(EnTuboTrap* this, PlayState* play) {
     Vec3f* actorPos = &this->actor.world.pos;
 
     pos = *actorPos;
-    pos.y += this->actor.yDistToWater;
+    pos.y += this->actor.depthInWater;
 
     EffectSsGSplash_Spawn(play, &pos, 0, 0, 0, 400);
 
@@ -172,7 +172,7 @@ void EnTuboTrap_HandleImpact(EnTuboTrap* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     Player* player2 = GET_PLAYER(play);
 
-    if ((this->actor.bgCheckFlags & 0x20) && (this->actor.yDistToWater > 15.0f)) {
+    if ((this->actor.bgCheckFlags & 0x20) && (this->actor.depthInWater > 15.0f)) {
         EnTuboTrap_SpawnEffectsInWater(this, play);
         SoundSource_PlaySfxAtFixedWorldPos(play, &this->actor.world.pos, 40, NA_SE_EV_BOMB_DROP_WATER);
         EnTuboTrap_DropCollectible(this, play);
@@ -257,7 +257,7 @@ void EnTuboTrap_Levitate(EnTuboTrap* this, PlayState* play) {
     Math_ApproachF(&this->actor.world.pos.y, this->targetY, 0.8f, 3.0f);
 
     if (fabsf(this->actor.world.pos.y - this->targetY) < 10.0f) {
-        this->actor.speedXZ = 10.0f;
+        this->actor.speed = 10.0f;
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
         this->actionFunc = EnTuboTrap_Fly;
     }

@@ -331,7 +331,7 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x3D, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 0, ICHAIN_STOP),
 };
 
 void BossGanon_Init(Actor* thisx, PlayState* play2) {
@@ -423,7 +423,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
             } else {
                 thisx->update = func_808E1EB4;
                 thisx->draw = func_808E229C;
-                thisx->speedXZ = 11.0f;
+                thisx->speed = 11.0f;
 
                 if (thisx->params == 0xC8) {
                     this->timers[0] = 7;
@@ -439,7 +439,7 @@ void BossGanon_Init(Actor* thisx, PlayState* play2) {
             // light ball (anything from 0x64 - 0xC7)
             thisx->update = BossGanon_LightBall_Update;
             thisx->draw = BossGanon_LightBall_Draw;
-            thisx->speedXZ = 12.0f;
+            thisx->speed = 12.0f;
 
             xDistFromPlayer = player->actor.world.pos.x - thisx->world.pos.x;
             yDistFromPlayer = (player->actor.world.pos.y + 30.0f) - thisx->world.pos.y;
@@ -4055,7 +4055,7 @@ void BossGanon_LightBall_Update(Actor* thisx, PlayState* play2) {
 
                             // if a spin attack is used
                             if (player->meleeWeaponAnimation >= 0x18) {
-                                this->actor.speedXZ = 20.0f;
+                                this->actor.speed = 20.0f;
                             }
                             break;
                         } else {
@@ -4087,7 +4087,7 @@ void BossGanon_LightBall_Update(Actor* thisx, PlayState* play2) {
 
             case 1:
                 if ((ganondorf->actionFunc == BossGanon_PlayTennis) && (ganondorf->unk_1C2 == 1)) {
-                    minReflectDist = (this->actor.speedXZ >= 19.0f) ? 250.0f : 170.0f;
+                    minReflectDist = (this->actor.speed >= 19.0f) ? 250.0f : 170.0f;
 
                     if (sqrtf(SQ(xDistFromGanondorf) + SQ(yDistFromGanondorf) + SQ(zDistFromGanondorf)) <
                         minReflectDist) {
@@ -4317,7 +4317,7 @@ void func_808E1EB4(Actor* thisx, PlayState* play2) {
         if (sqrtf(SQ(xDiff) + SQ(zDiff) + SQ(yDiff)) < 40.0f) {
             this->unk_1C2 = 2;
             this->timers[0] = 30;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
 
             if (this->actor.params == 0xC8) {
                 Sfx_PlaySfxCentered(NA_SE_EN_GANON_DAMAGE2);
@@ -4428,7 +4428,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
 
     switch (this->unk_1C2) {
         case 0:
-            this->actor.speedXZ = 40.0f;
+            this->actor.speed = 40.0f;
             Math_ApproachF(&this->fwork[1], 255.0f, 1.0f, 40.0f);
             xDiff = dorf->unk_278.x - this->actor.world.pos.x;
             yDiff = dorf->unk_278.y - this->actor.world.pos.y;
@@ -4450,7 +4450,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
 
             if (sqrtf(SQ(xDiff) + SQ(zDiff) + SQ(yDiff)) < 45.0f) {
                 this->unk_1C2 = 1;
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
             }
             break;
 
@@ -4470,7 +4470,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
             this->collider.dim.height = 20;
             this->collider.dim.yShift = -10;
 
-            this->actor.speedXZ = 20.0f;
+            this->actor.speed = 20.0f;
             this->fwork[1] = 255.0f;
             this->unk_1F0 = player->actor.world.pos;
             new_var = this->unk_1F0.x - this->actor.world.pos.x;
@@ -4500,7 +4500,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
 
             if ((player->meleeWeaponState != 0) && (player->meleeWeaponAnimation >= 0x18) && (this->actor.xzDistToPlayer < 80.0f)) {
                 this->unk_1C2 = 0xC;
-                this->actor.speedXZ = -30.0f;
+                this->actor.speed = -30.0f;
                 Actor_UpdateVelocityXYZ(&this->actor);
                 Actor_UpdatePos(&this->actor);
                 this->unk_1F0 = dorf->unk_1FC;
@@ -4516,7 +4516,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
                 if (!(acHitInfo->toucher.dmgFlags & 0x100000) || Player_HasMirrorShieldEquipped(play)) {
                     func_800AA000(this->actor.xyzDistToPlayerSq, 0xB4, 0x14, 0x64);
                     this->unk_1C2 = 0xC;
-                    this->actor.speedXZ = -30.0f;
+                    this->actor.speed = -30.0f;
 
                     Actor_UpdateVelocityXYZ(&this->actor);
                     Actor_UpdatePos(&this->actor);
@@ -4546,7 +4546,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
 
             if (sqrtf(SQ(xDiff) + SQ(zDiff) + SQ(yDiff)) < 30.0f) {
                 this->unk_1C2 = 1;
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
 
                 if (dorf->timers[2] == 0) {
                     func_8002F6D4(play, &this->actor, 3.0f, this->actor.world.rot.y, 0.0f, 0x50);
@@ -4567,7 +4567,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
             break;
 
         case 12:
-            this->actor.speedXZ = 20.0f;
+            this->actor.speed = 20.0f;
 
             xDiff = this->unk_1F0.x - this->actor.world.pos.x;
             yDiff = this->unk_1F0.y - this->actor.world.pos.y;
@@ -4598,7 +4598,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
                 this->timers[0] = 150;
                 numEffects = 40;
                 this->unk_1C2 = 1;
-                this->actor.speedXZ = 0.0f;
+                this->actor.speed = 0.0f;
             }
             break;
     }
@@ -4610,7 +4610,7 @@ void func_808E2544(Actor* thisx, PlayState* play) {
             (fabsf(this->actor.world.pos.z) > (465.0f + xzDist)) || ((this->actor.world.pos.y < 0.0f)) ||
             (this->actor.world.pos.y > 450.0f)) {
             this->unk_1C2 = 1;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             numEffects = 10;
             BossGanon_CheckFallingPlatforms(this, play, &this->actor.world.pos);
             Actor_SpawnAsChild(&play->actorCtx, &dorf->actor, play, ACTOR_BOSS_GANON, this->actor.world.pos.x,

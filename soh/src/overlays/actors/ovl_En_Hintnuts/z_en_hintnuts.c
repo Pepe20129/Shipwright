@@ -69,7 +69,7 @@ static s16 sPuzzleCounter = 0;
 static InitChainEntry sInitChain[] = {
     ICHAIN_F32(gravity, -1, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x0A, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2600, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2600, ICHAIN_STOP),
 };
 
 void EnHintnuts_Init(Actor* thisx, PlayState* play) {
@@ -191,12 +191,12 @@ void EnHintnuts_SetupRun(EnHintnuts* this) {
 void EnHintnuts_SetupTalk(EnHintnuts* this) {
     Animation_MorphToLoop(&this->skelAnime, &gHintNutsTalkAnim, -5.0f);
     this->actionFunc = EnHintnuts_Talk;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 void EnHintnuts_SetupLeave(EnHintnuts* this, PlayState* play) {
     Animation_MorphToLoop(&this->skelAnime, &gHintNutsRunAnim, -5.0f);
-    this->actor.speedXZ = 3.0f;
+    this->actor.speed = 3.0f;
     this->animFlagAndTimer = 100;
     this->actor.world.rot.y = this->actor.shape.rot.y;
     this->collider.base.ocFlags1 &= ~OC1_ON;
@@ -328,7 +328,7 @@ void EnHintnuts_BeginFreeze(EnHintnuts* this, PlayState* play) {
 
 void EnHintnuts_CheckProximity(EnHintnuts* this, PlayState* play) {
     if (this->actor.category != ACTORCAT_ENEMY) {
-        if ((this->collider.base.ocFlags1 & OC1_HIT) || this->actor.isTargeted) {
+        if ((this->collider.base.ocFlags1 & OC1_HIT) || this->actor.isLockedOn) {
             this->actor.flags |= ACTOR_FLAG_WILL_TALK;
         } else {
             this->actor.flags &= ~ACTOR_FLAG_WILL_TALK;
@@ -355,7 +355,7 @@ void EnHintnuts_Run(EnHintnuts* this, PlayState* play) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_WALK);
     }
 
-    Math_StepToF(&this->actor.speedXZ, 7.5f, 1.0f);
+    Math_StepToF(&this->actor.speed, 7.5f, 1.0f);
     if (Math_SmoothStepToS(&this->actor.world.rot.y, this->unk_196, 1, 0xE38, 0xB6) == 0) {
         if (this->actor.bgCheckFlags & 0x20) {
             this->unk_196 = Actor_WorldYawTowardPoint(&this->actor, &this->actor.home.pos);
@@ -380,7 +380,7 @@ void EnHintnuts_Run(EnHintnuts* this, PlayState* play) {
         EnHintnuts_SetupTalk(this);
     } else if (this->animFlagAndTimer == 0 && Actor_WorldDistXZToPoint(&this->actor, &this->actor.home.pos) < 20.0f &&
                fabsf(this->actor.world.pos.y - this->actor.home.pos.y) < 2.0f) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         if (this->actor.category == ACTORCAT_BG) {
             this->actor.flags &= ~(ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_WILL_TALK);
             this->actor.flags |= ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE;

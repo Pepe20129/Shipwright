@@ -89,7 +89,7 @@ static DamageTable sDamageTable[] = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x27, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 static Vec3f sFlamePosOffsets[] = {
@@ -120,7 +120,7 @@ void EnSb_Init(Actor* thisx, PlayState* play) {
     this->actor.colChkInfo.mass = 0;
     Actor_SetScale(&this->actor, 0.006f);
     this->actor.shape.rot.y = 0;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.gravity = -0.35f;
     this->fire = 0;
     this->hitByWindArrow = false;
@@ -137,7 +137,7 @@ void EnSb_Destroy(Actor* thisx, PlayState* play) {
 void EnSb_SpawnBubbles(PlayState* play, EnSb* this) {
     s32 i;
 
-    if (this->actor.yDistToWater > 0) {
+    if (this->actor.depthInWater > 0) {
         for (i = 0; i < 10; i++) {
             EffectSsBubble_Spawn(play, &this->actor.world.pos, 10.0f, 10.0f, 30.0f, 0.25f);
         }
@@ -168,7 +168,7 @@ void EnSb_SetupWaitOpen(EnSb* this) {
 
 void EnSb_SetupLunge(EnSb* this) {
     f32 frameCount = Animation_GetLastFrame(&object_sb_Anim_000124);
-    f32 playbackSpeed = this->actor.yDistToWater > 0.0f ? 1.0f : 0.0f;
+    f32 playbackSpeed = this->actor.depthInWater > 0.0f ? 1.0f : 0.0f;
 
     Animation_Change(&this->skelAnime, &object_sb_Anim_000124, playbackSpeed, 0.0f, frameCount, ANIMMODE_ONCE, 0);
     this->behavior = SHELLBLADE_LUNGE;
@@ -191,13 +191,13 @@ void EnSb_SetupCooldown(EnSb* this, s32 changeSpeed) {
     }
     this->behavior = SHELLBLADE_WAIT_CLOSED;
     if (changeSpeed) {
-        if (this->actor.yDistToWater > 0.0f) {
-            this->actor.speedXZ = -5.0f;
+        if (this->actor.depthInWater > 0.0f) {
+            this->actor.speed = -5.0f;
             if (this->actor.velocity.y < 0.0f) {
                 this->actor.velocity.y = 2.1f;
             }
         } else {
-            this->actor.speedXZ = -6.0f;
+            this->actor.speed = -6.0f;
             if (this->actor.velocity.y < 0.0f) {
                 this->actor.velocity.y = 1.4f;
             }
@@ -256,13 +256,13 @@ void EnSb_TurnAround(EnSb* this, PlayState* play) {
 
     if (this->actor.shape.rot.y == invertedYaw) {
         this->actor.world.rot.y = this->attackYaw;
-        if (this->actor.yDistToWater > 0.0f) {
+        if (this->actor.depthInWater > 0.0f) {
             this->actor.velocity.y = 3.0f;
-            this->actor.speedXZ = 5.0f;
+            this->actor.speed = 5.0f;
             this->actor.gravity = -0.35f;
         } else {
             this->actor.velocity.y = 2.0f;
-            this->actor.speedXZ = 6.0f;
+            this->actor.speed = 6.0f;
             this->actor.gravity = -2.0f;
         }
         EnSb_SpawnBubbles(play, this);
@@ -274,9 +274,9 @@ void EnSb_TurnAround(EnSb* this, PlayState* play) {
 }
 
 void EnSb_Lunge(EnSb* this, PlayState* play) {
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 0.2f);
+    Math_StepToF(&this->actor.speed, 0.0f, 0.2f);
     if ((this->actor.velocity.y <= -0.1f) || ((this->actor.bgCheckFlags & 2))) {
-        if (!(this->actor.yDistToWater > 0.0f)) {
+        if (!(this->actor.depthInWater > 0.0f)) {
             Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
         }
         this->actor.bgCheckFlags = this->actor.bgCheckFlags & ~2;
@@ -291,26 +291,26 @@ void EnSb_Bounce(EnSb* this, PlayState* play) {
 
     currentFrame = this->skelAnime.curFrame;
     frameCount = Animation_GetLastFrame(&object_sb_Anim_0000B4);
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 0.2f);
+    Math_StepToF(&this->actor.speed, 0.0f, 0.2f);
 
     if (currentFrame == frameCount) {
         if (this->bouncesLeft != 0) {
             this->bouncesLeft--;
             this->timer = 1;
-            if (this->actor.yDistToWater > 0.0f) {
+            if (this->actor.depthInWater > 0.0f) {
                 this->actor.velocity.y = 3.0f;
-                this->actor.speedXZ = 5.0f;
+                this->actor.speed = 5.0f;
                 this->actor.gravity = -0.35f;
             } else {
                 this->actor.velocity.y = 2.0f;
-                this->actor.speedXZ = 6.0f;
+                this->actor.speed = 6.0f;
                 this->actor.gravity = -2.0f;
             }
             EnSb_SpawnBubbles(play, this);
             EnSb_SetupLunge(this);
         } else if (this->actor.bgCheckFlags & 1) {
             this->actor.bgCheckFlags &= ~2;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->timer = 1;
             EnSb_SetupWaitClosed(this);
             osSyncPrintf(VT_FGCOL(RED) "攻撃終了！！" VT_RST "\n"); // "Attack Complete!"
@@ -323,13 +323,13 @@ void EnSb_Cooldown(EnSb* this, PlayState* play) {
         this->timer--;
         if (this->actor.bgCheckFlags & 1) {
             this->actor.bgCheckFlags &= ~1;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
         }
     } else {
         if (this->actor.bgCheckFlags & 1) {
             this->actor.bgCheckFlags &= ~1;
             this->actionFunc = EnSb_WaitClosed;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
         }
     }
 }
@@ -446,7 +446,7 @@ void EnSb_Update(Actor* thisx, PlayState* play) {
     s32 pad;
 
     if (this->isDead) {
-        if (this->actor.yDistToWater > 0.0f) {
+        if (this->actor.depthInWater > 0.0f) {
             this->actor.params = 4;
         } else {
             this->actor.params = 1;

@@ -91,7 +91,7 @@ void EnNiwLady_Init(Actor* thisx, PlayState* play) {
     osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ ねぇちゃんうっふん ☆☆☆☆☆ %d\n" VT_RST, this->unk_278);
     osSyncPrintf("\n\n");
     this->actionFunc = func_80AB9F24;
-    thisx->uncullZoneForward = 600.0f;
+    thisx->cullingVolumeDistance = 600.0f;
     this->getItemEntry = (GetItemEntry)GET_ITEM_NONE;
 }
 

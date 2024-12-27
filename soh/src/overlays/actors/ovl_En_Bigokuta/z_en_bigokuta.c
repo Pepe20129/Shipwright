@@ -147,7 +147,7 @@ static DamageTable sDamageTable = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_CONTINUE),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
     ICHAIN_F32(gravity, -1, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x59, ICHAIN_CONTINUE),
@@ -577,7 +577,7 @@ void func_809BDFC8(EnBigokuta* this, PlayState* play) {
 
 void func_809BE058(EnBigokuta* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
-    f32 speedXZ;
+    f32 speed;
 
     if (this->unk_196 != 0) {
         this->unk_196--;
@@ -587,14 +587,14 @@ void func_809BE058(EnBigokuta* this, PlayState* play) {
 
     if ((this->collider.base.ocFlags1 & OC1_HIT) || (this->cylinder[0].base.ocFlags1 & OC1_HIT) ||
         (this->cylinder[1].base.ocFlags1 & OC1_HIT)) {
-        speedXZ = CLAMP_MIN(player->actor.speedXZ, 1.0f);
+        speed = CLAMP_MIN(player->actor.speed, 1.0f);
         if (!(this->collider.base.ocFlags1 & OC1_HIT)) {
             this->cylinder[0].base.ocFlags1 &= ~OC1_HIT;
             this->cylinder[1].base.ocFlags1 &= ~OC1_HIT;
-            speedXZ *= -1.0f;
+            speed *= -1.0f;
         }
-        player->actor.world.pos.x -= speedXZ * Math_SinS(this->actor.shape.rot.y);
-        player->actor.world.pos.z -= speedXZ * Math_CosS(this->actor.shape.rot.y);
+        player->actor.world.pos.x -= speed * Math_SinS(this->actor.shape.rot.y);
+        player->actor.world.pos.z -= speed * Math_CosS(this->actor.shape.rot.y);
     }
     if (this->unk_196 == 0) {
         func_809BD6B8(this);

@@ -163,7 +163,7 @@ static s16 sTimerFrogSong[] = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 // Counter to Coordinate Frog jumping out of water one at a time
@@ -218,7 +218,7 @@ void EnFr_OrientUnderwater(EnFr* this) {
     this->actor.world.pos.y = sLogSpotToFromWater[this->actor.params].yDist + this->posLogSpot.y;
     this->actor.world.rot.y = this->actor.shape.rot.y =
         (s16)(sLogSpotToFromWater[this->actor.params].yaw * ((f32)0x8000 / M_PI)) + 0x8000;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = 0.0f;
 }
@@ -415,7 +415,7 @@ void EnFr_JumpingOutOfWater(EnFr* this, PlayState* play) {
         this->skelAnime.playSpeed = 0.0f;
     } else if (this->skelAnime.curFrame == 3.0f) {
         this->actor.gravity = -10.0f;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->actor.velocity.y = 47.0f;
     }
 
@@ -498,7 +498,7 @@ void EnFr_JumpingBackIntoWater(EnFr* this, PlayState* play) {
     if (this->skelAnime.curFrame == 6.0f) {
         this->skelAnime.playSpeed = 0.0f;
     } else if (this->skelAnime.curFrame == 3.0f) {
-        this->actor.speedXZ = 6.0f;
+        this->actor.speed = 6.0f;
         this->actor.gravity = -10.0f;
         this->actor.velocity.y = 25.0f;
     }

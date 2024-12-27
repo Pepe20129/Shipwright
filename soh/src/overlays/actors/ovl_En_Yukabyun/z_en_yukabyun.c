@@ -54,7 +54,7 @@ static ColliderCylinderInit sCylinderInit = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F(scale, 1, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 16, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 16, ICHAIN_STOP),
 };
 
 static void* D_80B43F64[] = { gFloorTileEnemyTopTex, gFloorTileEnemyBottomTex };
@@ -92,7 +92,7 @@ void func_80B43AD4(EnYukabyun* this, PlayState* play) {
     this->actor.shape.rot.y += this->unk_150;
     if (this->unk_150 >= 0x2000) {
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-        this->actor.speedXZ = 10.0f;
+        this->actor.speed = 10.0f;
         this->actionfunc = func_80B43B6C;
     }
     Math_StepToF(&this->actor.world.pos.y, this->actor.home.pos.y + 30.0f, 1.0f);

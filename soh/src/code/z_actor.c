@@ -405,7 +405,7 @@ void func_8002BF60(TargetContext* targetCtx, Actor* actor, s32 actorCategory, Pl
 
     NaviColor* naviColor = &sNaviColorList[actorCategory];
     targetCtx->naviRefPos.x = actor->focus.pos.x;
-    targetCtx->naviRefPos.y = actor->focus.pos.y + (actor->targetArrowOffset * actor->scale.y);
+    targetCtx->naviRefPos.y = actor->focus.pos.y + (actor->lockOnArrowOffset * actor->scale.y);
     targetCtx->naviRefPos.z = actor->focus.pos.z;
     targetCtx->naviInner.r = naviColor->inner.r;
     targetCtx->naviInner.g = naviColor->inner.g;
@@ -535,7 +535,7 @@ void func_8002C124(TargetContext* targetCtx, PlayState* play) {
 
         POLY_XLU_DISP = Gfx_SetupDL(POLY_XLU_DISP, 0x7);
 
-        Matrix_Translate(actor->focus.pos.x, actor->focus.pos.y + (actor->targetArrowOffset * actor->scale.y) + 17.0f,
+        Matrix_Translate(actor->focus.pos.x, actor->focus.pos.y + (actor->lockOnArrowOffset * actor->scale.y) + 17.0f,
                          actor->focus.pos.z, MTXMODE_NEW);
         Matrix_RotateY((f32)((u16)(play->gameplayFrames * 3000)) * (M_PI / 0x8000), MTXMODE_APPLY);
         Matrix_Scale((iREG(27) + 35) / 1000.0f, (iREG(28) + 60) / 1000.0f, (iREG(29) + 50) / 1000.0f, MTXMODE_APPLY);
@@ -599,7 +599,7 @@ void func_8002C7BC(TargetContext* targetCtx, Player* player, Actor* actorArg, Pl
     if (Math_StepToF(&targetCtx->unk_40, 0.0f, 0.25f) == 0) {
         temp1 = 0.25f / targetCtx->unk_40;
         temp2 = unkActor->world.pos.x - targetCtx->naviRefPos.x;
-        temp3 = (unkActor->world.pos.y + (unkActor->targetArrowOffset * unkActor->scale.y)) - targetCtx->naviRefPos.y;
+        temp3 = (unkActor->world.pos.y + (unkActor->lockOnArrowOffset * unkActor->scale.y)) - targetCtx->naviRefPos.y;
         temp4 = unkActor->world.pos.z - targetCtx->naviRefPos.z;
         targetCtx->naviRefPos.x += temp2 * temp1;
         targetCtx->naviRefPos.y += temp3 * temp1;
@@ -1223,9 +1223,9 @@ void Actor_Init(Actor* actor, PlayState* play) {
     actor->minVelocityY = -20.0f;
     actor->xyzDistToPlayerSq = FLT_MAX;
     actor->naviEnemyId = 0xFF;
-    actor->uncullZoneForward = 1000.0f;
-    actor->uncullZoneScale = 350.0f;
-    actor->uncullZoneDownward = 700.0f;
+    actor->cullingVolumeDistance = 1000.0f;
+    actor->cullingVolumeScale = 350.0f;
+    actor->cullingVolumeDownward = 700.0f;
     CollisionCheck_InitInfo(&actor->colChkInfo);
     actor->floorBgId = BGCHECK_SCENE;
     ActorShape_Init(&actor->shape, 0.0f, NULL, 0.0f);
@@ -1264,8 +1264,8 @@ void Actor_UpdatePos(Actor* actor) {
 }
 
 void Actor_UpdateVelocityXZGravity(Actor* actor) {
-    actor->velocity.x = Math_SinS(actor->world.rot.y) * actor->speedXZ;
-    actor->velocity.z = Math_CosS(actor->world.rot.y) * actor->speedXZ;
+    actor->velocity.x = Math_SinS(actor->world.rot.y) * actor->speed;
+    actor->velocity.z = Math_CosS(actor->world.rot.y) * actor->speed;
 
     actor->velocity.y += actor->gravity;
     if (actor->velocity.y < actor->minVelocityY) {
@@ -1279,10 +1279,10 @@ void Actor_MoveXZGravity(Actor* actor) {
 }
 
 void Actor_UpdateVelocityXYZ(Actor* actor) {
-    f32 sp24 = Math_CosS(actor->world.rot.x) * actor->speedXZ;
+    f32 sp24 = Math_CosS(actor->world.rot.x) * actor->speed;
 
     actor->velocity.x = Math_SinS(actor->world.rot.y) * sp24;
-    actor->velocity.y = Math_SinS(actor->world.rot.x) * actor->speedXZ;
+    actor->velocity.y = Math_SinS(actor->world.rot.x) * actor->speed;
     actor->velocity.z = Math_CosS(actor->world.rot.y) * sp24;
 }
 
@@ -1292,7 +1292,7 @@ void Actor_MoveXYZ(Actor* actor) {
 }
 
 void Actor_SetProjectileSpeed(Actor* actor, f32 arg1) {
-    actor->speedXZ = Math_CosS(actor->world.rot.x) * arg1;
+    actor->speed = Math_CosS(actor->world.rot.x) * arg1;
     actor->velocity.y = -Math_SinS(actor->world.rot.x) * arg1;
 }
 
@@ -1694,8 +1694,8 @@ void Actor_UpdateBgCheckInfo(PlayState* play, Actor* actor, f32 wallCheckHeight,
         waterBoxYSurface = actor->world.pos.y;
         if (WaterBox_GetSurface1(play, &play->colCtx, actor->world.pos.x, actor->world.pos.z,
                                  &waterBoxYSurface, &waterBox)) {
-            actor->yDistToWater = waterBoxYSurface - actor->world.pos.y;
-            if (actor->yDistToWater < 0.0f) {
+            actor->depthInWater = waterBoxYSurface - actor->world.pos.y;
+            if (actor->depthInWater < 0.0f) {
                 actor->bgCheckFlags &= ~0x60;
             } else {
                 if (!(actor->bgCheckFlags & 0x20)) {
@@ -1713,7 +1713,7 @@ void Actor_UpdateBgCheckInfo(PlayState* play, Actor* actor, f32 wallCheckHeight,
             }
         } else {
             actor->bgCheckFlags &= ~0x60;
-            actor->yDistToWater = BGCHECK_Y_MIN;
+            actor->depthInWater = BGCHECK_Y_MIN;
         }
     }
 }
@@ -1925,7 +1925,7 @@ s32 func_8002F1C4(Actor* actor, PlayState* play, f32 arg2, f32 arg3, u32 exchang
 
     // This is convoluted but it seems like it must be a single if statement to match
     if ((player->actor.flags & ACTOR_FLAG_PLAYER_TALKED_TO) || ((exchangeItemId != EXCH_ITEM_NONE) && Player_InCsMode(play)) ||
-        (!actor->isTargeted &&
+        (!actor->isLockedOn &&
          ((arg3 < fabsf(actor->yDistToPlayer)) || (player->talkActorDistance < actor->xzDistToPlayer) ||
           (arg2 < actor->xzDistToPlayer)))) {
         return false;
@@ -2220,7 +2220,7 @@ void func_8002F850(PlayState* play, Actor* actor) {
     s32 sfxId;
 
     if (actor->bgCheckFlags & 0x20) {
-        if (actor->yDistToWater < 20.0f) {
+        if (actor->depthInWater < 20.0f) {
             sfxId = NA_SE_PL_WALK_WATER0 - SFX_FLAG;
         } else {
             sfxId = NA_SE_PL_WALK_WATER1 - SFX_FLAG;
@@ -2626,13 +2626,13 @@ void Actor_UpdateAll(PlayState* play, ActorContext* actorCtx) {
 
                 if ((DECR(actor->freezeTimer) == 0) && (actor->flags & (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_ACTIVE))) {
                     if (actor == player->focusActor) {
-                        actor->isTargeted = true;
+                        actor->isLockedOn = true;
                     } else {
-                        actor->isTargeted = false;
+                        actor->isLockedOn = false;
                     }
 
-                    if ((actor->targetPriority != 0) && (player->focusActor == NULL)) {
-                        actor->targetPriority = 0;
+                    if ((actor->attentionPriority != 0) && (player->focusActor == NULL)) {
+                        actor->attentionPriority = 0;
                     }
 
                     Actor_SetObjectDependency(play, actor);
@@ -2900,12 +2900,12 @@ s32 func_800314B0(PlayState* play, Actor* actor) {
 s32 func_800314D4(PlayState* play, Actor* actor, Vec3f* arg2, f32 arg3) {
     f32 var;
 
-    if ((arg2->z > -actor->uncullZoneScale) && (arg2->z < (actor->uncullZoneForward + actor->uncullZoneScale))) {
+    if ((arg2->z > -actor->cullingVolumeScale) && (arg2->z < (actor->cullingVolumeDistance + actor->cullingVolumeScale))) {
         var = (arg3 < 1.0f) ? 1.0f : 1.0f / arg3;
 
-        if ((((fabsf(arg2->x) - actor->uncullZoneScale) * var) < 1.0f) &&
-            (((arg2->y + actor->uncullZoneDownward) * var) > -1.0f) &&
-            (((arg2->y - actor->uncullZoneScale) * var) < 1.0f)) {
+        if ((((fabsf(arg2->x) - actor->cullingVolumeScale) * var) < 1.0f) &&
+            (((arg2->y + actor->cullingVolumeDownward) * var) > -1.0f) &&
+            (((arg2->y - actor->cullingVolumeScale) * var) < 1.0f)) {
             return true;
         }
     }
@@ -2936,10 +2936,10 @@ s32 Ship_CalcShouldDrawAndUpdate(PlayState* play, Actor* actor, Vec3f* projected
 
     // Some actors have a really short forward value, so we need to add to it before the multiplier to increase the
     // final strength of the forward culling
-    f32 adder = (actor->uncullZoneForward < 500) ? 1000.0f : 0.0f;
+    f32 adder = (actor->cullingVolumeDistance < 500) ? 1000.0f : 0.0f;
 
-    if ((projectedPos->z > -actor->uncullZoneScale) &&
-        (projectedPos->z < (((actor->uncullZoneForward + adder) * multiplier) + actor->uncullZoneScale))) {
+    if ((projectedPos->z > -actor->cullingVolumeScale) &&
+        (projectedPos->z < (((actor->cullingVolumeDistance + adder) * multiplier) + actor->cullingVolumeScale))) {
         clampedProjectedW = (projectedW < 1.0f) ? 1.0f : 1.0f / projectedW;
 
         f32 ratioAdjusted = 1.0f;
@@ -2950,9 +2950,9 @@ s32 Ship_CalcShouldDrawAndUpdate(PlayState* play, Actor* actor, Vec3f* projected
             ratioAdjusted = MAX(currentAspectRatio / originalAspectRatio, 1.0f);
         }
 
-        if ((((fabsf(projectedPos->x) - actor->uncullZoneScale) * (clampedProjectedW / ratioAdjusted)) < 1.0f) &&
-            (((projectedPos->y + actor->uncullZoneDownward) * clampedProjectedW) > -1.0f) &&
-            (((projectedPos->y - actor->uncullZoneScale) * clampedProjectedW) < 1.0f)) {
+        if ((((fabsf(projectedPos->x) - actor->cullingVolumeScale) * (clampedProjectedW / ratioAdjusted)) < 1.0f) &&
+            (((projectedPos->y + actor->cullingVolumeDownward) * clampedProjectedW) > -1.0f) &&
+            (((projectedPos->y - actor->cullingVolumeScale) * clampedProjectedW) < 1.0f)) {
 
             if (CVarGetInteger(CVAR_ENHANCEMENT("ExtendedCullingExcludeGlitchActors"), 0)) {
                 // These actors are safe to draw without impacting glitches
@@ -3515,10 +3515,10 @@ void func_800328D4(PlayState* play, ActorContext* actorCtx, Player* player, u32 
                     (!BgCheck_CameraLineTest1(&play->colCtx, &player->actor.focus.pos, &actor->focus.pos, &sp70,
                                               &sp80, 1, 1, 1, 1, &sp7C) ||
                      SurfaceType_IsIgnoredByProjectiles(&play->colCtx, sp80, sp7C))) {
-                    if (actor->targetPriority != 0) {
-                        if (actor->targetPriority < D_8015BBF8) {
+                    if (actor->attentionPriority != 0) {
+                        if (actor->attentionPriority < D_8015BBF8) {
                             D_8015BBEC = actor;
-                            D_8015BBF8 = actor->targetPriority;
+                            D_8015BBF8 = actor->attentionPriority;
                         }
                     } else {
                         D_8015BBE8 = actor;
@@ -3864,9 +3864,9 @@ Actor* Actor_GetProjectileActor(PlayState* play, Actor* refActor, f32 radius) {
             ) {
                 actor = actor->next;
             } else {
-                deltaX = Math_SinS(actor->world.rot.y) * (actor->speedXZ * 10.0f);
+                deltaX = Math_SinS(actor->world.rot.y) * (actor->speed * 10.0f);
                 deltaY = actor->velocity.y + (actor->gravity * 10.0f);
-                deltaZ = Math_CosS(actor->world.rot.y) * (actor->speedXZ * 10.0f);
+                deltaZ = Math_CosS(actor->world.rot.y) * (actor->speed * 10.0f);
 
                 spA8.x = actor->world.pos.x + deltaX;
                 spA8.y = actor->world.pos.y + deltaY;
@@ -4003,7 +4003,7 @@ s16 Actor_TestFloorInDirection(Actor* actor, PlayState* play, f32 distance, s16 
 s32 Actor_IsTargeted(PlayState* play, Actor* actor) {
     Player* player = GET_PLAYER(play);
 
-    if ((player->stateFlags1 & PLAYER_STATE1_HOSTILE_LOCK_ON) && actor->isTargeted) {
+    if ((player->stateFlags1 & PLAYER_STATE1_HOSTILE_LOCK_ON) && actor->isLockedOn) {
         return true;
     } else {
         return false;
@@ -4016,7 +4016,7 @@ s32 Actor_IsTargeted(PlayState* play, Actor* actor) {
 s32 Actor_OtherIsTargeted(PlayState* play, Actor* actor) {
     Player* player = GET_PLAYER(play);
 
-    if ((player->stateFlags1 & PLAYER_STATE1_HOSTILE_LOCK_ON) && !actor->isTargeted) {
+    if ((player->stateFlags1 & PLAYER_STATE1_HOSTILE_LOCK_ON) && !actor->isLockedOn) {
         return true;
     } else {
         return false;
@@ -4604,7 +4604,7 @@ s32 func_80035124(Actor* actor, PlayState* play) {
                 actor->params = 1;
             } else if (!(actor->bgCheckFlags & 1)) {
                 Actor_MoveXZGravity(actor);
-                Math_SmoothStepToF(&actor->speedXZ, 0.0f, 1.0f, 0.1f, 0.0f);
+                Math_SmoothStepToF(&actor->speed, 0.0f, 1.0f, 0.1f, 0.0f);
             } else if ((actor->bgCheckFlags & 2) && (actor->velocity.y < -4.0f)) {
                 ret = 1;
             } else {
@@ -4806,7 +4806,7 @@ Actor* func_800358DC(Actor* actor, Vec3f* spawnPos, Vec3s* spawnRot, f32* arg3, 
                                     spawnPos->z, spawnRot->x, spawnRot->y, actor->objectSlot, params);
     if (spawnedEnPart != NULL) {
         spawnedEnPart->actor.scale = actor->scale;
-        spawnedEnPart->actor.speedXZ = arg3[0];
+        spawnedEnPart->actor.speed = arg3[0];
         spawnedEnPart->displayList = arg8;
         spawnedEnPart->action = 2;
         spawnedEnPart->timer = timer;
@@ -6260,7 +6260,7 @@ s32 func_80037D98(PlayState* play, Actor* actor, s16 arg2, s32* arg3) {
         return false;
     }
 
-    if ((actor->xyzDistToPlayerSq > SQ(160.0f)) && !actor->isTargeted) {
+    if ((actor->xyzDistToPlayerSq > SQ(160.0f)) && !actor->isLockedOn) {
         return false;
     }
 

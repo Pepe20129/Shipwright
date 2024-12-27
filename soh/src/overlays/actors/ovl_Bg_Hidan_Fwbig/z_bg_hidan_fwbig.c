@@ -65,7 +65,7 @@ static ColliderCylinderInit sCylinderInit = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneScale, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeScale, 1000, ICHAIN_STOP),
 };
 
 void BgHidanFwbig_Init(Actor* thisx, PlayState* play2) {

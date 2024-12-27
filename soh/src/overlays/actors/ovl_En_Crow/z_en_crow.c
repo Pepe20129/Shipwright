@@ -100,10 +100,10 @@ static DamageTable sDamageTable = {
 static u32 sDeathCount = 0;
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneScale, 3000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 3000, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x58, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, -200, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_STOP),
 };
 
 static Vec3f sHeadVec = { 2500.0f, 0.0f, 0.0f };
@@ -141,7 +141,7 @@ void EnCrow_SetupFlyIdle(EnCrow* this) {
 
 void EnCrow_SetupDiveAttack(EnCrow* this) {
     this->timer = 300;
-    this->actor.speedXZ = 4.0f;
+    this->actor.speed = 4.0f;
     this->skelAnime.playSpeed = 2.0f;
     this->actionFunc = EnCrow_DiveAttack;
 }
@@ -151,14 +151,14 @@ void EnCrow_SetupDamaged(EnCrow* this, PlayState* play) {
     f32 scale;
     Vec3f iceParticlePos;
 
-    this->actor.speedXZ *= Math_CosS(this->actor.world.rot.x);
+    this->actor.speed *= Math_CosS(this->actor.world.rot.x);
     this->actor.velocity.y = 0.0f;
     Animation_Change(&this->skelAnime, &gGuayFlyAnim, 0.4f, 0.0f, 0.0f, ANIMMODE_LOOP_INTERP, -3.0f);
     scale = this->actor.scale.x * 100.0f;
     this->actor.world.pos.y += 20.0f * scale;
     this->actor.bgCheckFlags &= ~1;
     this->actor.shape.yOffset = 0.0f;
-    this->actor.targetArrowOffset = 0.0f;
+    this->actor.lockOnArrowOffset = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_DEAD);
 
     if (this->actor.colChkInfo.damageEffect == 3) { // Ice arrows
@@ -181,7 +181,7 @@ void EnCrow_SetupDamaged(EnCrow* this, PlayState* play) {
     }
 
     if (this->actor.flags & ACTOR_FLAG_DRAGGED_BY_ARROW) {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 
     this->collider.base.acFlags &= ~AC_ON;
@@ -198,7 +198,7 @@ void EnCrow_SetupDie(EnCrow* this) {
 
 void EnCrow_SetupTurnAway(EnCrow* this) {
     this->timer = 100;
-    this->actor.speedXZ = 3.5f;
+    this->actor.speed = 3.5f;
     this->aimRotX = -0x1000;
     this->aimRotY = this->actor.yawTowardsPlayer + 0x8000;
     this->skelAnime.playSpeed = 2.0f;
@@ -224,7 +224,7 @@ void EnCrow_SetupRespawn(EnCrow* this) {
     this->actor.shape.rot.z = 0;
     this->timer = 300;
     this->actor.shape.yOffset = 2000;
-    this->actor.targetArrowOffset = 2000.0f;
+    this->actor.lockOnArrowOffset = 2000.0f;
     this->actor.draw = NULL;
     this->actionFunc = EnCrow_Respawn;
 }
@@ -238,7 +238,7 @@ void EnCrow_FlyIdle(EnCrow* this, PlayState* play) {
 
     SkelAnime_Update(&this->skelAnime);
     skelanimeUpdated = Animation_OnFrame(&this->skelAnime, 0.0f);
-    this->actor.speedXZ = (Rand_ZeroOne() * 1.5f) + 3.0f;
+    this->actor.speed = (Rand_ZeroOne() * 1.5f) + 3.0f;
 
     if (this->actor.bgCheckFlags & 8) {
         this->aimRotY = this->actor.wallYaw;
@@ -257,7 +257,7 @@ void EnCrow_FlyIdle(EnCrow* this, PlayState* play) {
         Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_CRY);
     }
 
-    if (this->actor.yDistToWater > -40.0f) {
+    if (this->actor.depthInWater > -40.0f) {
         this->aimRotX = -0x1000;
     } else if (this->actor.world.pos.y < (this->actor.home.pos.y - 50.0f)) {
         this->aimRotX = -0x800 - (Rand_ZeroOne() * 0x800);
@@ -283,7 +283,7 @@ void EnCrow_FlyIdle(EnCrow* this, PlayState* play) {
         this->timer--;
     }
     if ((this->timer == 0) && (this->actor.xzDistToPlayer < 300.0f) && !(player->stateFlags1 & PLAYER_STATE1_ON_HORSE) &&
-        (this->actor.yDistToWater < -40.0f) && (Player_GetMask(play) != PLAYER_MASK_SKULL) &&
+        (this->actor.depthInWater < -40.0f) && (Player_GetMask(play) != PLAYER_MASK_SKULL) &&
         !CVarGetInteger(CVAR_CHEAT("NoKeeseGuayTarget"), 0)) {
         EnCrow_SetupDiveAttack(this);
     }
@@ -321,7 +321,7 @@ void EnCrow_DiveAttack(EnCrow* this, PlayState* play) {
 
     if ((this->timer == 0) || (Player_GetMask(play) == PLAYER_MASK_SKULL) ||
         (this->collider.base.atFlags & AT_HIT) || (this->actor.bgCheckFlags & 9) ||
-        (player->stateFlags1 & PLAYER_STATE1_ON_HORSE) || (this->actor.yDistToWater > -40.0f) ||
+        (player->stateFlags1 & PLAYER_STATE1_ON_HORSE) || (this->actor.depthInWater > -40.0f) ||
         CVarGetInteger(CVAR_CHEAT("NoKeeseGuayTarget"), 0)) {
         if (this->collider.base.atFlags & AT_HIT) {
             this->collider.base.atFlags &= ~AT_HIT;
@@ -333,7 +333,7 @@ void EnCrow_DiveAttack(EnCrow* this, PlayState* play) {
 }
 
 void EnCrow_Damaged(EnCrow* this, PlayState* play) {
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 0.5f);
+    Math_StepToF(&this->actor.speed, 0.0f, 0.5f);
     this->actor.colorFilterTimer = 40;
 
     if (!(this->actor.flags & ACTOR_FLAG_DRAGGED_BY_ARROW)) {

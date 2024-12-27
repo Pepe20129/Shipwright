@@ -105,7 +105,7 @@ static DamageTable sDamageTable = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x4D, ICHAIN_CONTINUE),
     ICHAIN_F32(gravity, -1, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 2600, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2600, ICHAIN_STOP),
 };
 
 void EnDekunuts_Init(Actor* thisx, PlayState* play) {
@@ -200,7 +200,7 @@ void EnDekunuts_SetupRun(EnDekunuts* this) {
 void EnDekunuts_SetupGasp(EnDekunuts* this) {
     Animation_PlayLoop(&this->skelAnime, &gDekuNutsGaspAnim);
     this->animFlagAndTimer = 3;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     if (this->runAwayCount != 0) {
         this->runAwayCount--;
     }
@@ -216,7 +216,7 @@ void EnDekunuts_SetupBeDamaged(EnDekunuts* this) {
     }
     this->collider.base.acFlags &= ~AC_ON;
     this->actionFunc = EnDekunuts_BeDamaged;
-    this->actor.speedXZ = 10.0f;
+    this->actor.speed = 10.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_DAMAGE);
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_CUTBODY);
     Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, Animation_GetLastFrame(&gDekuNutsDamageAnim));
@@ -226,7 +226,7 @@ void EnDekunuts_SetupBeStunned(EnDekunuts* this) {
     Animation_MorphToLoop(&this->skelAnime, &gDekuNutsDamageAnim, -3.0f);
     this->animFlagAndTimer = 5;
     this->actionFunc = EnDekunuts_BeStunned;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     Actor_SetColorFilter(&this->actor, 0, 0xFF, 0,
                          Animation_GetLastFrame(&gDekuNutsDamageAnim) * this->animFlagAndTimer);
@@ -235,7 +235,7 @@ void EnDekunuts_SetupBeStunned(EnDekunuts* this) {
 void EnDekunuts_SetupDie(EnDekunuts* this) {
     Animation_PlayOnce(&this->skelAnime, &gDekuNutsDieAnim);
     this->actionFunc = EnDekunuts_Die;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_DEAD);
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
 }
@@ -363,7 +363,7 @@ void EnDekunuts_Run(EnDekunuts* this, PlayState* play) {
         this->playWalkSound = true;
     }
 
-    Math_StepToF(&this->actor.speedXZ, 7.5f, 1.0f);
+    Math_StepToF(&this->actor.speed, 7.5f, 1.0f);
     if (Math_SmoothStepToS(&this->actor.world.rot.y, this->runDirection, 1, 0xE38, 0xB6) == 0) {
         if (this->actor.bgCheckFlags & 0x20) {
             this->runDirection = Actor_WorldYawTowardPoint(&this->actor, &this->actor.home.pos);
@@ -387,7 +387,7 @@ void EnDekunuts_Run(EnDekunuts* this, PlayState* play) {
     if ((this->runAwayCount == 0) && Actor_WorldDistXZToPoint(&this->actor, &this->actor.home.pos) < 20.0f &&
         fabsf(this->actor.world.pos.y - this->actor.home.pos.y) < 2.0f) {
         this->actor.colChkInfo.mass = MASS_IMMOVABLE;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         EnDekunuts_SetupBurrow(this);
     } else if (this->animFlagAndTimer == 0) {
         EnDekunuts_SetupGasp(this);
@@ -405,7 +405,7 @@ void EnDekunuts_Gasp(EnDekunuts* this, PlayState* play) {
 }
 
 void EnDekunuts_BeDamaged(EnDekunuts* this, PlayState* play) {
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 1.0f);
+    Math_StepToF(&this->actor.speed, 0.0f, 1.0f);
     if (SkelAnime_Update(&this->skelAnime)) {
         EnDekunuts_SetupDie(this);
     }

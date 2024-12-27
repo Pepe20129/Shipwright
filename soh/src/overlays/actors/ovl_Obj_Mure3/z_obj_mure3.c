@@ -35,9 +35,9 @@ const ActorInit Obj_Mure3_InitVars = {
 static s16 sRupeeCounts[] = { 5, 5, 7, 0 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 1800, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 100, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 100, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 1800, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 100, ICHAIN_STOP),
 };
 
 void func_80B9A9D0(ObjMure3* this, PlayState* play) {

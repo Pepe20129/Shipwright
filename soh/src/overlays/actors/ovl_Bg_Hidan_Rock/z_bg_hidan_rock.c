@@ -137,14 +137,14 @@ void func_8088B268(BgHidanRock* this, PlayState* play) {
                 }
             }
 
-            this->dyna.actor.speedXZ = this->dyna.actor.speedXZ + (CVarGetInteger(CVAR_ENHANCEMENT("FasterBlockPush"), 0) * 0.3) + 0.5f;
-            this->dyna.actor.speedXZ =
-                CLAMP_MAX(this->dyna.actor.speedXZ, 2.0f + (CVarGetInteger(CVAR_ENHANCEMENT("FasterBlockPush"), 0) * 0.5));
+            this->dyna.actor.speed = this->dyna.actor.speed + (CVarGetInteger(CVAR_ENHANCEMENT("FasterBlockPush"), 0) * 0.3) + 0.5f;
+            this->dyna.actor.speed =
+                CLAMP_MAX(this->dyna.actor.speed, 2.0f + (CVarGetInteger(CVAR_ENHANCEMENT("FasterBlockPush"), 0) * 0.5));
 
             if (D_8088BFC0 > 0.0f) {
-                temp_v1 = Math_StepToF(&D_8088BFC0, 20.0f, this->dyna.actor.speedXZ);
+                temp_v1 = Math_StepToF(&D_8088BFC0, 20.0f, this->dyna.actor.speed);
             } else {
-                temp_v1 = Math_StepToF(&D_8088BFC0, -20.0f, this->dyna.actor.speedXZ);
+                temp_v1 = Math_StepToF(&D_8088BFC0, -20.0f, this->dyna.actor.speed);
             }
 
             this->dyna.actor.world.pos.x = (Math_SinS(this->dyna.unk_158) * D_8088BFC0) + this->dyna.actor.home.pos.x;
@@ -156,7 +156,7 @@ void func_8088B268(BgHidanRock* this, PlayState* play) {
                 this->dyna.actor.home.pos.x = this->dyna.actor.world.pos.x;
                 this->dyna.actor.home.pos.z = this->dyna.actor.world.pos.z;
                 D_8088BFC0 = 0.0f;
-                this->dyna.actor.speedXZ = 0.0f;
+                this->dyna.actor.speed = 0.0f;
                 this->timer = 5 - ((CVarGetInteger(CVAR_ENHANCEMENT("FasterBlockPush"), 0) * 3) / 5);
             }
 
@@ -178,7 +178,7 @@ void func_8088B268(BgHidanRock* this, PlayState* play) {
         Math_Vec3f_Copy(&this->dyna.actor.home.pos, &D_8088BF60);
         this->dyna.actor.world.pos.x = D_8088BF60.x;
         this->dyna.actor.world.pos.z = D_8088BF60.z;
-        this->dyna.actor.speedXZ = 0.0f;
+        this->dyna.actor.speed = 0.0f;
         D_8088BFC0 = 0.0f;
         player->stateFlags2 &= ~PLAYER_STATE2_MOVING_DYNAPOLY;
         this->actionFunc = func_8088B79C;
@@ -299,7 +299,7 @@ void func_8088B990(BgHidanRock* this, PlayState* play) {
 
     this->timer++;
     if (this->dyna.unk_150 != 0.0f) {
-        this->dyna.actor.speedXZ = 0.0f;
+        this->dyna.actor.speed = 0.0f;
         player->stateFlags2 &= ~PLAYER_STATE2_MOVING_DYNAPOLY;
     }
 

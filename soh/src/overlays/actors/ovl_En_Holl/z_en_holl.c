@@ -41,9 +41,9 @@ static EnHollActionFunc sActionFuncs[] = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 4000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 400, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 4000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 400, ICHAIN_STOP),
 };
 
 /**
@@ -207,7 +207,7 @@ void func_80A591C0(EnHoll* this, PlayState* play) {
                 func_8009728C(play, &play->roomCtx, this->actor.room) != 0) {
                 EnHoll_SetupAction(this, EnHoll_NextAction);
                 this->unk_14F = 1;
-                player->actor.speedXZ = 0.0f;
+                player->actor.speed = 0.0f;
             }
         }
     } else if (this->unk_14F != 0) {

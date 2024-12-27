@@ -54,9 +54,9 @@ static ColliderCylinderInit sCylinderInit = {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 32767, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 32767, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 32767, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeScale, 32767, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 32767, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDistance, 32767, ICHAIN_STOP),
 };
 
 void BgDdanKd_SetupAction(BgDdanKd* this, BgDdanKdActionFunc actionFunc) {
@@ -129,16 +129,16 @@ void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play) {
     Vec3f pos2;
     f32 effectStrength;
 
-    Math_SmoothStepToF(&this->dyna.actor.speedXZ, 4.0f, 0.5f, 0.025f, 0.0f);
+    Math_SmoothStepToF(&this->dyna.actor.speed, 4.0f, 0.5f, 0.025f, 0.0f);
     func_800AA000(500.0f, 0x78, 0x14, 0xA);
 
     if (Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y - 200.0f - 20.0f, 0.075f,
-                           this->dyna.actor.speedXZ, 0.0075f) == 0.0f) {
+                           this->dyna.actor.speed, 0.0075f) == 0.0f) {
         Flags_SetSwitch(play, this->dyna.actor.params);
         BgDdanKd_SetupAction(this, BgDdanKd_DoNothing);
     } else {
         effectStrength =
-            (this->dyna.actor.prevPos.y - this->dyna.actor.world.pos.y) + (this->dyna.actor.speedXZ * 0.25f);
+            (this->dyna.actor.prevPos.y - this->dyna.actor.world.pos.y) + (this->dyna.actor.speed * 0.25f);
 
         if (play->state.frames & 1) {
             pos1 = pos2 = this->dyna.actor.world.pos;

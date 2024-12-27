@@ -133,7 +133,7 @@ s32 sEnPoFieldNumSpawned = 0;
 static Vec3f sFieldMiddle = { -1000.0f, 0.0f, 6500.0f };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 3200, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 3200, ICHAIN_STOP),
 };
 
 static Vec3f D_80AD7114 = { 0.0f, 3.0f, 0.0f };
@@ -222,7 +222,7 @@ void EnPoField_SetupAppear(EnPoField* this) {
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_PO_APPEAR);
     this->actor.home.pos.y = this->actor.world.pos.y;
     if (this->actor.params == EN_PO_FIELD_BIG) {
-        this->actor.speedXZ = 12.0f;
+        this->actor.speed = 12.0f;
         this->collider.dim.radius = 35;
         this->collider.dim.height = 100;
         this->collider.dim.yShift = 10;
@@ -230,7 +230,7 @@ void EnPoField_SetupAppear(EnPoField* this) {
         this->scaleModifier = 0.014f;
         this->actor.naviEnemyId = 0x5A;
     } else {
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
         this->collider.dim.radius = D_80AD7080.dim.radius;
         this->collider.dim.height = D_80AD7080.dim.height;
         this->collider.dim.yShift = D_80AD7080.dim.yShift;
@@ -261,7 +261,7 @@ void EnPoField_SetupFlee(EnPoField* this) {
     Animation_MorphToLoop(&this->skelAnime, &gPoeFieldFleeAnim, -5.0f);
     this->collider.base.acFlags |= AC_ON;
     this->actionFunc = EnPoField_Flee;
-    this->actor.speedXZ = 12.0f;
+    this->actor.speed = 12.0f;
     if (this->actionFunc != EnPoField_Damage) {
         this->actor.flags |= ACTOR_FLAG_TARGETABLE;
         this->actor.world.rot.y = this->actor.shape.rot.y + 0x8000;
@@ -278,7 +278,7 @@ void EnPoField_SetupDamage(EnPoField* this) {
         this->actor.world.rot.y = Actor_WorldYawTowardActor(&this->actor, this->collider.base.ac) + 0x8000;
     }
     this->collider.base.acFlags &= ~(AC_HIT | AC_ON);
-    this->actor.speedXZ = 5.0f;
+    this->actor.speed = 5.0f;
     Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 16);
     this->actionFunc = EnPoField_Damage;
 }
@@ -286,7 +286,7 @@ void EnPoField_SetupDamage(EnPoField* this) {
 void EnPoField_SetupDeath(EnPoField* this) {
     this->actionTimer = 0;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.world.rot.y = this->actor.shape.rot.y;
     this->actor.naviEnemyId = 0xFF;
     if (this->flameTimer >= 20) {
@@ -299,7 +299,7 @@ void EnPoField_SetupDisappear(EnPoField* this) {
     Animation_MorphToLoop(&this->skelAnime, &gPoeFieldDisappearAnim, -6.0f);
     this->actionTimer = 16;
     this->collider.base.acFlags &= ~(AC_HIT | AC_ON);
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_PO_LAUGH);
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_PO_DISAPPEAR);
     this->actionFunc = EnPoField_Disappear;
@@ -387,18 +387,18 @@ void EnPoField_CorrectYPos(EnPoField* this, PlayState* play) {
 
 f32 EnPoField_SetFleeSpeed(EnPoField* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
-    f32 speed = ((player->stateFlags1 & PLAYER_STATE1_ON_HORSE) && player->rideActor != NULL) ? player->rideActor->speedXZ : 12.0f;
+    f32 speed = ((player->stateFlags1 & PLAYER_STATE1_ON_HORSE) && player->rideActor != NULL) ? player->rideActor->speed : 12.0f;
 
     if (this->actor.xzDistToPlayer < 300.0f) {
-        this->actor.speedXZ = speed * 1.5f + 2.0f;
+        this->actor.speed = speed * 1.5f + 2.0f;
     } else if (this->actor.xzDistToPlayer < 400.0f) {
-        this->actor.speedXZ = speed * 1.25f + 2.0f;
+        this->actor.speed = speed * 1.25f + 2.0f;
     } else if (this->actor.xzDistToPlayer < 500.0f) {
-        this->actor.speedXZ = speed + 2.0f;
+        this->actor.speed = speed + 2.0f;
     } else {
-        this->actor.speedXZ = 12.0f;
+        this->actor.speed = 12.0f;
     }
-    this->actor.speedXZ = CLAMP_MIN(this->actor.speedXZ, 12.0f);
+    this->actor.speed = CLAMP_MIN(this->actor.speed, 12.0f);
 }
 
 void EnPoField_WaitForSpawn(EnPoField* this, PlayState* play) {
@@ -534,7 +534,7 @@ void EnPoField_Flee(EnPoField* this, PlayState* play) {
 }
 
 void EnPoField_Damage(EnPoField* this, PlayState* play) {
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 0.5f);
+    Math_StepToF(&this->actor.speed, 0.0f, 0.5f);
     if (SkelAnime_Update(&this->skelAnime)) {
         if (this->actor.colChkInfo.health == 0) {
             EnPoField_SetupDeath(this);

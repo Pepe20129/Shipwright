@@ -627,14 +627,14 @@ AnimationHeader* EnXc_GetCurrentHarpAnim(PlayState* play, s32 index) {
 
 void EnXc_CalcXZAccel(EnXc* this) {
     f32 timer = this->timer;
-    f32* speedXZ = &this->actor.speedXZ;
+    f32* speed = &this->actor.speed;
 
     if (timer < 9.0f) {
-        *speedXZ = 0.0f;
+        *speed = 0.0f;
     } else if (timer < 3.0f) {
-        *speedXZ = (((kREG(2) * 0.01f) + 1.2f) / 3.0f) * (timer - 9.0f);
+        *speed = (((kREG(2) * 0.01f) + 1.2f) / 3.0f) * (timer - 9.0f);
     } else {
-        *speedXZ = (kREG(2) * 0.01f) + 1.2f;
+        *speed = (kREG(2) * 0.01f) + 1.2f;
     }
 
     Actor_MoveXZGravity(&this->actor);
@@ -646,12 +646,12 @@ void func_80B3D644(EnXc* this) {
 
 void EnXc_CalcXZSpeed(EnXc* this) {
     f32 timer = this->timer;
-    f32* speedXZ = &this->actor.speedXZ;
+    f32* speed = &this->actor.speed;
 
     if (timer < 3.0f) {
-        *speedXZ = (((kREG(2) * 0.01f) + 1.2f) / 3.0f) * (3.0f - timer);
+        *speed = (((kREG(2) * 0.01f) + 1.2f) / 3.0f) * (3.0f - timer);
     } else {
-        *speedXZ = 0.0f;
+        *speed = 0.0f;
     }
     Actor_MoveXZGravity(&this->actor);
 }
@@ -725,7 +725,7 @@ void EnXc_SetupWalkAction(EnXc* this) {
 
     *timer += 1.0f;
     if (*timer >= 12.0f) {
-        this->actor.speedXZ = (kREG(2) * 0.01f) + 1.2f;
+        this->actor.speed = (kREG(2) * 0.01f) + 1.2f;
         this->action = SHEIK_ACTION_WALK;
     }
 }
@@ -749,7 +749,7 @@ void EnXc_SetupStoppedAction(EnXc* this) {
     *timer += 1.0f;
     if (*timer >= 12.0f) {
         this->action = SHEIK_ACTION_STOPPED;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 }
 
@@ -865,7 +865,7 @@ void EnXc_SetupReverseAccel(EnXc* this, PlayState* play) {
 void EnXc_SetupReverseWalkAction(EnXc* this) {
     this->timer++;
     if (this->timer >= 12.0f) {
-        this->actor.speedXZ = (kREG(2) * 0.01f) + 1.2f;
+        this->actor.speed = (kREG(2) * 0.01f) + 1.2f;
         this->action = SHEIK_ACTION_REVERSE_WALK;
     }
 }
@@ -888,7 +888,7 @@ void EnXc_SetupNutThrow(EnXc* this) {
                          Animation_GetLastFrame(&gSheikThrowingNutAnim), ANIMMODE_ONCE, 0.0f);
         this->action = SHEIK_ACTION_THROW_NUT;
         this->timer = 0.0f;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 }
 
@@ -1200,7 +1200,7 @@ void func_80B3EC90(EnXc* this, PlayState* play) {
 void func_80B3ECD8(EnXc* this) {
     this->timer++;
     if (this->timer >= 12.0f) {
-        this->actor.speedXZ = kREG(2) * 0.01f + 1.2f;
+        this->actor.speed = kREG(2) * 0.01f + 1.2f;
         this->action = SHEIK_ACTION_24;
     }
 }

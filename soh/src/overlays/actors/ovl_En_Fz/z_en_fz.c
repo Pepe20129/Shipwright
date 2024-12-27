@@ -155,7 +155,7 @@ static DamageTable sDamageTable = {
 static InitChainEntry sInitChain[] = {
     ICHAIN_S8(naviEnemyId, 0x3B, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 2, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 30, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 30, ICHAIN_STOP),
 };
 
 void EnFz_Init(Actor* thisx, PlayState* play) {
@@ -184,7 +184,7 @@ void EnFz_Init(Actor* thisx, PlayState* play) {
     this->isFreezing = false;
     this->isActive = true;
     this->isDespawning = false;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.gravity = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->posOrigin.y = this->actor.world.pos.y;
@@ -329,15 +329,15 @@ void EnFz_ApplyDamage(EnFz* this, PlayState* play) {
          (Actor_TestFloorInDirection(&this->actor, play, 60.0f, this->actor.world.rot.y) == 0))) {
         this->actor.bgCheckFlags &= ~8;
         this->isMoving = false;
-        this->speedXZ = 0.0f;
-        this->actor.speedXZ = 0.0f;
+        this->speed = 0.0f;
+        this->actor.speed = 0.0f;
     }
 
     if (this->isFreezing) {
         if ((this->actor.params < 0) && (this->collider1.base.atFlags & 2)) {
             this->isMoving = false;
             this->collider1.base.acFlags &= ~2;
-            this->actor.speedXZ = this->speedXZ = 0.0f;
+            this->actor.speed = this->speed = 0.0f;
             this->timer = 10;
             EnFz_SetupDisappear(this);
         } else if (this->collider2.base.acFlags & 0x80) {
@@ -465,7 +465,7 @@ void EnFz_SetupMoveTowardsPlayer(EnFz* this) {
     this->isMoving = true;
     this->timer = 100;
     this->actionFunc = EnFz_MoveTowardsPlayer;
-    this->speedXZ = 4.0f;
+    this->speed = 4.0f;
 }
 
 void EnFz_MoveTowardsPlayer(EnFz* this, PlayState* play) {
@@ -478,8 +478,8 @@ void EnFz_SetupAimForFreeze(EnFz* this) {
     this->state = 1;
     this->timer = 40;
     this->actionFunc = EnFz_AimForFreeze;
-    this->speedXZ = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->speed = 0.0f;
+    this->actor.speed = 0.0f;
 }
 
 void EnFz_AimForFreeze(EnFz* this, PlayState* play) {
@@ -553,10 +553,10 @@ void EnFz_SetupDespawn(EnFz* this, PlayState* play) {
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
     this->isActive = false;
     this->timer = 60;
-    this->speedXZ = 0.0f;
+    this->speed = 0.0f;
     this->actor.gravity = 0.0f;
     this->actor.velocity.y = 0.0f;
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_PROP);
     Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos, 0x60);
     this->actionFunc = EnFz_Despawn;
@@ -574,8 +574,8 @@ void EnFz_SetupMelt(EnFz* this) {
     this->isDespawning = true;
     this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
     this->actionFunc = EnFz_Melt;
-    this->actor.speedXZ = 0.0f;
-    this->speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
+    this->speed = 0.0f;
 }
 
 void EnFz_Melt(EnFz* this, PlayState* play) {
@@ -697,7 +697,7 @@ void EnFz_Update(Actor* thisx, PlayState* play) {
         }
     }
 
-    Math_StepToF(&this->actor.speedXZ, this->speedXZ, 0.2f);
+    Math_StepToF(&this->actor.speed, this->speed, 0.2f);
     Actor_MoveXZGravity(&this->actor);
 
     if (this->updateBgInfo) {

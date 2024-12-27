@@ -104,9 +104,9 @@ void BgDodoago_SpawnSparkles(Vec3f* meanPos, PlayState* play) {
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 5000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 800, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 5000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 800, ICHAIN_STOP),
 };
 
 void BgDodoago_Init(Actor* thisx, PlayState* play) {
@@ -289,7 +289,7 @@ void BgDodoago_Update(Actor* thisx, PlayState* play) {
                 // disable the bomb catcher for a few seconds
                 this->dyna.actor.parent = &bomb->actor;
                 bomb->timer = 50;
-                bomb->actor.speedXZ = 0.0f;
+                bomb->actor.speed = 0.0f;
                 sBgDodoagoTimer = 0;
             }
         }

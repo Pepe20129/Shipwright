@@ -67,9 +67,9 @@ static CollisionCheckInfoInit sColChkInfoInit = { 1, 15, 0, MASS_HEAVY };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 void BgJyaGoroiwa_UpdateCollider(BgJyaGoroiwa* this) {
@@ -130,9 +130,9 @@ void BgJyaGoroiwa_Move(BgJyaGoroiwa* this, PlayState* play) {
         speedXZsqBase = 0.01f;
     }
 
-    thisx->speedXZ = sqrtf(speedXZsqBase) * this->speedFactor;
-    thisx->velocity.x = Math_SinS(thisx->world.rot.y) * thisx->speedXZ;
-    thisx->velocity.z = Math_CosS(thisx->world.rot.y) * thisx->speedXZ;
+    thisx->speed = sqrtf(speedXZsqBase) * this->speedFactor;
+    thisx->velocity.x = Math_SinS(thisx->world.rot.y) * thisx->speed;
+    thisx->velocity.z = Math_CosS(thisx->world.rot.y) * thisx->speed;
 
     thisx->world.pos.x = thisx->world.pos.x + thisx->velocity.x;
     thisx->world.pos.z = thisx->world.pos.z + thisx->velocity.z;

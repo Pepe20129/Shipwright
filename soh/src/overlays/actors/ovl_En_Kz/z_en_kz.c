@@ -450,7 +450,7 @@ void EnKz_SetupMweep(EnKz* this, PlayState* play) {
         Play_CameraSetAtEye(play, this->cutsceneCamera, &pos, &initPos);
         Player_SetCsActionWithHaltedActors(play, &this->actor, 8);
     }
-    this->actor.speedXZ = 0.1f * CVarGetFloat(CVAR_ENHANCEMENT("MweepSpeed"), 1.0f);
+    this->actor.speed = 0.1f * CVarGetFloat(CVAR_ENHANCEMENT("MweepSpeed"), 1.0f);
     this->actionFunc = EnKz_Mweep;
 }
 
@@ -472,7 +472,7 @@ void EnKz_Mweep(EnKz* this, PlayState* play) {
         Inventory_ReplaceItem(play, ITEM_LETTER_RUTO, ITEM_BOTTLE);
         EnKz_SetMovedPos(this, play);
         Flags_SetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED);
-        this->actor.speedXZ = 0.0;
+        this->actor.speed = 0.0;
         this->actionFunc = EnKz_StopMweep;
     }
     if (this->skelanime.curFrame == 13.0f) {

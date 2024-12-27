@@ -84,9 +84,9 @@ static ColliderJntSphInit sJntSphInit = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(uncullZoneForward, 1400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1200, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1200, ICHAIN_STOP),
 };
 
 static Vec3f D_8086E0E0 = { 0.0f, 140.0f, 0.0f };

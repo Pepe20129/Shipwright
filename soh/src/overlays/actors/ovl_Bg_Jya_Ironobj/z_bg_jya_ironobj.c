@@ -73,9 +73,9 @@ static s16 D_80899530[] = { 48, 42, 36, 32, 28, 24, 20, 16 };
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 500, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 500, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 static CollisionHeader* sCollisionHeaders[] = { &gPillarCol, &gThroneCol };
@@ -120,7 +120,7 @@ void BgJyaIronobj_SpawnPillarParticles(BgJyaIronobj* this, PlayState* play, EnIk
                         Rand_ZeroOne() * 80.0f + this->dyna.actor.world.pos.y + 20.0f, this->dyna.actor.world.pos.z, 0,
                         (s16)(Rand_ZeroOne() * 0x4000) + rotY - 0x2000, 0, 0, true);
         if (actor != NULL) {
-            actor->speedXZ = Rand_ZeroOne() * 8.0f + 9.0f;
+            actor->speed = Rand_ZeroOne() * 8.0f + 9.0f;
             actor->velocity.y = Rand_ZeroOne() * 10.0f + 6.0f;
         }
     }
@@ -182,7 +182,7 @@ void BgJyaIronobj_SpawnThoneParticles(BgJyaIronobj* this, PlayState* play, EnIk*
                         (Rand_ZeroOne() * 80.0f) + this->dyna.actor.world.pos.y + 10.0f, this->dyna.actor.world.pos.z,
                         0, ((s16)(s32)(Rand_ZeroOne() * 0x4000) + rotY) - 0x2000, 0, 0, true);
         if (actor != NULL) {
-            actor->speedXZ = Rand_ZeroOne() * 8.0f + 9.0f;
+            actor->speed = Rand_ZeroOne() * 8.0f + 9.0f;
             actor->velocity.y = Rand_ZeroOne() * 10.0f + 6.0f;
         }
     }

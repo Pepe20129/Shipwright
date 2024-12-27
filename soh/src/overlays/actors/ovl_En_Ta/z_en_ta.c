@@ -393,8 +393,8 @@ void func_80B14818(EnTa* this, PlayState* play) {
     if (framesMod12 == 0 || framesMod12 == 6) {
         Audio_PlayActorSound2(&this->actor, NA_SE_PL_WALK_GROUND);
     }
-    if (this->actor.speedXZ < 6.0f) {
-        this->actor.speedXZ += 0.4f;
+    if (this->actor.speed < 6.0f) {
+        this->actor.speed += 0.4f;
     }
     Actor_MoveXZGravity(&this->actor);
 }
@@ -607,7 +607,7 @@ void func_80B15100(EnTa* this, PlayState* play) {
         this->actionFunc = EnTa_RunCuccoGame;
         this->superCuccos[unk_2CA]->actor.gravity = 0.1f;
         this->superCuccos[unk_2CA]->actor.velocity.y = 0.0f;
-        this->superCuccos[unk_2CA]->actor.speedXZ = 0.0f;
+        this->superCuccos[unk_2CA]->actor.speed = 0.0f;
         this->superCuccos[unk_2CA]->actor.parent = NULL;
 
         if (player->interactRangeActor == &this->superCuccos[unk_2CA]->actor) {

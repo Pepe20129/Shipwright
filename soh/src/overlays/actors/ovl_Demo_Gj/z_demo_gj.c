@@ -314,7 +314,7 @@ void DemoGj_DrawRotated(DemoGj* this, PlayState* play, Gfx* displayList) {
 void DemoGj_SetupRotation(DemoGj* this, PlayState* play) {
     f32 yPosition = this->dyna.actor.world.pos.y;
     f32* yVelocity = &this->dyna.actor.velocity.y;
-    f32* speedXZ = &this->dyna.actor.speedXZ;
+    f32* speed = &this->dyna.actor.speed;
     Vec3s* unk_172 = &this->unk_172;
     f32 verticalTranslation;
     Vec3f vec;
@@ -396,7 +396,7 @@ void DemoGj_SetupRotation(DemoGj* this, PlayState* play) {
     if (yPosition <= 1086.0f && (*yVelocity < 0.0f)) {
         if (!this->isRotated) {
             *yVelocity *= verticalFactor;
-            *speedXZ *= xzPlaneFactor;
+            *speed *= xzPlaneFactor;
 
             unk_172->x *= vec.x;
             unk_172->y *= vec.y;
@@ -404,7 +404,7 @@ void DemoGj_SetupRotation(DemoGj* this, PlayState* play) {
 
             if (*yVelocity <= -this->dyna.actor.gravity) {
                 *yVelocity = 0.0f;
-                *speedXZ = 0.0f;
+                *speed = 0.0f;
 
                 unk_172->x = 0;
                 unk_172->y = 0;
@@ -470,7 +470,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
 
         switch (DemoGj_GetType(this)) {
             case DEMOGJ_TYPE_RUBBLE_PILE_1:
-                actor->speedXZ = kREG(16) + 10.0f;
+                actor->speed = kREG(16) + 10.0f;
                 actor->velocity.y = kREG(17) + 40.0f;
                 unk_172->x = kREG(18);
                 unk_172->y = kREG(19) + 0x3E8;
@@ -480,7 +480,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_2:
-                actor->speedXZ = kREG(29) + 10.0f;
+                actor->speed = kREG(29) + 10.0f;
                 actor->velocity.y = kREG(30) + 40.0f;
                 unk_172->x = kREG(31);
                 unk_172->y = kREG(32) + 0x3E8;
@@ -490,7 +490,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_3:
-                actor->speedXZ = kREG(42) + 10.0f;
+                actor->speed = kREG(42) + 10.0f;
                 actor->velocity.y = kREG(43) + 40.0f;
                 unk_172->x = kREG(44);
                 unk_172->y = kREG(45) + 0x3E8;
@@ -500,7 +500,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_4:
-                actor->speedXZ = kREG(55) + 10.0f;
+                actor->speed = kREG(55) + 10.0f;
                 actor->velocity.y = kREG(56) + 40.0f;
                 unk_172->x = kREG(57);
                 unk_172->y = kREG(58) + 0x3E8;
@@ -510,7 +510,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_5:
-                actor->speedXZ = kREG(68) + 10.0f;
+                actor->speed = kREG(68) + 10.0f;
                 actor->velocity.y = kREG(69) + 40.0f;
                 unk_172->x = kREG(70);
                 unk_172->y = kREG(71) + 0x3E8;
@@ -520,7 +520,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_6:
-                actor->speedXZ = kREG(81) + 10.0f;
+                actor->speed = kREG(81) + 10.0f;
                 actor->velocity.y = kREG(82) + 40.0f;
                 unk_172->x = kREG(83);
                 unk_172->y = kREG(84) + 0x3E8;
@@ -530,7 +530,7 @@ void DemoGj_SetupMovement(DemoGj* this, PlayState* play) {
                 break;
 
             case DEMOGJ_TYPE_RUBBLE_PILE_7:
-                actor->speedXZ = kREG(94) + 10.0f;
+                actor->speed = kREG(94) + 10.0f;
                 actor->velocity.y = kREG(95) + 70.0f;
                 unk_172->x = kREG(15);
                 unk_172->y = kREG(14) + 0x3E8;

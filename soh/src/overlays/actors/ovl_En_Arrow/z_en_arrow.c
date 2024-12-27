@@ -242,8 +242,8 @@ void func_809B3CEC(PlayState* play, EnArrow* this) {
     EnArrow_SetupAction(this, func_809B4640);
     Animation_PlayOnce(&this->skelAnime, &gArrow1Anim);
     this->actor.world.rot.y += (s32)(24576.0f * (Rand_ZeroOne() - 0.5f)) + 0x8000;
-    this->actor.velocity.y += (this->actor.speedXZ * (0.4f + (0.4f * Rand_ZeroOne())));
-    this->actor.speedXZ *= (0.04f + 0.3f * Rand_ZeroOne());
+    this->actor.velocity.y += (this->actor.speed * (0.4f + (0.4f * Rand_ZeroOne())));
+    this->actor.speed *= (0.04f + 0.3f * Rand_ZeroOne());
     this->timer = 50;
     this->actor.gravity = -1.5f;
 }
@@ -339,7 +339,7 @@ void EnArrow_Fly(EnArrow* this, PlayState* play) {
                     Math_Vec3f_Diff(&hitActor->world.pos, &this->actor.world.pos, &this->unk_250);
                     hitActor->flags |= ACTOR_FLAG_DRAGGED_BY_ARROW;
                     this->collider.base.atFlags &= ~AT_HIT;
-                    this->actor.speedXZ /= 2.0f;
+                    this->actor.speed /= 2.0f;
                     this->actor.velocity.y /= 2.0f;
                 } else {
                     this->hitFlags |= 1;
@@ -381,7 +381,7 @@ void EnArrow_Fly(EnArrow* this, PlayState* play) {
         }
 
         if (this->actor.params <= ARROW_0E) {
-            this->actor.shape.rot.x = Math_Atan2S(this->actor.speedXZ, -this->actor.velocity.y);
+            this->actor.shape.rot.x = Math_Atan2S(this->actor.speed, -this->actor.velocity.y);
         }
     }
 
@@ -503,7 +503,7 @@ void EnArrow_Draw(Actor* thisx, PlayState* play) {
         Gfx_SetupDL_25Opa(play->state.gfxCtx);
         SkelAnime_DrawLod(play, this->skelAnime.skeleton, this->skelAnime.jointTable, NULL, NULL, this,
                           (this->actor.projectedPos.z < MREG(95)) ? 0 : 1);
-    } else if (this->actor.speedXZ != 0.0f) {
+    } else if (this->actor.speed != 0.0f) {
         alpha = (Math_CosS(this->timer * 5000) * 127.5f) + 127.5f;
 
         OPEN_DISPS(play->state.gfxCtx);
@@ -524,7 +524,7 @@ void EnArrow_Draw(Actor* thisx, PlayState* play) {
         Matrix_Mult(&play->billboardMtxF, MTXMODE_APPLY);
         // redundant check because this is contained in an if block for non-zero speed
         Matrix_RotateZ(
-            (this->actor.speedXZ == 0.0f) ? 0.0f : ((play->gameplayFrames & 0xFF) * 4000) * (M_PI / 0x8000),
+            (this->actor.speed == 0.0f) ? 0.0f : ((play->gameplayFrames & 0xFF) * 4000) * (M_PI / 0x8000),
             MTXMODE_APPLY);
         Matrix_Scale(scale, scale, scale, MTXMODE_APPLY);
         gSPMatrix(POLY_XLU_DISP++, MATRIX_NEWMTX(play->state.gfxCtx),

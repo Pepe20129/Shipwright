@@ -68,7 +68,7 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_U8(attentionRangeType, 5, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x21, ICHAIN_CONTINUE),
     ICHAIN_F32_DIV1000(gravity, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 0, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 0, ICHAIN_STOP),
 };
 
 void BossFd_SpawnEmber(BossFdEffect* effect, Vec3f* position, Vec3f* velocity, Vec3f* acceleration, f32 scale) {
@@ -335,7 +335,7 @@ void BossFd_Fly(BossFd* this, PlayState* play) {
                     player2->actor.world.pos.y = 100.0f;
                     player2->actor.world.pos.z = 0.0f;
                     player2->actor.shape.rot.y = player2->actor.world.rot.y = -0x4000;
-                    player2->actor.speedXZ = 0.0f;
+                    player2->actor.speed = 0.0f;
                     this->camData.eye.x = player2->actor.world.pos.x - 70.0f;
                     this->camData.eye.y = player2->actor.world.pos.y + 40.0f;
                     this->camData.eye.z = player2->actor.world.pos.z + 70.0f;
@@ -391,7 +391,7 @@ void BossFd_Fly(BossFd* this, PlayState* play) {
                 player2->actor.world.pos.x = 380.0f;
                 player2->actor.world.pos.y = 100.0f;
                 player2->actor.world.pos.z = 0.0f;
-                player2->actor.speedXZ = 0.0f;
+                player2->actor.speed = 0.0f;
                 player2->actor.shape.rot.y = player2->actor.world.rot.y = -0x4000;
                 if (this->timers[0] == 50) {
                     this->fogMode = 1;
@@ -836,7 +836,7 @@ void BossFd_Fly(BossFd* this, PlayState* play) {
             }
             break;
         case BOSSFD_SKULL_FALL:
-            this->fwork[BFD_TURN_RATE] = this->fwork[BFD_TURN_RATE_MAX] = this->actor.speedXZ =
+            this->fwork[BFD_TURN_RATE] = this->fwork[BFD_TURN_RATE_MAX] = this->actor.speed =
                 this->fwork[BFD_FLY_SPEED] = 0;
 
             if (this->timers[0] == 1) {
@@ -890,7 +890,7 @@ void BossFd_Fly(BossFd* this, PlayState* play) {
         case BOSSFD_SKULL_BURN:
             this->actor.velocity.y = 0.0f;
             this->actor.world.pos.y = 110.0f;
-            this->fwork[BFD_TURN_RATE] = this->fwork[BFD_TURN_RATE_MAX] = this->actor.speedXZ =
+            this->fwork[BFD_TURN_RATE] = this->fwork[BFD_TURN_RATE_MAX] = this->actor.speed =
                 this->fwork[BFD_FLY_SPEED] = 0.0f;
 
             if ((50 > this->timers[0]) && (this->timers[0] > 0)) {
@@ -948,7 +948,7 @@ void BossFd_Fly(BossFd* this, PlayState* play) {
 
         Math_ApproachS(&this->actor.world.rot.x, pitchToTarget, 0xA, this->fwork[BFD_TURN_RATE]);
         Math_ApproachF(&this->fwork[BFD_TURN_RATE], this->fwork[BFD_TURN_RATE_MAX], 1.0f, 20000.0f);
-        Math_ApproachF(&this->actor.speedXZ, this->fwork[BFD_FLY_SPEED], 1.0f, 0.1f);
+        Math_ApproachF(&this->actor.speed, this->fwork[BFD_FLY_SPEED], 1.0f, 0.1f);
         if (this->work[BFD_ACTION_STATE] < BOSSFD_SKULL_FALL) {
             Actor_UpdateVelocityXYZ(&this->actor);
         }
@@ -1955,7 +1955,7 @@ void BossFd_DrawBody(PlayState* play, BossFd* this) {
     gDPSetEnvColor(POLY_OPA_DISP++, 255, 255, 255, (s8)this->fwork[BFD_HEAD_TEX2_ALPHA]);
     Matrix_Push();
     temp_float =
-        (this->work[BFD_ACTION_STATE] >= BOSSFD_SKULL_FALL) ? -20.0f : -10.0f - ((this->actor.speedXZ - 5.0f) * 10.0f);
+        (this->work[BFD_ACTION_STATE] >= BOSSFD_SKULL_FALL) ? -20.0f : -10.0f - ((this->actor.speed - 5.0f) * 10.0f);
     segIndex = (this->work[BFD_LEAD_BODY_SEG] + sBodyIndex[0]) % 100;
     Matrix_Translate(this->bodySegsPos[segIndex].x, this->bodySegsPos[segIndex].y, this->bodySegsPos[segIndex].z,
                      MTXMODE_NEW);

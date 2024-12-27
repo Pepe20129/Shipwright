@@ -87,7 +87,7 @@ static ColliderCylinderInit sHeadColliderInit = {
 static CollisionCheckInfoInit sColCheckInfoInit = { 1, 15, 80, MASS_HEAVY };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 2500, ICHAIN_CONTINUE),
+    ICHAIN_F32(lockOnArrowOffset, 2500, ICHAIN_CONTINUE),
     ICHAIN_U8(attentionRangeType, 1, ICHAIN_CONTINUE),
     ICHAIN_S8(naviEnemyId, 0x09, ICHAIN_STOP),
 };
@@ -180,7 +180,7 @@ void EnKarebaba_SetupDying(EnKarebaba* this) {
     this->actor.gravity = -0.8f;
     this->actor.velocity.y = 4.0f;
     this->actor.world.rot.y = this->actor.shape.rot.y + 0x8000;
-    this->actor.speedXZ = 3.0f;
+    this->actor.speed = 3.0f;
     Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEKU_JR_DEAD);
     this->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED;
     this->actionFunc = EnKarebaba_Dying;
@@ -324,7 +324,7 @@ void EnKarebaba_Dying(EnKarebaba* this, PlayState* play) {
     Vec3f position;
     Vec3f rotation;
 
-    Math_StepToF(&this->actor.speedXZ, 0.0f, 0.1f);
+    Math_StepToF(&this->actor.speed, 0.0f, 0.1f);
 
     if (this->actor.params == 0) {
         Math_ScaledStepToS(&this->actor.shape.rot.x, 0x4800, 0x71C);
@@ -332,7 +332,7 @@ void EnKarebaba_Dying(EnKarebaba* this, PlayState* play) {
 
         if (this->actor.scale.x > 0.005f && ((this->actor.bgCheckFlags & 2) || (this->actor.bgCheckFlags & 8))) {
             this->actor.scale.x = this->actor.scale.y = this->actor.scale.z = 0.0f;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->actor.flags &= ~(ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE);
             EffectSsHahen_SpawnBurst(play, &this->actor.world.pos, 3.0f, 0, 12, 5, 15, HAHEN_OBJECT_DEFAULT, 10,
                                      NULL);

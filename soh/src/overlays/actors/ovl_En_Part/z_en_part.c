@@ -48,12 +48,12 @@ void func_80ACDDE8(EnPart* this, PlayState* play) {
             this->actor.gravity = -0.3f - Rand_ZeroOne() * 0.5f;
             this->rotZSpeed = 0.3f;
             this->timer = 25;
-            this->actor.speedXZ = (Rand_ZeroOne() - 0.5f) * 2.0f;
+            this->actor.speed = (Rand_ZeroOne() - 0.5f) * 2.0f;
             break;
         case 13:
             this->timer = 400;
         case 12:
-            this->actor.speedXZ = Rand_CenteredFloat(6.0f);
+            this->actor.speed = Rand_CenteredFloat(6.0f);
             this->actor.home.pos = this->actor.world.pos;
             this->timer += 60;
             this->actor.velocity.y = Rand_ZeroOne() * 5.0f + 4.0f;
@@ -75,7 +75,7 @@ void func_80ACDDE8(EnPart* this, PlayState* play) {
         case 11:
             EffectSsEnFire_SpawnVec3f(play, &this->actor, &this->actor.world.pos, 40, 0x8001, 0, -1);
         case 3:
-            this->actor.speedXZ = (Rand_ZeroOne() - 0.5f) * 3.0f;
+            this->actor.speed = (Rand_ZeroOne() - 0.5f) * 3.0f;
             this->timer = (s16)(Rand_ZeroOne() * 17.0f) + 10;
             this->actor.velocity.y = Rand_ZeroOne() * 3.0f + 8.0f;
             this->actor.gravity = -0.6f - Rand_ZeroOne() * 0.3f;
@@ -90,7 +90,7 @@ void func_80ACDDE8(EnPart* this, PlayState* play) {
                 sign = -1.0f;
             }
             this->actor.velocity.y = 0.0f;
-            this->actor.speedXZ = 6.0f * sign;
+            this->actor.speed = 6.0f * sign;
             this->actor.gravity = -1.2f;
             this->rotZSpeed = 0.15f * sign;
             ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawCircle, 30.0f);
@@ -111,7 +111,7 @@ void func_80ACE13C(EnPart* this, PlayState* play) {
 
         if ((this->actor.bgCheckFlags & 1) || (this->actor.world.pos.y <= this->actor.floorHeight)) {
             this->action = 4;
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->actor.gravity = 0.0f;
             this->actor.velocity.y = 0.0f;
         }
@@ -249,7 +249,7 @@ void EnPart_Update(Actor* thisx, PlayState* play) {
     if ((this->actor.params > 4 && this->actor.params < 9) || this->actor.params < 0) {
         Actor_UpdateBgCheckInfo(play, &this->actor, 5.0f, 15.0f, 0.0f, 5);
         if (this->actor.params >= 0) {
-            Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.5f, 0.0f);
+            Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.5f, 0.0f);
             if (thisx->bgCheckFlags & 1) {
                 thisx->bgCheckFlags &= ~1;
                 thisx->velocity.y = 6.0f;

@@ -79,22 +79,22 @@ static ColliderCylinderInit sCylinderInitDroppedFlame = {
 
 static InitChainEntry sInitChainCapturableFlame[] = {
     ICHAIN_U8(attentionRangeType, 0, ICHAIN_CONTINUE),
-    ICHAIN_F32(targetArrowOffset, 60, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 60, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 static InitChainEntry sInitChainDroppedFlame[] = {
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 static InitChainEntry sInitChainSmallFlame[] = {
-    ICHAIN_F32(uncullZoneForward, 1000, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneScale, 400, ICHAIN_CONTINUE),
-    ICHAIN_F32(uncullZoneDownward, 1000, ICHAIN_STOP),
+    ICHAIN_F32(cullingVolumeDistance, 1000, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeScale, 400, ICHAIN_CONTINUE),
+    ICHAIN_F32(cullingVolumeDownward, 1000, ICHAIN_STOP),
 };
 
 f32 EnIceHono_XZDistanceSquared(Vec3f* v1, Vec3f* v2) {
@@ -309,10 +309,10 @@ void EnIceHono_SetupActionSmallFlame(EnIceHono* this) {
     this->alpha = 255;
     if (this->actor.params == 1) {
         this->smallFlameTargetYScale = (Rand_ZeroOne() * 0.005f) + 0.004f;
-        this->actor.speedXZ = (Rand_ZeroOne() * 1.6f) + 0.5f;
+        this->actor.speed = (Rand_ZeroOne() * 1.6f) + 0.5f;
     } else {
         this->smallFlameTargetYScale = (Rand_ZeroOne() * 0.005f) + 0.003f;
-        this->actor.speedXZ = (Rand_ZeroOne() * 2.0f) + 0.5f;
+        this->actor.speed = (Rand_ZeroOne() * 2.0f) + 0.5f;
     }
 }
 
@@ -325,7 +325,7 @@ void EnIceHono_SmallFlameMove(EnIceHono* this, PlayState* play) {
         Math_StepToF(&this->actor.scale.y, 0.0001f, 0.00015f);
     }
     this->actor.scale.z = this->actor.scale.x;
-    Math_StepToF(&this->actor.speedXZ, 0, 0.06f);
+    Math_StepToF(&this->actor.speed, 0, 0.06f);
     Actor_MoveXZGravity(&this->actor);
     Actor_UpdateBgCheckInfo(play, &this->actor, 10.0f, 10.0f, 0.0f, 5);
 

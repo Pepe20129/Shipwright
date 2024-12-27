@@ -58,7 +58,7 @@ static ColliderCylinderInit sCylinderInit = {
 };
 
 static InitChainEntry sInitChain[] = {
-    ICHAIN_F32(targetArrowOffset, 2000, ICHAIN_STOP),
+    ICHAIN_F32(lockOnArrowOffset, 2000, ICHAIN_STOP),
 };
 
 static Color_RGBA8 sEffectPrimColor = { 255, 255, 127, 0 };
@@ -502,7 +502,7 @@ void EnItem00_Init(Actor* thisx, PlayState* play) {
     this->unk_15A = 15;
     this->unk_154 = 35;
 
-    this->actor.speedXZ = 0.0f;
+    this->actor.speed = 0.0f;
     this->actor.velocity.y = 0.0f;
     this->actor.gravity = 0.0f;
 
@@ -618,7 +618,7 @@ void func_8001DFC8(EnItem00* this, PlayState* play) {
         this->actor.shape.yOffset = Math_SinS(this->actor.shape.rot.y) * 150.0f + 850.0f;
     }
 
-    Math_SmoothStepToF(&this->actor.speedXZ, 0.0f, 1.0f, 0.5f, 0.0f);
+    Math_SmoothStepToF(&this->actor.speed, 0.0f, 1.0f, 0.5f, 0.0f);
 
     if (this->unk_154 == 0) {
         if ((this->actor.params != ITEM00_SMALL_KEY) && (this->actor.params != ITEM00_HEART_PIECE) &&
@@ -676,7 +676,7 @@ void func_8001E304(EnItem00* this, PlayState* play) {
 
     if (this->actor.params == ITEM00_HEART) {
         if (this->actor.velocity.y < 0.0f) {
-            this->actor.speedXZ = 0.0f;
+            this->actor.speed = 0.0f;
             this->actor.gravity = -0.4f;
             if (this->actor.velocity.y < -1.5f) {
                 this->actor.velocity.y = -1.5f;
@@ -718,7 +718,7 @@ void func_8001E304(EnItem00* this, PlayState* play) {
         EnItem00_SetupAction(this, func_8001DFC8);
         this->actor.shape.rot.z = 0;
         this->actor.velocity.y = 0.0f;
-        this->actor.speedXZ = 0.0f;
+        this->actor.speed = 0.0f;
     }
 }
 
@@ -983,7 +983,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
     this->unk_15A = 15;
     this->unk_154 = 35;
     this->actor.shape.rot.z = 0;
-    this->actor.speedXZ = 0;
+    this->actor.speed = 0;
     this->actor.velocity.y = 0;
     this->actor.gravity = 0;
 
@@ -1607,7 +1607,7 @@ EnItem00* Item_DropCollectible(PlayState* play, Vec3f* spawnPos, s16 params) {
                                                   spawnPos->y, spawnPos->z, 0, 0, 0, params | param8000 | param3F00, true);
             if ((spawnedActor != NULL) && !param8000) {
                 spawnedActor->actor.velocity.y = !param4000 ? 8.0f : -2.0f;
-                spawnedActor->actor.speedXZ = 2.0f;
+                spawnedActor->actor.speed = 2.0f;
                 spawnedActor->actor.gravity = -0.9f;
                 spawnedActor->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
                 Actor_SetScale(&spawnedActor->actor, 0.0f);
@@ -1649,7 +1649,7 @@ EnItem00* Item_DropCollectible2(PlayState* play, Vec3f* spawnPos, s16 params) {
                                                   spawnPos->y, spawnPos->z, 0, 0, 0, params | param8000 | param3F00, true);
             if ((spawnedActor != NULL) && !param8000) {
                 spawnedActor->actor.velocity.y = 0.0f;
-                spawnedActor->actor.speedXZ = 0.0f;
+                spawnedActor->actor.speed = 0.0f;
                 spawnedActor->actor.gravity = param4000 ? 0.0f : -0.9f;
                 spawnedActor->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
                 spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
@@ -1761,7 +1761,7 @@ void Item_DropCollectibleRandom(PlayState* play, Actor* fromActor, Vec3f* spawnP
                                                           spawnPos->y, spawnPos->z, 0, 0, 0, dropId, true);
                     if ((spawnedActor != NULL) && (dropId != 0xFF)) {
                         spawnedActor->actor.velocity.y = 8.0f;
-                        spawnedActor->actor.speedXZ = 2.0f;
+                        spawnedActor->actor.speed = 2.0f;
                         spawnedActor->actor.gravity = -0.9f;
                         spawnedActor->actor.world.rot.y = Rand_ZeroOne() * 40000.0f;
                         Actor_SetScale(&spawnedActor->actor, 0.0f);

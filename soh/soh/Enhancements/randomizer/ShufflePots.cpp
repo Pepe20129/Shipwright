@@ -47,7 +47,7 @@ void ObjTsubo_RandomizerSpawnCollectible(ObjTsubo* potActor, PlayState* play) {
     item00->itemEntry = Rando::Context::GetInstance()->GetFinalGIEntry(potActor->potIdentity.randomizerCheck, true, GI_NONE);
     item00->actor.draw = (ActorFunc)EnItem00_DrawRandomizedItem;
     item00->actor.velocity.y = 8.0f;
-    item00->actor.speedXZ = 2.0f;
+    item00->actor.speed = 2.0f;
     item00->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
 }
 
