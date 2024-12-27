@@ -228,7 +228,7 @@ s32 func_80A9C95C(PlayState* play, EnKz* this, s16* talkState, f32 unkf, NpcGetT
     f32 xzDistToPlayer;
     f32 yaw;
 
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         *talkState = NPC_TALK_STATE_TALKING;
         return 1;
     }
@@ -263,7 +263,7 @@ s32 func_80A9C95C(PlayState* play, EnKz* this, s16* talkState, f32 unkf, NpcGetT
 
     xzDistToPlayer = this->actor.xzDistToPlayer;
     this->actor.xzDistToPlayer = Math_Vec3f_DistXZ(&this->actor.home.pos, &player->actor.world.pos);
-    if (func_8002F2CC(&this->actor, play, unkf) == 0) {
+    if (Actor_OfferTalk(&this->actor, play, unkf) == 0) {
         this->actor.xzDistToPlayer = xzDistToPlayer;
         return 0;
     }

@@ -242,11 +242,11 @@ void func_809DF870(EnCow* this, PlayState* play) {
 }
 
 void func_809DF8FC(EnCow* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->actionFunc = func_809DF870;
     } else {
         this->actor.flags |= ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
-        func_8002F2CC(&this->actor, play, 170.0f);
+        Actor_OfferTalk(&this->actor, play, 170.0f);
         this->actor.textId = 0x2006;
     }
     func_809DF494(this, play);
@@ -265,7 +265,7 @@ void func_809DF96C(EnCow* this, PlayState* play) {
                     if (GameInteractor_Should(VB_GIVE_ITEM_FROM_COW, true, this)) {
                         this->actionFunc = func_809DF8FC;
                         this->actor.flags |= ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
-                        func_8002F2CC(&this->actor, play, 170.0f);
+                        Actor_OfferTalk(&this->actor, play, 170.0f);
                         this->actor.textId = 0x2006;
                     } else {
                         return;

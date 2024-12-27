@@ -295,7 +295,7 @@ void func_80B20768(EnToryo* this, PlayState* play) {
     s16 sp30;
 
     if (this->unk_1E4 == 3 && !GameInteractor_Should(VB_FIX_SAW_SOFTLOCK, false)) {
-        Actor_ProcessTalkRequest(&this->actor, play);
+        Actor_TalkOfferAccepted(&this->actor, play);
         Message_ContinueTextbox(play, this->actor.textId);
         this->unk_1E4 = 1;
     }
@@ -326,7 +326,7 @@ void func_80B20768(EnToryo* this, PlayState* play) {
     }
 
     if (this->unk_1E4 == 0) {
-        if (Actor_ProcessTalkRequest(&this->actor, play)) {
+        if (Actor_TalkOfferAccepted(&this->actor, play)) {
             this->unk_1E0 = func_8002F368(play);
             if (this->unk_1E0 != 0) {
                 player->actor.textId = func_80B20634(this, play);
@@ -339,7 +339,7 @@ void func_80B20768(EnToryo* this, PlayState* play) {
         Actor_GetScreenPos(play, &this->actor, &sp32, &sp30);
         if ((sp32 >= 0) && (sp32 < 0x141) && (sp30 >= 0) && (sp30 < 0xF1)) {
             this->actor.textId = func_80B206A0(this, play);
-            func_8002F298(&this->actor, play, 100.0f, 10);
+            Actor_OfferTalkExchangeEquiCylinder(&this->actor, play, 100.0f, 10);
         }
     }
 }

@@ -929,7 +929,7 @@ void EnIn_Update(Actor* thisx, PlayState* play) {
     if (this->actionFunc != func_80A7A304) {
         func_80A79AB4(this, play);
         if (gSaveContext.timer2Value < 6 && gSaveContext.timer2State != 0 && this->interactInfo.talkState == NPC_TALK_STATE_IDLE) {
-            if (Actor_ProcessTalkRequest(&this->actor, play)) {}
+            if (Actor_TalkOfferAccepted(&this->actor, play)) {}
         } else {
             Npc_UpdateTalking(play, &this->actor, &this->interactInfo.talkState,
                           ((this->actor.attentionRangeType == 6) ? 80.0f : 320.0f) + this->collider.dim.radius, func_80A79168,

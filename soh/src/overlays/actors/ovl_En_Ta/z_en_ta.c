@@ -251,7 +251,7 @@ void EnTa_Destroy(Actor* thisx, PlayState* play) {
 }
 
 s32 func_80B142F4(EnTa* this, PlayState* play, u16 textId) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         return true;
     }
 
@@ -260,7 +260,7 @@ s32 func_80B142F4(EnTa* this, PlayState* play, u16 textId) {
     if ((ABS((s16)(this->actor.yawTowardsPlayer - this->actor.shape.rot.y)) <= 0x4300) &&
         (this->actor.xzDistToPlayer < 100.0f)) {
         this->unk_2E0 |= 1;
-        func_8002F2CC(&this->actor, play, 100.0f);
+        Actor_OfferTalk(&this->actor, play, 100.0f);
     }
     return false;
 }
@@ -332,7 +332,7 @@ void func_80B145F8(EnTa* this, PlayState* play) {
 void EnTa_IdleAsleepInCastle(EnTa* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         s32 exchangeItemId = func_8002F368(play);
 
         switch (exchangeItemId) {
@@ -350,22 +350,22 @@ void EnTa_IdleAsleepInCastle(EnTa* this, PlayState* play) {
         }
     } else {
         this->actor.textId = 0x702A;
-        func_8002F298(&this->actor, play, 100.0f, 3);
+        Actor_OfferTalkExchangeEquiCylinder(&this->actor, play, 100.0f, 3);
     }
 }
 
 void EnTa_IdleAsleepInLonLonHouse(EnTa* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         EnTa_SetupAction(this, func_80B143D4, EnTa_AnimSleeping);
     }
     this->actor.textId = 0x204B;
-    func_8002F2CC(&this->actor, play, 100.0f);
+    Actor_OfferTalk(&this->actor, play, 100.0f);
 }
 
 void EnTa_IdleAsleepInKakariko(EnTa* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         s32 exchangeItemId = func_8002F368(play);
 
         switch (exchangeItemId) {
@@ -383,7 +383,7 @@ void EnTa_IdleAsleepInKakariko(EnTa* this, PlayState* play) {
         }
     } else {
         this->actor.textId = 0x5015;
-        func_8002F298(&this->actor, play, 100.0f, 6);
+        Actor_OfferTalkExchangeEquiCylinder(&this->actor, play, 100.0f, 6);
     }
 }
 
@@ -623,11 +623,11 @@ void func_80B15100(EnTa* this, PlayState* play) {
 }
 
 void func_80B15260(EnTa* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->actionFunc = func_80B15100;
         this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
     } else {
-        func_8002F2CC(&this->actor, play, 1000.0f);
+        Actor_OfferTalk(&this->actor, play, 1000.0f);
     }
     this->unk_2E0 |= 1;
 }
@@ -733,7 +733,7 @@ void EnTa_RunCuccoGame(EnTa* this, PlayState* play) {
                     }
                     this->actionFunc = func_80B15260;
                     this->actor.flags |= ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
-                    func_8002F2CC(&this->actor, play, 1000.0f);
+                    Actor_OfferTalk(&this->actor, play, 1000.0f);
                     return;
                 }
             } else {
@@ -1049,7 +1049,7 @@ void EnTa_IdleSittingInLonLonHouse(EnTa* this, PlayState* play) {
 }
 
 void EnTa_IdleAfterCuccoGameFinished(EnTa* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         switch (this->actor.textId) {
             case 0x2085:
                 this->actionFunc = func_80B161C0;
@@ -1064,7 +1064,7 @@ void EnTa_IdleAfterCuccoGameFinished(EnTa* this, PlayState* play) {
         this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
     } else {
         this->actor.flags |= ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
-        func_8002F2CC(&this->actor, play, 1000.0f);
+        Actor_OfferTalk(&this->actor, play, 1000.0f);
     }
     this->unk_2E0 |= 1;
 }

@@ -247,7 +247,7 @@ void func_80A56874(EnHeishi4* this, PlayState* play) {
     if (this->unk_284 != 0) {
         SkelAnime_Update(&this->skelAnime);
     }
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         if (this->unk_284 == 0) {
             this->actionFunc = func_80A5673C;
 
@@ -255,7 +255,7 @@ void func_80A56874(EnHeishi4* this, PlayState* play) {
             this->actionFunc = func_80A56900;
         }
     } else {
-        func_8002F2CC(&this->actor, play, 100.0f);
+        Actor_OfferTalk(&this->actor, play, 100.0f);
     }
 }
 
@@ -329,7 +329,7 @@ void func_80A56B40(EnHeishi4* this, PlayState* play) {
             }
         }
     }
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         if ((this->type == HEISHI4_AT_KAKRIKO_ENTRANCE) || (this->type == HEISHI4_AT_IMPAS_HOUSE)) {
             this->unk_284 = 1;
             this->actionFunc = func_80A563BC;
@@ -349,7 +349,7 @@ void func_80A56B40(EnHeishi4* this, PlayState* play) {
             }
         }
     }
-    func_8002F2F4(&this->actor, play);
+    Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);
 }
 
 /*Function that allows child Link to exit from Market entrance to Hyrule Field

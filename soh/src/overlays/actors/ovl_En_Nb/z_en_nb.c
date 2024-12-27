@@ -1202,7 +1202,7 @@ void EnNb_SetupIdleCrawlspace(EnNb* this, s32 animFinished) {
 }
 
 void func_80AB3838(EnNb* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->action = NB_IN_DIALOG;
     } else {
         this->actor.flags |= ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY;
@@ -1213,7 +1213,7 @@ void func_80AB3838(EnNb* this, PlayState* play) {
             this->actor.textId = 0x6024;
         }
 
-        func_8002F2F4(&this->actor, play);
+        Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);
     }
 }
 
@@ -1294,7 +1294,7 @@ void func_80AB3A7C(EnNb* this, PlayState* play, s32 animFinished) {
 }
 
 void func_80AB3B04(EnNb* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->action = NB_ACTION_30;
     } else {
         this->actor.flags |= ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY;
@@ -1304,7 +1304,7 @@ void func_80AB3B04(EnNb* this, PlayState* play) {
             this->actor.textId = 0x6026;
         }
 
-        func_8002F2F4(&this->actor, play);
+        Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);
     }
 }
 

@@ -118,7 +118,7 @@ void func_80AACB14(EnMk* this, PlayState* play) {
 }
 
 void func_80AACB6C(EnMk* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->actionFunc = func_80AACB14;
     }
 
@@ -228,7 +228,7 @@ void EnMk_Wait(EnMk* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
     s32 playerExchangeItem;
 
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         playerExchangeItem = func_8002F368(play);
 
         if (this->actor.textId != 0x4018) {
@@ -288,7 +288,7 @@ void EnMk_Wait(EnMk* this, PlayState* play) {
         angle = this->actor.yawTowardsPlayer - this->actor.shape.rot.y;
 
         if ((ABS(angle) < 0x2151) && (this->actor.xzDistToPlayer < 100.0f)) {
-            func_8002F298(&this->actor, play, 100.0f, EXCH_ITEM_FROG);
+            Actor_OfferTalkExchangeEquiCylinder(&this->actor, play, 100.0f, EXCH_ITEM_FROG);
             this->flags |= 1;
         }
     }
