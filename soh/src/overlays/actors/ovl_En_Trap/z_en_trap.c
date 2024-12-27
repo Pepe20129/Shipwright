@@ -7,7 +7,7 @@
 #include "z_en_trap.h"
 #include "objects/object_trap/object_trap.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 #define BEGIN_MOVE_OUT 65535.0f
 
@@ -34,7 +34,7 @@ void EnTrap_Destroy(Actor* thisx, PlayState* play);
 void EnTrap_Update(Actor* thisx, PlayState* play);
 void EnTrap_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Trap_InitVars = {
+const ActorProfile En_Trap_InitVars = {
     ACTOR_EN_TRAP,
     ACTORCAT_BG,
     FLAGS,

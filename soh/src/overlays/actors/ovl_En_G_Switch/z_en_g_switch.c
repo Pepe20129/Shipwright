@@ -14,7 +14,7 @@
 #include "objects/object_gi_rupy/object_gi_rupy.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 typedef enum {
     /* 0 */ MOVE_TARGET,
@@ -66,7 +66,7 @@ static s16 sRupeeTypes[] = {
     ITEM00_RUPEE_GREEN, ITEM00_RUPEE_BLUE, ITEM00_RUPEE_RED, ITEM00_RUPEE_ORANGE, ITEM00_RUPEE_PURPLE,
 };
 
-const ActorInit En_G_Switch_InitVars = {
+const ActorProfile En_G_Switch_InitVars = {
     ACTOR_EN_G_SWITCH,
     ACTORCAT_PROP,
     FLAGS,

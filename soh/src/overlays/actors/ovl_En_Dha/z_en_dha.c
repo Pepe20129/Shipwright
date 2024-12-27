@@ -9,7 +9,7 @@
 #include "objects/object_dh/object_dh.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
 
 void EnDha_Init(Actor* thisx, PlayState* play);
 void EnDha_Destroy(Actor* thisx, PlayState* play);
@@ -24,7 +24,7 @@ void EnDha_SetupDeath(EnDha* this);
 void EnDha_Die(EnDha* this, PlayState* play);
 void EnDha_UpdateHealth(EnDha* this, PlayState* play);
 
-const ActorInit En_Dha_InitVars = {
+const ActorProfile En_Dha_InitVars = {
     ACTOR_EN_DHA,
     ACTORCAT_ENEMY,
     FLAGS,
@@ -168,7 +168,7 @@ void EnDha_Init(Actor* thisx, PlayState* play) {
     this->limbAngleX[0] = -0x4000;
     Collider_InitJntSph(play, &this->collider);
     Collider_SetJntSph(play, &this->collider, &this->actor, &sJntSphInit, this->colliderItem);
-    this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+    this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
 
     EnDha_SetupWait(this);
 }

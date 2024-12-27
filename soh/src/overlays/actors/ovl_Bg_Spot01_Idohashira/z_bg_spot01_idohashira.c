@@ -8,7 +8,7 @@
 #include "objects/object_spot01_objects/object_spot01_objects.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgSpot01Idohashira_Init(Actor* thisx, PlayState* play);
 void BgSpot01Idohashira_Destroy(Actor* thisx, PlayState* play);
@@ -36,7 +36,7 @@ static BgSpot01IdohashiraDrawFunc sDrawFuncs[] = {
     func_808AB700,
 };
 
-const ActorInit Bg_Spot01_Idohashira_InitVars = {
+const ActorProfile Bg_Spot01_Idohashira_InitVars = {
     ACTOR_BG_SPOT01_IDOHASHIRA,
     ACTORCAT_PROP,
     FLAGS,

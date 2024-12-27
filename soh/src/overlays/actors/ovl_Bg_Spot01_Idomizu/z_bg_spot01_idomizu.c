@@ -7,7 +7,7 @@
 #include "z_bg_spot01_idomizu.h"
 #include "objects/object_spot01_objects/object_spot01_objects.h"
 
-#define FLAGS ACTOR_FLAG_DRAW_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_DRAW_CULLING_DISABLED
 
 void BgSpot01Idomizu_Init(Actor* thisx, PlayState* play);
 void BgSpot01Idomizu_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void BgSpot01Idomizu_Draw(Actor* thisx, PlayState* play);
 
 void BgSpot01Idomizu_UpdateWaterLevel(BgSpot01Idomizu* this, PlayState* play);
 
-const ActorInit Bg_Spot01_Idomizu_InitVars = {
+const ActorProfile Bg_Spot01_Idomizu_InitVars = {
     ACTOR_BG_SPOT01_IDOMIZU,
     ACTORCAT_BG,
     FLAGS,

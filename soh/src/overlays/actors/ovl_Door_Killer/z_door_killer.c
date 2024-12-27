@@ -13,7 +13,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef enum {
     /* 0 */ DOOR_KILLER_DOOR,
@@ -31,7 +31,7 @@ void DoorKiller_SetProperties(DoorKiller* this, PlayState* play);
 void DoorKiller_DrawDoor(Actor* thisx, PlayState* play);
 void DoorKiller_DrawRubble(Actor* thisx, PlayState* play);
 
-const ActorInit Door_Killer_InitVars = {
+const ActorProfile Door_Killer_InitVars = {
     ACTOR_DOOR_KILLER,
     ACTORCAT_BG,
     FLAGS,

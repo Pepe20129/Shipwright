@@ -8,7 +8,7 @@
 #include "objects/object_demo_kekkai/object_demo_kekkai.h"
 #include <assert.h>
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 typedef enum {
     /* 0 */ GNDICE_IDLE,
@@ -24,7 +24,7 @@ void BgGndIceblock_Draw(Actor* thisx, PlayState* play);
 void BgGndIceblock_Idle(BgGndIceblock* this, PlayState* play);
 void BgGndIceblock_Slide(BgGndIceblock* this, PlayState* play);
 
-const ActorInit Bg_Gnd_Iceblock_InitVars = {
+const ActorProfile Bg_Gnd_Iceblock_InitVars = {
     ACTOR_BG_GND_ICEBLOCK,
     ACTORCAT_PROP,
     FLAGS,

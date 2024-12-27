@@ -7,7 +7,7 @@
 #include "z_en_siofuki.h"
 #include "objects/object_siofuki/object_siofuki.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EnSiofuki_Init(Actor* thisx, PlayState* play);
 void EnSiofuki_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void func_80AFC34C(EnSiofuki* this, PlayState* play);
 void func_80AFC544(EnSiofuki* this, PlayState* play);
 void func_80AFC478(EnSiofuki* this, PlayState* play);
 
-const ActorInit En_Siofuki_InitVars = {
+const ActorProfile En_Siofuki_InitVars = {
     ACTOR_EN_SIOFUKI,
     ACTORCAT_BG,
     FLAGS,

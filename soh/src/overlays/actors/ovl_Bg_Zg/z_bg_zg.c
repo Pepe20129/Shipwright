@@ -8,7 +8,7 @@
 #include "objects/object_zg/object_zg.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgZg_Init(Actor* thisx, PlayState* play);
 void BgZg_Destroy(Actor* thisx, PlayState* play);
@@ -35,7 +35,7 @@ static BgZgDrawFunc sDrawFuncs[] = {
     func_808C0EEC,
 };
 
-const ActorInit Bg_Zg_InitVars = {
+const ActorProfile Bg_Zg_InitVars = {
     ACTOR_BG_ZG,
     ACTORCAT_NPC,
     FLAGS,

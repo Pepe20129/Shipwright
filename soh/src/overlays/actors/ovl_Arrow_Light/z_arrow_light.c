@@ -8,7 +8,7 @@
 
 #include "overlays/actors/ovl_En_Arrow/z_en_arrow.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 void ArrowLight_Init(Actor* thisx, PlayState* play);
 void ArrowLight_Destroy(Actor* thisx, PlayState* play);
@@ -21,7 +21,7 @@ void ArrowLight_Hit(ArrowLight* this, PlayState* play);
 
 #include "overlays/ovl_Arrow_Light/ovl_Arrow_Light.h"
 
-const ActorInit Arrow_Light_InitVars = {
+const ActorProfile Arrow_Light_InitVars = {
     ACTOR_ARROW_LIGHT,
     ACTORCAT_ITEMACTION,
     FLAGS,

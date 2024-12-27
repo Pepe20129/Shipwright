@@ -18,7 +18,7 @@ void func_808911D4(BgIceShelter* this, PlayState* play);
 // For "Blue Fire Arrows" enhancement
 void MeltOnIceArrowHit(BgIceShelter* this, ColliderCylinder cylinder, s16 type, PlayState* play);
 
-const ActorInit Bg_Ice_Shelter_InitVars = {
+const ActorProfile Bg_Ice_Shelter_InitVars = {
     ACTOR_BG_ICE_SHELTER,
     ACTORCAT_BG,
     FLAGS,

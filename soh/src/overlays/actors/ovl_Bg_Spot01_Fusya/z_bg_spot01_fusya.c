@@ -7,7 +7,7 @@
 #include "z_bg_spot01_fusya.h"
 #include "objects/object_spot01_objects/object_spot01_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgSpot01Fusya_Init(Actor* thisx, PlayState* play);
 void BgSpot01Fusya_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void BgSpot01Fusya_Draw(Actor* thisx, PlayState* play);
 
 void func_808AAA50(BgSpot01Fusya* this, PlayState* play);
 
-const ActorInit Bg_Spot01_Fusya_InitVars = {
+const ActorProfile Bg_Spot01_Fusya_InitVars = {
     ACTOR_BG_SPOT01_FUSYA,
     ACTORCAT_BG,
     FLAGS,

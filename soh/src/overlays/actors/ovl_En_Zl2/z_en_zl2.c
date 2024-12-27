@@ -12,7 +12,7 @@
 #include "objects/object_zl2_anime1/object_zl2_anime1.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnZl2_Init(Actor* thisx, PlayState* play);
 void EnZl2_Destroy(Actor* thisx, PlayState* play);
@@ -86,7 +86,7 @@ static EnZl2DrawFunc sDrawFuncs[] = {
     func_80B525D4,
 };
 
-const ActorInit En_Zl2_InitVars = {
+const ActorProfile En_Zl2_InitVars = {
     ACTOR_EN_ZL2,
     ACTORCAT_NPC,
     FLAGS,

@@ -8,7 +8,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EffDust_Init(Actor* thisx, PlayState* play);
 void EffDust_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void EffDust_UpdateFunc_8099DFC0(EffDust* this, PlayState* play);
 void EffDust_DrawFunc_8099E4F4(Actor* thisx, PlayState* play);
 void EffDust_DrawFunc_8099E784(Actor* thisx, PlayState* play);
 
-const ActorInit Eff_Dust_InitVars = {
+const ActorProfile Eff_Dust_InitVars = {
     ACTOR_EFF_DUST,
     ACTORCAT_NPC,
     FLAGS,

@@ -8,7 +8,7 @@
 #include "z_item_shield.h"
 #include "objects/object_link_child/object_link_child.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ItemShield_Init(Actor* thisx, PlayState* play);
 void ItemShield_Destroy(Actor* thisx, PlayState* play);
@@ -38,7 +38,7 @@ static ColliderCylinderInit sCylinderInit = {
     { 15, 15, 0, { 0, 0, 0 } },
 };
 
-const ActorInit Item_Shield_InitVars = {
+const ActorProfile Item_Shield_InitVars = {
     ACTOR_ITEM_SHIELD,
     ACTORCAT_ITEMACTION,
     FLAGS,

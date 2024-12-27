@@ -7,7 +7,7 @@
 #include "z_bg_bombwall.h"
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
 
-#define FLAGS ACTOR_FLAG_IGNORE_POINTLIGHTS
+#define FLAGS ACTOR_FLAG_IGNORE_POINT_LIGHTS
 
 void BgBombwall_Init(Actor* thisx, PlayState* play);
 void BgBombwall_Destroy(Actor* thisx, PlayState* play);
@@ -69,7 +69,7 @@ static ColliderTrisInit sTrisInit = {
     sTrisElementsInit,
 };
 
-const ActorInit Bg_Bombwall_InitVars = {
+const ActorProfile Bg_Bombwall_InitVars = {
     ACTOR_BG_BOMBWALL,
     ACTORCAT_BG,
     FLAGS,

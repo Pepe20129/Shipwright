@@ -4,7 +4,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnHeishi4_Init(Actor* thisx, PlayState* play);
 void EnHeishi4_Destroy(Actor* thisx, PlayState* play);
@@ -24,7 +24,7 @@ void func_80A56A50(EnHeishi4* this, PlayState* play);
 void func_80A56ACC(EnHeishi4* this, PlayState* play);
 void EnHeishi4_MarketSneak(EnHeishi4* this, PlayState* play);
 
-const ActorInit En_Heishi4_InitVars = {
+const ActorProfile En_Heishi4_InitVars = {
     ACTOR_EN_HEISHI4,
     ACTORCAT_NPC,
     FLAGS,

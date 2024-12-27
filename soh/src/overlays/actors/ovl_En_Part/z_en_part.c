@@ -10,14 +10,14 @@
 
 #include <string.h> // strcmp
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnPart_Init(Actor* thisx, PlayState* play);
 void EnPart_Destroy(Actor* thisx, PlayState* play);
 void EnPart_Update(Actor* thisx, PlayState* play);
 void EnPart_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Part_InitVars = {
+const ActorProfile En_Part_InitVars = {
     ACTOR_EN_PART,
     ACTORCAT_ITEMACTION,
     FLAGS,

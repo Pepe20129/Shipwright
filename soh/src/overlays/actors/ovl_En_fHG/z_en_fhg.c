@@ -11,7 +11,7 @@
 #include "overlays/actors/ovl_Boss_Ganondrof/z_boss_ganondrof.h"
 #include "overlays/actors/ovl_En_Fhg_Fire/z_en_fhg_fire.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef struct {
     /* 0x00 */ Vec3f pos;
@@ -46,7 +46,7 @@ void EnfHG_Damage(EnfHG* this, PlayState* play);
 void EnfHG_Retreat(EnfHG* this, PlayState* play);
 void EnfHG_Done(EnfHG* this, PlayState* play);
 
-const ActorInit En_fHG_InitVars = {
+const ActorProfile En_fHG_InitVars = {
     ACTOR_EN_FHG,
     ACTORCAT_BG,
     FLAGS,

@@ -6,7 +6,7 @@
 
 #include "z_item_inbox.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void ItemInbox_Init(Actor* thisx, PlayState* play);
 void ItemInbox_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void ItemInbox_Draw(Actor* thisx, PlayState* play);
 
 void ItemInbox_Wait(ItemInbox* this, PlayState* play);
 
-const ActorInit Item_Inbox_InitVars = {
+const ActorProfile Item_Inbox_InitVars = {
     ACTOR_ITEM_INBOX,
     ACTORCAT_NPC,
     FLAGS,

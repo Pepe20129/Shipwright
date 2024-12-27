@@ -6,13 +6,13 @@
 
 #include "z_en_arow_trap.h"
 #include "overlays/actors/ovl_En_Arrow/z_en_arrow.h"
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnArowTrap_Init(Actor* thisx, PlayState* play);
 void EnArowTrap_Destroy(Actor* thisx, PlayState* play);
 void EnArowTrap_Update(Actor* thisx, PlayState* play);
 
-const ActorInit En_Arow_Trap_InitVars = {
+const ActorProfile En_Arow_Trap_InitVars = {
     ACTOR_EN_AROW_TRAP,
     ACTORCAT_PROP,
     FLAGS,

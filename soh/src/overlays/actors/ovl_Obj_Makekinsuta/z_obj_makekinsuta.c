@@ -7,7 +7,7 @@
 #include "z_obj_makekinsuta.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ObjMakekinsuta_Init(Actor* thisx, PlayState* play);
 void ObjMakekinsuta_Update(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void ObjMakekinsuta_Update(Actor* thisx, PlayState* play);
 void func_80B98320(ObjMakekinsuta* this, PlayState* play);
 void ObjMakekinsuta_DoNothing(ObjMakekinsuta* this, PlayState* play);
 
-const ActorInit Obj_Makekinsuta_InitVars = {
+const ActorProfile Obj_Makekinsuta_InitVars = {
     ACTOR_OBJ_MAKEKINSUTA,
     ACTORCAT_ITEMACTION,
     FLAGS,

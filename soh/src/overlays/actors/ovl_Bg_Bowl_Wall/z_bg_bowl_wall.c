@@ -10,7 +10,7 @@
 #include "objects/object_bowl/object_bowl.h"
 #include "vt.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgBowlWall_Init(Actor* thisx, PlayState* play);
 void BgBowlWall_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void BgBowlWall_FallDoEffects(BgBowlWall* this, PlayState* play);
 void BgBowlWall_FinishFall(BgBowlWall* this, PlayState* play);
 void BgBowlWall_Reset(BgBowlWall* this, PlayState* play);
 
-const ActorInit Bg_Bowl_Wall_InitVars = {
+const ActorProfile Bg_Bowl_Wall_InitVars = {
     ACTOR_BG_BOWL_WALL,
     ACTORCAT_PROP,
     FLAGS,

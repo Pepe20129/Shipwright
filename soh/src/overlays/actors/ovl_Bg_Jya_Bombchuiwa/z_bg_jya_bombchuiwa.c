@@ -1,7 +1,7 @@
 #include "z_bg_jya_bombchuiwa.h"
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 #include "objects/object_jya_obj/object_jya_obj.h"
-#define FLAGS ACTOR_FLAG_TARGETABLE
+#define FLAGS ACTOR_FLAG_ATTENTION_ENABLED
 
 void BgJyaBombchuiwa_Init(Actor* thisx, PlayState* play);
 void BgJyaBombchuiwa_Destroy(Actor* thisx, PlayState* play);
@@ -14,7 +14,7 @@ void func_808949B8(BgJyaBombchuiwa* this, PlayState* play);
 void BgJyaBombchuiwa_CleanUpAfterExplosion(BgJyaBombchuiwa* this, PlayState* play);
 void BgJyaBombchuiwa_SpawnLightRay(BgJyaBombchuiwa* this, PlayState* play);
 
-const ActorInit Bg_Jya_Bombchuiwa_InitVars = {
+const ActorProfile Bg_Jya_Bombchuiwa_InitVars = {
     ACTOR_BG_JYA_BOMBCHUIWA,
     ACTORCAT_BG,
     FLAGS,
@@ -163,7 +163,7 @@ void BgJyaBombchuiwa_CleanUpAfterExplosion(BgJyaBombchuiwa* this, PlayState* pla
     BgJyaBombchuiwa_SetDrawFlags(this, 4);
     this->lightRayIntensity = 0.3f;
     this->timer = 0;
-    this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+    this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
 }
 
 void func_808949B8(BgJyaBombchuiwa* this, PlayState* play) {

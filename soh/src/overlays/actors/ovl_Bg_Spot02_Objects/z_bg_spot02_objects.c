@@ -8,7 +8,7 @@
 #include "objects/object_spot02_objects/object_spot02_objects.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgSpot02Objects_Init(Actor* thisx, PlayState* play);
 void BgSpot02Objects_Destroy(Actor* thisx, PlayState* play);
@@ -32,7 +32,7 @@ static void* D_808AD850[] = {
     object_spot02_objects_Tex_0102B0, object_spot02_objects_Tex_010EB0, object_spot02_objects_Tex_011AB0,
 };
 
-const ActorInit Bg_Spot02_Objects_InitVars = {
+const ActorProfile Bg_Spot02_Objects_InitVars = {
     ACTOR_BG_SPOT02_OBJECTS,
     ACTORCAT_BG,
     FLAGS,
@@ -76,7 +76,7 @@ void BgSpot02Objects_Init(Actor* thisx, PlayState* play) {
             } else if (thisx->params == 1) {
                 this->actionFunc = func_808AC8FC;
                 CollisionHeader_GetVirtual(&object_spot02_objects_Col_0128D8, &colHeader);
-                thisx->flags |= ACTOR_FLAG_IGNORE_POINTLIGHTS;
+                thisx->flags |= ACTOR_FLAG_IGNORE_POINT_LIGHTS;
             } else {
                 if (play->sceneNum == SCENE_GRAVEYARD) {
                     this->actionFunc = func_808AC908;

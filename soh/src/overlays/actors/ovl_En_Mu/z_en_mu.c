@@ -7,7 +7,7 @@
 #include "z_en_mu.h"
 #include "objects/object_mu/object_mu.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnMu_Init(Actor* thisx, PlayState* play);
 void EnMu_Destroy(Actor* thisx, PlayState* play);
@@ -39,7 +39,7 @@ static ColliderCylinderInit D_80AB0BD0 = {
 
 static CollisionCheckInfoInit2 D_80AB0BFC = { 0, 0, 0, 0, MASS_IMMOVABLE };
 
-const ActorInit En_Mu_InitVars = {
+const ActorProfile En_Mu_InitVars = {
     ACTOR_EN_MU,
     ACTORCAT_NPC,
     FLAGS,

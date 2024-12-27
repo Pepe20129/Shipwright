@@ -1,7 +1,7 @@
 #include "z_bg_mizu_shutter.h"
 #include "objects/object_mizu_objects/object_mizu_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 #define SIZE_PARAM (((u16)this->dyna.actor.params >> 0xC) & 0xF)
 #define TIMER_PARAM (((u16)this->dyna.actor.params >> 6) & 0x3F)
@@ -16,7 +16,7 @@ void BgMizuShutter_WaitForSwitch(BgMizuShutter* this, PlayState* play);
 void BgMizuShutter_Move(BgMizuShutter* this, PlayState* play);
 void BgMizuShutter_WaitForCutscene(BgMizuShutter* this, PlayState* play);
 
-const ActorInit Bg_Mizu_Shutter_InitVars = {
+const ActorProfile Bg_Mizu_Shutter_InitVars = {
     ACTOR_BG_MIZU_SHUTTER,
     ACTORCAT_PROP,
     FLAGS,

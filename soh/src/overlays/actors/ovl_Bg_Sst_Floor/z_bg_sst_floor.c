@@ -8,7 +8,7 @@
 #include "objects/object_sst/object_sst.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgSstFloor_Init(BgSstFloor* this, PlayState* play);
 void BgSstFloor_Destroy(BgSstFloor* this, PlayState* play);
@@ -17,7 +17,7 @@ void BgSstFloor_Draw(BgSstFloor* this, PlayState* play);
 
 static s32 sUnkValues[] = { 0, 0, 0 }; // Unused, probably a zero vector
 
-const ActorInit Bg_Sst_Floor_InitVars = {
+const ActorProfile Bg_Sst_Floor_InitVars = {
     ACTOR_BG_SST_FLOOR,
     ACTORCAT_BG,
     FLAGS,

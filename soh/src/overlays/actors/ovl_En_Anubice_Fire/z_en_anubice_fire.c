@@ -9,7 +9,7 @@
 #include "objects/object_anubice/object_anubice.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnAnubiceFire_Init(Actor* thisx, PlayState* play);
 void EnAnubiceFire_Destroy(Actor* thisx, PlayState* play);
@@ -20,7 +20,7 @@ void func_809B26EC(EnAnubiceFire* this, PlayState* play);
 void func_809B27D8(EnAnubiceFire* this, PlayState* play);
 void func_809B2B48(EnAnubiceFire* this, PlayState* play);
 
-const ActorInit En_Anubice_Fire_InitVars = {
+const ActorProfile En_Anubice_Fire_InitVars = {
     ACTOR_EN_ANUBICE_FIRE,
     ACTORCAT_ENEMY,
     FLAGS,

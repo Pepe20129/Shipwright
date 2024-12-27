@@ -7,7 +7,7 @@
 #include "z_bg_mori_rakkatenjo.h"
 #include "objects/object_mori_objects/object_mori_objects.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgMoriRakkatenjo_Init(Actor* thisx, PlayState* play);
 void BgMoriRakkatenjo_Destroy(Actor* thisx, PlayState* play);
@@ -27,7 +27,7 @@ void BgMoriRakkatenjo_Rise(BgMoriRakkatenjo* this, PlayState* play);
 
 static s16 sCamSetting = 0;
 
-const ActorInit Bg_Mori_Rakkatenjo_InitVars = {
+const ActorProfile Bg_Mori_Rakkatenjo_InitVars = {
     ACTOR_BG_MORI_RAKKATENJO,
     ACTORCAT_BG,
     FLAGS,

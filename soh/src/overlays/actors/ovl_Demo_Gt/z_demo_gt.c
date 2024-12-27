@@ -4,7 +4,7 @@
 #include "vt.h"
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void DemoGt_Init(Actor* thisx, PlayState* play);
 void DemoGt_Destroy(Actor* thisx, PlayState* play);
@@ -1768,7 +1768,7 @@ void DemoGt_Draw(Actor* thisx, PlayState* play) {
     drawFunc(this, play);
 }
 
-const ActorInit Demo_Gt_InitVars = {
+const ActorProfile Demo_Gt_InitVars = {
     ACTOR_DEMO_GT,
     ACTORCAT_PROP,
     FLAGS,

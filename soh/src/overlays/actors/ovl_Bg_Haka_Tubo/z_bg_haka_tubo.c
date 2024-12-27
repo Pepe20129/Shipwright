@@ -8,7 +8,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_haka_objects/object_haka_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgHakaTubo_Init(Actor* thisx, PlayState* play);
 void BgHakaTubo_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void BgHakaTubo_Draw(Actor* thisx, PlayState* play);
 void BgHakaTubo_Idle(BgHakaTubo* this, PlayState* play);
 void BgHakaTubo_DropCollectible(BgHakaTubo* this, PlayState* play);
 
-const ActorInit Bg_Haka_Tubo_InitVars = {
+const ActorProfile Bg_Haka_Tubo_InitVars = {
     ACTOR_BG_HAKA_TUBO,
     ACTORCAT_BG,
     FLAGS,

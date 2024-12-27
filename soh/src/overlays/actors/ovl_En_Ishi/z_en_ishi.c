@@ -11,7 +11,7 @@
 
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_ALWAYS_THROWN
+#define FLAGS ACTOR_FLAG_THROW_ONLY
 
 void EnIshi_Init(Actor* thisx, PlayState* play);
 void EnIshi_Destroy(Actor* thisx, PlayState* play);
@@ -33,7 +33,7 @@ void EnIshi_SpawnDustLarge(EnIshi* this, PlayState* play);
 s16 sRockRotSpeedX = 0;
 s16 sRockRotSpeedY = 0;
 
-const ActorInit En_Ishi_InitVars = {
+const ActorProfile En_Ishi_InitVars = {
     ACTOR_EN_ISHI,
     ACTORCAT_PROP,
     FLAGS,
@@ -392,7 +392,7 @@ void EnIshi_Wait(EnIshi* this, PlayState* play) {
 void EnIshi_SetupLiftedUp(EnIshi* this) {
     this->actionFunc = EnIshi_LiftedUp;
     this->actor.room = -1;
-    this->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+    this->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
 }
 
 void EnIshi_LiftedUp(EnIshi* this, PlayState* play) {

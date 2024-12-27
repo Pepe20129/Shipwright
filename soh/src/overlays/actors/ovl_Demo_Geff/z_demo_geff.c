@@ -8,7 +8,7 @@
 #include "objects/object_geff/object_geff.h"
 #include "vt.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void DemoGeff_Init(Actor* thisx, PlayState* play);
 void DemoGeff_Destroy(Actor* thisx, PlayState* play);
@@ -42,7 +42,7 @@ static DemoGeffDrawFunc sDrawFuncs[] = {
     func_80978344,
 };
 
-const ActorInit Demo_Geff_InitVars = {
+const ActorProfile Demo_Geff_InitVars = {
     ACTOR_DEMO_GEFF,
     ACTORCAT_BOSS,
     FLAGS,

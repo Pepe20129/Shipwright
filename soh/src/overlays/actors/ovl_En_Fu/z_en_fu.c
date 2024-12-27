@@ -10,7 +10,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 #define FU_RESET_LOOK_ANGLE (1 << 0)
 #define FU_WAIT (1 << 1)
@@ -30,7 +30,7 @@ void func_80A1DBA0(EnFu* this, PlayState* play);
 void func_80A1DBD4(EnFu* this, PlayState* play);
 void func_80A1DB60(EnFu* this, PlayState* play);
 
-const ActorInit En_Fu_InitVars = {
+const ActorProfile En_Fu_InitVars = {
     ACTOR_EN_FU,
     ACTORCAT_NPC,
     FLAGS,
@@ -142,7 +142,7 @@ void EnFu_WaitChild(EnFu* this, PlayState* play) {
         textID = (Flags_GetEventChkInf(EVENTCHKINF_DRAINED_WELL_IN_KAKARIKO)) ? 0x5033 : 0x5032;
     }
 
-    // if ACTOR_FLAG_PLAYER_TALKED_TO is set and textID is 0x5033, change animation
+    // if ACTOR_FLAG_TALK is set and textID is 0x5033, change animation
     // if func_80A1D94C returns 1, actionFunc is set to func_80A1DA04
     if (func_80A1D94C(this, play, textID, func_80A1DA04)) {
         if (textID == 0x5033) {
@@ -183,11 +183,11 @@ void func_80A1DBD4(EnFu* this, PlayState* play) {
     if (play->msgCtx.ocarinaMode >= OCARINA_MODE_04) {
         this->actionFunc = EnFu_WaitAdult;
         play->msgCtx.ocarinaMode = OCARINA_MODE_04;
-        this->actor.flags &= ~ACTOR_FLAG_WILL_TALK;
+        this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
     } else if (play->msgCtx.ocarinaMode == OCARINA_MODE_03) {
         Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
         this->actionFunc = func_80A1DB60;
-        this->actor.flags &= ~ACTOR_FLAG_WILL_TALK;
+        this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
 
         play->msgCtx.ocarinaMode = OCARINA_MODE_00;
         Flags_SetEventChkInf(EVENTCHKINF_PLAYED_SONG_OF_STORMS_IN_WINDMILL);

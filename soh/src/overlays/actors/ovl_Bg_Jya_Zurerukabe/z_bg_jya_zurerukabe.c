@@ -8,7 +8,7 @@
 #include "objects/object_jya_obj/object_jya_obj.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgJyaZurerukabe_Init(Actor* thisx, PlayState* play);
 void BgJyaZurerukabe_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void func_8089B870(BgJyaZurerukabe* this, PlayState* play);
 
 static f32 D_8089B9C0[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-const ActorInit Bg_Jya_Zurerukabe_InitVars = {
+const ActorProfile Bg_Jya_Zurerukabe_InitVars = {
     ACTOR_BG_JYA_ZURERUKABE,
     ACTORCAT_BG,
     FLAGS,

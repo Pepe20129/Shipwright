@@ -1,6 +1,6 @@
 #include "z_en_holl.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 // Horizontal Plane parameters
 
@@ -23,7 +23,7 @@ void func_80A593A4(EnHoll* this, PlayState* play);
 void func_80A59520(EnHoll* this, PlayState* play);
 void func_80A59618(EnHoll* this, PlayState* play);
 
-const ActorInit En_Holl_InitVars = {
+const ActorProfile En_Holl_InitVars = {
     ACTOR_EN_HOLL,
     ACTORCAT_DOOR,
     FLAGS,

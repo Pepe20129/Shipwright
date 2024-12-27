@@ -5,8 +5,8 @@
 ActorDB* ActorDB::Instance;
 
 
-#define DEFINE_ACTOR(name, _1, _2) extern "C" ActorInit name##_InitVars;
-#define DEFINE_ACTOR_INTERNAL(name, _1, _2) extern "C" ActorInit name##_InitVars;
+#define DEFINE_ACTOR(name, _1, _2) extern "C" ActorProfile name##_InitVars;
+#define DEFINE_ACTOR_INTERNAL(name, _1, _2) extern "C" ActorProfile name##_InitVars;
 #define DEFINE_ACTOR_UNSET(_0)
 
 #include "tables/actor_table.h"
@@ -17,7 +17,7 @@ ActorDB* ActorDB::Instance;
 
 struct AddPair {
     const char* name;
-    ActorInit& init;
+    ActorProfile& init;
 };
 
 #define DEFINE_ACTOR_INTERNAL(name, _1, allocType) { #name, name##_InitVars },
@@ -496,8 +496,8 @@ ActorDB::Entry& ActorDB::AddEntry(const std::string& name, const std::string& de
     return newEntry;
 }
 
-// Adds an actor with the legacy ActorInit struct. The id is provided in it.
-ActorDB::Entry& ActorDB::AddEntry(const std::string& name, const std::string& desc, const ActorInit& init) {
+// Adds an actor with the legacy ActorProfile struct. The id is provided in it.
+ActorDB::Entry& ActorDB::AddEntry(const std::string& name, const std::string& desc, const ActorProfile& init) {
     Entry& entry = AddEntry(name, desc, init.id);
 
     entry.entry.category = init.category;
@@ -598,7 +598,7 @@ static ActorDBInit EnPartnerInit = {
     "En_Partner",
     "Ivan",
     ACTORCAT_ITEMACTION,
-    (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED | ACTOR_FLAG_DRAGGED_BY_HOOKSHOT | ACTOR_FLAG_CAN_PRESS_SWITCH),
+    (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED | ACTOR_FLAG_HOOKSHOT_PULLS_PLAYER | ACTOR_FLAG_CAN_PRESS_SWITCHES),
     OBJECT_GAMEPLAY_KEEP,
     sizeof(EnPartner),
     (ActorFunc)EnPartner_Init,

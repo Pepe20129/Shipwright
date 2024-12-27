@@ -7,7 +7,7 @@
 #include "z_en_tana.h"
 #include "objects/object_shop_dungen/object_shop_dungen.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnTana_Init(Actor* thisx, PlayState* play);
 void EnTana_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void EnTana_Update(Actor* thisx, PlayState* play);
 void EnTana_DrawWoodenShelves(Actor* thisx, PlayState* play);
 void EnTana_DrawStoneShelves(Actor* thisx, PlayState* play);
 
-const ActorInit En_Tana_InitVars = {
+const ActorProfile En_Tana_InitVars = {
     ACTOR_EN_TANA,
     ACTORCAT_PROP,
     FLAGS,
@@ -60,7 +60,7 @@ void EnTana_Init(Actor* thisx, PlayState* play) {
 
     osSyncPrintf("☆☆☆ %s ☆☆☆\n", sShelfTypes[thisx->params]);
     Actor_SetScale(thisx, 1.0f);
-    thisx->flags &= ~ACTOR_FLAG_TARGETABLE;
+    thisx->flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
     thisx->draw = sDrawFuncs[thisx->params];
 }
 

@@ -3,7 +3,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 #define SSH_STATE_STUNNED (1 << 0)
 #define SSH_STATE_GROUND_START (1 << 2)
@@ -32,7 +32,7 @@ void EnSsh_Start(EnSsh* this, PlayState* play);
 
 #include "overlays/ovl_En_Ssh/ovl_En_Ssh.h"
 
-const ActorInit En_Ssh_InitVars = {
+const ActorProfile En_Ssh_InitVars = {
     ACTOR_EN_SSH,
     ACTORCAT_NPC,
     FLAGS,

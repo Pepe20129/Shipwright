@@ -11,7 +11,7 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
 
 typedef enum {
     /* 0 */ ZL4_CS_WAIT,
@@ -61,7 +61,7 @@ void EnZl4_Cutscene(EnZl4* this, PlayState* play);
 void EnZl4_Idle(EnZl4* this, PlayState* play);
 void EnZl4_TheEnd(EnZl4* this, PlayState* play);
 
-const ActorInit En_Zl4_InitVars = {
+const ActorProfile En_Zl4_InitVars = {
     ACTOR_EN_ZL4,
     ACTORCAT_NPC,
     FLAGS,

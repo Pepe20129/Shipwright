@@ -7,7 +7,7 @@
 #include "z_en_eg.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnEg_Init(Actor* thisx, PlayState* play);
 void EnEg_Destroy(Actor* thisx, PlayState* play);
@@ -22,7 +22,7 @@ static EnEgActionFunc sActionFuncs[] = {
     func_809FFDC8,
 };
 
-const ActorInit En_Eg_InitVars = {
+const ActorProfile En_Eg_InitVars = {
     ACTOR_EN_EG,
     ACTORCAT_ITEMACTION,
     FLAGS,

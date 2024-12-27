@@ -7,7 +7,7 @@
 #include "z_en_bdfire.h"
 #include "objects/object_kingdodongo/object_kingdodongo.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EnBdfire_Init(Actor* thisx, PlayState* play);
 void EnBdfire_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void EnBdfire_DrawFire(EnBdfire* this, PlayState* play);
 void func_809BC2A4(EnBdfire* this, PlayState* play);
 void func_809BC598(EnBdfire* this, PlayState* play);
 
-const ActorInit En_Bdfire_InitVars = {
+const ActorProfile En_Bdfire_InitVars = {
     ACTOR_EN_BDFIRE,
     ACTORCAT_ENEMY,
     FLAGS,

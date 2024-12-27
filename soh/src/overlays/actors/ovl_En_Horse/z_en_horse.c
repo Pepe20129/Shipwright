@@ -11,7 +11,7 @@
 #include "scenes/overworld/spot09/spot09_scene.h"
 #include <assert.h>
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef void (*EnHorseCsFunc)(EnHorse*, PlayState*, CsCmdActorCue*);
 typedef void (*EnHorseActionFunc)(EnHorse*, PlayState*);
@@ -67,7 +67,7 @@ static f32 sPlaybackSpeeds[] = { 2.0f / 3.0f, 2.0f / 3.0f, 1.0f, 1.0f, 1.0f, 1.0
 
 static SkeletonHeader* sSkeletonHeaders[] = { &gEponaSkel, &gHorseIngoSkel };
 
-const ActorInit En_Horse_InitVars = {
+const ActorProfile En_Horse_InitVars = {
     ACTOR_EN_HORSE,
     ACTORCAT_BG,
     FLAGS,
@@ -726,7 +726,7 @@ s32 EnHorse_PlayerCanMove(EnHorse* this, PlayState* play) {
 
     if ((player->stateFlags1 & PLAYER_STATE1_LOADING) || func_8002DD78(GET_PLAYER(play)) == 1 || (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) ||
         ((this->stateFlags & ENHORSE_FLAG_19) && !this->inRace) || this->action == ENHORSE_ACT_HBA ||
-        player->actor.flags & ACTOR_FLAG_PLAYER_TALKED_TO || play->csCtx.state != 0) {
+        player->actor.flags & ACTOR_FLAG_TALK || play->csCtx.state != 0) {
         return false;
     }
     return true;
@@ -1539,7 +1539,7 @@ void EnHorse_Reverse(EnHorse* this, PlayState* play) {
         } else if (stickMag < 10.0f) {
             stickAngle = -0x7FFF;
         }
-    } else if (player->actor.flags & ACTOR_FLAG_PLAYER_TALKED_TO) {
+    } else if (player->actor.flags & ACTOR_FLAG_TALK) {
         EnHorse_StartMountedIdleResetAnim(this);
         this->actor.speed = 0.0f;
         return;

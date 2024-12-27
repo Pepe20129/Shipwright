@@ -6,7 +6,7 @@
 
 #include "z_demo_shd.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void DemoShd_Init(Actor* thisx, PlayState* play);
 void DemoShd_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void DemoShd_Draw(Actor* thisx, PlayState* play);
 
 void func_80991298(DemoShd* this, PlayState* play);
 
-const ActorInit Demo_Shd_InitVars = {
+const ActorProfile Demo_Shd_InitVars = {
     ACTOR_DEMO_SHD,
     ACTORCAT_ITEMACTION,
     FLAGS,

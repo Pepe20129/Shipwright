@@ -7,7 +7,7 @@
 #include "z_bg_ydan_hasi.h"
 #include "objects/object_ydan_objects/object_ydan_objects.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgYdanHasi_Init(Actor* thisx, PlayState* play);
 void BgYdanHasi_Destroy(Actor* thisx, PlayState* play);
@@ -21,7 +21,7 @@ void BgYdanHasi_MoveWater(BgYdanHasi* this, PlayState* play);
 void BgYdanHasi_DecWaterTimer(BgYdanHasi* this, PlayState* play);
 void BgYdanHasi_UpdateThreeBlocks(BgYdanHasi* this, PlayState* play);
 
-const ActorInit Bg_Ydan_Hasi_InitVars = {
+const ActorProfile Bg_Ydan_Hasi_InitVars = {
     ACTOR_BG_YDAN_HASI,
     ACTORCAT_BG,
     FLAGS,

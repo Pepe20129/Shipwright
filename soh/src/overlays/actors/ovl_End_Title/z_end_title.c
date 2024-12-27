@@ -6,7 +6,7 @@
 
 #include "z_end_title.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EndTitle_Init(Actor* thisx, PlayState* play);
 void EndTitle_Destroy(Actor* thisx, PlayState* play);
@@ -14,7 +14,7 @@ void EndTitle_Update(Actor* thisx, PlayState* play);
 void EndTitle_DrawFull(Actor* thisx, PlayState* play);
 void EndTitle_DrawNintendoLogo(Actor* thisx, PlayState* play);
 
-const ActorInit End_Title_InitVars = {
+const ActorProfile End_Title_InitVars = {
     ACTOR_END_TITLE,
     ACTORCAT_ITEMACTION,
     FLAGS,

@@ -8,7 +8,7 @@
 #include "objects/object_mir_ray/object_mir_ray.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void MirRay_Init(Actor* thisx, PlayState* play);
 void MirRay_Destroy(Actor* thisx, PlayState* play);
@@ -31,7 +31,7 @@ typedef enum {
     /* 9 */ MIRRAY_GANONSCASTLE_SPIRITTRIAL_DOWNLIGHT
 } MirRayBeamLocations;
 
-const ActorInit Mir_Ray_InitVars = {
+const ActorProfile Mir_Ray_InitVars = {
     ACTOR_MIR_RAY,
     ACTORCAT_ITEMACTION,
     FLAGS,

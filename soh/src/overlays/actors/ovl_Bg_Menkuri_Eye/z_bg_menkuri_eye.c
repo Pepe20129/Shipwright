@@ -7,7 +7,7 @@
 #include "z_bg_menkuri_eye.h"
 #include "objects/object_menkuri_objects/object_menkuri_objects.h"
 
-#define FLAGS ACTOR_FLAG_DRAW_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_DRAW_CULLING_DISABLED
 
 void BgMenkuriEye_Init(Actor* thisx, PlayState* play);
 void BgMenkuriEye_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void BgMenkuriEye_Update(Actor* thisx, PlayState* play);
 void BgMenkuriEye_Draw(Actor* thisx, PlayState* play);
 void BgMenkuriEye_Reset(void);
 
-const ActorInit Bg_Menkuri_Eye_InitVars = {
+const ActorProfile Bg_Menkuri_Eye_InitVars = {
     ACTOR_BG_MENKURI_EYE,
     ACTORCAT_BG,
     FLAGS,

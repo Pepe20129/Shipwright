@@ -7,7 +7,7 @@
 #include "z_en_horse_ganon.h"
 #include "objects/object_horse_ganon/object_horse_ganon.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef struct {
     /* 0x0 */ Vec3s unk_0;
@@ -23,7 +23,7 @@ void func_80A68AC4(EnHorseGanon* this);
 void func_80A68AF0(EnHorseGanon* this, PlayState* play);
 void func_80A68DB0(EnHorseGanon* this, PlayState* play);
 
-const ActorInit En_Horse_Ganon_InitVars = {
+const ActorProfile En_Horse_Ganon_InitVars = {
     ACTOR_EN_HORSE_GANON,
     ACTORCAT_BG,
     FLAGS,

@@ -9,7 +9,7 @@
 #include "vt.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 // type:        (this->dyna.actor.params & 7)
 // subtype:     (this->dyna.actor.params >> 4 & 7)
@@ -50,7 +50,7 @@ void ObjSwitch_CrystalOn(ObjSwitch* this, PlayState* play);
 void ObjSwitch_CrystalTurnOffInit(ObjSwitch* this);
 void ObjSwitch_CrystalTurnOff(ObjSwitch* this, PlayState* play);
 
-const ActorInit Obj_Switch_InitVars = {
+const ActorProfile Obj_Switch_InitVars = {
     ACTOR_OBJ_SWITCH,
     ACTORCAT_SWITCH,
     FLAGS,
@@ -313,7 +313,7 @@ void ObjSwitch_Init(Actor* thisx, PlayState* play) {
     }
 
     if (type == OBJSWITCH_TYPE_CRYSTAL_TARGETABLE) {
-        this->dyna.actor.flags |= ACTOR_FLAG_TARGETABLE;
+        this->dyna.actor.flags |= ACTOR_FLAG_ATTENTION_ENABLED;
         this->dyna.actor.attentionRangeType = 4;
     }
 

@@ -9,7 +9,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_hidan_objects/object_hidan_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef enum {
     /* 0 */ FWBIG_MOVE,
@@ -31,7 +31,7 @@ void BgHidanFwbig_WaitForTimer(BgHidanFwbig* this, PlayState* play);
 void BgHidanFwbig_WaitForPlayer(BgHidanFwbig* this, PlayState* play);
 void BgHidanFwbig_Move(BgHidanFwbig* this, PlayState* play);
 
-const ActorInit Bg_Hidan_Fwbig_InitVars = {
+const ActorProfile Bg_Hidan_Fwbig_InitVars = {
     ACTOR_BG_HIDAN_FWBIG,
     ACTORCAT_PROP,
     FLAGS,
@@ -95,7 +95,7 @@ void BgHidanFwbig_Init(Actor* thisx, PlayState* play2) {
         BgHidanFwbig_UpdatePosition(this);
         Actor_SetScale(&this->actor, 0.15f);
         this->collider.dim.height = 230;
-        this->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+        this->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         this->moveState = FWBIG_MOVE;
         this->actionFunc = BgHidanFwbig_WaitForPlayer;
         this->actor.world.pos.y = this->actor.home.pos.y - (2400.0f * this->actor.scale.y);

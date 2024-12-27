@@ -8,7 +8,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED | ACTOR_FLAG_NO_LOCKON)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED | ACTOR_FLAG_LOCK_ON_DISABLED)
 
 typedef enum {
     /* 0 */ CHU_GIRL_EYES_ASLEEP,
@@ -38,7 +38,7 @@ void EnBomBowMan_SetupChooseShowPrize(EnBomBowlMan* this, PlayState* play);
 void EnBomBowMan_ChooseShowPrize(EnBomBowlMan* this, PlayState* play);
 void EnBomBowlMan_BeginPlayGame(EnBomBowlMan* this, PlayState* play);
 
-const ActorInit En_Bom_Bowl_Man_InitVars = {
+const ActorProfile En_Bom_Bowl_Man_InitVars = {
     ACTOR_EN_BOM_BOWL_MAN,
     ACTORCAT_NPC,
     FLAGS,

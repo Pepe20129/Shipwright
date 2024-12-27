@@ -9,7 +9,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 void EnMa1_Init(Actor* thisx, PlayState* play);
 void EnMa1_Destroy(Actor* thisx, PlayState* play);
@@ -28,7 +28,7 @@ void func_80AA10EC(EnMa1* this, PlayState* play);
 void func_80AA1150(EnMa1* this, PlayState* play);
 void EnMa1_DoNothing(EnMa1* this, PlayState* play);
 
-const ActorInit En_Ma1_InitVars = {
+const ActorProfile En_Ma1_InitVars = {
     ACTOR_EN_MA1,
     ACTORCAT_NPC,
     FLAGS,
@@ -369,7 +369,7 @@ void func_80AA0F44(EnMa1* this, PlayState* play) {
             this->actor.textId = 0x2061;
             Message_StartTextbox(play, this->actor.textId, NULL);
             this->interactInfo.talkState = NPC_TALK_STATE_TALKING;
-            this->actor.flags |= ACTOR_FLAG_WILL_TALK;
+            this->actor.flags |= ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
             this->actionFunc = func_80AA106C;
         } else if (this->actor.xzDistToPlayer < 30.0f + (f32)this->collider.dim.radius) {
             player->stateFlags2 |= PLAYER_STATE2_NEAR_OCARINA_ACTOR;
@@ -382,7 +382,7 @@ void func_80AA106C(EnMa1* this, PlayState* play) {
     if (this->interactInfo.talkState == NPC_TALK_STATE_ACTION) {
         Audio_OcaSetInstrument(2);
         func_8010BD58(play, OCARINA_ACTION_TEACH_EPONA);
-        this->actor.flags &= ~ACTOR_FLAG_WILL_TALK;
+        this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
         this->actionFunc = func_80AA10EC;
     }
 }

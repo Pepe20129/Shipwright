@@ -7,14 +7,14 @@
 #include "z_en_lightbox.h"
 #include "objects/object_lightbox/object_lightbox.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnLightbox_Init(Actor* thisx, PlayState* play);
 void EnLightbox_Destroy(Actor* thisx, PlayState* play);
 void EnLightbox_Update(Actor* thisx, PlayState* play);
 void EnLightbox_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Lightbox_InitVars = {
+const ActorProfile En_Lightbox_InitVars = {
     ACTOR_EN_LIGHTBOX,
     ACTORCAT_PROP,
     FLAGS,

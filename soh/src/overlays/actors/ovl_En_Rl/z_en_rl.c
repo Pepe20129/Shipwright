@@ -9,7 +9,7 @@
 #include "objects/object_rl/object_rl.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnRl_Init(Actor* thisx, PlayState* play);
 void EnRl_Destroy(Actor* thisx, PlayState* play);
@@ -382,7 +382,7 @@ void EnRl_Draw(Actor* thisx, PlayState* play) {
     sDrawFuncs[this->drawConfig](this, play);
 }
 
-const ActorInit En_Rl_InitVars = {
+const ActorProfile En_Rl_InitVars = {
     ACTOR_EN_RL,
     ACTORCAT_NPC,
     FLAGS,

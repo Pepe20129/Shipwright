@@ -7,7 +7,7 @@
 #include "z_bg_hidan_fslift.h"
 #include "objects/object_hidan_objects/object_hidan_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgHidanFslift_Init(Actor* thisx, PlayState* play);
 void BgHidanFslift_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void func_80886FCC(BgHidanFslift* this, PlayState* play);
 void func_8088706C(BgHidanFslift* this, PlayState* play);
 void func_808870D8(BgHidanFslift* this, PlayState* play);
 
-const ActorInit Bg_Hidan_Fslift_InitVars = {
+const ActorProfile Bg_Hidan_Fslift_InitVars = {
     ACTOR_BG_HIDAN_FSLIFT,
     ACTORCAT_BG,
     FLAGS,

@@ -30,7 +30,7 @@ void func_80880D68(BgHakaTrap* this);
 
 UNK_TYPE D_80880F30 = 0;
 
-const ActorInit Bg_Haka_Trap_InitVars = {
+const ActorProfile Bg_Haka_Trap_InitVars = {
     ACTOR_BG_HAKA_TRAP,
     ACTORCAT_BG,
     FLAGS,
@@ -133,7 +133,7 @@ void BgHakaTrap_Init(Actor* thisx, PlayState* play) {
             this->actionFunc = func_80880484;
         } else {
             DynaPolyActor_Init(&this->dyna, DPM_PLAYER);
-            thisx->flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+            thisx->flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
 
             if (thisx->params == HAKA_TRAP_SPIKED_BOX) {
                 CollisionHeader_GetVirtual(&object_haka_objects_Col_009CD0, &colHeader);

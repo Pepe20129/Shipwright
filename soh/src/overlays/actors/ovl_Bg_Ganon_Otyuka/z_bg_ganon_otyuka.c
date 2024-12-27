@@ -10,7 +10,7 @@
 
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 typedef enum {
     /* 0x00 */ FLASH_NONE,
@@ -27,7 +27,7 @@ void BgGanonOtyuka_WaitToFall(BgGanonOtyuka* this, PlayState* play);
 void BgGanonOtyuka_Fall(BgGanonOtyuka* this, PlayState* play);
 void BgGanonOtyuka_DoNothing(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Ganon_Otyuka_InitVars = {
+const ActorProfile Bg_Ganon_Otyuka_InitVars = {
     ACTOR_BG_GANON_OTYUKA,
     ACTORCAT_PROP,
     FLAGS,

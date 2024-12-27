@@ -11,7 +11,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_UPDATE_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
 
 void EnVm_Init(Actor* thisx, PlayState* play);
 void EnVm_Destroy(Actor* thisx, PlayState* play);
@@ -25,7 +25,7 @@ void EnVm_Attack(EnVm* this, PlayState* play);
 void EnVm_Stun(EnVm* this, PlayState* play);
 void EnVm_Die(EnVm* this, PlayState* play);
 
-const ActorInit En_Vm_InitVars = {
+const ActorProfile En_Vm_InitVars = {
     ACTOR_EN_VM,
     ACTORCAT_ENEMY,
     FLAGS,

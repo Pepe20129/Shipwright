@@ -14,7 +14,7 @@ void BgUmaJump_Destroy(Actor* thisx, PlayState* play);
 void BgUmaJump_Update(Actor* thisx, PlayState* play);
 void BgUmaJump_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Umajump_InitVars = {
+const ActorProfile Bg_Umajump_InitVars = {
     ACTOR_BG_UMAJUMP,
     ACTORCAT_PROP,
     FLAGS,
@@ -46,7 +46,7 @@ void BgUmaJump_Init(Actor* thisx, PlayState* play) {
             Actor_Kill(&this->dyna.actor);
             return;
         }
-        this->dyna.actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED;
+        this->dyna.actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED;
     }
 }
 

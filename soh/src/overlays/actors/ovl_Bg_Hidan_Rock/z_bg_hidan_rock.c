@@ -30,7 +30,7 @@ void func_8088BC40(PlayState* play, BgHidanRock* this);
 
 static Vec3f D_8088BF60 = { 3310.0f, 120.0f, 0.0f };
 
-const ActorInit Bg_Hidan_Rock_InitVars = {
+const ActorProfile Bg_Hidan_Rock_InitVars = {
     ACTOR_BG_HIDAN_ROCK,
     ACTORCAT_BG,
     FLAGS,
@@ -93,7 +93,7 @@ void BgHidanRock_Init(Actor* thisx, PlayState* play) {
         } else {
             this->actionFunc = func_8088B268;
         }
-        thisx->flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED;
+        thisx->flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED;
         CollisionHeader_GetVirtual(&gFireTempleStoneBlock1Col, &colHeader);
     } else {
         CollisionHeader_GetVirtual(&gFireTempleStoneBlock2Col, &colHeader);
@@ -116,7 +116,7 @@ void BgHidanRock_Destroy(Actor* thisx, PlayState* play) {
 }
 
 void func_8088B24C(BgHidanRock* this) {
-    this->dyna.actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED;
+    this->dyna.actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED;
     this->actionFunc = func_8088B990;
 }
 
@@ -250,7 +250,7 @@ void func_8088B79C(BgHidanRock* this, PlayState* play) {
         } else {
             this->dyna.actor.world.pos.y = this->dyna.actor.home.pos.y - 15.0f;
             this->actionFunc = func_8088B90C;
-            this->dyna.actor.flags &= ~(ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED);
+            this->dyna.actor.flags &= ~(ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED);
         }
 
         Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);

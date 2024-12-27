@@ -6,7 +6,7 @@
 
 #include "z_obj_roomtimer.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ObjRoomtimer_Init(Actor* thisx, PlayState* play);
 void ObjRoomtimer_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void ObjRoomtimer_Update(Actor* thisx, PlayState* play);
 void func_80B9D054(ObjRoomtimer* this, PlayState* play);
 void func_80B9D0B0(ObjRoomtimer* this, PlayState* play);
 
-const ActorInit Obj_Roomtimer_InitVars = {
+const ActorProfile Obj_Roomtimer_InitVars = {
     ACTOR_OBJ_ROOMTIMER,
     ACTORCAT_ENEMY,
     FLAGS,

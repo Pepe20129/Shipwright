@@ -8,7 +8,7 @@
 #include <assert.h>
 #include "soh/OTRGlobals.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ItemEtcetera_Init(Actor* thisx, PlayState* play);
 void ItemEtcetera_Destroy(Actor* thisx, PlayState* play);
@@ -24,7 +24,7 @@ void ItemEtcetera_MoveFireArrowDown(ItemEtcetera* this, PlayState* play);
 void func_80B85B28(ItemEtcetera* this, PlayState* play);
 void ItemEtcetera_UpdateFireArrow(ItemEtcetera* this, PlayState* play);
 
-const ActorInit Item_Etcetera_InitVars = {
+const ActorProfile Item_Etcetera_InitVars = {
     ACTOR_ITEM_ETCETERA,
     ACTORCAT_PROP,
     FLAGS,

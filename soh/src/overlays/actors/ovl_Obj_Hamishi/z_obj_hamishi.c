@@ -14,7 +14,7 @@ void ObjHamishi_Destroy(Actor* thisx, PlayState* play);
 void ObjHamishi_Update(Actor* thisx, PlayState* play);
 void ObjHamishi_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Obj_Hamishi_InitVars = {
+const ActorProfile Obj_Hamishi_InitVars = {
     ACTOR_OBJ_HAMISHI,
     ACTORCAT_PROP,
     FLAGS,

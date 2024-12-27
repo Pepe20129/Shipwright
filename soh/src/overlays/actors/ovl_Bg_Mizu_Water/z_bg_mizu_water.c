@@ -7,7 +7,7 @@
 #include "z_bg_mizu_water.h"
 #include "objects/object_mizu_objects/object_mizu_objects.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgMizuWater_Init(Actor* thisx, PlayState* play);
 void BgMizuWater_Destroy(Actor* thisx, PlayState* play);
@@ -29,7 +29,7 @@ static WaterLevel sWaterLevels[] = {
     { WATER_TEMPLE_WATER_F1_FLAG, WATER_TEMPLE_WATER_F1_Y - WATER_TEMPLE_WATER_F3_Y },
 };
 
-const ActorInit Bg_Mizu_Water_InitVars = {
+const ActorProfile Bg_Mizu_Water_InitVars = {
     ACTOR_BG_MIZU_WATER,
     ACTORCAT_BG,
     FLAGS,

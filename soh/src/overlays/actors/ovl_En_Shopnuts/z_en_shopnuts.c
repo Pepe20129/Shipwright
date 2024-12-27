@@ -4,7 +4,7 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE)
 
 void EnShopnuts_Init(Actor* thisx, PlayState* play);
 void EnShopnuts_Destroy(Actor* thisx, PlayState* play);
@@ -19,7 +19,7 @@ void EnShopnuts_ThrowNut(EnShopnuts* this, PlayState* play);
 void EnShopnuts_Burrow(EnShopnuts* this, PlayState* play);
 void EnShopnuts_SpawnSalesman(EnShopnuts* this, PlayState* play);
 
-const ActorInit En_Shopnuts_InitVars = {
+const ActorProfile En_Shopnuts_InitVars = {
     ACTOR_EN_SHOPNUTS,
     ACTORCAT_ENEMY,
     FLAGS,

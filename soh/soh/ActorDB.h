@@ -67,7 +67,7 @@ public:
     int GetEntryCount();
 private:
     Entry& AddEntry(const std::string& name, const std::string& desc, size_t index);
-    Entry& AddEntry(const std::string& name, const std::string& desc, const ActorInit& init);
+    Entry& AddEntry(const std::string& name, const std::string& desc, const ActorProfile& init);
 
     std::vector<Entry> db;
     std::unordered_map<std::string, int> nameTable;

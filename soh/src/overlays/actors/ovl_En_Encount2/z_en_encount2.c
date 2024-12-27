@@ -4,7 +4,7 @@
 #include "objects/object_efc_star_field/object_efc_star_field.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 typedef enum {
     /* 0x0 */ ENCOUNT2_INACTIVE,
@@ -23,7 +23,7 @@ void EnEncount2_ParticleInit(EnEncount2* this, Vec3f* particlePos, f32 scale);
 void EnEncount2_ParticleDraw(Actor* thisx, PlayState* play);
 void EnEncount2_ParticleUpdate(EnEncount2* this, PlayState* play);
 
-const ActorInit En_Encount2_InitVars = {
+const ActorProfile En_Encount2_InitVars = {
     ACTOR_EN_ENCOUNT2,
     ACTORCAT_ENEMY,
     FLAGS,

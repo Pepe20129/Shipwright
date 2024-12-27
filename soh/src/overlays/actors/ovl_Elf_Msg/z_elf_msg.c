@@ -9,7 +9,7 @@
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ElfMsg_Init(Actor* thisx, PlayState* play);
 void ElfMsg_Destroy(Actor* thisx, PlayState* play);
@@ -19,7 +19,7 @@ void ElfMsg_Draw(Actor* thisx, PlayState* play);
 void ElfMsg_CallNaviCuboid(ElfMsg* this, PlayState* play);
 void ElfMsg_CallNaviCylinder(ElfMsg* this, PlayState* play);
 
-const ActorInit Elf_Msg_InitVars = {
+const ActorProfile Elf_Msg_InitVars = {
     ACTOR_ELF_MSG,
     ACTORCAT_ITEMACTION,
     FLAGS,

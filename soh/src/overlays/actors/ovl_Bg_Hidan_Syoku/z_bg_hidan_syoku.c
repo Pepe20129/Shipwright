@@ -7,7 +7,7 @@
 #include "z_bg_hidan_syoku.h"
 #include "objects/object_hidan_objects/object_hidan_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgHidanSyoku_Init(Actor* thisx, PlayState* play);
 void BgHidanSyoku_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void func_8088F4B8(BgHidanSyoku* this, PlayState* play);
 void func_8088F514(BgHidanSyoku* this, PlayState* play);
 void func_8088F62C(BgHidanSyoku* this, PlayState* play);
 
-const ActorInit Bg_Hidan_Syoku_InitVars = {
+const ActorProfile Bg_Hidan_Syoku_InitVars = {
     ACTOR_BG_HIDAN_SYOKU,
     ACTORCAT_BG,
     FLAGS,

@@ -23,7 +23,7 @@ static Color_RGBA8 sWhite = { 250, 250, 250, 255 };
 static Color_RGBA8 sGray = { 180, 180, 180, 255 };
 static Vec3f sZeroVec = { 0.0f, 0.0f, 0.0f };
 
-const ActorInit Bg_Ice_Objects_InitVars = {
+const ActorProfile Bg_Ice_Objects_InitVars = {
     ACTOR_BG_ICE_OBJECTS,
     ACTORCAT_PROP,
     FLAGS,
@@ -142,7 +142,7 @@ void BgIceObjects_Idle(BgIceObjects* this, PlayState* play) {
         if ((this->dyna.unk_150 > 0.0f) && !Player_InCsMode(play)) {
             BgIceObjects_SetNextTarget(this, play);
             if (Actor_WorldDistXZToPoint(thisx, &this->targetPos) > 1.0f) {
-                thisx->flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+                thisx->flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
                 Player_SetCsActionWithHaltedActors(play, thisx, 8);
                 thisx->params = 1;
                 this->actionFunc = BgIceObjects_Slide;
@@ -170,7 +170,7 @@ void BgIceObjects_Slide(BgIceObjects* this, PlayState* play) {
         this->targetPos.x = thisx->world.pos.x;
         this->targetPos.z = thisx->world.pos.z;
         if (thisx->velocity.y <= 0.0f) {
-            thisx->flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
+            thisx->flags &= ~ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         }
         thisx->params = 0;
         Player_SetCsActionWithHaltedActors(play, thisx, 7);
@@ -207,7 +207,7 @@ void BgIceObjects_Reset(BgIceObjects* this, PlayState* play) {
         this->dyna.unk_150 = 0.0f;
     }
     if (Math_StepToF(&thisx->world.pos.y, thisx->home.pos.y, 1.0f)) {
-        thisx->flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
+        thisx->flags &= ~ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         Math_Vec3f_Copy(&this->targetPos, &thisx->home.pos);
         this->actionFunc = BgIceObjects_Idle;
         thisx->speed = 0.0f;

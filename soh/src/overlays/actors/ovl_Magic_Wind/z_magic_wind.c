@@ -7,7 +7,7 @@
 #include "z_magic_wind.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 void MagicWind_Init(Actor* thisx, PlayState* play);
 void MagicWind_Destroy(Actor* thisx, PlayState* play);
@@ -20,7 +20,7 @@ void MagicWind_FadeOut(MagicWind* this, PlayState* play);
 void MagicWind_WaitAtFullSize(MagicWind* this, PlayState* play);
 void MagicWind_Grow(MagicWind* this, PlayState* play);
 
-const ActorInit Magic_Wind_InitVars = {
+const ActorProfile Magic_Wind_InitVars = {
     ACTOR_MAGIC_WIND,
     ACTORCAT_ITEMACTION,
     FLAGS,

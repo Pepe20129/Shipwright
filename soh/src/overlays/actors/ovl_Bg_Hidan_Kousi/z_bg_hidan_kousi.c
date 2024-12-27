@@ -7,7 +7,7 @@
 #include "z_bg_hidan_kousi.h"
 #include "objects/object_hidan_objects/object_hidan_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgHidanKousi_Init(Actor* thisx, PlayState* play);
 void BgHidanKousi_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void func_80889D28(BgHidanKousi* this, PlayState* play);
 
 static f32 D_80889E40[] = { 120.0f, 150.0f, 150.0f };
 
-const ActorInit Bg_Hidan_Kousi_InitVars = {
+const ActorProfile Bg_Hidan_Kousi_InitVars = {
     ACTOR_BG_HIDAN_KOUSI,
     ACTORCAT_PROP,
     FLAGS,

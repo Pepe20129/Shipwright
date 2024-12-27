@@ -9,7 +9,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgTokiSwd_Init(Actor* thisx, PlayState* play);
 void BgTokiSwd_Destroy(Actor* thisx, PlayState* play);
@@ -24,7 +24,7 @@ extern CutsceneData D_808BB2F0[];
 extern CutsceneData D_808BB7A0[];
 extern CutsceneData D_808BBD90[];
 
-const ActorInit Bg_Toki_Swd_InitVars = {
+const ActorProfile Bg_Toki_Swd_InitVars = {
     ACTOR_BG_TOKI_SWD,
     ACTORCAT_PROP,
     FLAGS,

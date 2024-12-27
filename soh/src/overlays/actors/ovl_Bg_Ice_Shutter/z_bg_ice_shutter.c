@@ -7,7 +7,7 @@
 #include "z_bg_ice_shutter.h"
 #include "objects/object_ice_objects/object_ice_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgIceShutter_Init(Actor* thisx, PlayState* play);
 void BgIceShutter_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void func_80891CF4(BgIceShutter* thisx, PlayState* play);
 void func_80891D6C(BgIceShutter* thisx, PlayState* play);
 void func_80891DD4(BgIceShutter* thisx, PlayState* play);
 
-const ActorInit Bg_Ice_Shutter_InitVars = {
+const ActorProfile Bg_Ice_Shutter_InitVars = {
     ACTOR_BG_ICE_SHUTTER,
     ACTORCAT_PROP,
     FLAGS,

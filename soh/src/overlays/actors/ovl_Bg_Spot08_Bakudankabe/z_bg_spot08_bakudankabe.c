@@ -9,7 +9,7 @@
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
 
-#define FLAGS ACTOR_FLAG_IGNORE_POINTLIGHTS
+#define FLAGS ACTOR_FLAG_IGNORE_POINT_LIGHTS
 
 void BgSpot08Bakudankabe_Init(Actor* thisx, PlayState* play);
 void BgSpot08Bakudankabe_Destroy(Actor* thisx, PlayState* play);
@@ -19,7 +19,7 @@ void BgSpot08Bakudankabe_Draw(Actor* thisx, PlayState* play);
 void func_808B02D0(BgSpot08Bakudankabe* this, PlayState* play);
 void func_808B0324(BgSpot08Bakudankabe* this, PlayState* play);
 
-const ActorInit Bg_Spot08_Bakudankabe_InitVars = {
+const ActorProfile Bg_Spot08_Bakudankabe_InitVars = {
     ACTOR_BG_SPOT08_BAKUDANKABE,
     ACTORCAT_BG,
     FLAGS,

@@ -17,7 +17,7 @@
 #include "soh/frame_interpolation.h"
 #include <assert.h>
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnViewer_Init(Actor* thisx, PlayState* play);
 void EnViewer_Destroy(Actor* thisx, PlayState* play);
@@ -32,7 +32,7 @@ void EnViewer_UpdateImpl(EnViewer* this, PlayState* play);
 
 static u8 sHorseSfxPlayed = false;
 
-const ActorInit En_Viewer_InitVars = {
+const ActorProfile En_Viewer_InitVars = {
     ACTOR_EN_VIEWER,
     ACTORCAT_ITEMACTION,
     FLAGS,
@@ -178,7 +178,7 @@ void EnViewer_InitImpl(EnViewer* this, PlayState* play) {
 
     if (!Object_IsLoaded(&play->objectCtx, skelObjBankIndex) ||
         !Object_IsLoaded(&play->objectCtx, this->animObjBankIndex)) {
-        this->actor.flags &= ~ACTOR_FLAG_ACTIVE;
+        this->actor.flags &= ~ACTOR_FLAG_INSIDE_CULLING_VOLUME;
         return;
     }
 

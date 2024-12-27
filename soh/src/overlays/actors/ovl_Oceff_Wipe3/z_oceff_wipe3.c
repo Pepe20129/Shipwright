@@ -8,14 +8,14 @@
 #include "vt.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 void OceffWipe3_Init(Actor* thisx, PlayState* play);
 void OceffWipe3_Destroy(Actor* thisx, PlayState* play);
 void OceffWipe3_Update(Actor* thisx, PlayState* play);
 void OceffWipe3_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Oceff_Wipe3_InitVars = {
+const ActorProfile Oceff_Wipe3_InitVars = {
     ACTOR_OCEFF_WIPE3,
     ACTORCAT_ITEMACTION,
     FLAGS,

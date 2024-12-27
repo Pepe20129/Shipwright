@@ -24,7 +24,7 @@ void EnChanger_Wait(EnChanger* this, PlayState* play);
 void EnChanger_OpenChests(EnChanger* this, PlayState* play);
 void EnChanger_SetHeartPieceFlag(EnChanger* this, PlayState* play);
 
-const ActorInit En_Changer_InitVars = {
+const ActorProfile En_Changer_InitVars = {
     ACTOR_EN_CHANGER,
     ACTORCAT_PROP,
     FLAGS,
@@ -201,7 +201,7 @@ void EnChanger_Init(Actor* thisx, PlayState* play2) {
                     ((this->rightChestNum & 0x1F) << 8) + (rightChestItem & 0xFF), true);
     }
 
-    this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+    this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
     this->actionFunc = EnChanger_Wait;
 }
 

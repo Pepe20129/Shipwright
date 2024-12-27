@@ -2,7 +2,7 @@
 #include "objects/object_efc_erupc/object_efc_erupc.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EfcErupc_Init(Actor* thisx, PlayState* play);
 void EfcErupc_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void EfcErupc_UpdateParticles(EfcErupc* this, PlayState* play);
 void EfcErupc_AddParticle(EfcErupcParticles* particles, Vec3f* pos, Vec3f* vel, Vec3f* accel, f32 scaleFactor);
 void EfcErupc_InitParticles(EfcErupcParticles* particles);
 
-const ActorInit Efc_Erupc_InitVars = {
+const ActorProfile Efc_Erupc_InitVars = {
     ACTOR_EFC_ERUPC,
     ACTORCAT_ITEMACTION,
     FLAGS,

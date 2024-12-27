@@ -10,7 +10,7 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnAni_Init(Actor* thisx, PlayState* play);
 void EnAni_Destroy(Actor* thisx, PlayState* play);
@@ -29,7 +29,7 @@ void func_809B0994(EnAni* this, PlayState* play);
 void func_809B0A28(EnAni* this, PlayState* play);
 void func_809B0A6C(EnAni* this, PlayState* play);
 
-const ActorInit En_Ani_InitVars = {
+const ActorProfile En_Ani_InitVars = {
     ACTOR_EN_ANI,
     ACTORCAT_NPC,
     FLAGS,

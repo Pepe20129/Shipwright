@@ -7,7 +7,7 @@
 #include "z_bg_ddan_kd.h"
 #include "objects/object_ddan_objects/object_ddan_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgDdanKd_Init(Actor* thisx, PlayState* play);
 void BgDdanKd_Destroy(Actor* thisx, PlayState* play);
@@ -19,7 +19,7 @@ void BgDdanKd_CheckForExplosions(BgDdanKd* this, PlayState* play);
 void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play);
 void BgDdanKd_DoNothing(BgDdanKd* this, PlayState* play);
 
-const ActorInit Bg_Ddan_Kd_InitVars = {
+const ActorProfile Bg_Ddan_Kd_InitVars = {
     ACTOR_BG_DDAN_KD,
     ACTORCAT_BG,
     FLAGS,

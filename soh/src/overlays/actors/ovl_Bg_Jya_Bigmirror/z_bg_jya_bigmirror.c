@@ -7,7 +7,7 @@
 #include "z_bg_jya_bigmirror.h"
 #include "objects/object_jya_obj/object_jya_obj.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgJyaBigmirror_Init(Actor* thisx, PlayState* play);
 void BgJyaBigmirror_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void BgJyaBigmirror_Draw(Actor* thisx, PlayState* play);
 
 static u8 sKankyoIsSpawned = false;
 
-const ActorInit Bg_Jya_Bigmirror_InitVars = {
+const ActorProfile Bg_Jya_Bigmirror_InitVars = {
     ACTOR_BG_JYA_BIGMIRROR,
     ACTORCAT_BG,
     FLAGS,

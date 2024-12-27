@@ -8,7 +8,7 @@
 #include "objects/object_hakach_objects/object_hakach_objects.h"
 #include "objects/object_haka_objects/object_haka_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef enum {
     /* 0x0 */ STA_GIANT_BIRD_STATUE,
@@ -54,7 +54,7 @@ static ColliderCylinderInit sCylinderInit = {
 
 static Vec3f sZeroVec = { 0.0f, 0.0f, 0.0f };
 
-const ActorInit Bg_Haka_Zou_InitVars = {
+const ActorProfile Bg_Haka_Zou_InitVars = {
     ACTOR_BG_HAKA_ZOU,
     ACTORCAT_PROP,
     FLAGS,

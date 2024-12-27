@@ -8,7 +8,7 @@
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 #include "objects/object_jya_iron/object_jya_iron.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgJyaHaheniron_Init(Actor* thisx, PlayState* play);
 void BgJyaHaheniron_Destroy(Actor* thisx, PlayState* play);
@@ -22,7 +22,7 @@ void BgJyaHaheniron_PillarCrumble(BgJyaHaheniron* this, PlayState* play);
 void BgJyaHaheniron_SetupRubbleCollide(BgJyaHaheniron* this);
 void BgJyaHaheniron_RubbleCollide(BgJyaHaheniron* this, PlayState* play);
 
-const ActorInit Bg_Jya_Haheniron_InitVars = {
+const ActorProfile Bg_Jya_Haheniron_InitVars = {
     ACTOR_BG_JYA_HAHENIRON,
     ACTORCAT_PROP,
     FLAGS,

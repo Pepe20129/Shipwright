@@ -5,7 +5,7 @@
 #include "vt.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef void (*DemoDuActionFunc)(DemoDu*, PlayState*);
 typedef void (*DemoDuDrawFunc)(Actor*, PlayState*);
@@ -1039,7 +1039,7 @@ void DemoDu_Draw(Actor* thisx, PlayState* play) {
     sDrawFuncs[this->drawIndex](thisx, play);
 }
 
-const ActorInit Demo_Du_InitVars = {
+const ActorProfile Demo_Du_InitVars = {
     ACTOR_DEMO_DU,
     ACTORCAT_NPC,
     FLAGS,

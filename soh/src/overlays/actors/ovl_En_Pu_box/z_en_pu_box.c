@@ -7,14 +7,14 @@
 #include "z_en_pu_box.h"
 #include "objects/object_pu_box/object_pu_box.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnPubox_Init(Actor* thisx, PlayState* play);
 void EnPubox_Destroy(Actor* thisx, PlayState* play);
 void EnPubox_Update(Actor* thisx, PlayState* play);
 void EnPubox_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Pu_box_InitVars = {
+const ActorProfile En_Pu_box_InitVars = {
     ACTOR_EN_PU_BOX,
     ACTORCAT_BG,
     FLAGS,

@@ -9,7 +9,7 @@
 #include <assert.h>
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnTr_Init(Actor* thisx, PlayState* play);
 void EnTr_Destroy(Actor* thisx, PlayState* play);
@@ -25,7 +25,7 @@ void EnTr_UpdateRotation(EnTr* this, PlayState* play, s32 actionIndex);
 void func_80B24038(EnTr* this, PlayState* play, s32 actionIndex);
 void EnTr_SetStartPosRot(EnTr* this, PlayState* play, s32 actionIndex);
 
-const ActorInit En_Tr_InitVars = {
+const ActorProfile En_Tr_InitVars = {
     ACTOR_EN_TR,
     ACTORCAT_NPC,
     FLAGS,

@@ -8,7 +8,7 @@
 #include "objects/object_nwc/object_nwc.h"
 #include "soh/frame_interpolation.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EnNwc_Init(Actor* thisx, PlayState* play);
 void EnNwc_Destroy(Actor* thisx, PlayState* play);
@@ -31,7 +31,7 @@ typedef enum {
     /* 1 */ CHICK_NORMAL
 } ChickTypes;
 
-const ActorInit En_Nwc_InitVars = {
+const ActorProfile En_Nwc_InitVars = {
     ACTOR_EN_NWC,
     ACTORCAT_PROP,
     FLAGS,

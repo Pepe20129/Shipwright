@@ -7,7 +7,7 @@
 #include "z_en_stream.h"
 #include "objects/object_stream/object_stream.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnStream_Init(Actor* thisx, PlayState* play);
 void EnStream_Destroy(Actor* thisx, PlayState* play);
@@ -15,7 +15,7 @@ void EnStream_Update(Actor* thisx, PlayState* play);
 void EnStream_Draw(Actor* thisx, PlayState* play);
 void EnStream_WaitForPlayer(EnStream* this, PlayState* play);
 
-const ActorInit En_Stream_InitVars = {
+const ActorProfile En_Stream_InitVars = {
     ACTOR_EN_STREAM,
     ACTORCAT_BG,
     FLAGS,

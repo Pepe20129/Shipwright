@@ -9,7 +9,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ItemOcarina_Init(Actor* thisx, PlayState* play);
 void ItemOcarina_Destroy(Actor* thisx, PlayState* play);
@@ -24,7 +24,7 @@ void func_80B864EC(ItemOcarina* this, PlayState* play);
 void func_80B865E0(ItemOcarina* this, PlayState* play);
 void ItemOcarina_DoNothing(ItemOcarina* this, PlayState* play);
 
-const ActorInit Item_Ocarina_InitVars = {
+const ActorProfile Item_Ocarina_InitVars = {
     ACTOR_ITEM_OCARINA,
     ACTORCAT_ITEMACTION,
     FLAGS,

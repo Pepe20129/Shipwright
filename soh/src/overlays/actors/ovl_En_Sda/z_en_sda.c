@@ -6,7 +6,7 @@
 
 #include "z_en_sda.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EnSda_Init(Actor* thisx, PlayState* play);
 void EnSda_Destroy(Actor* thisx, PlayState* play);
@@ -17,7 +17,7 @@ void func_80AF95C4(EnSda* this, u8* shadowTexture, Player* player, PlayState* pl
 void func_80AF9C70(u8* shadowTexture, Player* player, PlayState* play);
 void func_80AF8F60(Player* player, u8* shadowTexture, f32 arg2);
 
-const ActorInit En_Sda_InitVars = {
+const ActorProfile En_Sda_InitVars = {
     ACTOR_EN_SDA,
     ACTORCAT_BOSS,
     FLAGS,

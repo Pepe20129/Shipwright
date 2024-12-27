@@ -5,7 +5,7 @@
 #include "soh/frame_interpolation.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE | ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void EnClearTag_Init(Actor* thisx, PlayState* play);
 void EnClearTag_Destroy(Actor* thisx, PlayState* play);
@@ -25,7 +25,7 @@ void EnClearTag_CreateFlashEffect(PlayState* play, Vec3f* position, f32 scale, f
 
 void EnClearTag_CalculateFloorTangent(EnClearTag* this);
 
-const ActorInit En_Clear_Tag_InitVars = {
+const ActorProfile En_Clear_Tag_InitVars = {
     ACTOR_EN_CLEAR_TAG,
     ACTORCAT_BOSS,
     FLAGS,
@@ -266,7 +266,7 @@ void EnClearTag_Init(Actor* thisx, PlayState* play) {
             Actor_ChangeCategory(play, &play->actorCtx, thisx, ACTORCAT_ENEMY);
         }
 
-        this->actor.flags |= ACTOR_FLAG_TARGETABLE;
+        this->actor.flags |= ACTOR_FLAG_ATTENTION_ENABLED;
         this->actor.attentionRangeType = 5;
         Collider_SetCylinder(play, &this->collider, &this->actor, &sArwingCylinderInit);
         this->actor.colChkInfo.health = 3;
@@ -553,7 +553,7 @@ void EnClearTag_Update(Actor* thisx, PlayState* play2) {
                         if (this->drawMode != CLEAR_TAG_DRAW_MODE_ARWING) {
                             this->drawMode = CLEAR_TAG_DRAW_MODE_EFFECT;
                             this->deathTimer = 70;
-                            this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+                            this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
                         } else {
                             Actor_Kill(&this->actor);
                         }

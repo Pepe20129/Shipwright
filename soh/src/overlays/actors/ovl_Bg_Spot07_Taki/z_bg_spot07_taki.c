@@ -7,7 +7,7 @@
 #include "z_bg_spot07_taki.h"
 #include "objects/object_spot07_object/object_spot07_object.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgSpot07Taki_Init(Actor* thisx, PlayState* play);
 void BgSpot07Taki_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void BgSpot07Taki_Draw(Actor* thisx, PlayState* play);
 
 void BgSpot07Taki_DoNothing(BgSpot07Taki* this, PlayState* play);
 
-const ActorInit Bg_Spot07_Taki_InitVars = {
+const ActorProfile Bg_Spot07_Taki_InitVars = {
     ACTOR_BG_SPOT07_TAKI,
     ACTORCAT_BG,
     FLAGS,

@@ -9,7 +9,7 @@
 #include "objects/object_bowl/object_bowl.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgBomGuard_Init(Actor* thisx, PlayState* play);
 void BgBomGuard_Destroy(Actor* thisx, PlayState* play);
@@ -17,7 +17,7 @@ void BgBomGuard_Update(Actor* thisx, PlayState* play);
 
 void func_8086E638(BgBomGuard* this, PlayState* play);
 
-const ActorInit Bg_Bom_Guard_InitVars = {
+const ActorProfile Bg_Bom_Guard_InitVars = {
     ACTOR_BG_BOM_GUARD,
     ACTORCAT_PROP,
     FLAGS,

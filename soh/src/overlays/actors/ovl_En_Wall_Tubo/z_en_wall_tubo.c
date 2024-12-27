@@ -10,7 +10,7 @@
 #include "overlays/actors/ovl_Bg_Bowl_Wall/z_bg_bowl_wall.h"
 #include "overlays/effects/ovl_Effect_Ss_Hahen/z_eff_ss_hahen.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnWallTubo_Init(Actor* thisx, PlayState* play);
 void EnWallTubo_Destroy(Actor* thisx, PlayState* play);
@@ -20,7 +20,7 @@ void EnWallTubo_FindGirl(EnWallTubo* this, PlayState* play);
 void EnWallTubo_DetectChu(EnWallTubo* this, PlayState* play);
 void EnWallTubo_SetWallFall(EnWallTubo* this, PlayState* play);
 
-const ActorInit En_Wall_Tubo_InitVars = {
+const ActorProfile En_Wall_Tubo_InitVars = {
     ACTOR_EN_WALL_TUBO,
     ACTORCAT_PROP,
     FLAGS,

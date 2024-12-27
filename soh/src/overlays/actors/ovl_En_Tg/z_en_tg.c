@@ -7,7 +7,7 @@
 #include "z_en_tg.h"
 #include "objects/object_mu/object_mu.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnTg_Init(Actor* thisx, PlayState* play);
 void EnTg_Destroy(Actor* thisx, PlayState* play);
@@ -38,7 +38,7 @@ static ColliderCylinderInit sCylinderInit = {
 
 static CollisionCheckInfoInit2 sColChkInfoInit = { 0, 0, 0, 0, MASS_IMMOVABLE };
 
-const ActorInit En_Tg_InitVars = {
+const ActorProfile En_Tg_InitVars = {
     ACTOR_EN_TG,
     ACTORCAT_NPC,
     FLAGS,

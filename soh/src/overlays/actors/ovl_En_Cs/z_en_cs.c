@@ -3,7 +3,7 @@
 #include "objects/object_link_child/object_link_child.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnCs_Init(Actor* thisx, PlayState* play);
 void EnCs_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void EnCs_Wait(EnCs* this, PlayState* play);
 s32 EnCs_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, void* thisx);
 void EnCs_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx);
 
-const ActorInit En_Cs_InitVars = {
+const ActorProfile En_Cs_InitVars = {
     ACTOR_EN_CS,
     ACTORCAT_NPC,
     FLAGS,

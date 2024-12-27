@@ -24,7 +24,7 @@ void EnItem00_DrawCollectible(EnItem00* this, PlayState* play);
 void EnItem00_DrawHeartContainer(EnItem00* this, PlayState* play);
 void EnItem00_DrawHeartPiece(EnItem00* this, PlayState* play);
 
-const ActorInit En_Item00_InitVars = {
+const ActorProfile En_Item00_InitVars = {
     ACTOR_EN_ITEM00,
     ACTORCAT_MISC,
     FLAGS,
@@ -495,11 +495,11 @@ void EnItem00_Init(Actor* thisx, PlayState* play) {
 
     if (!spawnParam8000) {
         EnItem00_SetupAction(this, func_8001DFC8);
-        this->unk_15A = -1;
+        this->despawnTimer = -1;
         return;
     }
 
-    this->unk_15A = 15;
+    this->despawnTimer = 15;
     this->unk_154 = 35;
 
     this->actor.speed = 0.0f;
@@ -594,20 +594,20 @@ void EnItem00_Destroy(Actor* thisx, PlayState* play) {
 }
 
 void func_8001DFC8(EnItem00* this, PlayState* play) {
-    if ((this->actor.params <= ITEM00_RUPEE_RED) || ((this->actor.params == ITEM00_HEART) && (this->unk_15A < 0)) ||
+    if ((this->actor.params <= ITEM00_RUPEE_RED) || ((this->actor.params == ITEM00_HEART) && (this->despawnTimer < 0)) ||
         (this->actor.params == ITEM00_HEART_PIECE)) {
         this->actor.shape.rot.y += 960;
     } else {
         if ((this->actor.params >= ITEM00_SHIELD_DEKU) && (this->actor.params < ITEM00_BOMBS_SPECIAL)) {
-            if (this->unk_15A == -1) {
+            if (this->despawnTimer == -1) {
                 if (Math_SmoothStepToS(&this->actor.shape.rot.x, this->actor.world.rot.x - 0x4000, 2, 3000, 1500) ==
                     0) {
-                    this->unk_15A = -2;
+                    this->despawnTimer = -2;
                 }
             } else {
                 if (Math_SmoothStepToS(&this->actor.shape.rot.x, -this->actor.world.rot.x - 0x4000, 2, 3000, 1500) ==
                     0) {
-                    this->unk_15A = -1;
+                    this->despawnTimer = -1;
                 }
             }
             Math_SmoothStepToS(&this->actor.world.rot.x, 0, 2, 2500, 500);
@@ -627,7 +627,7 @@ void func_8001DFC8(EnItem00* this, PlayState* play) {
         }
     }
 
-    if (this->unk_15A == 0) {
+    if (this->despawnTimer == 0) {
         if ((this->actor.params != ITEM00_SMALL_KEY) && (this->actor.params != ITEM00_HEART_PIECE) &&
             (this->actor.params != ITEM00_HEART_CONTAINER)) {
             Actor_Kill(&this->actor);
@@ -672,7 +672,7 @@ void func_8001E304(EnItem00* this, PlayState* play) {
     Vec3f pos;
     s32 rotOffset;
 
-    this->unk_15A++;
+    this->despawnTimer++;
 
     if (this->actor.params == ITEM00_HEART) {
         if (this->actor.velocity.y < 0.0f) {
@@ -727,13 +727,13 @@ void func_8001E5C8(EnItem00* this, PlayState* play) {
     if (this->getItemId != GI_NONE) {
         if (!Actor_HasParent(&this->actor, play)) {
             Actor_OfferGetItem(&this->actor, play, this->getItemId, 50.0f, 80.0f);
-            this->unk_15A++;
+            this->despawnTimer++;
         } else {
             this->getItemId = GI_NONE;
         }
     }
 
-    if (this->unk_15A == 0) {
+    if (this->despawnTimer == 0) {
         Actor_Kill(&this->actor);
         return;
     }
@@ -747,7 +747,7 @@ void func_8001E5C8(EnItem00* this, PlayState* play) {
     }
 
     // bounces up and down above player's head
-    this->actor.world.pos.y += 40.0f + Math_SinS(this->unk_15A * 15000) * (this->unk_15A * 0.3f);
+    this->actor.world.pos.y += 40.0f + Math_SinS(this->despawnTimer * 15000) * (this->despawnTimer * 0.3f);
 
     if (LINK_IS_ADULT) {
         this->actor.world.pos.y += 20.0f;
@@ -769,7 +769,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
 
     // Rotate some drops when 3D drops are on, otherwise reset rotation back to 0 for billboard effect
     if (
-        (this->actor.params == ITEM00_HEART && this->unk_15A >= 0) ||
+        (this->actor.params == ITEM00_HEART && this->despawnTimer >= 0) ||
         (this->actor.params >= ITEM00_ARROWS_SMALL && this->actor.params <= ITEM00_SMALL_KEY) ||
         this->actor.params == ITEM00_BOMBS_A ||
         this->actor.params == ITEM00_ARROWS_SINGLE ||
@@ -783,15 +783,15 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
         }
     }
 
-    if (this->unk_15A > 0) {
-        this->unk_15A--;
+    if (this->despawnTimer > 0) {
+        this->despawnTimer--;
         if (CVarGetInteger(CVAR_CHEAT("DropsDontDie"), 0) && (this->unk_154 <= 0)) {
-            this->unk_15A++;
+            this->despawnTimer++;
         }
     }
 
-    if ((this->unk_15A > 0) && (this->unk_15A < 41) && (this->unk_154 <= 0)) {
-        this->unk_156 = this->unk_15A;
+    if ((this->despawnTimer > 0) && (this->despawnTimer < 41) && (this->unk_154 <= 0)) {
+        this->unk_156 = this->despawnTimer;
     }
 
     this->actionFunc(this, play);
@@ -980,7 +980,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
 
     Flags_SetCollectible(play, this->collectibleFlag);
 
-    this->unk_15A = 15;
+    this->despawnTimer = 15;
     this->unk_154 = 35;
     this->actor.shape.rot.z = 0;
     this->actor.speed = 0;
@@ -1051,20 +1051,20 @@ void EnItem00_Draw(Actor* thisx, PlayState* play) {
                 break;
             case ITEM00_HEART:
                 // Only change despawn-able recovery hearts
-                if (CVarGetInteger(CVAR_ENHANCEMENT("NewDrops"), 0) && this->unk_15A >= 0) {
+                if (CVarGetInteger(CVAR_ENHANCEMENT("NewDrops"), 0) && this->despawnTimer >= 0) {
                     mtxScale = 16.0f;
                     Matrix_Scale(mtxScale, mtxScale, mtxScale, MTXMODE_APPLY);
                     GetItem_Draw(play, GID_HEART);
                     break;
                 } else {
                     // Overworld hearts that are always 3D
-                    if (this->unk_15A < 0) {
-                        if (this->unk_15A == -1) {
+                    if (this->despawnTimer < 0) {
+                        if (this->despawnTimer == -1) {
                             s8 bankIndex = Object_GetIndex(&play->objectCtx, OBJECT_GI_HEART);
                             if (Object_IsLoaded(&play->objectCtx, bankIndex)) {
                                 this->actor.objectSlot = bankIndex;
                                 Actor_SetObjectDependency(play, &this->actor);
-                                this->unk_15A = -2;
+                                this->despawnTimer = -2;
                             }
                         } else {
                             mtxScale = 16.0f;
@@ -1612,13 +1612,13 @@ EnItem00* Item_DropCollectible(PlayState* play, Vec3f* spawnPos, s16 params) {
                 spawnedActor->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
                 Actor_SetScale(&spawnedActor->actor, 0.0f);
                 EnItem00_SetupAction(spawnedActor, func_8001E304);
-                spawnedActor->unk_15A = 220;
+                spawnedActor->despawnTimer = 220;
                 if ((spawnedActor->actor.params != ITEM00_SMALL_KEY) &&
                     (spawnedActor->actor.params != ITEM00_HEART_PIECE) &&
                     (spawnedActor->actor.params != ITEM00_HEART_CONTAINER)) {
                     spawnedActor->actor.room = -1;
                 }
-                spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+                spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
             }
         }
     }
@@ -1652,7 +1652,7 @@ EnItem00* Item_DropCollectible2(PlayState* play, Vec3f* spawnPos, s16 params) {
                 spawnedActor->actor.speed = 0.0f;
                 spawnedActor->actor.gravity = param4000 ? 0.0f : -0.9f;
                 spawnedActor->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
-                spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+                spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
             }
         }
     }
@@ -1766,13 +1766,13 @@ void Item_DropCollectibleRandom(PlayState* play, Actor* fromActor, Vec3f* spawnP
                         spawnedActor->actor.world.rot.y = Rand_ZeroOne() * 40000.0f;
                         Actor_SetScale(&spawnedActor->actor, 0.0f);
                         EnItem00_SetupAction(spawnedActor, func_8001E304);
-                        spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+                        spawnedActor->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
                         if ((spawnedActor->actor.params != ITEM00_SMALL_KEY) &&
                             (spawnedActor->actor.params != ITEM00_HEART_PIECE) &&
                             (spawnedActor->actor.params != ITEM00_HEART_CONTAINER)) {
                             spawnedActor->actor.room = -1;
                         }
-                        spawnedActor->unk_15A = 220;
+                        spawnedActor->despawnTimer = 220;
                     }
                 }
             } else {

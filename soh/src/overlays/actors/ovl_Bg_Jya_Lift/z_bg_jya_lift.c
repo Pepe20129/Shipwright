@@ -8,7 +8,7 @@
 #include "objects/object_jya_obj/object_jya_obj.h"
 #include "soh/OTRGlobals.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgJyaLift_Init(Actor* thisx, PlayState* play);
 void BgJyaLift_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void BgJyaLift_Move(BgJyaLift* this, PlayState* play);
 
 static s16 sKankyoIsSpawned = false;
 
-const ActorInit Bg_Jya_Lift_InitVars = {
+const ActorProfile Bg_Jya_Lift_InitVars = {
     ACTOR_BG_JYA_LIFT,
     ACTORCAT_BG,
     FLAGS,

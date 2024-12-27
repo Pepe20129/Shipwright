@@ -9,7 +9,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgMoriBigst_Init(Actor* thisx, PlayState* play);
 void BgMoriBigst_Destroy(Actor* thisx, PlayState* play);
@@ -29,7 +29,7 @@ void BgMoriBigst_SetupStalfosPairFight(BgMoriBigst* this, PlayState* play);
 void BgMoriBigst_StalfosPairFight(BgMoriBigst* this, PlayState* play);
 void BgMoriBigst_SetupDone(BgMoriBigst* this, PlayState* play);
 
-const ActorInit Bg_Mori_Bigst_InitVars = {
+const ActorProfile Bg_Mori_Bigst_InitVars = {
     ACTOR_BG_MORI_BIGST,
     ACTORCAT_BG,
     FLAGS,

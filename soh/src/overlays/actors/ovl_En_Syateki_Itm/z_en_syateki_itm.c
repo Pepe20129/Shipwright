@@ -4,7 +4,7 @@
 #include "overlays/actors/ovl_En_Ex_Ruppy/z_en_ex_ruppy.h"
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef enum {
     SYATEKI_ROUND_GREEN_APPEAR,
@@ -27,7 +27,7 @@ void EnSyatekiItm_CheckTargets(EnSyatekiItm* this, PlayState* play);
 void EnSyatekiItm_CleanupGame(EnSyatekiItm* this, PlayState* play);
 void EnSyatekiItm_EndGame(EnSyatekiItm* this, PlayState* play);
 
-const ActorInit En_Syateki_Itm_InitVars = {
+const ActorProfile En_Syateki_Itm_InitVars = {
     ACTOR_EN_SYATEKI_ITM,
     ACTORCAT_PROP,
     FLAGS,

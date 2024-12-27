@@ -9,7 +9,7 @@
 #include "objects/object_mm/object_mm.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
 
 typedef enum {
     /* 0 */ RM2_ANIM_RUN,
@@ -36,7 +36,7 @@ void func_80AAF668(EnMm2* this, PlayState* play);
 s32 EnMm2_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* pos, Vec3s* rot, void* thisx);
 void EnMm2_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, void* thisx);
 
-const ActorInit En_Mm2_InitVars = {
+const ActorProfile En_Mm2_InitVars = {
     ACTOR_EN_MM2,
     ACTORCAT_NPC,
     FLAGS,

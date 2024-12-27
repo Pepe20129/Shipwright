@@ -27,7 +27,7 @@ void EnDntDemo_Judge(EnDntDemo* this, PlayState* play);
 void EnDntDemo_Results(EnDntDemo* this, PlayState* play);
 void EnDntDemo_Prize(EnDntDemo* this, PlayState* play);
 
-const ActorInit En_Dnt_Demo_InitVars = {
+const ActorProfile En_Dnt_Demo_InitVars = {
     ACTOR_EN_DNT_DEMO,
     ACTORCAT_PROP,
     FLAGS,
@@ -100,7 +100,7 @@ void EnDntDemo_Init(Actor* thisx, PlayState* play2) {
         osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ じじじじじじじじじじい ☆☆☆☆☆ %x\n" VT_RST, this->leader);
     }
     this->subCamera = 0;
-    this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+    this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
     this->actionFunc = EnDntDemo_Judge;
 }
 

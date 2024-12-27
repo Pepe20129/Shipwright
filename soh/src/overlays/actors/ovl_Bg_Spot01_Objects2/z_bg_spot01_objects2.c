@@ -8,7 +8,7 @@
 #include "objects/object_spot01_matoya/object_spot01_matoya.h"
 #include "objects/object_spot01_matoyab/object_spot01_matoyab.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgSpot01Objects2_Init(Actor* thisx, PlayState* play);
 void BgSpot01Objects2_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void func_808AC2BC(BgSpot01Objects2* this, PlayState* play);
 void func_808AC474(BgSpot01Objects2* this, PlayState* play);
 void func_808AC4A4(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Spot01_Objects2_InitVars = {
+const ActorProfile Bg_Spot01_Objects2_InitVars = {
     ACTOR_BG_SPOT01_OBJECTS2,
     ACTORCAT_BG,
     FLAGS,

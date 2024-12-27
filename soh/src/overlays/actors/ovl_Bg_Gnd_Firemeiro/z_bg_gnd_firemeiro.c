@@ -7,7 +7,7 @@
 #include "z_bg_gnd_firemeiro.h"
 #include "objects/object_demo_kekkai/object_demo_kekkai.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgGndFiremeiro_Init(Actor* thisx, PlayState* play);
 void BgGndFiremeiro_Destroy(Actor* thisx, PlayState* play);
@@ -18,7 +18,7 @@ void BgGndFiremeiro_Sink(BgGndFiremeiro* this, PlayState* play);
 void BgGndFiremeiro_Shake(BgGndFiremeiro* this, PlayState* play);
 void BgGndFiremeiro_Rise(BgGndFiremeiro* this, PlayState* play);
 
-const ActorInit Bg_Gnd_Firemeiro_InitVars = {
+const ActorProfile Bg_Gnd_Firemeiro_InitVars = {
     ACTOR_BG_GND_FIREMEIRO,
     ACTORCAT_PROP,
     FLAGS,

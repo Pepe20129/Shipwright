@@ -7,7 +7,7 @@
 #include "z_bg_jya_1flift.h"
 #include "objects/object_jya_obj/object_jya_obj.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgJya1flift_Init(Actor* thisx, PlayState* play);
 void BgJya1flift_Destroy(Actor* thisx, PlayState* play);
@@ -25,7 +25,7 @@ void BgJya1flift_DelayMove(BgJya1flift* this, PlayState* play);
 
 static u8 sKankyoIsSpawned = false;
 
-const ActorInit Bg_Jya_1flift_InitVars = {
+const ActorProfile Bg_Jya_1flift_InitVars = {
     ACTOR_BG_JYA_1FLIFT,
     ACTORCAT_BG,
     FLAGS,

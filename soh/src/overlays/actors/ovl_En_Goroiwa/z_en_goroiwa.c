@@ -10,7 +10,7 @@
 #include "objects/object_goroiwa/object_goroiwa.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 typedef s32 (*EnGoroiwaUnkFunc1)(EnGoroiwa* this, PlayState* play);
 typedef void (*EnGoroiwaUnkFunc2)(EnGoroiwa* this);
@@ -42,7 +42,7 @@ void EnGoroiwa_MoveUp(EnGoroiwa* this, PlayState* play);
 void EnGoroiwa_SetupMoveDown(EnGoroiwa* this);
 void EnGoroiwa_MoveDown(EnGoroiwa* this, PlayState* play);
 
-const ActorInit En_Goroiwa_InitVars = {
+const ActorProfile En_Goroiwa_InitVars = {
     ACTOR_EN_GOROIWA,
     ACTORCAT_PROP,
     FLAGS,

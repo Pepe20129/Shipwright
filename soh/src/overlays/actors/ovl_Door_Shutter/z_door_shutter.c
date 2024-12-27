@@ -25,7 +25,7 @@
 #include "objects/object_ouke_haka/object_ouke_haka.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void DoorShutter_Init(Actor* thisx, PlayState* play);
 void DoorShutter_Destroy(Actor* thisx, PlayState* play);
@@ -48,7 +48,7 @@ void func_809975C0(DoorShutter* this, PlayState* play);
 void func_809976B8(DoorShutter* this, PlayState* play);
 void func_80997744(DoorShutter* this, PlayState* play);
 
-const ActorInit Door_Shutter_InitVars = {
+const ActorProfile Door_Shutter_InitVars = {
     ACTOR_DOOR_SHUTTER,
     ACTORCAT_DOOR,
     FLAGS,

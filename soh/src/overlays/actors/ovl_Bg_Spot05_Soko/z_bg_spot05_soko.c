@@ -17,7 +17,7 @@ void func_808AE5A8(BgSpot05Soko* this, PlayState* play);
 void func_808AE5B4(BgSpot05Soko* this, PlayState* play);
 void func_808AE630(BgSpot05Soko* this, PlayState* play);
 
-const ActorInit Bg_Spot05_Soko_InitVars = {
+const ActorProfile Bg_Spot05_Soko_InitVars = {
     ACTOR_BG_SPOT05_SOKO,
     ACTORCAT_PROP,
     FLAGS,
@@ -62,7 +62,7 @@ void BgSpot05Soko_Init(Actor* thisx, PlayState* play) {
             Actor_Kill(thisx);
         } else {
             this->actionFunc = func_808AE5B4;
-            thisx->flags |= ACTOR_FLAG_UPDATE_WHILE_CULLED;
+            thisx->flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         }
     }
     this->dyna.bgId = DynaPoly_SetBgActor(play, &play->colCtx.dyna, thisx, colHeader);

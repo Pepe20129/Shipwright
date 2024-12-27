@@ -9,7 +9,7 @@
 #include "objects/object_hs/object_hs.h"
 #include "soh/ResourceManagerHelpers.h"
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY)
 
 void EnHs2_Init(Actor* thisx, PlayState* play);
 void EnHs2_Destroy(Actor* thisx, PlayState* play);
@@ -17,7 +17,7 @@ void EnHs2_Update(Actor* thisx, PlayState* play);
 void EnHs2_Draw(Actor* thisx, PlayState* play);
 void func_80A6F1A4(EnHs2* this, PlayState* play);
 
-const ActorInit En_Hs2_InitVars = {
+const ActorProfile En_Hs2_InitVars = {
     ACTOR_EN_HS2,
     ACTORCAT_NPC,
     FLAGS,

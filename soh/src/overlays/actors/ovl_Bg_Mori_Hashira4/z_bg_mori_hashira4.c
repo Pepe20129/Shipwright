@@ -7,7 +7,7 @@
 #include "z_bg_mori_hashira4.h"
 #include "objects/object_mori_objects/object_mori_objects.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgMoriHashira4_Init(Actor* thisx, PlayState* play);
 void BgMoriHashira4_Destroy(Actor* thisx, PlayState* play);
@@ -21,7 +21,7 @@ void BgMoriHashira4_PillarsRotate(BgMoriHashira4* this, PlayState* play);
 void BgMoriHashira4_GateWait(BgMoriHashira4* this, PlayState* play);
 void BgMoriHashira4_GateOpen(BgMoriHashira4* this, PlayState* play);
 
-const ActorInit Bg_Mori_Hashira4_InitVars = {
+const ActorProfile Bg_Mori_Hashira4_InitVars = {
     ACTOR_BG_MORI_HASHIRA4,
     ACTORCAT_BG,
     FLAGS,

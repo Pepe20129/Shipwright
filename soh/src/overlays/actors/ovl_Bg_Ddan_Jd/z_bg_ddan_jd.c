@@ -7,7 +7,7 @@
 #include "z_bg_ddan_jd.h"
 #include "objects/object_ddan_objects/object_ddan_objects.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_DRAW_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
 void BgDdanJd_Init(Actor* thisx, PlayState* play);
 void BgDdanJd_Destroy(Actor* thisx, PlayState* play);
@@ -17,7 +17,7 @@ void BgDdanJd_Draw(Actor* thisx, PlayState* play);
 void BgDdanJd_Idle(BgDdanJd* this, PlayState* play);
 void BgDdanJd_Move(BgDdanJd* this, PlayState* play);
 
-const ActorInit Bg_Ddan_Jd_InitVars = {
+const ActorProfile Bg_Ddan_Jd_InitVars = {
     ACTOR_BG_DDAN_JD,
     ACTORCAT_BG,
     FLAGS,

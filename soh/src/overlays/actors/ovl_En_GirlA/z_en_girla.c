@@ -11,7 +11,7 @@
 #include "soh/OTRGlobals.h"
 #include <assert.h>
 
-#define FLAGS (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_WHILE_CULLED)
+#define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
 
 void EnGirlA_Init(Actor* thisx, PlayState* play);
 void EnGirlA_Destroy(Actor* thisx, PlayState* play);
@@ -75,7 +75,7 @@ void EnGirlA_BuyEvent_ZoraTunic(PlayState* play, EnGirlA* this);
 
 s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
 
-const ActorInit En_GirlA_InitVars = {
+const ActorProfile En_GirlA_InitVars = {
     ACTOR_EN_GIRLA,
     ACTORCAT_PROP,
     FLAGS,
@@ -1251,7 +1251,7 @@ void EnGirlA_WaitForObject(EnGirlA* this, PlayState* play) {
     ShopItemEntry* itemEntry = &shopItemEntries[params];
 
     if (Object_IsLoaded(&play->objectCtx, this->requiredObjectSlot)) {
-        this->actor.flags &= ~ACTOR_FLAG_UPDATE_WHILE_CULLED;
+        this->actor.flags &= ~ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         this->actor.objectSlot = this->requiredObjectSlot;
         switch (this->actor.params) {
             case SI_KEATON_MASK:
@@ -1334,7 +1334,7 @@ void EnGirlA_WaitForObject(EnGirlA* this, PlayState* play) {
             this->hiliteFunc = itemEntry->hiliteFunc;
             this->giDrawId = itemEntry->giDrawId;
             osSyncPrintf("%s(%2d)\n", sShopItemDescriptions[params], params);
-            this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+            this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
             Actor_SetScale(&this->actor, 0.25f);
             this->actor.shape.yOffset = 24.0f;
             this->actor.shape.shadowScale = 4.0f;
@@ -1375,7 +1375,7 @@ void EnGirlA_WaitForObject(EnGirlA* this, PlayState* play) {
             this->hiliteFunc = itemEntry->hiliteFunc;
             this->giDrawId = itemEntry->giDrawId;
             osSyncPrintf("%s(%2d)\n", sShopItemDescriptions[params], params);
-            this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
+            this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
             Actor_SetScale(&this->actor, 0.25f);
             this->actor.shape.yOffset = 24.0f;
             this->actor.shape.shadowScale = 4.0f;

@@ -8,7 +8,7 @@
 #include "objects/object_d_lift/object_d_lift.h"
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void ObjLift_Init(Actor* thisx, PlayState* play);
 void ObjLift_Destroy(Actor* thisx, PlayState* play);
@@ -23,7 +23,7 @@ void func_80B96560(ObjLift* this, PlayState* play);
 void func_80B96678(ObjLift* this, PlayState* play);
 void func_80B96840(ObjLift* this, PlayState* play);
 
-const ActorInit Obj_Lift_InitVars = {
+const ActorProfile Obj_Lift_InitVars = {
     ACTOR_OBJ_LIFT,
     ACTORCAT_BG,
     FLAGS,

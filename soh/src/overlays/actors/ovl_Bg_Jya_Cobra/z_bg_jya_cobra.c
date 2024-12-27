@@ -7,7 +7,7 @@
 #include "objects/object_jya_obj/object_jya_obj.h"
 #include "vt.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgJyaCobra_Init(Actor* thisx, PlayState* play);
 void BgJyaCobra_Destroy(Actor* thisx, PlayState* play);
@@ -21,7 +21,7 @@ void func_80896ABC(BgJyaCobra* this, PlayState* play);
 
 #include "overlays/ovl_Bg_Jya_Cobra/ovl_Bg_Jya_Cobra.h"
 
-const ActorInit Bg_Jya_Cobra_InitVars = {
+const ActorProfile Bg_Jya_Cobra_InitVars = {
     ACTOR_BG_JYA_COBRA,
     ACTORCAT_PROP,
     FLAGS,

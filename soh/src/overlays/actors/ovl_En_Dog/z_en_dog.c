@@ -22,7 +22,7 @@ void EnDog_RunAway(EnDog* this, PlayState* play);
 void EnDog_FaceLink(EnDog* this, PlayState* play);
 void EnDog_Wait(EnDog* this, PlayState* play);
 
-const ActorInit En_Dog_InitVars = {
+const ActorProfile En_Dog_InitVars = {
     ACTOR_EN_DOG,
     ACTORCAT_NPC,
     FLAGS,

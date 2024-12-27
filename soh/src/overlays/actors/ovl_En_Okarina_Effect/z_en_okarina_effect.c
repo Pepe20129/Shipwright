@@ -7,7 +7,7 @@
 #include "z_en_okarina_effect.h"
 #include "vt.h"
 
-#define FLAGS (ACTOR_FLAG_UPDATE_WHILE_CULLED | ACTOR_FLAG_NO_FREEZE_OCARINA)
+#define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_UPDATE_DURING_OCARINA)
 
 void EnOkarinaEffect_Init(Actor* thisx, PlayState* play);
 void EnOkarinaEffect_Destroy(Actor* thisx, PlayState* play);
@@ -16,7 +16,7 @@ void EnOkarinaEffect_Update(Actor* thisx, PlayState* play);
 void EnOkarinaEffect_TriggerStorm(EnOkarinaEffect* this, PlayState* play);
 void EnOkarinaEffect_ManageStorm(EnOkarinaEffect* this, PlayState* play);
 
-const ActorInit En_Okarina_Effect_InitVars = {
+const ActorProfile En_Okarina_Effect_InitVars = {
     ACTOR_EN_OKARINA_EFFECT,
     ACTORCAT_ITEMACTION,
     FLAGS,

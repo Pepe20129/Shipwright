@@ -8,7 +8,7 @@
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "objects/object_spot11_obj/object_spot11_obj.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void BgSpot11Oasis_Init(Actor* thisx, PlayState* play);
 void BgSpot11Oasis_Update(Actor* thisx, PlayState* play);
@@ -20,7 +20,7 @@ void func_808B29F0(BgSpot11Oasis* this, PlayState* play);
 void func_808B2AA8(BgSpot11Oasis* this);
 void func_808B2AB8(BgSpot11Oasis* this, PlayState* play);
 
-const ActorInit Bg_Spot11_Oasis_InitVars = {
+const ActorProfile Bg_Spot11_Oasis_InitVars = {
     ACTOR_BG_SPOT11_OASIS,
     ACTORCAT_BG,
     FLAGS,

@@ -7,13 +7,13 @@
 #include "z_en_vase.h"
 #include "objects/object_vase/object_vase.h"
 
-#define FLAGS ACTOR_FLAG_UPDATE_WHILE_CULLED
+#define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
 void EnVase_Init(Actor* thisx, PlayState* play);
 void EnVase_Destroy(Actor* thisx, PlayState* play);
 void EnVase_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Vase_InitVars = {
+const ActorProfile En_Vase_InitVars = {
     ACTOR_EN_VASE,
     ACTORCAT_PROP,
     FLAGS,
