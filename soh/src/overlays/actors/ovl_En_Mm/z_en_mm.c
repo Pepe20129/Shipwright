@@ -419,7 +419,7 @@ void func_80AAE294(EnMm* this, PlayState* play) {
 
         if (this->curAnimIndex == 0) {
             if (((s32)this->skelAnime.curFrame == 1) || ((s32)this->skelAnime.curFrame == 6)) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_PL_WALK_GROUND);
+                Actor_PlaySfx(&this->actor, NA_SE_PL_WALK_GROUND);
             }
         }
 
@@ -427,7 +427,7 @@ void func_80AAE294(EnMm* this, PlayState* play) {
             if (((this->skelAnime.curFrame - this->skelAnime.playSpeed < 9.0f) && (this->skelAnime.curFrame >= 9.0f)) ||
                 ((this->skelAnime.curFrame - this->skelAnime.playSpeed < 19.0f) &&
                  (this->skelAnime.curFrame >= 19.0f))) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_MORIBLIN_WALK);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_MORIBLIN_WALK);
             }
         }
 
@@ -468,7 +468,7 @@ void func_80AAE294(EnMm* this, PlayState* play) {
             }
 
             if (this->collider.base.ocFlags2 & OC2_HIT_PLAYER) {
-                func_8002F71C(play, &this->actor, 3.0f, this->actor.yawTowardsPlayer, 4.0f);
+                Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 3.0f, this->actor.yawTowardsPlayer, 4.0f);
             }
         }
     }

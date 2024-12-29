@@ -252,6 +252,6 @@ void EnRiverSound_Draw(Actor* thisx, PlayState* play) {
                (this->actor.params == RS_CHAMBER_OF_SAGES_2) || (this->actor.params == RS_RUMBLING)) {
         Sfx_PlaySfxCentered2(soundEffects[this->actor.params]);
     } else {
-        Audio_PlayActorSound2(&this->actor, soundEffects[this->actor.params]);
+        Actor_PlaySfx(&this->actor, soundEffects[this->actor.params]);
     }
 }

@@ -428,7 +428,7 @@ u16 EnZo_GetTextId(PlayState* play, Actor* thisx) {
                 return 0x402D;
             }
 
-            if (Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED) ||
+            if (Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA) ||
                 (CVarGetInteger(CVAR_ENHANCEMENT("FixZoraHintDialogue"), 0) &&
                  Flags_GetEventChkInf(EVENTCHKINF_OBTAINED_RUTOS_LETTER))) {
                 return 0x4010;
@@ -654,7 +654,7 @@ void EnZo_Submerged(EnZo* this, PlayState* play) {
 
 void EnZo_Surface(EnZo* this, PlayState* play) {
     if (this->actor.depthInWater < 54.0f) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_OUT_OF_WATER);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_OUT_OF_WATER);
         EnZo_SpawnSplashes(this);
         Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ENZO_ANIM_3);
         this->actor.flags |= ACTOR_FLAG_ATTENTION_ENABLED;
@@ -705,7 +705,7 @@ void EnZo_TreadWater(EnZo* this, PlayState* play) {
 
 void EnZo_Dive(EnZo* this, PlayState* play) {
     if (Animation_OnFrame(&this->skelAnime, this->skelAnime.endFrame)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_DIVE_WATER);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_DIVE_WATER);
         EnZo_SpawnSplashes(this);
         this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
         this->actor.velocity.y = -4.0f;

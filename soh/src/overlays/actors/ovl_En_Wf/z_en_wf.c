@@ -402,7 +402,7 @@ void EnWf_WaitToAppear(EnWf* this, PlayState* play) {
         this->actionTimer--;
 
         if (this->actionTimer == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_APPEAR);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_APPEAR);
         }
     } else { // actionTimer == 0
         if (SkelAnime_Update(&this->skelAnime)) {
@@ -479,7 +479,7 @@ void EnWf_Wait(EnWf* this, PlayState* play) {
                     EnWf_SetupSearchForPlayer(this);
                 }
                 if ((play->gameplayFrames & 95) == 0) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
                 }
             }
         }
@@ -559,10 +559,10 @@ void EnWf_RunAtPlayer(EnWf* this, PlayState* play) {
 
         if (!EnWf_ChangeAction(play, this, false)) {
             if ((play->gameplayFrames & 95) == 0) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
             }
             if ((animPrevFrame != (s32)this->skelAnime.curFrame) && (sp58 <= 0) && ((playSpeed + animPrevFrame) > 0)) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_WALK);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_WALK);
                 Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 20.0f, 3, 3.0f, 50, 50, true);
             }
         }
@@ -606,7 +606,7 @@ void EnWf_SearchForPlayer(EnWf* this, PlayState* play) {
         }
 
         if ((play->gameplayFrames & 95) == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
         }
     }
 }
@@ -693,12 +693,12 @@ void EnWf_RunAroundPlayer(EnWf* this, PlayState* play) {
 
         if ((animPrevFrame != (s32)this->skelAnime.curFrame) && (animFrameSpeedDiff <= 0) &&
             (animSpeed + animPrevFrame > 0)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_WALK);
             Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 20.0f, 3, 3.0f, 50, 50, true);
         }
 
         if ((play->gameplayFrames & 95) == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
         }
 
         if ((Math_CosS(angle1 - this->actor.shape.rot.y) < -0.85f) && !Actor_OtherIsLockedOn(play, &this->actor) &&
@@ -744,7 +744,7 @@ void EnWf_Slash(EnWf* this, PlayState* play) {
 
     if (((curFrame >= 9) && (curFrame <= 12)) || ((curFrame >= 17) && (curFrame <= 19))) {
         if (this->slashStatus == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_ATTACK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_ATTACK);
         }
 
         this->slashStatus = 1;
@@ -849,7 +849,7 @@ void EnWf_SetupBackflipAway(EnWf* this) {
     this->actionTimer = 0;
     this->unk_300 = true;
     this->action = WOLFOS_ACTION_BACKFLIP_AWAY;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_STAL_JUMP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_JUMP);
     EnWf_SetupAction(this, EnWf_BackflipAway);
 }
 
@@ -865,7 +865,7 @@ void EnWf_BackflipAway(EnWf* this, PlayState* play) {
         }
     }
     if ((play->state.frames & 95) == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
     }
 }
 
@@ -874,7 +874,7 @@ void EnWf_SetupStunned(EnWf* this) {
         this->actor.speed = 0.0f;
     }
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     Animation_PlayOnceSetSpeed(&this->skelAnime, &gWolfosDamagedAnim, 0.0f);
     this->action = WOLFOS_ACTION_STUNNED;
     EnWf_SetupAction(this, EnWf_Stunned);
@@ -914,7 +914,7 @@ void EnWf_SetupDamaged(EnWf* this) {
 
     this->unk_2E2 = 0;
     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_DAMAGE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_DAMAGE);
     this->action = WOLFOS_ACTION_DAMAGED;
     EnWf_SetupAction(this, EnWf_Damaged);
 }
@@ -968,7 +968,7 @@ void EnWf_SetupSomersaultAndAttack(EnWf* this) {
     this->action = WOLFOS_ACTION_TURN_TOWARDS_PLAYER;
     this->actor.speed = 6.5f;
     this->actor.velocity.y = 15.0f;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_STAL_JUMP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_JUMP);
     this->actor.world.rot.y = this->actor.shape.rot.y;
     EnWf_SetupAction(this, EnWf_SomersaultAndAttack);
 }
@@ -1173,12 +1173,12 @@ void EnWf_Sidestep(EnWf* this, PlayState* play) {
 
         if ((animPrevFrame != (s32)this->skelAnime.curFrame) && (animFrameSpeedDiff <= 0) &&
             ((animSpeed + animPrevFrame) > 0)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_WALK);
             Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 20.0f, 3, 3.0f, 50, 50, true);
         }
 
         if ((play->gameplayFrames & 95) == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_CRY);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_CRY);
         }
     }
 }
@@ -1197,7 +1197,7 @@ void EnWf_SetupDie(EnWf* this) {
     this->action = WOLFOS_ACTION_DIE;
     this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
     this->actionTimer = this->skelAnime.animLength;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_WOLFOS_DEAD);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_WOLFOS_DEAD);
     EnWf_SetupAction(this, EnWf_Die);
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
 }

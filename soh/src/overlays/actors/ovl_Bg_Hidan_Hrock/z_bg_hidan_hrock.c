@@ -162,8 +162,8 @@ void func_808894B0(BgHidanHrock* this, PlayState* play) {
         (Math_CosS(this->dyna.actor.world.rot.y + (this->unk_168 << 0xE)) * 5.0f) + this->dyna.actor.home.pos.z;
 
     if (!(this->unk_168 % 4)) {
-        func_800AA000(this->dyna.actor.xyzDistToPlayerSq, 180, 10, 100);
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_BLOCK_SHAKE);
+        Rumble_Request(this->dyna.actor.xyzDistToPlayerSq, 180, 10, 100);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BLOCK_SHAKE);
     }
 
     if (this->unk_168 == 0) {
@@ -186,7 +186,7 @@ void func_8088960C(BgHidanHrock* this, PlayState* play) {
 
     if (Math_StepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y, this->dyna.actor.velocity.y)) {
         this->dyna.actor.flags &= ~(ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED);
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);
 
         if (this->dyna.actor.params == 0) {
             if (play->roomCtx.curRoom.num == 10) {

@@ -75,8 +75,8 @@ void ArmsHook_Init(Actor* thisx, PlayState* play) {
 void ArmsHook_Destroy(Actor* thisx, PlayState* play) {
     ArmsHook* this = (ArmsHook*)thisx;
 
-    if (this->grabbed != NULL) {
-        this->grabbed->flags &= ~ACTOR_FLAG_HOOKSHOT_ATTACHED;
+    if (this->attachedActor != NULL) {
+        this->attachedActor->flags &= ~ACTOR_FLAG_HOOKSHOT_ATTACHED;
     }
     Collider_DestroyQuad(play, &this->collider);
 }
@@ -111,9 +111,9 @@ s32 ArmsHook_AttachToPlayer(ArmsHook* this, Player* player) {
 }
 
 void ArmsHook_DetachHookFromActor(ArmsHook* this) {
-    if (this->grabbed != NULL) {
-        this->grabbed->flags &= ~ACTOR_FLAG_HOOKSHOT_ATTACHED;
-        this->grabbed = NULL;
+    if (this->attachedActor != NULL) {
+        this->attachedActor->flags &= ~ACTOR_FLAG_HOOKSHOT_ATTACHED;
+        this->attachedActor = NULL;
     }
 }
 
@@ -134,7 +134,7 @@ s32 ArmsHook_CheckForCancel(ArmsHook* this) {
 
 void ArmsHook_AttachHookToActor(ArmsHook* this, Actor* actor) {
     actor->flags |= ACTOR_FLAG_HOOKSHOT_ATTACHED;
-    this->grabbed = actor;
+    this->attachedActor = actor;
     Math_Vec3f_Diff(&actor->world.pos, &this->actor.world.pos, &this->attachPointOffset);
 }
 
@@ -166,7 +166,7 @@ void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
         return;
     }
 
-    func_8002F8F0(&player->actor, NA_SE_IT_HOOKSHOT_CHAIN - SFX_FLAG);
+    Actor_PlaySfx_Flagged2(&player->actor, NA_SE_IT_HOOKSHOT_CHAIN - SFX_FLAG);
     ArmsHook_CheckForCancel(this);
 
     if ((this->timer != 0) && (this->collider.base.atFlags & AT_HIT) &&
@@ -181,14 +181,14 @@ void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
             }
         }
         this->timer = 0;
-        Audio_PlaySoundGeneral(NA_SE_IT_ARROW_STICK_CRE, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_IT_ARROW_STICK_CRE, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
     } else if (DECR(this->timer) == 0) {
-        grabbed = this->grabbed;
+        grabbed = this->attachedActor;
         if (grabbed != NULL) {
             if ((grabbed->update == NULL) || !CHECK_FLAG_ALL(grabbed->flags, ACTOR_FLAG_HOOKSHOT_ATTACHED)) {
                 grabbed = NULL;
-                this->grabbed = NULL;
+                this->attachedActor = NULL;
             } else if (this->actor.child != NULL) {
                 sp94 = Actor_WorldDistXYZToActor(&this->actor, grabbed);
                 sp90 = sqrtf(SQ(this->attachPointOffset.x) + SQ(this->attachPointOffset.y) + SQ(this->attachPointOffset.z));
@@ -278,11 +278,11 @@ void ArmsHook_Shoot(ArmsHook* this, PlayState* play) {
                     }
                 }
                 func_80865044(this);
-                Audio_PlaySoundGeneral(NA_SE_IT_HOOKSHOT_STICK_OBJ, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                Audio_PlaySfxGeneral(NA_SE_IT_HOOKSHOT_STICK_OBJ, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             } else {
                 CollisionCheck_SpawnShieldParticlesMetal(play, &this->actor.world.pos);
-                Audio_PlaySoundGeneral(NA_SE_IT_HOOKSHOT_REFLECT, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                Audio_PlaySfxGeneral(NA_SE_IT_HOOKSHOT_REFLECT, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             }
         } else if (CHECK_BTN_ANY(play->state.input[0].press.button, (buttonsToCheck))) {

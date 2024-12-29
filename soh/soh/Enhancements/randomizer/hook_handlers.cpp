@@ -926,7 +926,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         }
         case VB_KING_ZORA_THANK_CHILD: {
             // Allow turning in Ruto's letter even if you have already rescued her
-            if (!Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)) {
+            if (!Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)) {
                 GET_PLAYER(gPlayState)->exchangeItemId = EXCH_ITEM_LETTER_RUTO;
             }
             *should = Flags_GetEventChkInf(EVENTCHKINF_USED_JABU_JABUS_BELLY_BLUE_WARP);
@@ -940,14 +940,14 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             *should = false;
             switch (RAND_GET_OPTION(RSK_ZORAS_FOUNTAIN)) {
                 case RO_ZF_CLOSED:
-                    if (Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)) {
+                    if (Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)) {
                         *should = true;
                     }
                     break;
                 case RO_ZF_CLOSED_CHILD:
                     if (LINK_IS_ADULT) {
                         *should = true;
-                    } else if (Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)) {
+                    } else if (Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)) {
                         *should = true;
                     }
                     break;
@@ -996,7 +996,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
                 Actor_Kill(&item00->actor);
                 *should = false;
             } else if (item00->actor.params == ITEM00_SOH_GIVE_ITEM_ENTRY) {
-                Audio_PlaySoundGeneral(NA_SE_SY_GET_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                Audio_PlaySfxGeneral(NA_SE_SY_GET_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 if (item00->itemEntry.modIndex == MOD_NONE) {
                     if (item00->itemEntry.getItemId == GI_SWORD_BGS) {
                         gSaveContext.bgsFlag = true;
@@ -1211,7 +1211,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
                 bool hasShieldHoldingR = (CHECK_BTN_ANY(input.cur.button, BTN_R) &&
                                           CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) > EQUIP_VALUE_SHIELD_NONE);
 
-                if (func_8002F368(gPlayState) == EXCH_ITEM_PRESCRIPTION ||
+                if (Actor_GetPlayerExchangeItemId(gPlayState) == EXCH_ITEM_PRESCRIPTION ||
                     (hasShieldHoldingR && INV_CONTENT(ITEM_TRADE_ADULT) < ITEM_FROG)) {
                     Flags_SetRandomizerInf(RAND_INF_ADULT_TRADES_ZD_TRADE_PRESCRIPTION);
                     Randomizer_ConsumeAdultTradeItem(gPlayState, ITEM_PRESCRIPTION);

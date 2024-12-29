@@ -241,7 +241,7 @@ void EnOkuta_SetupShoot(EnOkuta* this, PlayState* play) {
         EnOkuta_SpawnSplash(this, play);
     }
     if (this->jumpHeight > 50.0f) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_JUMP);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_JUMP);
     }
     this->actionFunc = EnOkuta_Shoot;
 }
@@ -251,7 +251,7 @@ void EnOkuta_SetupWaitToDie(EnOkuta* this) {
     Actor_SetColorFilter(&this->actor, 0x4000, 0xFF, 0, 0xB);
     this->collider.base.acFlags &= ~AC_HIT;
     Actor_SetScale(&this->actor, 0.01f);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_DEAD1);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_DEAD1);
     this->actionFunc = EnOkuta_WaitToDie;
 }
 
@@ -287,7 +287,7 @@ void EnOkuta_SpawnProjectile(EnOkuta* this, PlayState* play) {
         velocity.z = 1.5f * cos;
         EnOkuta_SpawnDust(&pos, &velocity, 20, play);
     }
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_THROW);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_THROW);
 }
 
 void EnOkuta_WaitToAppear(EnOkuta* this, PlayState* play) {
@@ -312,10 +312,10 @@ void EnOkuta_Appear(EnOkuta* this, PlayState* play) {
         Actor_SetScale(&this->actor, 0.01f);
     }
     if (Animation_OnFrame(&this->skelAnime, 2.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_JUMP);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_JUMP);
     }
     if (Animation_OnFrame(&this->skelAnime, 12.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_LAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_LAND);
     }
     if (Animation_OnFrame(&this->skelAnime, 3.0f) || Animation_OnFrame(&this->skelAnime, 15.0f)) {
         EnOkuta_SpawnSplash(this, play);
@@ -327,14 +327,14 @@ void EnOkuta_Hide(EnOkuta* this, PlayState* play) {
 
     Math_ApproachF(&this->actor.world.pos.y, this->actor.home.pos.y, 0.5f, 30.0f);
     if (SkelAnime_Update(&this->skelAnime)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_BUBLE);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_BUBLE);
         EnOkuta_SpawnBubbles(this, play);
         EnOkuta_SetupWaitToAppear(this);
     } else if (this->skelAnime.curFrame >= 4.0f) {
         Actor_SetScale(&this->actor, (6.0f - this->skelAnime.curFrame) * 0.5f * 0.01f);
     }
     if (Animation_OnFrame(&this->skelAnime, 2.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_SINK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_SINK);
     }
     if (Animation_OnFrame(&this->skelAnime, 4.0f)) {
         EnOkuta_SpawnSplash(this, play);
@@ -353,7 +353,7 @@ void EnOkuta_WaitToShoot(EnOkuta* this, PlayState* play) {
         }
     }
     if (Animation_OnFrame(&this->skelAnime, 0.5f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_FLOAT);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_FLOAT);
     }
     if (this->actor.xzDistToPlayer < 160.0f || this->actor.xzDistToPlayer > 560.0f) {
         EnOkuta_SetupHide(this);
@@ -390,7 +390,7 @@ void EnOkuta_Shoot(EnOkuta* this, PlayState* play) {
             EnOkuta_SpawnSplash(this, play);
         }
         if ((this->jumpHeight > 50.0f) && Animation_OnFrame(&this->skelAnime, 13.0f)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_LAND);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_LAND);
         }
     }
     if (this->actor.xzDistToPlayer < 160.0f) {
@@ -425,11 +425,11 @@ void EnOkuta_Die(EnOkuta* this, PlayState* play) {
         velocity.y = -0.5f;
         velocity.z = 0.0f;
         EnOkuta_SpawnDust(&pos, &velocity, -0x14, play);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_DEAD2);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_DEAD2);
     }
     if (Animation_OnFrame(&this->skelAnime, 15.0f)) {
         EnOkuta_SpawnSplash(this, play);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_OCTAROCK_LAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_OCTAROCK_LAND);
     }
     if (this->timer < 3) {
         Actor_SetScale(&this->actor, ((this->timer * 0.25f) + 1.0f) * 0.01f);

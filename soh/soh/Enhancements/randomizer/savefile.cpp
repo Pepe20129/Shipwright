@@ -225,7 +225,7 @@ extern "C" void Randomizer_InitSaveFile() {
     // Set Cutscene flags and texts to skip them
     // Now handled by cutscene skips
     // Flags_SetInfTable(INFTABLE_GREETED_BY_SARIA);
-    Flags_SetEventChkInf(EVENTCHKINF_FIRST_SPOKE_TO_MIDO);
+    Flags_SetEventChkInf(EVENTCHKINF_MIDO_DENIED_DEKU_TREE_ACCESS);
     // Now handled by cutscene skips
     // Flags_SetEventChkInf(EVENTCHKINF_MET_DEKU_TREE);
     // Flags_SetEventChkInf(EVENTCHKINF_DEKU_TREE_OPENED_MOUTH);
@@ -246,8 +246,8 @@ extern "C" void Randomizer_InitSaveFile() {
     // Flags_SetInfTable(INFTABLE_MET_CHILD_MALON_AT_CASTLE_OR_MARKET);
     // Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_CASTLE_OR_MARKET);
     // Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_INGO_AT_RANCH_BEFORE_TALON_RETURNS);
-    // Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_RANCH);
-    // Flags_SetEventChkInf(EVENTCHKINF_INVITED_TO_SING_WITH_CHILD_MALON);
+    // Flags_SetEventChkInf(EVENTCHKINF_TALKED_TO_CHILD_MALON_AT_RANCH);
+    // Flags_SetEventChkInf(EVENTCHKINF_CAN_LEARN_EPONAS_SONG);
     // Flags_SetInfTable(INFTABLE_CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU);
     // Flags_SetInfTable(INFTABLE_SPOKE_TO_INGO_ONCE_AS_ADULT);
 
@@ -385,7 +385,7 @@ extern "C" void Randomizer_InitSaveFile() {
         StartingItemGive(getItemEntry, RC_SONG_FROM_IMPA);
 
         // malon/talon back at ranch
-        Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG);
+        Flags_SetEventChkInf(EVENTCHKINF_RECEIVED_WEIRD_EGG);
         Flags_SetEventChkInf(EVENTCHKINF_TALON_WOKEN_IN_CASTLE);
         Flags_SetEventChkInf(EVENTCHKINF_TALON_RETURNED_FROM_CASTLE);
 

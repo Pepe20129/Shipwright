@@ -575,7 +575,7 @@ s16 func_80A70058(PlayState* play, Actor* thisx) {
                 case 0x709E:
                 case 0x709F:
                     if (!this->unk_215) {
-                        Audio_PlaySoundGeneral(this->actor.textId == 0x709F ? NA_SE_SY_CORRECT_CHIME : NA_SE_SY_ERROR,
+                        Audio_PlaySfxGeneral(this->actor.textId == 0x709F ? NA_SE_SY_CORRECT_CHIME : NA_SE_SY_ERROR,
                                                &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                         this->unk_215 = true;
                     }
@@ -730,7 +730,7 @@ void func_80A70834(EnHy* this, PlayState* play) {
     if ((this->actor.params & 0x7F) == ENHY_TYPE_BOJ_5) {
         if (!Inventory_HasSpecificBottle(ITEM_BLUE_FIRE) && !Inventory_HasSpecificBottle(ITEM_BUG) &&
             !Inventory_HasSpecificBottle(ITEM_FISH)) {
-            switch (func_8002F368(play)) {
+            switch (Actor_GetPlayerExchangeItemId(play)) {
                 case EXCH_ITEM_POE:
                 case EXCH_ITEM_BIG_POE:
                 case EXCH_ITEM_LETTER_RUTO:
@@ -743,7 +743,7 @@ void func_80A70834(EnHy* this, PlayState* play) {
                     break;
             }
         } else {
-            switch (func_8002F368(play)) {
+            switch (Actor_GetPlayerExchangeItemId(play)) {
                 case EXCH_ITEM_BLUE_FIRE:
                     this->actor.textId = 0x70F0;
                     break;

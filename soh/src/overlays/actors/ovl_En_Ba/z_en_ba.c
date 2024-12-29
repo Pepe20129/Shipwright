@@ -241,7 +241,7 @@ void EnBa_SwingAtPlayer(EnBa* this, PlayState* play) {
     Math_SmoothStepToF(&this->actor.world.pos.y, this->actor.home.pos.y + 60.0f, 1.0f, 10.0f, 0.0f);
     if ((this->actor.xzDistToPlayer <= 175.0f) || (this->unk_31A != 0)) {
         if (this->unk_318 == 20) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BALINADE_HAND_UP);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BALINADE_HAND_UP);
             this->unk_31C = 1500;
         }
         if (this->unk_318 != 0) {
@@ -271,7 +271,7 @@ void EnBa_SwingAtPlayer(EnBa* this, PlayState* play) {
             }
         } else {
             if (this->unk_31A == 10) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_BALINADE_HAND_DOWN);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_BALINADE_HAND_DOWN);
             }
             if (this->unk_31A != 0) {
                 this->unk_31C = 8000;
@@ -307,7 +307,7 @@ void EnBa_SwingAtPlayer(EnBa* this, PlayState* play) {
         if (this->collider.base.atFlags & 2) {
             this->collider.base.atFlags &= ~2;
             if (this->collider.base.at == &player->actor) {
-                func_8002F71C(play, &this->actor, 8.0f, this->actor.yawTowardsPlayer, 8.0f);
+                Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 8.0f, this->actor.yawTowardsPlayer, 8.0f);
             }
         }
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);
@@ -328,7 +328,7 @@ void func_809B7174(EnBa* this) {
     this->unk_318 = 20;
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     this->actor.speed = 10.0f;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_BALINADE_HAND_DAMAGE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_BALINADE_HAND_DAMAGE);
     Actor_SetColorFilter(&this->actor, 0x4000, 255, 0, 12);
     EnBa_SetupAction(this, EnBa_RecoilFromDamage);
 }

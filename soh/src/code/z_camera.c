@@ -7157,7 +7157,7 @@ void Camera_PrintSettings(Camera* camera) {
     char sp48[8];
     s32 i;
 
-    if ((OREG(0) & 1) && (camera->play->activeCamera == camera->thisIdx) && !gDbgCamEnabled) {
+    if ((OREG(0) & 1) && (camera->play->activeCamera == camera->thisIdx) && !gDebugCamEnabled) {
         for (i = 0; i < NUM_CAMS; i++) {
             if (camera->play->cameraPtrs[i] == NULL) {
                 sp58[i] = '-';
@@ -7318,8 +7318,8 @@ s32 Camera_UpdateWater(Camera* camera) {
         if ((*quakeId == -1) || (Quake_GetCountdown(*quakeId) == 0xA)) {
             if (*quakeId = newQuakeId = Quake_Add(camera, 5U), newQuakeId != 0) {
                 Quake_SetSpeed(*quakeId, 550);
-                Quake_SetQuakeValues(*quakeId, 1, 1, 180, 0);
-                Quake_SetCountdown(*quakeId, 1000);
+                Quake_SetPerturbations(*quakeId, 1, 1, 180, 0);
+                Quake_SetDuration(*quakeId, 1000);
             }
         }
 
@@ -7359,7 +7359,7 @@ s32 Camera_UpdateHotRoom(Camera* camera) {
 s32 Camera_DbgChangeMode(Camera* camera) {
     s32 changeDir = 0;
 
-    if (!gDbgCamEnabled && camera->play->activeCamera == MAIN_CAM) {
+    if (!gDebugCamEnabled && camera->play->activeCamera == MAIN_CAM) {
         if (CHECK_BTN_ALL(D_8015BD7C->state.input[2].press.button, BTN_CUP)) {
             osSyncPrintf("attention sound URGENCY\n");
             Sfx_PlaySfxCentered(NA_SE_SY_ATTENTION_URGENCY);
@@ -7620,8 +7620,8 @@ Vec3s Camera_Update(Camera* camera) {
 
     // enable/disable debug cam
     if (CVarGetInteger(CVAR_DEVELOPER_TOOLS("DebugEnabled"), 0) && CHECK_BTN_ALL(D_8015BD7C->state.input[2].press.button, BTN_START)) {
-        gDbgCamEnabled ^= 1;
-        if (gDbgCamEnabled) {
+        gDebugCamEnabled ^= 1;
+        if (gDebugCamEnabled) {
             DbgCamera_Enable(&D_8015BD80, camera);
         } else if (camera->play->csCtx.state != CS_STATE_IDLE) {
             func_80064534(camera->play, &camera->play->csCtx);
@@ -7629,7 +7629,7 @@ Vec3s Camera_Update(Camera* camera) {
     }
 
     // Debug cam update
-    if (gDbgCamEnabled) {
+    if (gDebugCamEnabled) {
         camera->play->view.fovy = D_8015BD80.fov;
         DbCamera_Update(&D_8015BD80, camera);
         func_800AA358(&camera->play->view, &D_8015BD80.eye, &D_8015BD80.at, &D_8015BD80.unk_1C);
@@ -8015,7 +8015,7 @@ s32 Camera_ChangeDataIdx(Camera* camera, s32 camDataIdx) {
 }
 
 Vec3s* Camera_GetInputDir(Vec3s* dst, Camera* camera) {
-    if (gDbgCamEnabled) {
+    if (gDebugCamEnabled) {
         *dst = D_8015BD80.sub.unk_104A;
         return dst;
     } else {
@@ -8039,7 +8039,7 @@ s16 Camera_GetInputDirYaw(Camera* camera) {
 }
 
 Vec3s* Camera_GetCamDir(Vec3s* dst, Camera* camera) {
-    if (gDbgCamEnabled) {
+    if (gDebugCamEnabled) {
         *dst = D_8015BD80.sub.unk_104A;
         return dst;
     } else {
@@ -8070,8 +8070,8 @@ s32 Camera_AddQuake(Camera* camera, s32 arg1, s16 y, s32 countdown) {
         return 0;
     }
     Quake_SetSpeed(quakeIdx, 0x61A8);
-    Quake_SetQuakeValues(quakeIdx, y, 0, 0, 0);
-    Quake_SetCountdown(quakeIdx, countdown);
+    Quake_SetPerturbations(quakeIdx, y, 0, 0, 0);
+    Quake_SetDuration(quakeIdx, countdown);
     return 1;
 }
 
@@ -8233,7 +8233,7 @@ s32 Camera_Copy(Camera* dstCamera, Camera* srcCamera) {
 }
 
 s32 Camera_GetDbgCamEnabled() {
-    return gDbgCamEnabled;
+    return gDebugCamEnabled;
 }
 
 Vec3f* Camera_GetSkyboxOffset(Vec3f* dst, Camera* camera) {

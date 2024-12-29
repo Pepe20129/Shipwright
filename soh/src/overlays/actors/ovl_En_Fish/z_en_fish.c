@@ -431,7 +431,7 @@ void EnFish_Dropped_SetupFlopOnGround(EnFish* this) {
     this->unk_250 = 5;
 
     if (playSound && (this->actor.draw != NULL)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_FISH_LEAP);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_FISH_LEAP);
     }
 }
 
@@ -596,7 +596,7 @@ void EnFish_Cutscene_FlopOnGround(EnFish* this, PlayState* play) {
 
         if (Rand_ZeroOne() < 0.1f) {
             D_80A17018 = (Rand_ZeroOne() * 3.0f) + 2.0f;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FISH_LEAP);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FISH_LEAP);
         } else {
             D_80A17018 = 0.0f;
         }

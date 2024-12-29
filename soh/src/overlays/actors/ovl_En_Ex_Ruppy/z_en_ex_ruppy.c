@@ -338,8 +338,8 @@ void EnExRuppy_WaitToBlowUp(EnExRuppy* this, PlayState* play) {
         }
         EffectSsBomb2_SpawnLayered(play, &this->actor.world.pos, &velocity, &accel, explosionScale,
                                    explosionScaleStep);
-        func_8002F71C(play, &this->actor, 2.0f, this->actor.yawTowardsPlayer, 0.0f);
-        Audio_PlayActorSound2(&this->actor, NA_SE_IT_BOMB_EXPLOSION);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 2.0f, this->actor.yawTowardsPlayer, 0.0f);
+        Actor_PlaySfx(&this->actor, NA_SE_IT_BOMB_EXPLOSION);
         Actor_Kill(&this->actor);
     }
 }

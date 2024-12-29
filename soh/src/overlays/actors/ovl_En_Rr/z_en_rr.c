@@ -210,7 +210,7 @@ void EnRr_Destroy(Actor* thisx, PlayState* play) {
 
 void EnRr_SetSpeed(EnRr* this, f32 speed) {
     this->actor.speed = speed;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_WALK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_WALK);
 }
 
 void EnRr_SetupReach(EnRr* this) {
@@ -228,7 +228,7 @@ void EnRr_SetupReach(EnRr* this) {
         this->bodySegs[i].rotTarget.z = 0.0f;
     }
     this->actionFunc = EnRr_Reach;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_UNARI);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_UNARI);
 }
 
 void EnRr_SetupNeutral(EnRr* this) {
@@ -269,7 +269,7 @@ void EnRr_SetupGrabPlayer(EnRr* this, Player* player) {
         this->bodySegs[i].scaleTarget.x = this->bodySegs[i].scaleTarget.z = 1.0f;
     }
     this->actionFunc = EnRr_GrabPlayer;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_DRINK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_DRINK);
 }
 
 u8 EnRr_GetMessage(u8 shield, u8 tunic) {
@@ -325,10 +325,10 @@ void EnRr_SetupReleasePlayer(EnRr* this, PlayState* play) {
             break;
     }
     osSyncPrintf(VT_FGCOL(YELLOW) "%s[%d] : Rr_Catch_Cancel" VT_RST "\n", __FILE__, __LINE__);
-    func_8002F6D4(play, &this->actor, 4.0f, this->actor.shape.rot.y, 12.0f, 8);
+    Actor_SetPlayerKnockbackLarge(play, &this->actor, 4.0f, this->actor.shape.rot.y, 12.0f, 8);
     if (this->actor.colorFilterTimer == 0) {
         this->actionFunc = EnRr_Approach;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_THROW);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_THROW);
     } else if (this->actor.colChkInfo.health != 0) {
         EnRr_SetupDamage(this);
     } else {
@@ -351,7 +351,7 @@ void EnRr_SetupDamage(EnRr* this) {
         this->bodySegs[i].scaleTarget.x = this->bodySegs[i].scaleTarget.z = 1.0f;
     }
     this->actionFunc = EnRr_Damage;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_DAMAGE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_DAMAGE);
 }
 
 void EnRr_SetupApproach(EnRr* this) {
@@ -381,7 +381,7 @@ void EnRr_SetupDeath(EnRr* this) {
         this->bodySegs[i].rotTarget.x = this->bodySegs[i].rotTarget.z = 0.0f;
     }
     this->actionFunc = EnRr_Death;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_DEAD);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_DEAD);
     this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
 }
@@ -492,7 +492,7 @@ void EnRr_CollisionCheck(EnRr* this, PlayState* play) {
                     EnRr_SetupStunned(this);
                     return;
                 case RR_DMG_STUN: // Boomerang and Hookshot
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
                     Actor_SetColorFilter(&this->actor, 0, 0xFF, 0x2000, 0x50);
                     EnRr_SetupStunned(this);
                     return;
@@ -622,9 +622,9 @@ void EnRr_Reach(EnRr* this, PlayState* play) {
 void EnRr_GrabPlayer(EnRr* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    func_800AA000(this->actor.xyzDistToPlayerSq, 120, 2, 120);
+    Rumble_Request(this->actor.xyzDistToPlayerSq, 120, 2, 120);
     if ((this->frameCount % 8) == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_LIKE_EAT);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_LIKE_EAT);
     }
     this->ocTimer = 8;
     if ((this->grabTimer == 0) || !(player->stateFlags2 & PLAYER_STATE2_GRABBED_BY_ENEMY)) {

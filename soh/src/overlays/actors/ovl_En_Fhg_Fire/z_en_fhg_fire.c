@@ -97,7 +97,7 @@ void EnFhgFire_Init(Actor* thisx, PlayState* play) {
 
     if (this->actor.params == FHGFIRE_LIGHTNING_STRIKE) {
         EnFhgFire_SetUpdate(this, EnFhgFire_LightningStrike);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_THUNDER);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_THUNDER);
     } else if (this->actor.params >= FHGFIRE_LIGHTNING_TRAIL) {
         EnFhgFire_SetUpdate(this, EnFhgFire_LightningTrail);
         this->actor.shape.rot = this->actor.world.rot;
@@ -106,7 +106,7 @@ void EnFhgFire_Init(Actor* thisx, PlayState* play) {
         this->actor.draw = NULL;
         EnFhgFire_SetUpdate(this, EnFhgFire_LightningShock);
         this->actor.speed = 30.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_SPARK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_SPARK);
     } else if (this->actor.params == FHGFIRE_LIGHTNING_BURST) {
         EnFhgFire_SetUpdate(this, EnFhgFire_LightningBurst);
         this->fwork[FHGFIRE_ALPHA] = 255.0f;
@@ -133,8 +133,8 @@ void EnFhgFire_Init(Actor* thisx, PlayState* play) {
             this->actor.scale.z = 1.0f;
         } else {
             this->work[FHGFIRE_TIMER] = 76;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_S);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_S2);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_S);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_S2);
         }
     } else if (this->actor.params == FHGFIRE_ENERGY_BALL) {
         f32 dxL;
@@ -213,7 +213,7 @@ void EnFhgFire_LightningStrike(EnFhgFire* this, PlayState* play) {
                                                         (s16)(Rand_ZeroOne() * 100.0f) + 240, FHGFLASH_LIGHTBALL_GREEN);
                     }
                 }
-                func_80033E88(&this->actor, play, 4, 10);
+                Actor_RequestQuakeAndRumble(&this->actor, play, 4, 10);
             }
 
             break;
@@ -287,7 +287,7 @@ void EnFhgFire_LightningShock(EnFhgFire* this, PlayState* play) {
 
     if (this->collider.base.atFlags & AT_HIT) {
         this->collider.base.atFlags &= ~AT_HIT;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
     }
 
     if (Rand_ZeroOne() < 0.5f) {
@@ -494,9 +494,9 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                     canBottleReflect2 = canBottleReflect1;
                     if (!canBottleReflect2 && (hurtbox->toucher.dmgFlags & 0x00100000)) {
                         killMode = BALL_IMPACT;
-                        Audio_PlaySoundGeneral(NA_SE_IT_SHIELD_REFLECT_MG, &player->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_IT_SHIELD_REFLECT_MG, &player->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-                        func_800AA000(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
+                        Rumble_Request(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
                     } else {
                         if (bossGnd->flyMode == GND_FLY_NEUTRAL) {
                             angleModX = Rand_CenteredFloat(0x2000);
@@ -523,17 +523,17 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                             angleModX;
                         this->work[FHGFIRE_FIRE_MODE] = FHGFIRE_LIGHT_BLUE;
                         this->work[FHGFIRE_FX_TIMER] = 2;
-                        Audio_PlaySoundGeneral(NA_SE_IT_SWORD_REFLECT_MG, &player->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_IT_SWORD_REFLECT_MG, &player->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-                        func_800AA000(this->actor.xyzDistToPlayerSq, 0xB4, 0x14, 0x64);
+                        Rumble_Request(this->actor.xyzDistToPlayerSq, 0xB4, 0x14, 0x64);
                     }
                 } else if (sqrtf(SQ(dxL) + SQ(dyL) + SQ(dzL)) <= 25.0f) {
                     killMode = BALL_BURST;
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
                     if ((bossGnd->flyMode >= GND_FLY_VOLLEY) && (this->work[FHGFIRE_RETURN_COUNT] >= 2)) {
-                        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_LAUGH);
+                        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_LAUGH);
                     }
-                    func_8002F698(play, &this->actor, 3.0f, this->actor.world.rot.y, 0.0f, 3, 0x10);
+                    Actor_SetPlayerKnockback(play, &this->actor, 3.0f, this->actor.world.rot.y, 0.0f, 3, 0x10);
                 }
                 break;
             case FHGFIRE_LIGHT_BLUE:
@@ -555,9 +555,9 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                     if ((fabsf(dxPG) < 30.0f) && (fabsf(dzPG) < 30.0f) && (fabsf(dyPG) < 45.0f)) {
                         killMode = BALL_IMPACT;
                         bossGnd->returnCount = this->work[FHGFIRE_RETURN_COUNT] + 1;
-                        Audio_PlaySoundGeneral(NA_SE_EN_FANTOM_HIT_THUNDER, &bossGnd->actor.projectedPos, 4,
+                        Audio_PlaySfxGeneral(NA_SE_EN_FANTOM_HIT_THUNDER, &bossGnd->actor.projectedPos, 4,
                                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-                        Audio_PlaySoundGeneral(NA_SE_EN_FANTOM_DAMAGE, &bossGnd->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_EN_FANTOM_DAMAGE, &bossGnd->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                     }
                 }
@@ -579,7 +579,7 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                     dxzL = sqrtf(SQ(dxL) + SQ(dzL));
                     this->actor.world.rot.x = Math_FAtan2F(dyL, dxzL) * (0x8000 / M_PI);
                     this->work[FHGFIRE_FIRE_MODE] = FHGFIRE_LIGHT_GREEN;
-                    Audio_PlayActorSound2(&this->actor, NA_SE_IT_SWORD_REFLECT_MG);
+                    Actor_PlaySfx(&this->actor, NA_SE_IT_SWORD_REFLECT_MG);
                     this->actor.speed += 2.0f;
                 }
                 break;
@@ -615,7 +615,7 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
                 this->work[FHGFIRE_KILL_TIMER] = 30;
                 this->actor.draw = NULL;
                 if (killMode == BALL_FIZZLE) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_THUNDER_GND);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_THUNDER_GND);
                 }
                 return;
             } else {
@@ -630,7 +630,7 @@ void EnFhgFire_EnergyBall(EnFhgFire* this, PlayState* play) {
         if (this->actor.speed > 20.0f) {
             this->actor.speed = 20.0f;
         }
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_FIRE - SFX_FLAG);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_FIRE - SFX_FLAG);
         // "Why ah ah ah ah"
         osSyncPrintf("なぜだああああああああ      %d\n", this->work[FHGFIRE_VARIANCE_TIMER]);
     }
@@ -647,13 +647,13 @@ void EnFhgFire_PhantomWarp(EnFhgFire* this, PlayState* play) {
 
     if (this->actor.params == FHGFIRE_WARP_DEATH) {
         if (this->work[FHGFIRE_TIMER] > 70) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_L - SFX_FLAG);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_L2 - SFX_FLAG);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_L - SFX_FLAG);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_L2 - SFX_FLAG);
         }
 
         if (this->work[FHGFIRE_TIMER] == 70) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_S);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_FANTOM_WARP_S2);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_S);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_FANTOM_WARP_S2);
         }
     }
 

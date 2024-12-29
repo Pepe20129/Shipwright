@@ -217,7 +217,7 @@ void EnDh_Wait(EnDh* this, PlayState* play) {
                 this->actor.flags &= ~ACTOR_FLAG_REACT_TO_LENS;
                 this->actionState++;
                 this->drawDirtWave++;
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_HIDE);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_HIDE);
             case 1:
                 this->dirtWavePhase += 0x3A7;
                 Math_SmoothStepToF(&this->dirtWaveSpread, 300.0f, 1.0f, 5.0f, 0.0f);
@@ -257,10 +257,10 @@ void EnDh_Walk(EnDh* this, PlayState* play) {
     this->actor.world.rot.y = this->actor.shape.rot.y;
     SkelAnime_Update(&this->skelAnime);
     if (((s32)this->skelAnime.curFrame % 8) == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_WALK);
     }
     if ((play->gameplayFrames & 0x5F) == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_LAUGH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_LAUGH);
     }
     if (this->actor.xzDistToPlayer <= 100.0f) {
         this->actor.speed = 0.0f;
@@ -316,7 +316,7 @@ void EnDh_Attack(EnDh* this, PlayState* play) {
         case 1:
             Animation_PlayOnce(&this->skelAnime, &object_dh_Anim_001A3C);
             this->actionState++;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_BITE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_BITE);
         case 0:
             Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 1, 0x5DC, 0);
             break;
@@ -335,7 +335,7 @@ void EnDh_Attack(EnDh* this, PlayState* play) {
                 this->actionState++;
             } else if (this->collider2.base.atFlags & AT_HIT) {
                 this->collider2.base.atFlags &= ~AT_HIT;
-                func_8002F71C(play, &this->actor, 8.0f, this->actor.shape.rot.y, 8.0f);
+                Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 8.0f, this->actor.shape.rot.y, 8.0f);
             }
             break;
         case 3:
@@ -369,7 +369,7 @@ void EnDh_SetupBurrow(EnDh* this) {
     this->dirtWavePhase = 0;
     this->actionState = 0;
     this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_HIDE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_HIDE);
     EnDh_SetupAction(this, EnDh_Burrow);
 }
 
@@ -408,7 +408,7 @@ void EnDh_SetupDamage(EnDh* this) {
     if (this->actor.bgCheckFlags & 1) {
         this->actor.speed = -1.0f;
     }
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_DAMAGE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_DAMAGE);
     this->curAction = DH_DAMAGE;
     EnDh_SetupAction(this, EnDh_Damage);
 }
@@ -442,7 +442,7 @@ void EnDh_SetupDeath(EnDh* this) {
     this->actor.speed = 0.0f;
     func_800F5B58();
     this->actor.params = ENDH_DEATH;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_DEADHAND_DEAD);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_DEADHAND_DEAD);
     EnDh_SetupAction(this, EnDh_Death);
     GameInteractor_ExecuteOnEnemyDefeat(&this->actor);
 }
@@ -465,7 +465,7 @@ void EnDh_Death(EnDh* this, PlayState* play) {
     } else {
         if (((s32)this->skelAnime.curFrame == 53) || ((s32)this->skelAnime.curFrame == 56) ||
             ((s32)this->skelAnime.curFrame == 61)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_RIZA_DOWN);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_RIZA_DOWN);
         }
         if ((s32)this->skelAnime.curFrame == 61) {
             Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_PROP);

@@ -164,7 +164,7 @@ u16 func_80AF55E0(PlayState* play, Actor* thisx) {
             return 0x1047;
         }
     }
-    if (Flags_GetEventChkInf(EVENTCHKINF_FIRST_SPOKE_TO_MIDO)) {
+    if (Flags_GetEventChkInf(EVENTCHKINF_MIDO_DENIED_DEKU_TREE_ACCESS)) {
         this->unk_208 = 0;
         this->unk_209 = TEXT_STATE_NONE;
         if (Flags_GetInfTable(INFTABLE_03)) {
@@ -681,7 +681,7 @@ void func_80AF68E4(EnSa* this, PlayState* play) {
                 phi_v0 = this->unk_20C;
             }
             if (phi_v0 == 0) {
-                Audio_PlaySoundGeneral(NA_SE_PL_WALK_GROUND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                Audio_PlaySfxGeneral(NA_SE_PL_WALK_GROUND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultReverb);
                 this->unk_20C = 8;
             }

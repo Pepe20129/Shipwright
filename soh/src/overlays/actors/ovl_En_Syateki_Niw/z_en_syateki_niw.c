@@ -443,7 +443,7 @@ void func_80B12460(EnSyatekiNiw* this, PlayState* play) {
                 this->unk_27C = 0.0f;
                 this->unk_280 = 14000.0f;
                 this->unk_278 = 14000.0f;
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHICKEN_CRY_M);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_CHICKEN_CRY_M);
                 this->unk_254 = this->unk_256 = this->unk_25A = 0x1E;
                 this->unk_29A = 5;
             }
@@ -459,7 +459,7 @@ void func_80B12460(EnSyatekiNiw* this, PlayState* play) {
             }
 
             if ((this->unk_25A == 0) && ((player->actor.world.pos.z - 30.0f) < this->actor.world.pos.z)) {
-                Audio_PlaySoundGeneral(NA_SE_VO_LI_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                Audio_PlaySfxGeneral(NA_SE_VO_LI_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultReverb);
                 this->unk_25E = 0x14;
                 this->unk_29A = 6;
@@ -556,7 +556,7 @@ void func_80B12BA4(EnSyatekiNiw* this, PlayState* play) {
             case 0:
                 if (this->unk_29C == 0) {
                     this->unk_262 = 0x1E;
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
+                    Actor_PlaySfx(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
                     this->unk_29C = 1;
                     this->unk_2A0 = 1;
                     this->actionFunc = func_80B123A8;
@@ -567,7 +567,7 @@ void func_80B12BA4(EnSyatekiNiw* this, PlayState* play) {
             case 1:
                 this->unk_262 = 0x1E;
                 this->unk_2F8 = 1;
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
                 this->unk_260 = 100;
                 this->unk_2A0 = 1;
                 this->unk_25E = this->unk_260;
@@ -643,10 +643,10 @@ void EnSyatekiNiw_Update(Actor* thisx, PlayState* play) {
     if (this->unk_262 == 0) {
         if (this->actionFunc == func_80B11E78) {
             this->unk_262 = 0x12C;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHICKEN_CRY_N);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_CHICKEN_CRY_N);
         } else {
             this->unk_262 = 0x1E;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_CHICKEN_CRY_A);
         }
     }
 

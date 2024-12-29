@@ -311,7 +311,7 @@ void BgDyYoseizo_ChooseType(BgDyYoseizo* this, PlayState* play) {
         OnePointCutscene_Init(play, 8604, -99, NULL, MAIN_CAM);
     };
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_EV_GREAT_FAIRY_APPEAR);
+    Actor_PlaySfx(&this->actor, NA_SE_EV_GREAT_FAIRY_APPEAR);
     this->actor.draw = BgDyYoseizo_Draw;
     this->actionFunc = BgDyYoseizo_SetupSpinGrow_NoReward;
 }
@@ -328,7 +328,7 @@ void BgDyYoseizo_SetupSpinGrow_NoReward(BgDyYoseizo* this, PlayState* play) {
                          ANIMMODE_ONCE, -10.0f);
     }
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_VO_FR_LAUGH_0);
+    Actor_PlaySfx(&this->actor, NA_SE_VO_FR_LAUGH_0);
     Player_SetCsActionWithHaltedActors(play, &this->actor, 1);
     this->actionFunc = BgDyYoseizo_SpinGrow_NoReward;
 }
@@ -424,7 +424,7 @@ void BgDyYoseizo_SetupHealPlayer_NoReward(BgDyYoseizo* this, PlayState* play) {
                          -10.0f);
     }
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_VO_FR_SMILE_0);
+    Actor_PlaySfx(&this->actor, NA_SE_VO_FR_SMILE_0);
     this->mouthState = 1;
     this->actionFunc = BgDyYoseizo_HealPlayer_NoReward;
 }
@@ -536,8 +536,8 @@ void BgDyYoseizo_SetupSpinShrink(BgDyYoseizo* this, PlayState* play) {
     this->vanishTimer = 5;
     this->scaleFraction = 0.0f;
     this->heightFraction = 0.0f;
-    Audio_PlayActorSound2(&this->actor, NA_SE_VO_FR_LAUGH_0);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EV_GREAT_FAIRY_VANISH);
+    Actor_PlaySfx(&this->actor, NA_SE_VO_FR_LAUGH_0);
+    Actor_PlaySfx(&this->actor, NA_SE_EV_GREAT_FAIRY_VANISH);
     this->actionFunc = BgDyYoseizo_SpinShrink;
 }
 
@@ -597,7 +597,7 @@ void BgDyYoseizo_SetupSpinGrow_Reward(BgDyYoseizo* this, PlayState* play) {
                                  ANIMMODE_ONCE, -10.0f);
             }
 
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_GREAT_FAIRY_APPEAR);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_GREAT_FAIRY_APPEAR);
             this->actionFunc = BgDyYoseizo_SpinGrowSetupGive_Reward;
         }
     }
@@ -853,10 +853,10 @@ void BgDyYoseizo_Update(Actor* thisx, PlayState* play2) {
         }
 
         if (phi_v1 == 1) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_VO_FR_SMILE_0);
+            Actor_PlaySfx(&this->actor, NA_SE_VO_FR_SMILE_0);
         }
         if (phi_v1 == 2) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_VO_FR_LAUGH_0);
+            Actor_PlaySfx(&this->actor, NA_SE_VO_FR_LAUGH_0);
         }
     }
 
@@ -973,7 +973,7 @@ void BgDyYoseizo_ParticleUpdate(BgDyYoseizo* this, PlayState* play) {
                 particle->velocity.y += particle->accel.y;
                 particle->velocity.z += particle->accel.z;
             } else {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_HEALING - SFX_FLAG);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_HEALING - SFX_FLAG);
 
                 sp94 = player->actor.world.pos;
                 sp94.y = player->actor.world.pos.y - 150.0f;

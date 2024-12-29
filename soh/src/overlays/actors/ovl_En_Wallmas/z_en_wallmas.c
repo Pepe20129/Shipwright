@@ -195,7 +195,7 @@ void EnWallmas_SetupLand(EnWallmas* this, PlayState* play) {
                      ANIMMODE_ONCE, -3.0f);
 
     Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 15.0f, 6, 20.0f, 300, 100, true);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_LAND);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_LAND);
     this->actionFunc = EnWallmas_Land;
 }
 
@@ -294,7 +294,7 @@ void EnWallmas_SetupStun(EnWallmas* this) {
         Actor_SetColorFilter(&this->actor, -0x8000, 0xFF, 0, 0x50);
     } else {
         Actor_SetColorFilter(&this->actor, 0, 0xFF, 0, 0x50);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     }
 
     this->timer = 0x50;
@@ -325,7 +325,7 @@ void EnWallmas_WaitToDrop(EnWallmas* this, PlayState* play) {
         }
 
     if (this->timer == 0x50) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_AIM);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_AIM);
     }
 
     if (this->timer == 0) {
@@ -370,7 +370,7 @@ void EnWallmas_Walk(EnWallmas* this, PlayState* play) {
 
     if (Animation_OnFrame(&this->skelAnime, 0.0f) || Animation_OnFrame(&this->skelAnime, 12.0f) ||
         Animation_OnFrame(&this->skelAnime, 24.0f) || Animation_OnFrame(&this->skelAnime, 36.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_WALK);
     }
 }
 
@@ -389,7 +389,7 @@ void EnWallmas_ReturnToCeiling(EnWallmas* this, PlayState* play) {
     }
 
     if (Animation_OnFrame(&this->skelAnime, 20.0f) != 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_UP);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_UP);
     }
 
     if (this->actor.yDistToPlayer < -900.0f) {
@@ -421,7 +421,7 @@ void EnWallmas_TakeDamage(EnWallmas* this, PlayState* play) {
         }
     }
     if (Animation_OnFrame(&this->skelAnime, 13.0f) != 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_GND);
     }
 
     Math_StepToF(&this->actor.speed, 0.0f, 0.2f);
@@ -460,7 +460,7 @@ void EnWallmas_TakePlayer(EnWallmas* this, PlayState* play) {
             Player_PlaySfx(&this->actor, NA_SE_VO_LI_DAMAGE_S);
         }
 
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_CATCH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_CATCH);
     }
     if (SkelAnime_Update(&this->skelAnime) != 0) {
         player->actor.world.pos.x = this->actor.world.pos.x;
@@ -486,7 +486,7 @@ void EnWallmas_TakePlayer(EnWallmas* this, PlayState* play) {
             }
         }
         if (this->timer == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_UP);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_UP);
         }
 
         this->timer = this->timer + 2;
@@ -540,11 +540,11 @@ void EnWallmas_ColUpdate(EnWallmas* this, PlayState* play) {
         if ((this->actor.colChkInfo.damageEffect != 0) || (this->actor.colChkInfo.damage != 0)) {
             if (Actor_ApplyDamage(&this->actor) == 0) {
                 Enemy_StartFinishingBlow(play, &this->actor);
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_DEAD);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_DEAD);
                 this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
             } else {
                 if (this->actor.colChkInfo.damage != 0) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_DAMAGE);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_DAMAGE);
                 }
             }
 

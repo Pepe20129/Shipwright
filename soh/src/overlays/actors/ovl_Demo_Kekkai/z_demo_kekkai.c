@@ -187,7 +187,7 @@ void DemoKekkai_TowerBarrier(DemoKekkai* this, PlayState* play) {
         }
     }
     if (!(this->sfxFlag & 1)) {
-        func_8002F974(&this->actor, NA_SE_EV_TOWER_BARRIER - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EV_TOWER_BARRIER - SFX_FLAG);
     }
 }
 
@@ -197,7 +197,7 @@ void DemoKekkai_Update(Actor* thisx, PlayState* play2) {
 
     if (this->energyAlpha > 0.99f) {
         if ((this->collider1.base.atFlags & AT_HIT) || (this->collider2.base.atFlags & AT_HIT)) {
-            func_8002F71C(play, &this->actor, 6.0f, this->actor.yawTowardsPlayer, 6.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 6.0f, this->actor.yawTowardsPlayer, 6.0f);
         }
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider1.base);
         CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider1.base);
@@ -229,13 +229,13 @@ void DemoKekkai_TrialBarrierDispel(Actor* thisx, PlayState* play) {
     } else if (this->timer < 50) {
         this->orbScale = 2.0f;
     } else if (this->timer == 50) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_IT_DM_RING_EXPLOSION);
+        Actor_PlaySfx(&this->actor, NA_SE_IT_DM_RING_EXPLOSION);
         DemoKekkai_SpawnParticles(this, play);
     } else {
         this->orbScale = 0.0f;
     }
     if (this->orbScale != 0.0f) {
-        func_8002F974(&this->actor, NA_SE_EV_TOWER_ENERGY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EV_TOWER_ENERGY - SFX_FLAG);
     }
     this->timer++;
 }
@@ -255,7 +255,7 @@ void DemoKekkai_TrialBarrierIdle(Actor* thisx, PlayState* play) {
     DemoKekkai* this = (DemoKekkai*)thisx;
 
     if (this->collider1.base.atFlags & AT_HIT) {
-        func_8002F71C(play, &this->actor, 5.0f, this->actor.yawTowardsPlayer, 5.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 5.0f, this->actor.yawTowardsPlayer, 5.0f);
     }
     CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider1.base);
     CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider1.base);
@@ -269,7 +269,7 @@ void DemoKekkai_TrialBarrierIdle(Actor* thisx, PlayState* play) {
         gSaveContext.cutsceneTrigger = 1;
     }
     CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider2.base);
-    func_8002F974(&this->actor, NA_SE_EV_TOWER_ENERGY - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EV_TOWER_ENERGY - SFX_FLAG);
 }
 
 void DemoKekkai_DrawTrialBarrier(Actor* thisx, PlayState* play2) {

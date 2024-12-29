@@ -279,7 +279,7 @@ void EnBox_Fall(EnBox* this, PlayState* play) {
                 OnePointCutscene_EndCutscene(play, this->unk_1AC);
             }
         }
-        Audio_PlaySoundGeneral(NA_SE_EV_COFFIN_CAP_BOUND, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EV_COFFIN_CAP_BOUND, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
         EnBox_SpawnDust(this, play);
     }
@@ -295,7 +295,7 @@ void EnBox_FallOnSwitchFlag(EnBox* this, PlayState* play) {
     s32 treasureFlag = this->dyna.actor.params & 0x1F;
 
     if (treasureFlag >= ENBOX_TREASURE_FLAG_UNK_MIN && treasureFlag < ENBOX_TREASURE_FLAG_UNK_MAX) {
-        func_8002F5F0(&this->dyna.actor, play);
+        Actor_SetClosestSecretDistance(&this->dyna.actor, play);
     }
 
     if (this->unk_1A8 >= 0) {
@@ -315,7 +315,7 @@ void func_809C9700(EnBox* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (treasureFlag >= ENBOX_TREASURE_FLAG_UNK_MIN && treasureFlag < ENBOX_TREASURE_FLAG_UNK_MAX) {
-        func_8002F5F0(&this->dyna.actor, play);
+        Actor_SetClosestSecretDistance(&this->dyna.actor, play);
     }
 
     if (Math3D_Vec3fDistSq(&this->dyna.actor.world.pos, &player->actor.world.pos) > 22500.0f) {
@@ -351,7 +351,7 @@ void EnBox_AppearOnSwitchFlag(EnBox* this, PlayState* play) {
     s32 treasureFlag = this->dyna.actor.params & 0x1F;
 
     if (treasureFlag >= ENBOX_TREASURE_FLAG_UNK_MIN && treasureFlag < ENBOX_TREASURE_FLAG_UNK_MAX) {
-        func_8002F5F0(&this->dyna.actor, play);
+        Actor_SetClosestSecretDistance(&this->dyna.actor, play);
     }
 
     if (Flags_GetSwitch(play, this->switchFlag)) {
@@ -365,7 +365,7 @@ void EnBox_AppearOnRoomClear(EnBox* this, PlayState* play) {
     s32 treasureFlag = this->dyna.actor.params & 0x1F;
 
     if (treasureFlag >= ENBOX_TREASURE_FLAG_UNK_MIN && treasureFlag < ENBOX_TREASURE_FLAG_UNK_MAX) {
-        func_8002F5F0(&this->dyna.actor, play);
+        Actor_SetClosestSecretDistance(&this->dyna.actor, play);
     }
 
     if (Flags_GetTempClear(play, this->dyna.actor.room) && !Player_InCsMode(play)) {
@@ -389,7 +389,7 @@ void EnBox_AppearInit(EnBox* this, PlayState* play) {
         this->unk_1A8 = 0;
         Actor_Spawn(&play->actorCtx, play, ACTOR_DEMO_KANKYO, this->dyna.actor.home.pos.x,
                     this->dyna.actor.home.pos.y, this->dyna.actor.home.pos.z, 0, 0, 0, 0x0011, true);
-        Audio_PlaySoundGeneral(NA_SE_EV_TRE_BOX_APPEAR, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EV_TRE_BOX_APPEAR, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
     }
 }
@@ -493,7 +493,7 @@ void EnBox_Open(EnBox* this, PlayState* play) {
         }
 
         if (sfxId != 0) {
-            Audio_PlaySoundGeneral(sfxId, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+            Audio_PlaySfxGeneral(sfxId, &this->dyna.actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         }
 
         if (this->skelanime.jointTable[3].z > 0) {
@@ -514,7 +514,7 @@ void EnBox_SpawnIceSmoke(EnBox* this, PlayState* play) {
     f32 f0;
 
     this->iceSmokeTimer++;
-    func_8002F974(&this->dyna.actor, NA_SE_EN_MIMICK_BREATH - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EN_MIMICK_BREATH - SFX_FLAG);
     if (Rand_ZeroOne() < 0.3f) {
         f0 = 2.0f * Rand_ZeroOne() - 1.0f;
         pos = this->dyna.actor.world.pos;

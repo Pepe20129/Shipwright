@@ -511,7 +511,7 @@ void EnBb_Death(EnBb* this, PlayState* play) {
 
 void EnBb_SetupDamage(EnBb* this) {
     this->action = BB_DAMAGE;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_DAMAGE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_DAMAGE);
     if (this->actor.params > ENBB_GREEN) {
         this->actor.world.rot.y = this->actor.yawTowardsPlayer;
         if ((this->actor.bgCheckFlags & 8) == 0) {
@@ -646,7 +646,7 @@ void EnBb_Blue(EnBb* this, PlayState* play) {
             afterHitAngle = -0x8000;
         } else {
             afterHitAngle = 0x4000;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_BITE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_BITE);
             if (play->gameplayFrames & 1) {
                 afterHitAngle = -0x4000;
             }
@@ -658,17 +658,17 @@ void EnBb_Blue(EnBb* this, PlayState* play) {
 
     if (this->maxSpeed >= 6.0f) {
         if ((s32)this->skelAnime.curFrame == 0 || (s32)this->skelAnime.curFrame == 5) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_MOUTH);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_MOUTH);
         } else if ((s32)this->skelAnime.curFrame == 2 || (s32)this->skelAnime.curFrame == 7) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_WING);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_WING);
         }
     } else {
         if ((s32)this->skelAnime.curFrame == 5) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_WING);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_WING);
         }
     }
     if (((s32)this->skelAnime.curFrame == 0) && (Rand_ZeroOne() < 0.1f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_LAUGH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_LAUGH);
     }
     this->actor.shape.rot.y = this->actor.world.rot.y;
 }
@@ -683,7 +683,7 @@ void EnBb_SetupDown(EnBb* this) {
     this->flameScaleX = 0.0f;
     this->flameScaleY = 0.0f;
     this->actor.gravity = -2.0f;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_DOWN);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_DOWN);
     EnBb_SetupAction(this, EnBb_Down);
 }
 
@@ -711,7 +711,7 @@ void EnBb_Down(EnBb* this, PlayState* play) {
                 return;
             }
         }
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_GND);
         if (this->actor.velocity.y < -14.0f) {
             this->actor.velocity.y *= -0.7f;
         } else {
@@ -723,10 +723,10 @@ void EnBb_Down(EnBb* this, PlayState* play) {
     }
     this->actor.shape.rot.y = this->actor.world.rot.y;
     if ((s32)this->skelAnime.curFrame == 5) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_WING);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_WING);
     }
     if (this->timer == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_UP);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_UP);
         switch (this->actor.params) {
             case ENBB_BLUE:
                 this->actor.velocity.y = 0.0f;
@@ -853,9 +853,9 @@ void EnBb_Red(EnBb* this, PlayState* play) {
     }
     if (this->actionState != BBRED_WAIT) {
         if (((s32)this->skelAnime.curFrame == 0) || ((s32)this->skelAnime.curFrame == 5)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_MOUTH);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_MOUTH);
         }
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLEFALL_FIRE - SFX_FLAG);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLEFALL_FIRE - SFX_FLAG);
     }
 }
 
@@ -925,7 +925,7 @@ void EnBb_White(EnBb* this, PlayState* play) {
             this->maxSpeed = 10.0f;
         }
         if (this->collider.base.atFlags & AT_HIT) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_BITE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_BITE);
             this->collider.base.atFlags &= ~AT_HIT;
         }
         this->actor.shape.rot.y = this->actor.world.rot.y;
@@ -934,13 +934,13 @@ void EnBb_White(EnBb* this, PlayState* play) {
     }
     SkelAnime_Update(&this->skelAnime);
     if (((s32)this->skelAnime.curFrame == 0) && (Rand_ZeroOne() <= 0.1f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_LAUGH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_LAUGH);
     }
 
     if ((this->maxSpeed != 0.0f) && (((s32)this->skelAnime.curFrame == 0) || ((s32)this->skelAnime.curFrame == 5))) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_MOUTH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_MOUTH);
     } else if (((s32)this->skelAnime.curFrame == 2) || ((s32)this->skelAnime.curFrame == 7)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_WING);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_WING);
     }
 }
 
@@ -1011,7 +1011,7 @@ void EnBb_Green(EnBb* this, PlayState* play) {
             this->moveMode = BBMOVE_NOCLIP;
             this->maxSpeed = 10.0f;
             if (this->collider.base.atFlags & AT_HIT) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_BITE);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_BITE);
                 this->collider.base.atFlags &= ~AT_HIT;
             }
             if (Math_CosF(this->bobPhase) == 0.0f) {
@@ -1019,7 +1019,7 @@ void EnBb_Green(EnBb* this, PlayState* play) {
                     this->bobSpeedMod = Rand_ZeroOne();
                 } else {
                     this->bobSpeedMod = Rand_ZeroOne() * 3.0f;
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_LAUGH);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_LAUGH);
                 }
             }
             this->actor.shape.rot.y = this->actor.world.rot.y;
@@ -1049,14 +1049,14 @@ void EnBb_Green(EnBb* this, PlayState* play) {
         if (this->vFlameTimer != 0) {
             this->collider.base.acFlags &= ~AC_HIT;
         }
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_DOWN);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_DOWN);
     }
     if (this->actionState != BBGREEN_FLAME_ON) {
         this->timer--;
         if (this->timer == 0) {
             this->actionState = BBGREEN_FLAME_ON;
             this->vFlameTimer = (Rand_ZeroOne() * 30.0f) + 180.0f;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_UP);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_UP);
         }
         Math_SmoothStepToF(&this->flameScaleY, 0.0f, 1.0f, 10.0f, 0.0f);
         Math_SmoothStepToF(&this->flameScaleX, 0.0f, 1.0f, 10.0f, 0.0f);
@@ -1065,10 +1065,10 @@ void EnBb_Green(EnBb* this, PlayState* play) {
         Math_SmoothStepToF(&this->flameScaleX, 100.0f, 1.0f, 10.0f, 0.0f);
     }
     if ((s32)this->skelAnime.curFrame == 5) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_WING);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_WING);
     }
     if (((s32)this->skelAnime.curFrame == 0) && (Rand_ZeroOne() < 0.1f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_LAUGH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_LAUGH);
     }
 }
 
@@ -1094,7 +1094,7 @@ void EnBb_SetupStunned(EnBb* this) {
         case 9:
             this->fireIceTimer = 0x30;
         case 15:
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
             Actor_SetColorFilter(&this->actor, 0, 0xB4, 0, 0x50);
             break;
     }
@@ -1112,7 +1112,7 @@ void EnBb_Stunned(EnBb* this, PlayState* play) {
         this->actor.bgCheckFlags &= ~8;
     }
     if (this->actor.bgCheckFlags & 2) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_GND);
         if (this->actor.velocity.y < -14.0f) {
             this->actor.velocity.y *= -0.4f;
         } else {
@@ -1213,7 +1213,7 @@ void EnBb_CollisionCheck(EnBb* this, PlayState* play) {
                     this->actor.speed = -8.0f;
                     this->maxSpeed = 0.0f;
                     this->actor.world.rot.y = this->actor.yawTowardsPlayer;
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_BUBLE_DAMAGE);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_BUBLE_DAMAGE);
                 } else if (((this->action == BB_DOWN) && (this->timer < 190)) ||
                            ((this->actor.params != ENBB_WHITE) && (this->flameScaleX < 20.0f))) {
                     EnBb_SetupDamage(this);

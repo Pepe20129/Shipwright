@@ -165,7 +165,7 @@ void func_800645A0(PlayState* play, CutsceneContext* csCtx) {
     }
 
     if (CVarGetInteger(CVAR_DEVELOPER_TOOLS("DebugEnabled"), 0) && CHECK_BTN_ALL(input->press.button, BTN_DUP) &&
-        (csCtx->state == CS_STATE_IDLE) && (gSaveContext.sceneSetupIndex >= 4) && !gDbgCamEnabled) {
+        (csCtx->state == CS_STATE_IDLE) && (gSaveContext.sceneSetupIndex >= 4) && !gDebugCamEnabled) {
         D_8015FCC8 = 1;
         gSaveContext.cutsceneIndex = 0xFFFD;
         gSaveContext.cutsceneTrigger = 1;
@@ -322,8 +322,8 @@ void func_80064824(PlayState* play, CutsceneContext* csCtx, CsCmdBase* cmd) {
             if (sp3F != 0) {
                 sQuakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 6);
                 Quake_SetSpeed(sQuakeIndex, 0x7FFF);
-                Quake_SetQuakeValues(sQuakeIndex, 4, 0, 1000, 0);
-                Quake_SetCountdown(sQuakeIndex, 800);
+                Quake_SetPerturbations(sQuakeIndex, 4, 0, 1000, 0);
+                Quake_SetDuration(sQuakeIndex, 800);
             }
             break;
         case 17:
@@ -473,7 +473,7 @@ void Cutscene_Command_FadeBGM(PlayState* play, CutsceneContext* csCtx, CsCmdMusi
 // Command 9: ?
 void Cutscene_Command_09(PlayState* play, CutsceneContext* csCtx, CsCmdUnknown9* cmd) {
     if (csCtx->frames == cmd->startFrame) {
-        func_800AA000(0.0f, cmd->unk_06, cmd->unk_07, cmd->unk_08);
+        Rumble_Request(0.0f, cmd->unk_06, cmd->unk_07, cmd->unk_08);
     }
 }
 
@@ -516,7 +516,7 @@ void Cutscene_Command_Terminator(PlayState* play, CutsceneContext* csCtx, CsCmdB
          CHECK_BTN_ALL(play->state.input[0].press.button, BTN_B) ||
          CHECK_BTN_ALL(play->state.input[0].press.button, BTN_START)) &&
         (gSaveContext.fileNum != 0xFEDC) && (play->transitionTrigger == TRANS_TRIGGER_OFF)) {
-        Audio_PlaySoundGeneral(NA_SE_SY_PIECE_OF_HEART, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_PIECE_OF_HEART, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         temp = 1;
     }
 
@@ -1330,12 +1330,12 @@ void Cutscene_Command_TransitionFX(PlayState* play, CutsceneContext* csCtx, CsCm
                 if (cmd->base == 1) {
                     play->envCtx.screenFillColor[3] = 255.0f * temp;
                     if ((temp == 0.0f) && (gSaveContext.entranceIndex == ENTR_CHAMBER_OF_THE_SAGES_0)) {
-                        Audio_PlaySoundGeneral(NA_SE_SY_WHITE_OUT_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_SY_WHITE_OUT_S, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultReverb);
                     } else if ((temp == 0.0f) &&
                                ((gSaveContext.entranceIndex == ENTR_TEMPLE_OF_TIME_ENTRANCE) || (gSaveContext.entranceIndex == ENTR_CASTLE_GROUNDS_SOUTH_EXIT) ||
                                 (gSaveContext.entranceIndex == ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_FARORES_ZF))) {
-                        Audio_PlaySoundGeneral(NA_SE_EV_WHITE_OUT, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_EV_WHITE_OUT, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultReverb);
                     } else if ((temp == 0.0f) && (play->sceneNum == SCENE_INSIDE_GANONS_CASTLE)) {
                         Sfx_PlaySfxCentered2(NA_SE_EV_WHITE_OUT);

@@ -80,7 +80,7 @@ u16 EnKz_GetTextNoMaskChild(PlayState* play, EnKz* this) {
         CHECK_QUEST_ITEM(QUEST_ZORA_SAPPHIRE)
     ), this)) {
         return 0x402B;
-    } else if (Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)) {
+    } else if (Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)) {
         return 0x401C;
     } else {
         player->exchangeItemId = EXCH_ITEM_LETTER_RUTO;
@@ -170,12 +170,12 @@ s16 func_80A9C6C0(PlayState* play, Actor* thisx) {
         case TEXT_STATE_DONE_FADING:
             if (this->actor.textId != 0x4014) {
                 if (this->actor.textId == 0x401B && !this->sfxPlayed) {
-                    Audio_PlaySoundGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                    Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                            &gSfxDefaultReverb);
                     this->sfxPlayed = true;
                 }
             } else if (!this->sfxPlayed) {
-                Audio_PlaySoundGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                Audio_PlaySfxGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 this->sfxPlayed = true;
             }
             break;
@@ -290,9 +290,9 @@ void func_80A9CB18(EnKz* this, PlayState* play) {
 
     if (func_80A9C95C(play, this, &this->interactInfo.talkState, 340.0f, EnKz_GetText, func_80A9C6C0)) {
         if (GameInteractor_Should(VB_BE_ABLE_TO_EXCHANGE_RUTOS_LETTER, (this->actor.textId == 0x401A), this) &&
-            !Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED))
+            !Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA))
         {
-            if (func_8002F368(play) == EXCH_ITEM_LETTER_RUTO) {
+            if (Actor_GetPlayerExchangeItemId(play) == EXCH_ITEM_LETTER_RUTO) {
                 this->actor.textId = 0x401B;
                 this->sfxPlayed = false;
             } else {
@@ -304,7 +304,7 @@ void func_80A9CB18(EnKz* this, PlayState* play) {
 
         if (LINK_IS_ADULT) {
             if ((INV_CONTENT(ITEM_TRADE_ADULT) == ITEM_PRESCRIPTION) &&
-                (func_8002F368(play) == EXCH_ITEM_PRESCRIPTION)) {
+                (Actor_GetPlayerExchangeItemId(play) == EXCH_ITEM_PRESCRIPTION)) {
                 this->actor.textId = 0x4014;
                 this->sfxPlayed = false;
                 player->actor.textId = this->actor.textId;
@@ -393,7 +393,7 @@ void EnKz_Init(Actor* thisx, PlayState* play) {
     Animation_ChangeByInfo(&this->skelanime, sAnimationInfo, ENKZ_ANIM_0);
 
     if (GameInteractor_Should(VB_KING_ZORA_BE_MOVED, (
-        Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)
+        Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)
     ), this)) {
         EnKz_SetMovedPos(this, play);
     }
@@ -471,12 +471,12 @@ void EnKz_Mweep(EnKz* this, PlayState* play) {
         Animation_ChangeByInfo(&this->skelanime, sAnimationInfo, ENKZ_ANIM_1);
         Inventory_ReplaceItem(play, ITEM_LETTER_RUTO, ITEM_BOTTLE);
         EnKz_SetMovedPos(this, play);
-        Flags_SetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED);
+        Flags_SetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA);
         this->actor.speed = 0.0;
         this->actionFunc = EnKz_StopMweep;
     }
     if (this->skelanime.curFrame == 13.0f) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_KZ_MOVE);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_KZ_MOVE);
     }
 }
 
@@ -513,7 +513,7 @@ void EnKz_SetupGetItem(EnKz* this, PlayState* play) {
         this->actionFunc = EnKz_StartTimer;
     } else {
         if (CVarGetInteger(CVAR_ENHANCEMENT("EarlyEyeballFrog"), 0)) {
-            getItemId = func_8002F368(play) == EXCH_ITEM_PRESCRIPTION ? GI_FROG : GI_TUNIC_ZORA;
+            getItemId = Actor_GetPlayerExchangeItemId(play) == EXCH_ITEM_PRESCRIPTION ? GI_FROG : GI_TUNIC_ZORA;
         } else {
             getItemId = this->isTrading ? GI_FROG : GI_TUNIC_ZORA;
         }

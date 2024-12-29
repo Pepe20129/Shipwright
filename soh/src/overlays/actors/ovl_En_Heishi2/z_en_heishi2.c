@@ -212,7 +212,7 @@ void func_80A53278(EnHeishi2* this, PlayState* play) {
         this->unk_300 = TEXT_STATE_DONE;
         this->actor.textId = 0x7099;
         this->actionFunc = func_80A5475C;
-    } else if (Flags_GetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG)) {
+    } else if (Flags_GetEventChkInf(EVENTCHKINF_RECEIVED_WEIRD_EGG)) {
         if (this->unk_30E == 0) {
             // "Start under the first sleeve!"
             osSyncPrintf(VT_FGCOL(PURPLE) " ☆☆☆☆☆ １回目袖の下開始！ ☆☆☆☆☆ \n" VT_RST);
@@ -288,7 +288,7 @@ void func_80A53638(EnHeishi2* this, PlayState* play) {
 
     SkelAnime_Update(&this->skelAnime);
     if ((frameCount >= 12.0f) && (!this->audioFlag)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_SPEAR_HIT);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
         this->audioFlag = 1;
     }
     if (this->unk_2EC <= frameCount) {
@@ -406,7 +406,7 @@ void func_80A53AD4(EnHeishi2* this, PlayState* play) {
     }
     this->unk_300 = TEXT_STATE_DONE;
     if (Actor_TalkOfferAccepted(&this->actor, play)) {
-        exchangeItemId = func_8002F368(play);
+        exchangeItemId = Actor_GetPlayerExchangeItemId(play);
         if (exchangeItemId == EXCH_ITEM_LETTER_ZELDA) {
             Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
             player->actor.textId = 0x2010;
@@ -451,7 +451,7 @@ void func_80A53D0C(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if (12.0f <= frameCount) {
         if (this->audioFlag == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_SPEAR_HIT);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
             this->audioFlag = 1;
         }
     }
@@ -609,7 +609,7 @@ void func_80A543A0(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
 
     if ((frameCount >= 12.0f) && (!this->audioFlag)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_SPEAR_HIT);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
         this->audioFlag = 1;
     }
 

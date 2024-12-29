@@ -203,7 +203,7 @@ void EnDoor_Idle(EnDoor* this, PlayState* play) {
         if (this->lockTimer != 0) {
             gSaveContext.inventory.dungeonKeys[gSaveContext.mapIndex]--;
             Flags_SetSwitch(play, this->actor.params & 0x3F);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHAIN_KEY_UNLOCK);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_CHAIN_KEY_UNLOCK);
         }
     } else if (!Player_InCsMode(play)) {
         if (fabsf(playerPosRelToDoor.y) < 20.0f && fabsf(playerPosRelToDoor.x) < 20.0f &&
@@ -276,7 +276,7 @@ void EnDoor_Open(EnDoor* this, PlayState* play) {
             this->actionFunc = EnDoor_Idle;
             this->playerIsOpening = 0;
         } else if (Animation_OnFrame(&this->skelAnime, sDoorAnimOpenFrames[this->animStyle])) {
-            Audio_PlayActorSound2(&this->actor,
+            Actor_PlaySfx(&this->actor,
                                   (play->sceneNum == SCENE_SHADOW_TEMPLE || play->sceneNum == SCENE_BOTTOM_OF_THE_WELL ||
                                    play->sceneNum == SCENE_FIRE_TEMPLE)
                                       ? NA_SE_EV_IRON_DOOR_OPEN
@@ -288,7 +288,7 @@ void EnDoor_Open(EnDoor* this, PlayState* play) {
                 }
             }
         } else if (Animation_OnFrame(&this->skelAnime, sDoorAnimCloseFrames[this->animStyle])) {
-            Audio_PlayActorSound2(&this->actor,
+            Actor_PlaySfx(&this->actor,
                                   (play->sceneNum == SCENE_SHADOW_TEMPLE || play->sceneNum == SCENE_BOTTOM_OF_THE_WELL ||
                                    play->sceneNum == SCENE_FIRE_TEMPLE)
                                       ? NA_SE_EV_IRON_DOOR_CLOSE

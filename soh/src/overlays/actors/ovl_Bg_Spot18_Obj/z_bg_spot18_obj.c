@@ -259,9 +259,9 @@ void func_808B8F08(BgSpot18Obj* this, PlayState* play) {
         player->stateFlags2 &= ~PLAYER_STATE2_MOVING_DYNAPOLY;
         Flags_SetSwitch(play, (this->dyna.actor.params >> 8) & 0x3F);
         Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BLOCK_BOUND);
     } else {
-        func_8002F974(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
     }
 }
 

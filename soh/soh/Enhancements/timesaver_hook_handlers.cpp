@@ -438,7 +438,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), 0)) {
                 *should = false;
                 Inventory_ReplaceItem(gPlayState, ITEM_LETTER_RUTO, ITEM_BOTTLE);
-                Flags_SetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED);
+                Flags_SetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA);
             }
             break;
         }
@@ -469,7 +469,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                         player->stateFlags1 |= PLAYER_STATE1_GETTING_ITEM;
 
                         if (Animation_OnFrame(&demoIm->skelAnime, 25.0f)) {
-                            Audio_PlaySoundGeneral(NA_SE_IT_DEKU, &demoIm->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                            Audio_PlaySfxGeneral(NA_SE_IT_DEKU, &demoIm->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                             GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnActorUpdate>(demoImUpdateHook);
                             GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneInit>(demoImKillHook);
                             demoImUpdateHook = 0;
@@ -690,7 +690,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                     pg->actor.world.pos.z = GND_BOSSROOM_CENTER_Z;
                     pg->actor.shape.rot.y = 0;
                     pg->work[GND_BODY_DECAY_INDEX] = 0;
-                    Audio_PlayActorSound2(&pg->actor, NA_SE_EN_FANTOM_LAST);
+                    Actor_PlaySfx(&pg->actor, NA_SE_EN_FANTOM_LAST);
 
                     // Move Player out of the center of the room
                     player->actor.world.pos.x = GND_BOSSROOM_CENTER_X - 200.0f;
@@ -951,9 +951,9 @@ void TimeSaverOnSceneInitHandler(int16_t sceneNum) {
             break;
         case SCENE_LON_LON_RANCH:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) && GameInteractor_Should(VB_MALON_RETURN_FROM_CASTLE, Flags_GetEventChkInf(EVENTCHKINF_TALON_RETURNED_FROM_CASTLE))) {
-                Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_RANCH);
+                Flags_SetEventChkInf(EVENTCHKINF_TALKED_TO_CHILD_MALON_AT_RANCH);
                 Flags_SetInfTable(INFTABLE_CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU);
-                Flags_SetEventChkInf(EVENTCHKINF_INVITED_TO_SING_WITH_CHILD_MALON);
+                Flags_SetEventChkInf(EVENTCHKINF_CAN_LEARN_EPONAS_SONG);
             }
             break;
         case SCENE_DEKU_TREE_BOSS:

@@ -193,7 +193,7 @@ void func_80ACE5C8(EnPart* this, PlayState* play) {
                     play->damagePlayer(play, -8);
                 }
             }
-            func_8002F71C(play, this->actor.parent, (650.0f - this->actor.parent->xzDistToPlayer) * 0.04f + 4.0f,
+            Actor_SetPlayerKnockbackLargeNoDamage(play, this->actor.parent, (650.0f - this->actor.parent->xzDistToPlayer) * 0.04f + 4.0f,
                           this->actor.parent->world.rot.y, 8.0f);
             player->invincibilityTimer = prevInvincibilityTimer;
             this->timer = 1;
@@ -203,7 +203,7 @@ void func_80ACE5C8(EnPart* this, PlayState* play) {
         velocity.x = Rand_CenteredFloat(16.0f);
         EffectSsHahen_Spawn(play, &this->actor.world.pos, &velocity, &accel, 20,
                             (s32)((Rand_ZeroOne() * 5.0f + 12.0f) * 2), -1, 10, NULL);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_MONBLIN_GNDWAVE - SFX_FLAG);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_MONBLIN_GNDWAVE - SFX_FLAG);
     }
 }
 
@@ -226,7 +226,7 @@ void func_80ACE7E8(EnPart* this, PlayState* play) {
         if (diffsSum == 0.0f) {
             this->actor.parent->home.rot.x--;
             this->timer--;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_STAL_DAMAGE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_STAL_DAMAGE);
         }
     } else if (this->timer > 0) {
         this->timer--;

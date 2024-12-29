@@ -166,7 +166,7 @@ void EnDntDemo_Judge(EnDntDemo* this, PlayState* play) {
                     }
                 case PLAYER_MASK_TRUTH:
                     if (!Flags_GetItemGetInf(ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE) && (Player_GetMask(play) != PLAYER_MASK_SKULL)) {
-                        Audio_PlaySoundGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultReverb);
                         this->prize = DNT_PRIZE_NUTS;
                         this->leader->stageSignal = DNT_LEADER_SIGNAL_UP;

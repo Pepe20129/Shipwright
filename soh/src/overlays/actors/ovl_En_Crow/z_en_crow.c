@@ -159,7 +159,7 @@ void EnCrow_SetupDamaged(EnCrow* this, PlayState* play) {
     this->actor.bgCheckFlags &= ~1;
     this->actor.shape.yOffset = 0.0f;
     this->actor.lockOnArrowOffset = 0.0f;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_DEAD);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_KAICHO_DEAD);
 
     if (this->actor.colChkInfo.damageEffect == 3) { // Ice arrows
         Actor_SetColorFilter(&this->actor, 0, 255, 0, 40);
@@ -203,7 +203,7 @@ void EnCrow_SetupTurnAway(EnCrow* this) {
     this->aimRotY = this->actor.yawTowardsPlayer + 0x8000;
     this->skelAnime.playSpeed = 2.0f;
     Actor_SetColorFilter(&this->actor, 0, 255, 0, 5);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
     this->actionFunc = EnCrow_TurnAway;
 }
 
@@ -254,7 +254,7 @@ void EnCrow_FlyIdle(EnCrow* this, PlayState* play) {
         } else {
             this->aimRotY -= 0x1000 + (0x1000 * Rand_ZeroOne());
         }
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_CRY);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_KAICHO_CRY);
     }
 
     if (this->actor.depthInWater > -40.0f) {
@@ -325,7 +325,7 @@ void EnCrow_DiveAttack(EnCrow* this, PlayState* play) {
         CVarGetInteger(CVAR_CHEAT("NoKeeseGuayTarget"), 0)) {
         if (this->collider.base.atFlags & AT_HIT) {
             this->collider.base.atFlags &= ~AT_HIT;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_ATTACK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_KAICHO_ATTACK);
         }
 
         EnCrow_SetupFlyIdle(this);
@@ -481,7 +481,7 @@ void EnCrow_Update(Actor* thisx, PlayState* play) {
     Actor_SetFocus(&this->actor, height);
 
     if (this->actor.colChkInfo.health != 0 && Animation_OnFrame(&this->skelAnime, 3.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_KAICHO_FLUTTER);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_KAICHO_FLUTTER);
     }
 }
 

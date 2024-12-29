@@ -133,7 +133,7 @@ void EnDntJiji_SetupUp(EnDntJiji* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntJijiUpAnim);
     Animation_Change(&this->skelAnime, &gDntJijiUpAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_ONCE, -10.0f);
     EffectSsHahen_SpawnBurst(play, &this->actor.world.pos, 6.0f, 0, 15, 5, 20, HAHEN_OBJECT_DEFAULT, 10, NULL);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_UP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_UP);
     this->actionFunc = EnDntJiji_Up;
 }
 
@@ -149,7 +149,7 @@ void EnDntJiji_SetupUnburrow(EnDntJiji* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntJijiUnburrowAnim);
     Animation_Change(&this->skelAnime, &gDntJijiUnburrowAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_ONCE, -10.0f);
     EffectSsHahen_SpawnBurst(play, &this->actor.world.pos, 6.0f, 0, 15, 5, 20, HAHEN_OBJECT_DEFAULT, 10, NULL);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_UP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_UP);
     this->actionFunc = EnDntJiji_Unburrow;
 }
 
@@ -182,7 +182,7 @@ void EnDntJiji_Walk(EnDntJiji* this, PlayState* play) {
     Math_ApproachF(&this->actor.speed, 1.0f, 0.2f, 0.4f);
     if (this->sfxTimer == 0) {
         this->sfxTimer = 5;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_WALK);
     }
     if ((this->actor.bgCheckFlags & 8) && (this->actor.bgCheckFlags & 1)) {
         this->actor.velocity.y = 9.0f;
@@ -206,8 +206,8 @@ void EnDntJiji_SetupBurrow(EnDntJiji* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntJijiBurrowAnim);
     Animation_Change(&this->skelAnime, &gDntJijiBurrowAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_ONCE, -10.0f);
     EffectSsHahen_SpawnBurst(play, &this->actor.world.pos, 6.0f, 0, 15, 5, 20, HAHEN_OBJECT_DEFAULT, 10, NULL);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_UP);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_DOWN);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_UP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_DOWN);
     this->actionFunc = EnDntJiji_Burrow;
 }
 
@@ -219,7 +219,7 @@ void EnDntJiji_SetupCower(EnDntJiji* this, PlayState* play) {
     this->endFrame = (f32)Animation_GetLastFrame(&gDntJijiCowerAnim);
     Animation_Change(&this->skelAnime, &gDntJijiCowerAnim, 1.0f, 0.0f, this->endFrame, ANIMMODE_ONCE, -10.0f);
     EffectSsHahen_SpawnBurst(play, &this->actor.world.pos, 3.0f, 0, 9, 3, 10, HAHEN_OBJECT_DEFAULT, 10, NULL);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_UP);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_UP);
 
     if ((CUR_UPG_VALUE(UPG_NUTS) == 1) || (CUR_UPG_VALUE(UPG_NUTS) == 0)) {
         this->getItemId = GI_NUT_UPGRADE_30;
@@ -354,7 +354,7 @@ void EnDntJiji_Return(EnDntJiji* this, PlayState* play) {
     }
     if (this->sfxTimer == 0) {
         this->sfxTimer = 3;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_NUTS_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_NUTS_WALK);
     }
     if ((fabsf(dx) < 5.0f) && (fabsf(dz) < 5.0f)) {
         this->actor.world.pos.x = this->flowerPos.x;

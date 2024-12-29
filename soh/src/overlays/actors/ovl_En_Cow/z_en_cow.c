@@ -312,7 +312,7 @@ void EnCow_Update(Actor* thisx, PlayState* play2) {
     Actor_UpdateBgCheckInfo(play, thisx, 0.0f, 0.0f, 0.0f, 4);
     if (SkelAnime_Update(&this->skelAnime) != 0) {
         if (this->skelAnime.animation == &gCowBodyChewAnim) {
-            Audio_PlayActorSound2(thisx, NA_SE_EV_COW_CRY);
+            Actor_PlaySfx(thisx, NA_SE_EV_COW_CRY);
             Animation_Change(&this->skelAnime, &gCowBodyMoveHeadAnim, 1.0f, 0.0f,
                              Animation_GetLastFrame(&gCowBodyMoveHeadAnim), ANIMMODE_ONCE, 1.0f);
         } else {

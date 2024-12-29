@@ -96,8 +96,8 @@ void EnEncount2_Wait(EnEncount2* this, PlayState* play) {
             if ((this->deathMountainSpawnerTimer == 1) || (!this->isQuaking)) {
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 1);
                 Quake_SetSpeed(quakeIndex, 0x7FFF);
-                Quake_SetQuakeValues(quakeIndex, 50, 0, 0, 0);
-                Quake_SetCountdown(quakeIndex, 300);
+                Quake_SetPerturbations(quakeIndex, 50, 0, 0, 0);
+                Quake_SetDuration(quakeIndex, 300);
                 this->isQuaking = true;
             }
         case ENCOUNT2_ACTIVE_GANONS_TOWER:
@@ -153,7 +153,7 @@ void EnEncount2_SpawnRocks(EnEncount2* this, PlayState* play) {
             spawnerState = ENCOUNT2_ACTIVE_DEATH_MOUNTAIN;
         }
 
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_VOLCANO - SFX_FLAG);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_VOLCANO - SFX_FLAG);
     } else if ((this->actor.xzDistToPlayer < 700.0f) && (Flags_GetSwitch(play, 0x37) != 0)) {
         s16 scene = play->sceneNum;
 

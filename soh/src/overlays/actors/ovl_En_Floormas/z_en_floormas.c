@@ -260,7 +260,7 @@ void EnFloormas_SetupHover(EnFloormas* this, PlayState* play) {
     this->actor.gravity = 0.0f;
     EnFloormas_MakeInvulnerable(this);
     Actor_SpawnFloorDustRing(play, &this->actor, &this->actor.world.pos, 15.0f, 6, 20.0f, 300, 100, true);
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_ATTACK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_ATTACK);
     this->actionFunc = EnFloormas_Hover;
 }
 
@@ -421,9 +421,9 @@ void EnFloormas_SetupFreeze(EnFloormas* this) {
     } else {
         Actor_SetColorFilter(&this->actor, 0, 0xFF, 0, 0x50);
         if (this->actor.scale.x > 0.004f) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
         } else {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_GOMA_JR_FREEZE);
         }
     }
     this->actionTimer = 80;
@@ -438,7 +438,7 @@ void EnFloormas_Die(EnFloormas* this, PlayState* play) {
         EnFloormas_SetupSplit((EnFloormas*)this->actor.child);
         EnFloormas_SetupSplit((EnFloormas*)this->actor.parent);
         EnFloormas_SetupSplit(this);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SPLIT);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SPLIT);
     } else {
         // Die
         Item_DropCollectibleRandom(play, &this->actor, &this->actor.world.pos, 0x90);
@@ -487,7 +487,7 @@ void EnFloormas_BigWalk(EnFloormas* this, PlayState* play) {
     if (((animPastFrame || (Animation_OnFrame(&this->skelAnime, 12.0f))) ||
          (Animation_OnFrame(&this->skelAnime, 24.0f) != 0)) ||
         (Animation_OnFrame(&this->skelAnime, 36.0f) != 0)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_WALK);
     }
 
     if ((this->actor.xzDistToPlayer < 320.0f) && (Actor_IsFacingPlayer(&this->actor, 0x4000))) {
@@ -515,7 +515,7 @@ void EnFloormas_Run(EnFloormas* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if (Animation_OnFrame(&this->skelAnime, 0.0f) || Animation_OnFrame(&this->skelAnime, 12.0f) ||
         Animation_OnFrame(&this->skelAnime, 24.0f) || Animation_OnFrame(&this->skelAnime, 36.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_WALK);
     }
 
     Math_ApproachS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 3, 0x71C);
@@ -540,9 +540,9 @@ void EnFloormas_Turn(EnFloormas* this, PlayState* play) {
     if (((this->skelAnime.playSpeed > 0.0f) && Animation_OnFrame(&this->skelAnime, 21.0f)) ||
         ((this->skelAnime.playSpeed < 0.0f) && Animation_OnFrame(&this->skelAnime, 6.0f))) {
         if (this->actor.scale.x > 0.004f) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_WALK);
         } else {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
         }
     }
     // Needed to match
@@ -588,7 +588,7 @@ void EnFloormas_Slide(EnFloormas* this, PlayState* play) {
 
     func_800286CC(play, &pos, &velocity, &accel, 450, 100);
 
-    func_8002F974(&this->actor, NA_SE_EN_FLOORMASTER_SLIDING);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_FLOORMASTER_SLIDING);
 }
 
 void EnFloormas_Charge(EnFloormas* this, PlayState* play) {
@@ -628,9 +628,9 @@ void EnFloormas_Land(EnFloormas* this, PlayState* play) {
 
         if (this->actor.velocity.y < -4.0f) {
             if (this->actor.scale.x > 0.004f) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_LAND);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_LAND);
             } else {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
             }
         }
     }
@@ -678,7 +678,7 @@ void EnFloormas_Split(EnFloormas* this, PlayState* play) {
     }
 
     if (this->actor.bgCheckFlags & 2) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
     }
 }
 
@@ -687,7 +687,7 @@ void EnFloormas_SmWalk(EnFloormas* this, PlayState* play) {
     DECR(this->smActionTimer);
 
     if (Animation_OnFrame(&this->skelAnime, 0.0f) || Animation_OnFrame(&this->skelAnime, 18.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
     }
 
     if (this->smActionTimer == 0) {
@@ -706,7 +706,7 @@ void EnFloormas_SmDecideAction(EnFloormas* this, PlayState* play) {
 
     SkelAnime_Update(&this->skelAnime);
     if (Animation_OnFrame(&this->skelAnime, 0.0f) || Animation_OnFrame(&this->skelAnime, 18.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_WALK);
     }
     isAgainstWall = this->actor.bgCheckFlags & 8;
     if (isAgainstWall) {
@@ -757,7 +757,7 @@ void EnFloormas_JumpAtLink(EnFloormas* this, PlayState* play) {
     } else if (this->actor.bgCheckFlags & 2) {
         this->actionTimer = 0x32;
         this->actor.speed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
         EnFloormas_SetupLand(this);
     } else if ((this->actor.yDistToPlayer < -10.0f) && (this->collider.base.ocFlags1 & OC1_HIT) &&
                (&player->actor == this->collider.base.oc)) {
@@ -827,7 +827,7 @@ void EnFloormas_GrabLink(EnFloormas* this, PlayState* play) {
         }
     }
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_STICK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_STICK);
 }
 
 void EnFloormas_SmSlaveJumpAtMaster(EnFloormas* this, PlayState* play) {
@@ -857,7 +857,7 @@ void EnFloormas_SmSlaveJumpAtMaster(EnFloormas* this, PlayState* play) {
         this->collider.base.ocFlags1 |= OC1_ON;
     } else if (this->actor.bgCheckFlags & 2) {
         this->actor.speed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_LAND);
         EnFloormas_SetupLand(this);
     }
 
@@ -911,7 +911,7 @@ void EnFloormas_Merge(EnFloormas* this, PlayState* play) {
     this->actor.scale.y = this->actor.scale.z = curScale;
 
     if (((prevScale == 0.007f) || (prevScale == 0.004f)) && (prevScale != this->actor.scale.x)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_EXPAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_EXPAND);
     }
 
     this->collider.dim.radius = (sCylinderInit.dim.radius * 100.0f) * this->actor.scale.x;
@@ -935,7 +935,7 @@ void EnFloormas_Merge(EnFloormas* this, PlayState* play) {
             }
         }
     }
-    func_8002F974(&this->actor, NA_SE_EN_FLOORMASTER_RESTORE - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_FLOORMASTER_RESTORE - SFX_FLAG);
 }
 
 void EnFloormas_SmWait(EnFloormas* this, PlayState* play) {
@@ -952,9 +952,9 @@ void EnFloormas_TakeDamage(EnFloormas* this, PlayState* play) {
 
     if (Animation_OnFrame(&this->skelAnime, 13.0f)) {
         if (this->actor.scale.x > 0.004f) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_GND);
         } else {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_GND);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_GND);
         }
     }
     Math_StepToF(&this->actor.speed, 0.0f, 0.2f);
@@ -999,14 +999,14 @@ void EnFloormas_ColliderCheck(EnFloormas* this, PlayState* play) {
                 }
                 if (Actor_ApplyDamage(&this->actor) == 0) {
                     if (isSmall) {
-                        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FLOORMASTER_SM_DEAD);
+                        Actor_PlaySfx(&this->actor, NA_SE_EN_FLOORMASTER_SM_DEAD);
                     } else {
-                        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_DEAD);
+                        Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_DEAD);
                     }
                     Enemy_StartFinishingBlow(play, &this->actor);
                     this->actor.flags &= ~ACTOR_FLAG_ATTENTION_ENABLED;
                 } else if (this->actor.colChkInfo.damage != 0) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_FALL_DAMAGE);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_FALL_DAMAGE);
                 }
 
                 if ((this->actor.colChkInfo.damageEffect == 4) || (this->actor.colChkInfo.damageEffect == 1)) {

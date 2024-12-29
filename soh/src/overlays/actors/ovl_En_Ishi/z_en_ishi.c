@@ -441,9 +441,9 @@ void EnIshi_Fly(EnIshi* this, PlayState* play) {
         if (type == ROCK_LARGE) {
             quakeIdx = Quake_Add(GET_ACTIVE_CAM(play), 3);
             Quake_SetSpeed(quakeIdx, -0x3CB0);
-            Quake_SetQuakeValues(quakeIdx, 3, 0, 0, 0);
-            Quake_SetCountdown(quakeIdx, 7);
-            func_800AA000(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
+            Quake_SetPerturbations(quakeIdx, 3, 0, 0, 0);
+            Quake_SetDuration(quakeIdx, 7);
+            Rumble_Request(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
         }
         Actor_Kill(&this->actor);
         return;

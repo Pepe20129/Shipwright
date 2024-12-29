@@ -581,7 +581,7 @@ void EnGe2_Update(Actor* thisx, PlayState* play) {
         this->timer = 100;
         this->stateFlags |= GE2_STATE_KO;
         this->actor.speed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_SK_CRASH);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_SK_CRASH);
     } else {
         this->actionFunc(this, play);
 
@@ -628,7 +628,7 @@ void EnGe2_UpdateStunned(Actor* thisx, PlayState* play2) {
         this->timer = 100;
         this->stateFlags |= GE2_STATE_KO;
         this->actor.speed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_SK_CRASH);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_SK_CRASH);
     }
     CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider.base);
 

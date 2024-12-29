@@ -284,9 +284,9 @@ void BgSpot06Objects_GateOpen(BgSpot06Objects* this, PlayState* play) {
     if (Math_StepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y + 120.0f, 0.6f)) {
         this->actionFunc = BgSpot06Objects_DoNothing;
         this->timer = 0;
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_METALDOOR_STOP);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_METALDOOR_STOP);
     } else {
-        func_8002F974(&this->dyna.actor, NA_SE_EV_METALDOOR_SLIDE - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_METALDOOR_SLIDE - SFX_FLAG);
     }
 }
 
@@ -343,7 +343,7 @@ void BgSpot06Objects_LockWait(BgSpot06Objects* this, PlayState* play) {
         EffectSsGSplash_Spawn(play, &this->dyna.actor.world.pos, NULL, NULL, 1, 700);
         this->collider.elements->dim.worldSphere.radius = 45;
         this->actionFunc = BgSpot06Objects_LockPullOutward;
-        Audio_PlaySoundGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         Flags_SetSwitch(play, this->switchFlag);
         OnePointCutscene_Init(play, 4120, 170, &this->dyna.actor, MAIN_CAM);
     } else {
@@ -610,7 +610,7 @@ void BgSpot06Objects_WaterPlaneCutsceneRise(BgSpot06Objects* this, PlayState* pl
         play->colCtx.colHeader->waterBoxes[LHWB_MAIN_2].ySurface = this->dyna.actor.world.pos.y;
     }
 
-    func_8002F948(&this->dyna.actor, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
+    Actor_PlaySfx_FlaggedCentered2(&this->dyna.actor, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
 }
 
 /**
@@ -641,5 +641,5 @@ void BgSpot06Objects_WaterPlaneCutsceneLower(BgSpot06Objects* this, PlayState* p
         play->colCtx.colHeader->waterBoxes[LHWB_MAIN_2].ySurface = yPos;
     }
 
-    func_8002F948(&this->dyna.actor, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
+    Actor_PlaySfx_FlaggedCentered2(&this->dyna.actor, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
 }

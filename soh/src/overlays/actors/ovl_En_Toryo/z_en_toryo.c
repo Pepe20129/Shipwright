@@ -327,7 +327,7 @@ void func_80B20768(EnToryo* this, PlayState* play) {
 
     if (this->unk_1E4 == 0) {
         if (Actor_TalkOfferAccepted(&this->actor, play)) {
-            this->unk_1E0 = func_8002F368(play);
+            this->unk_1E0 = Actor_GetPlayerExchangeItemId(play);
             if (this->unk_1E0 != 0) {
                 player->actor.textId = func_80B20634(this, play);
                 this->actor.textId = player->actor.textId;

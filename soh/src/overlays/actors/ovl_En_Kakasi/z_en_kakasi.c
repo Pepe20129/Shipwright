@@ -110,7 +110,7 @@ void func_80A8F320(EnKakasi* this, PlayState* play, s16 arg) {
             this->unk_19A++;
             if (this->unk_1A4 == 0) {
                 this->unk_1A4 = 1;
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_KAKASHI_ROLL);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_KAKASHI_ROLL);
             }
             break;
         case OCARINA_NOTE_F4:
@@ -143,7 +143,7 @@ void func_80A8F320(EnKakasi* this, PlayState* play, s16 arg) {
         this->actor.gravity = -1.0f;
         if (this->unk_19A == 8 && (this->actor.bgCheckFlags & 1)) {
             this->actor.velocity.y = 3.0f;
-            Audio_PlayActorSound2(&this->actor, NA_SE_IT_KAKASHI_JUMP);
+            Actor_PlaySfx(&this->actor, NA_SE_IT_KAKASHI_JUMP);
         }
         Math_ApproachF(&this->skelanime.playSpeed, this->unk_1B8, 0.1f, 0.2f);
         Math_SmoothStepToS(&this->actor.shape.rot.x, this->unk_1A8, 5, 0x3E8, 0);
@@ -164,7 +164,7 @@ void func_80A8F320(EnKakasi* this, PlayState* play, s16 arg) {
         }
         currentFrame = this->skelanime.curFrame;
         if (currentFrame == 11 || currentFrame == 17) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_KAKASHI_SWING);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_KAKASHI_SWING);
         }
         SkelAnime_Update(&this->skelanime);
     }

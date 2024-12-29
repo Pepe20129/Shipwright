@@ -102,10 +102,10 @@ u16 EnMa1_GetText(PlayState* play, Actor* thisx) {
     if (malonTaughtEponasSong) {
         return 0x204A;
     }
-    if (Flags_GetEventChkInf(EVENTCHKINF_INVITED_TO_SING_WITH_CHILD_MALON)) {
+    if (Flags_GetEventChkInf(EVENTCHKINF_CAN_LEARN_EPONAS_SONG)) {
         return 0x2049;
     }
-    if (Flags_GetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_RANCH)) {
+    if (Flags_GetEventChkInf(EVENTCHKINF_TALKED_TO_CHILD_MALON_AT_RANCH)) {
         if ((Flags_GetInfTable(INFTABLE_CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU))) {
             return 0x2049;
         } else {
@@ -115,7 +115,7 @@ u16 EnMa1_GetText(PlayState* play, Actor* thisx) {
     if (malonReturnedFromCastle) {
         return 0x2047;
     }
-    if (Flags_GetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG)) {
+    if (Flags_GetEventChkInf(EVENTCHKINF_RECEIVED_WEIRD_EGG)) {
         return 0x2044;
     }
     if (Flags_GetInfTable(INFTABLE_MET_CHILD_MALON_AT_CASTLE_OR_MARKET)) {
@@ -143,7 +143,7 @@ s16 func_80AA0778(PlayState* play, Actor* thisx) {
                     ret = NPC_TALK_STATE_TALKING;
                     break;
                 case 0x2047:
-                    Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_RANCH);
+                    Flags_SetEventChkInf(EVENTCHKINF_TALKED_TO_CHILD_MALON_AT_RANCH);
                     ret = NPC_TALK_STATE_IDLE;
                     break;
                 case 0x2048:
@@ -151,7 +151,7 @@ s16 func_80AA0778(PlayState* play, Actor* thisx) {
                     ret = NPC_TALK_STATE_IDLE;
                     break;
                 case 0x2049:
-                    Flags_SetEventChkInf(EVENTCHKINF_INVITED_TO_SING_WITH_CHILD_MALON);
+                    Flags_SetEventChkInf(EVENTCHKINF_CAN_LEARN_EPONAS_SONG);
                     ret = NPC_TALK_STATE_IDLE;
                     break;
                 case 0x2061:
@@ -344,7 +344,7 @@ void func_80AA0EFC(EnMa1* this, PlayState* play) {
     if (this->interactInfo.talkState == NPC_TALK_STATE_ITEM_GIVEN || !GameInteractor_Should(VB_GIVE_ITEM_WEIRD_EGG, true)) {
         this->interactInfo.talkState = NPC_TALK_STATE_IDLE;
         this->actionFunc = func_80AA0D88;
-        Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG);
+        Flags_SetEventChkInf(EVENTCHKINF_RECEIVED_WEIRD_EGG);
         play->msgCtx.msgMode = MSGMODE_TEXT_CLOSING;
     }
 }
@@ -362,7 +362,7 @@ void func_80AA0F44(EnMa1* this, PlayState* play) {
         }
     }
 
-    if (Flags_GetEventChkInf(EVENTCHKINF_INVITED_TO_SING_WITH_CHILD_MALON)) {
+    if (Flags_GetEventChkInf(EVENTCHKINF_CAN_LEARN_EPONAS_SONG)) {
         if (player->stateFlags2 & PLAYER_STATE2_ATTEMPT_PLAY_FOR_ACTOR) {
             player->stateFlags2 |= PLAYER_STATE2_PLAY_FOR_ACTOR;
             player->unk_6A8 = &this->actor;

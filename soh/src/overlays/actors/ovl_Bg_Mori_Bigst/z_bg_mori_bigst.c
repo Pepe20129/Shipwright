@@ -166,7 +166,7 @@ void BgMoriBigst_Fall(BgMoriBigst* this, PlayState* play) {
     if (this->dyna.actor.world.pos.y <= this->dyna.actor.home.pos.y) {
         this->dyna.actor.world.pos.y = this->dyna.actor.home.pos.y;
         BgMoriBigst_SetupLanding(this, play);
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_STONE_BOUND);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_STONE_BOUND);
         if (GameInteractor_Should(VB_PLAY_ONEPOINT_ACTOR_CS, true, this)) {
             OnePointCutscene_Init(play, 1020, 8, &this->dyna.actor, MAIN_CAM);
             Player_SetCsAction(play, NULL, 0x3C);
@@ -182,8 +182,8 @@ void BgMoriBigst_SetupLanding(BgMoriBigst* this, PlayState* play) {
     this->waitTimer = 18;
     quake = Quake_Add(GET_ACTIVE_CAM(play), 3);
     Quake_SetSpeed(quake, 25000);
-    Quake_SetQuakeValues(quake, 5, 0, 0, 0);
-    Quake_SetCountdown(quake, 16);
+    Quake_SetPerturbations(quake, 5, 0, 0, 0);
+    Quake_SetDuration(quake, 16);
 }
 
 void BgMoriBigst_Landing(BgMoriBigst* this, PlayState* play) {

@@ -350,9 +350,9 @@ void EnFr_DivingIntoWater(EnFr* this, PlayState* play) {
         EffectSsGSplash_Spawn(play, &vec, NULL, NULL, 1, 1);
 
         if (this->isBelowWaterSurfaceCurrent == false) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_DIVE_INTO_WATER_L);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_DIVE_INTO_WATER_L);
         } else {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_BOMB_DROP_WATER);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_BOMB_DROP_WATER);
         }
     }
 }
@@ -476,7 +476,7 @@ void EnFr_JumpingUp(EnFr* this, PlayState* play) {
         this->actor.velocity.y = 25.0f;
         if (this->isJumpingToFrogSong) {
             this->isJumpingToFrogSong = false;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_DODO_M_EAT);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_DODO_M_EAT);
         }
     }
 
@@ -740,7 +740,7 @@ void EnFr_ChildSong(EnFr* this, PlayState* play) {
             if (frog->actionFunc == EnFr_ChooseJumpFromLogSpot) {
                 frog->isJumpingUp = true;
                 frog->isActive = true;
-                Audio_PlayActorSound2(&frog->actor, NA_SE_EV_FROG_GROW_UP);
+                Actor_PlaySfx(&frog->actor, NA_SE_EV_FROG_GROW_UP);
                 this->actionFunc = EnFr_ChildSongFirstTime;
             } else {
                 this->jumpCounter = 48;
@@ -1037,7 +1037,7 @@ void EnFr_Deactivate(EnFr* this, PlayState* play) {
     }
 
     play->msgCtx.ocarinaMode = OCARINA_MODE_04;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EV_FROG_CRY_0);
+    Actor_PlaySfx(&this->actor, NA_SE_EV_FROG_CRY_0);
     if (GameInteractor_Should(VB_FROGS_GO_TO_IDLE, this->reward == GI_NONE, this)) {
         this->actionFunc = EnFr_Idle;
     } else {

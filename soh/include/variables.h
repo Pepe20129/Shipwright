@@ -71,7 +71,7 @@ extern "C"
 	extern u64 gJpegUCode[];
 	extern EffectSsOverlay gEffectSsOverlayTable[EFFECT_SS_TYPE_MAX];
 	extern Gfx D_80116280[];
-	extern s32 gDbgCamEnabled;
+	extern s32 gDebugCamEnabled;
 	extern GameStateOverlay gGameStateOverlayTable[6];
 	extern u8 gWeatherMode;
 	extern u8 D_8011FB34;

@@ -457,7 +457,7 @@ s32 EnZl4_CsMeetPlayer(EnZl4* this, PlayState* play) {
     switch (this->talkState) {
         case 0:
             if (this->skelAnime.curFrame == 50.0f) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_Z0_MEET);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_Z0_MEET);
             }
             if (!EnZl4_SetNextAnim(this, ZL4_ANIM_4)) {
                 break;
@@ -561,7 +561,7 @@ s32 EnZl4_CsAskStone(EnZl4* this, PlayState* play) {
             break;
         case 4:
             if (this->skelAnime.curFrame == 16.0f) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_Z0_QUESTION);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_Z0_QUESTION);
             }
             if (EnZl4_SetNextAnim(this, ZL4_ANIM_10)) {
                 this->talkState++;
@@ -606,7 +606,7 @@ s32 EnZl4_CsAskStone(EnZl4* this, PlayState* play) {
             break;
         case 7:
             if (this->skelAnime.curFrame == 17.0f) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_Z0_SMILE_0);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_Z0_SMILE_0);
             }
             if (EnZl4_SetNextAnim(this, ZL4_ANIM_29)) {
                 this->talkState++;
@@ -744,7 +744,7 @@ s32 EnZl4_CsAskName(EnZl4* this, PlayState* play) {
             break;
         case 12:
             if (this->skelAnime.curFrame == 5.0f) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_Z0_SIGH_0);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_Z0_SIGH_0);
             }
             if (EnZl4_SetNextAnim(this, ZL4_ANIM_12)) {
                 this->talkState++;
@@ -837,7 +837,7 @@ s32 EnZl4_CsTellLegend(EnZl4* this, PlayState* play) {
                 this->mouthExpression = ZL4_MOUTH_SURPRISED;
                 Message_StartTextbox(play, 0x7038, NULL);
                 this->talkState++;
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_Z0_HURRY);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_Z0_HURRY);
             }
             break;
         case 5:
@@ -922,7 +922,7 @@ s32 EnZl4_CsLookWindow(EnZl4* this, PlayState* play) {
                     play->csCtx.state = CS_STATE_UNSKIPPABLE_INIT;
                 }
             } else {
-                func_800AA000(0.0f, 0xA0, 0xA, 0x28);
+                Rumble_Request(0.0f, 0xA0, 0xA, 0x28);
                 Player_SetCsActionWithHaltedActors(play, &this->actor, 1);
                 Animation_ChangeByInfo(&this->skelAnime, sAnimationInfo, ZL4_ANIM_30);
                 EnZl4_SetCsCameraAngle(play, 11);

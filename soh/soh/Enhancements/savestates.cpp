@@ -67,7 +67,7 @@ typedef struct SaveStateInfo {
 
     //Camera data
     int32_t sInitRegs_copy;
-    int32_t gDbgCamEnabled_copy;
+    int32_t gDebugCamEnabled_copy;
     int32_t sDbgModeIdx_copy;
     int16_t sNextUID_copy;             
     int32_t sCameraInterfaceFlags_copy;
@@ -420,7 +420,7 @@ void SaveState::LoadSeqScriptState(void) {
 
 void SaveState::BackupCameraData(void) {
     info->sInitRegs_copy = sInitRegs;
-    info->gDbgCamEnabled_copy = gDbgCamEnabled;
+    info->gDebugCamEnabled_copy = gDebugCamEnabled;
     info->sNextUID_copy = sNextUID;
     info->sCameraInterfaceFlags_copy = sCameraInterfaceFlags;
     info->sCameraInterfaceAlpha_copy = sCameraInterfaceAlpha;
@@ -447,7 +447,7 @@ void SaveState::BackupCameraData(void) {
 
 void SaveState::LoadCameraData(void) {
     sInitRegs = info->sInitRegs_copy;
-    gDbgCamEnabled = info->gDbgCamEnabled_copy;
+    gDebugCamEnabled = info->gDebugCamEnabled_copy;
     sDbgModeIdx = info->sDbgModeIdx_copy;
     sNextUID = info->sNextUID_copy;
     sCameraInterfaceAlpha = info->sCameraInterfaceAlpha_copy;

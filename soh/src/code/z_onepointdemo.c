@@ -165,8 +165,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 5);
             Quake_SetSpeed(i, 400);
-            Quake_SetQuakeValues(i, 4, 5, 40, 0x3C);
-            Quake_SetCountdown(i, 1600);
+            Quake_SetPerturbations(i, 4, 5, 40, 0x3C);
+            Quake_SetDuration(i, 1600);
             break;
         case 2280:
             csInfo->keyFrames = D_80120D4C;
@@ -186,8 +186,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 5);
             Quake_SetSpeed(i, 400);
-            Quake_SetQuakeValues(i, 2, 3, 200, 0x32);
-            Quake_SetCountdown(i, 9999);
+            Quake_SetPerturbations(i, 2, 3, 200, 0x32);
+            Quake_SetDuration(i, 9999);
             break;
         case 2220:
             csInfo->keyFrames = D_80120E64;
@@ -197,8 +197,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 5);
             Quake_SetSpeed(i, 400);
-            Quake_SetQuakeValues(i, 2, 2, 50, 0);
-            Quake_SetCountdown(i, 280);
+            Quake_SetPerturbations(i, 2, 2, 50, 0);
+            Quake_SetDuration(i, 280);
             break;
         case 2230:
             if (player->actor.world.pos.z < 1000.0f) {
@@ -219,8 +219,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 5);
             Quake_SetSpeed(i, 400);
-            Quake_SetQuakeValues(i, 2, 2, 50, 0);
-            Quake_SetCountdown(i, 60);
+            Quake_SetPerturbations(i, 2, 2, 50, 0);
+            Quake_SetDuration(i, 60);
             break;
         case 2350:
             csInfo->keyFrames = D_8012110C;
@@ -419,8 +419,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 22000);
-            Quake_SetQuakeValues(i, 2, 0, 200, 0);
-            Quake_SetCountdown(i, 10);
+            Quake_SetPerturbations(i, 2, 0, 200, 0);
+            Quake_SetDuration(i, 10);
             break;
         case 3080:
             csInfo->keyFrames = D_80121774;
@@ -457,8 +457,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 24000);
-            Quake_SetQuakeValues(i, 2, 0, 0, 0);
-            Quake_SetCountdown(i, 160);
+            Quake_SetPerturbations(i, 2, 0, 0, 0);
+            Quake_SetDuration(i, 160);
             break;
         case 3060:
             csInfo->keyFrames = D_80121904;
@@ -489,8 +489,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(mainCam, 3);
             Quake_SetSpeed(i, 30000);
-            Quake_SetQuakeValues(i, 2, 1, 1, 0);
-            Quake_SetCountdown(i, 200);
+            Quake_SetPerturbations(i, 2, 1, 1, 0);
+            Quake_SetDuration(i, 200);
             break;
         case 3120:
             csInfo->keyFrames = D_80121954[-(timer + 101)];
@@ -605,8 +605,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 22000);
-            Quake_SetQuakeValues(i, 1, 0, 0, 0);
-            Quake_SetCountdown(i, 90);
+            Quake_SetPerturbations(i, 1, 0, 0, 0);
+            Quake_SetDuration(i, 90);
             break;
         case 6010:
             Actor_GetWorld(&spA0, actor);
@@ -659,8 +659,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 0, 0, 20, 0);
-            Quake_SetCountdown(i, D_801208E4 - 10);
+            Quake_SetPerturbations(i, 0, 0, 20, 0);
+            Quake_SetDuration(i, D_801208E4 - 10);
             break;
         case 3400:
             Play_CameraChangeSetting(play, camIdx, CAM_SET_CS_3);
@@ -671,8 +671,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 0x4E20);
-            Quake_SetQuakeValues(i, 1, 0, 50, 0);
-            Quake_SetCountdown(i, D_80120698 - 20);
+            Quake_SetPerturbations(i, 1, 0, 50, 0);
+            Quake_SetDuration(i, D_80120698 - 20);
             break;
         case 3390:
             player->actor.shape.rot.y = player->actor.world.rot.y = player->yaw = -0x3FD9;
@@ -690,8 +690,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 2, 0, 0, 0);
-            Quake_SetCountdown(i, timer);
+            Quake_SetPerturbations(i, 2, 0, 0, 0);
+            Quake_SetDuration(i, timer);
             break;
         case 3290:
             D_80121F1C[0].atTargetInit = play->view.lookAt;
@@ -707,8 +707,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 12000);
-            Quake_SetQuakeValues(i, 0, 0, 1000, 0);
-            Quake_SetCountdown(i, 5);
+            Quake_SetPerturbations(i, 0, 0, 1000, 0);
+            Quake_SetDuration(i, 5);
             break;
         case 3340:
             D_80121FBC[0].atTargetInit = play->view.lookAt;
@@ -723,8 +723,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 12000);
-            Quake_SetQuakeValues(i, 0, 0, 1000, 0);
-            Quake_SetCountdown(i, 5);
+            Quake_SetPerturbations(i, 0, 0, 1000, 0);
+            Quake_SetDuration(i, 5);
             break;
         case 3360:
             csInfo->keyFrames = D_8012205C;
@@ -768,8 +768,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 4, 0, 0, 0);
-            Quake_SetCountdown(i, 20);
+            Quake_SetPerturbations(i, 4, 0, 0, 0);
+            Quake_SetDuration(i, 20);
             break;
         case 3450:
             csInfo->keyFrames = D_8012237C;
@@ -780,8 +780,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 2, 0, 0, 0);
-            Quake_SetCountdown(i, 10);
+            Quake_SetPerturbations(i, 2, 0, 0, 0);
+            Quake_SetDuration(i, 10);
             break;
         case 3440:
             csInfo->keyFrames = D_801223CC;
@@ -794,8 +794,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 2, 0, 0, 0);
-            Quake_SetCountdown(i, 10);
+            Quake_SetPerturbations(i, 2, 0, 0, 0);
+            Quake_SetDuration(i, 10);
             break;
         case 3430:
             csInfo->keyFrames = D_801224BC;
@@ -806,8 +806,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 1);
             Quake_SetSpeed(i, 32000);
-            Quake_SetQuakeValues(i, 1, 0, 10, 0);
-            Quake_SetCountdown(i, 20);
+            Quake_SetPerturbations(i, 1, 0, 10, 0);
+            Quake_SetDuration(i, 20);
             break;
         case 4100:
             csInfo->keyFrames = D_801225D4;
@@ -889,8 +889,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 12000);
-            Quake_SetQuakeValues(i, 0, 1, 100, 0);
-            Quake_SetCountdown(i, timer - 80);
+            Quake_SetPerturbations(i, 0, 1, 100, 0);
+            Quake_SetDuration(i, timer - 80);
             break;
         case 4220:
             csInfo->keyFrames = (player->actor.world.pos.z < -15.0f) ? D_80122C3C : D_80122C64;
@@ -901,8 +901,8 @@ s32 OnePointCutscene_SetInfo(PlayState* play, s16 camIdx, s16 csId, Actor* actor
 
             i = Quake_Add(csCam, 3);
             Quake_SetSpeed(i, 12000);
-            Quake_SetQuakeValues(i, 0, 1, 10, 0);
-            Quake_SetCountdown(i, timer - 10);
+            Quake_SetPerturbations(i, 0, 1, 10, 0);
+            Quake_SetDuration(i, timer - 10);
             break;
         case 4221:
             csInfo->keyFrames = D_80122C8C;

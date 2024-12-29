@@ -136,7 +136,7 @@ void EnVbBall_UpdateBones(EnVbBall* this, PlayState* play) {
         this->actor.velocity.z = cosf(angle) * 10.0f;
         this->actor.velocity.y *= -0.5f;
         if (this->actor.params & 1) {
-            Audio_PlaySoundGeneral(NA_SE_EN_VALVAISA_LAND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+            Audio_PlaySfxGeneral(NA_SE_EN_VALVAISA_LAND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                    &gSfxDefaultReverb);
         }
         for (i = 0; i < 10; i++) {
@@ -193,7 +193,7 @@ void EnVbBall_Update(Actor* thisx, PlayState* play2) {
             if ((this->actor.params == 100) || (this->actor.params == 101)) {
                 Actor_Kill(&this->actor);
                 if (this->actor.params == 100) {
-                    func_80033E88(&this->actor, play, 5, 0xA);
+                    Actor_RequestQuakeAndRumble(&this->actor, play, 5, 0xA);
                 }
                 if (this->actor.params == 100) {
                     spawnNum = 2;
@@ -221,7 +221,7 @@ void EnVbBall_Update(Actor* thisx, PlayState* play2) {
                                                              this->actor.world.rot.z * 0.5f, this->actor.params + 1);
                     if (newActor != NULL) {
                         if ((i == 0) && (this->actor.params == 100)) {
-                            Audio_PlaySoundGeneral(NA_SE_EN_VALVAISA_ROCK, &newActor->actor.projectedPos, 4,
+                            Audio_PlaySfxGeneral(NA_SE_EN_VALVAISA_ROCK, &newActor->actor.projectedPos, 4,
                                                    &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                         }
                         newActor->actor.parent = this->actor.parent;
@@ -291,7 +291,7 @@ void EnVbBall_Update(Actor* thisx, PlayState* play2) {
             Player* player = GET_PLAYER(play);
 
             this->collider.base.atFlags &= ~AT_HIT;
-            Audio_PlayActorSound2(&player->actor, NA_SE_PL_BODY_HIT);
+            Actor_PlaySfx(&player->actor, NA_SE_PL_BODY_HIT);
         }
         Collider_UpdateCylinder(&this->actor, &this->collider);
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);

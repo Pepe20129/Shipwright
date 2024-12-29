@@ -155,7 +155,7 @@ void EnBx_Update(Actor* thisx, PlayState* play) {
                     play->damagePlayer(play, -4);
                 }
             }
-            func_8002F71C(play, &this->actor, 6.0f, tmp32, 6.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 6.0f, tmp32, 6.0f);
             player->invincibilityTimer = tmp33;
         }
 
@@ -186,7 +186,7 @@ void EnBx_Update(Actor* thisx, PlayState* play) {
             }
         }
 
-        Audio_PlayActorSound2(thisx, NA_SE_EN_BIRI_SPARK - SFX_FLAG);
+        Actor_PlaySfx(thisx, NA_SE_EN_BIRI_SPARK - SFX_FLAG);
     }
     thisx->focus.pos = thisx->world.pos;
     Collider_UpdateCylinder(thisx, &this->collider);

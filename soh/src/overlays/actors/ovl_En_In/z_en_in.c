@@ -620,15 +620,15 @@ void func_80A7A304(EnIn* this, PlayState* play) {
         }
     }
     if (this->skelAnime.animation == &object_in_Anim_018C38 && this->skelAnime.curFrame == 20.0f) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_IN_CRY_0);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_IN_CRY_0);
     }
     if (SkelAnime_Update(&this->skelAnime) != 0) {
         this->animationIdx %= 8;
         this->unk_1E8 = this->animationIdx;
         if (this->animationIdx == 3 || this->animationIdx == 4) {
-            Audio_PlaySoundGeneral(NA_SE_IT_LASH, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+            Audio_PlaySfxGeneral(NA_SE_IT_LASH, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             if (Rand_ZeroOne() < 0.3f) {
-                Audio_PlaySoundGeneral(NA_SE_IT_INGO_HORSE_NEIGH, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
+                Audio_PlaySfxGeneral(NA_SE_IT_INGO_HORSE_NEIGH, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             }
         }
@@ -662,7 +662,7 @@ void func_80A7A568(EnIn* this, PlayState* play) {
         Flags_SetInfTable(INFTABLE_AB);
     }
     if (gSaveContext.timer1State == 10) {
-        Audio_PlaySoundGeneral(NA_SE_SY_FOUND, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_FOUND, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         func_80A79C78(this, play);
         this->actionFunc = func_80A7B024;
         gSaveContext.timer1State = 0;
@@ -680,7 +680,7 @@ void func_80A7A568(EnIn* this, PlayState* play) {
             phi_a2 = 2;
             transitionType = TRANS_TYPE_FADE_BLACK;
         } else {
-            Audio_PlaySoundGeneral(NA_SE_SY_FOUND, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+            Audio_PlaySfxGeneral(NA_SE_SY_FOUND, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             if (!Flags_GetEventChkInf(EVENTCHKINF_RENTED_HORSE_FROM_INGO)) {
                 if (Flags_GetInfTable(INFTABLE_AB)) {
                     Flags_SetEventChkInf(EVENTCHKINF_RENTED_HORSE_FROM_INGO);
@@ -743,7 +743,7 @@ void func_80A7A940(EnIn* this, PlayState* play) {
     if (this->unk_1EC != 0) {
         this->unk_1EC--;
         if (this->unk_1EC == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_VO_IN_LOST);
+            Actor_PlaySfx(&this->actor, NA_SE_VO_IN_LOST);
         }
     }
     if (this->interactInfo.talkState == NPC_TALK_STATE_ACTION) {
@@ -810,7 +810,7 @@ void func_80A7ABD4(EnIn* this, PlayState* play) {
         if (this->unk_1EC != 0) {
             this->unk_1EC--;
             if (this->unk_1EC == 0) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_VO_IN_LOST);
+                Actor_PlaySfx(&this->actor, NA_SE_VO_IN_LOST);
             }
         }
     }
@@ -832,7 +832,7 @@ void func_80A7ABD4(EnIn* this, PlayState* play) {
             return;
         }
         if (play->csCtx.frames == 44) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_RONRON_DOOR_CLOSE);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_RONRON_DOOR_CLOSE);
         }
         Math_SmoothStepToF(&this->unk_2F0, 0.0f, 0.06f, 10000.0f, 0.0f);
         Math_SmoothStepToF(&this->unk_2F4, 50.0f, 0.06f, 10000.0f, 0.0f);

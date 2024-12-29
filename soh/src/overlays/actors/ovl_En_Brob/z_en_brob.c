@@ -132,7 +132,7 @@ void func_809CAEF4(EnBrob* this) {
     Animation_MorphToPlayOnce(&this->skelAnime, &object_brob_Anim_000290, -5.0f);
     this->unk_1AE -= 125.0f;
     Actor_SetColorFilter(&this->dyna.actor, 0, 0xFF, 0, 0x50);
-    Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EN_GOMA_JR_FREEZE);
+    Actor_PlaySfx(&this->dyna.actor, NA_SE_EN_GOMA_JR_FREEZE);
     this->actionFunc = func_809CB2B8;
 }
 
@@ -155,7 +155,7 @@ void func_809CB054(EnBrob* this, PlayState* play) {
     }
     if (this->timer == 0) {
         if (DynaPolyActor_IsPlayerOnTop(&this->dyna) != 0) {
-            func_8002F71C(play, &this->dyna.actor, 5.0f, this->dyna.actor.yawTowardsPlayer, 1.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->dyna.actor, 5.0f, this->dyna.actor.yawTowardsPlayer, 1.0f);
             func_809CAE44(this, play);
         } else if (this->dyna.actor.xzDistToPlayer < 300.0f) {
             func_809CAE44(this, play);
@@ -185,7 +185,7 @@ void func_809CB114(EnBrob* this, PlayState* play) {
 void func_809CB218(EnBrob* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if (Animation_OnFrame(&this->skelAnime, 6.0f) || Animation_OnFrame(&this->skelAnime, 15.0f)) {
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EN_BROB_WAVE);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EN_BROB_WAVE);
     }
     if (this->timer != 0) {
         this->timer--;
@@ -281,7 +281,7 @@ void EnBrob_Update(Actor* thisx, PlayState* play2) {
 
         if (this->actionFunc == func_809CB114 && !(this->colliders[0].base.atFlags & AT_BOUNCED) &&
             !(this->colliders[1].base.atFlags & AT_BOUNCED)) {
-            func_8002F71C(play, &this->dyna.actor, 5.0f, this->dyna.actor.yawTowardsPlayer, 1.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->dyna.actor, 5.0f, this->dyna.actor.yawTowardsPlayer, 1.0f);
         } else if (this->actionFunc != func_809CB114) {
             func_809CB008(this);
         }

@@ -153,7 +153,7 @@ float previousImGuiScale;
 
 bool prevAltAssets = false;
 
-// Same as NaviColor type from OoT src (z_actor.c), but modified to be sans alpha channel for Controller LED.
+// Same as AttentionColor type from OoT src (z_actor.c), but modified to be sans alpha channel for Controller LED.
 typedef struct {
     Color_RGB8 inner;
     Color_RGB8 outer;

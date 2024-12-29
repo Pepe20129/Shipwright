@@ -2872,7 +2872,7 @@ void Fishing_FishLeapSfx(Fishing* this, u8 outOfWater) {
         }
     }
 
-    Audio_PlayActorSound2(&this->actor, sfxId);
+    Actor_PlaySfx(&this->actor, sfxId);
 }
 
 void Fishing_HandleAquariumDialog(Fishing* this, PlayState* play) {
@@ -3333,7 +3333,7 @@ void Fishing_UpdateFish(Actor* thisx, PlayState* play2) {
                         Fishing_SpawnRipple(&this->actor.projectedPos, play->specialEffects, &spB8, 30.0f, 400.0f,
                                             150, 90);
 
-                        Audio_PlayActorSound2(&this->actor, NA_SE_PL_CATCH_BOOMERANG);
+                        Actor_PlaySfx(&this->actor, NA_SE_PL_CATCH_BOOMERANG);
                         break;
                     }
                 }
@@ -3608,7 +3608,7 @@ void Fishing_UpdateFish(Actor* thisx, PlayState* play2) {
                 this->unk_194 = 2000.0f;
             } else if (distToTarget < 10.0f) {
                 if (sLurePos.y > (WATER_SURFACE_Y(play) - 10.0f)) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EV_JUMP_OUT_WATER);
+                    Actor_PlaySfx(&this->actor, NA_SE_EV_JUMP_OUT_WATER);
                     Sfx_PlaySfxCentered(NA_SE_PL_CATCH_BOOMERANG);
                 }
 
@@ -4238,7 +4238,7 @@ void Fishing_UpdateFish(Actor* thisx, PlayState* play2) {
                     this->actor.velocity.x = this->actor.world.pos.x * -0.003f;
                     this->actor.velocity.z = this->actor.world.pos.z * -0.003f;
 
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EV_FISH_LEAP);
+                    Actor_PlaySfx(&this->actor, NA_SE_EV_FISH_LEAP);
                     Fishing_SplashBySize2(this, play);
 
                     if (Rand_ZeroOne() < 0.5f) {

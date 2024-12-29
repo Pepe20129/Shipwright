@@ -190,8 +190,8 @@ void BgHeavyBlock_MovePiece(BgHeavyBlock* this, PlayState* play) {
             thisx->velocity.x = Rand_CenteredFloat(8.0f);
             thisx->velocity.z = Rand_CenteredFloat(8.0f);
             BgHeavyBlock_SetPieceRandRot(this, 1.0f);
-            Audio_PlayActorSound2(thisx, NA_SE_EV_ROCK_BROKEN);
-            func_800AA000(thisx->xzDistToPlayer, 0x96, 0xA, 8);
+            Actor_PlaySfx(thisx, NA_SE_EV_ROCK_BROKEN);
+            Rumble_Request(thisx->xzDistToPlayer, 0x96, 0xA, 8);
         }
     }
 
@@ -335,8 +335,8 @@ void BgHeavyBlock_Wait(BgHeavyBlock* this, PlayState* play) {
 
         quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 3);
         Quake_SetSpeed(quakeIndex, 25000);
-        Quake_SetQuakeValues(quakeIndex, 1, 1, 5, 0);
-        Quake_SetCountdown(quakeIndex, 10);
+        Quake_SetPerturbations(quakeIndex, 1, 1, 5, 0);
+        Quake_SetDuration(quakeIndex, 10);
         this->actionFunc = BgHeavyBlock_LiftedUp;
     }
 }
@@ -350,7 +350,7 @@ void BgHeavyBlock_LiftedUp(BgHeavyBlock* this, PlayState* play) {
     f32 xOffset;
 
     if (this->timer == 11) {
-        func_800AA000(0.0f, 0xFF, 0x14, 0x14);
+        Rumble_Request(0.0f, 0xFF, 0x14, 0x14);
         Player_PlaySfx(&player->actor, NA_SE_PL_PULL_UP_BIGROCK);
         LOG_STRING("NA_SE_PL_PULL_UP_BIGROCK");
     }
@@ -374,7 +374,7 @@ void BgHeavyBlock_LiftedUp(BgHeavyBlock* this, PlayState* play) {
 
     // if parent is NULL, link threw it
     if (Actor_HasNoParent(&this->dyna.actor, play)) {
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_HEAVY_THROW);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_HEAVY_THROW);
         this->actionFunc = BgHeavyBlock_Fly;
     }
 }
@@ -394,7 +394,7 @@ void BgHeavyBlock_Fly(BgHeavyBlock* this, PlayState* play) {
     this->dyna.actor.floorHeight = raycastResult;
 
     if (this->dyna.actor.home.pos.y <= raycastResult) {
-        func_800AA000(0.0f, 0xFF, 0x3C, 4);
+        Rumble_Request(0.0f, 0xFF, 0x3C, 4);
 
         switch (this->dyna.actor.params & 0xFF) {
             case HEAVYBLOCK_BREAKABLE:
@@ -404,43 +404,43 @@ void BgHeavyBlock_Fly(BgHeavyBlock* this, PlayState* play) {
 
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 3);
                 Quake_SetSpeed(quakeIndex, 28000);
-                Quake_SetQuakeValues(quakeIndex, 14, 2, 100, 0);
-                Quake_SetCountdown(quakeIndex, 30);
+                Quake_SetPerturbations(quakeIndex, 14, 2, 100, 0);
+                Quake_SetDuration(quakeIndex, 30);
 
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 2);
                 Quake_SetSpeed(quakeIndex, 12000);
-                Quake_SetQuakeValues(quakeIndex, 5, 0, 0, 0);
-                Quake_SetCountdown(quakeIndex, 999);
+                Quake_SetPerturbations(quakeIndex, 5, 0, 0, 0);
+                Quake_SetDuration(quakeIndex, 999);
 
                 SoundSource_PlaySfxAtFixedWorldPos(play, &this->dyna.actor.world.pos, 30,
                                                    NA_SE_EV_ELECTRIC_EXPLOSION);
                 return;
             case HEAVYBLOCK_UNBREAKABLE_OUTSIDE_CASTLE:
-                Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_STONE_BOUND);
+                Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_STONE_BOUND);
 
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 3);
                 Quake_SetSpeed(quakeIndex, 28000);
-                Quake_SetQuakeValues(quakeIndex, 16, 2, 120, 0);
-                Quake_SetCountdown(quakeIndex, 40);
+                Quake_SetPerturbations(quakeIndex, 16, 2, 120, 0);
+                Quake_SetDuration(quakeIndex, 40);
 
                 this->actionFunc = BgHeavyBlock_Land;
                 Flags_SetSwitch(play, (this->dyna.actor.params >> 8) & 0x3F);
                 break;
             case HEAVYBLOCK_UNBREAKABLE:
-                Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
+                Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
 
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 3);
                 Quake_SetSpeed(quakeIndex, 28000);
-                Quake_SetQuakeValues(quakeIndex, 14, 2, 100, 0);
-                Quake_SetCountdown(quakeIndex, 40);
+                Quake_SetPerturbations(quakeIndex, 14, 2, 100, 0);
+                Quake_SetDuration(quakeIndex, 40);
 
                 this->actionFunc = BgHeavyBlock_Land;
                 break;
             default:
                 quakeIndex = Quake_Add(GET_ACTIVE_CAM(play), 3);
                 Quake_SetSpeed(quakeIndex, 28000);
-                Quake_SetQuakeValues(quakeIndex, 14, 2, 100, 0);
-                Quake_SetCountdown(quakeIndex, 40);
+                Quake_SetPerturbations(quakeIndex, 14, 2, 100, 0);
+                Quake_SetDuration(quakeIndex, 40);
 
                 this->actionFunc = BgHeavyBlock_Land;
         }

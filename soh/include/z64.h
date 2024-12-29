@@ -308,7 +308,7 @@ typedef struct {
     /* 0x10 */ Color_RGB8 color;
 } TargetContextEntry; // size = 0x14
 
-typedef struct {
+typedef struct TargetContext {
     /* 0x00 */ Vec3f    naviRefPos; // possibly wrong
     /* 0x0C */ Vec3f    targetCenterPos;
     /* 0x18 */ Color_RGBAf naviInner;
@@ -328,7 +328,7 @@ typedef struct {
     /* 0x94 */ Actor*   unk_94;
 } TargetContext; // size = 0x98
 
-typedef struct {
+typedef struct TitleCardContext {
     /* 0x00 */ void*      texture;
     /* 0x04 */ s16      x;
     /* 0x06 */ s16      y;

@@ -194,7 +194,7 @@ typedef enum {
     // Vanilla condition: this->actor.textId == 0x401A
     VB_BE_ABLE_TO_EXCHANGE_RUTOS_LETTER,
     // Opt: *EnKz
-    // Vanilla condition: Flags_GetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED)
+    // Vanilla condition: Flags_GetEventChkInf(EVENTCHKINF_GAVE_LETTER_TO_KING_ZORA)
     VB_KING_ZORA_BE_MOVED,
     // Opt: *EnKz,
     // Vanilla condition: CHECK_OWNED_EQUIP(EQUIP_TYPE_TUNIC, EQUIP_INV_TUNIC_ZORA)

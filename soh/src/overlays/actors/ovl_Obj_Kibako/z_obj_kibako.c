@@ -230,7 +230,7 @@ void ObjKibako_Held(ObjKibako* this, PlayState* play) {
     if (Actor_HasNoParent(&this->actor, play)) {
         this->actor.room = play->roomCtx.curRoom.num;
         if (fabsf(this->actor.speed) < 0.1f) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_PUT_DOWN_WOODBOX);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_PUT_DOWN_WOODBOX);
             ObjKibako_SetupIdle(this);
             this->collider.base.ocFlags1 &= ~OC1_TYPE_PLAYER;
         } else {

@@ -599,7 +599,7 @@ void func_80A3F908(EnGo* this, PlayState* play) {
 
         if (((this->actor.params & 0xF0) == 0x90) && (dialogStarted == true)) {
             if (INV_CONTENT(ITEM_TRADE_ADULT) == ITEM_SWORD_BROKEN) {
-                if (func_8002F368(play) == EXCH_ITEM_SWORD_BROKEN) {
+                if (Actor_GetPlayerExchangeItemId(play) == EXCH_ITEM_SWORD_BROKEN) {
                     if (Flags_GetInfTable(INFTABLE_B4)) {
                         this->actor.textId = 0x3055;
                     } else {
@@ -612,7 +612,7 @@ void func_80A3F908(EnGo* this, PlayState* play) {
             }
 
             if (INV_CONTENT(ITEM_TRADE_ADULT) == ITEM_EYEDROPS) {
-                if (func_8002F368(play) == EXCH_ITEM_EYEDROPS) {
+                if (Actor_GetPlayerExchangeItemId(play) == EXCH_ITEM_EYEDROPS) {
                     this->actor.textId = 0x3059;
                 } else {
                     this->actor.textId = 0x3058;
@@ -716,7 +716,7 @@ void EnGo_StopRolling(EnGo* this, PlayState* play) {
         if (this->collider.base.ocFlags2 & OC2_HIT_PLAYER) {
             this->collider.base.ocFlags2 &= ~OC2_HIT_PLAYER;
             play->damagePlayer(play, -4);
-            func_8002F71C(play, &this->actor, 4.0f, this->actor.yawTowardsPlayer, 6.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 4.0f, this->actor.yawTowardsPlayer, 6.0f);
             this->unk_20E = 0x10;
         }
     }
@@ -771,7 +771,7 @@ void EnGo_FireGenericActionFunc(EnGo* this, PlayState* play) {
 
 void EnGo_CurledUp(EnGo* this, PlayState* play) {
     if ((DECR(this->unk_210) == 0) && EnGo_IsCameraModified(this, play)) {
-        Audio_PlaySoundGeneral(NA_SE_EN_GOLON_WAKE_UP, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EN_GOLON_WAKE_UP, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
 
         this->skelAnime.playSpeed = 0.1f;
@@ -806,7 +806,7 @@ void EnGo_WakeUp(EnGo* this, PlayState* play) {
     }
 
     if (DECR(this->unk_212) == 0) {
-        Audio_PlaySoundGeneral(NA_SE_EN_GOLON_SIT_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EN_GOLON_SIT_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
         EnGo_SetupAction(this, func_80A405CC);
     } else if (!EnGo_IsCameraModified(this, play)) {
@@ -825,7 +825,7 @@ void func_80A40494(EnGo* this, PlayState* play) {
     frame += this->skelAnime.playSpeed;
 
     if (!(frame >= 0.0f)) {
-        Audio_PlaySoundGeneral(NA_SE_EN_DODO_M_GND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EN_DODO_M_GND, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
         EnGo_SpawnDust(this, 10, 0.4f, 0.1f, 16, 26.0f, 2.0f);
         EnGo_ReverseAnimation(this);
@@ -917,7 +917,7 @@ void func_80A408D8(EnGo* this, PlayState* play) {
         EnGo_SetupAction(this, func_80A40494);
     } else if (EnGo_IsCameraModified(this, play)) {
         EnGo_ReverseAnimation(this);
-        Audio_PlaySoundGeneral(NA_SE_EN_GOLON_SIT_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+        Audio_PlaySfxGeneral(NA_SE_EN_GOLON_SIT_DOWN, &this->actor.projectedPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                &gSfxDefaultReverb);
         this->skelAnime.playSpeed = 0.0f;
         EnGo_SetupAction(this, func_80A405CC);

@@ -460,7 +460,7 @@ s16 func_80AAAF04(PlayState* play, Actor* thisx) {
                     Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_MIDO_ABOUT_SARIA);
                     break;
                 case 0x102F:
-                    Flags_SetEventChkInf(EVENTCHKINF_FIRST_SPOKE_TO_MIDO);
+                    Flags_SetEventChkInf(EVENTCHKINF_MIDO_DENIED_DEKU_TREE_ACCESS);
                     Flags_SetInfTable(INFTABLE_0C);
                     break;
                 case 0x1060:
@@ -547,7 +547,7 @@ void func_80AAB158(EnMd* this, PlayState* play) {
         temp2 = 1;
     }
 
-    if ((play->csCtx.state != CS_STATE_IDLE) || gDbgCamEnabled) {
+    if ((play->csCtx.state != CS_STATE_IDLE) || gDebugCamEnabled) {
         this->interactInfo.trackPos = play->view.eye;
         this->interactInfo.yOffset = 40.0f;
         trackingMode = NPC_TRACKING_HEAD_AND_TORSO;
@@ -774,7 +774,7 @@ void func_80AABC10(EnMd* this, PlayState* play) {
         this->actionFunc = func_80AAB948;
         play->msgCtx.ocarinaMode = OCARINA_MODE_04;
     } else if (play->msgCtx.ocarinaMode == OCARINA_MODE_03) {
-        Audio_PlaySoundGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         this->actor.textId = 0x1067;
         Actor_OfferTalk(&this->actor, play, this->collider.dim.radius + 30.0f);
 

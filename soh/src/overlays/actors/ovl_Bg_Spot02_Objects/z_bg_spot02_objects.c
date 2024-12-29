@@ -131,7 +131,7 @@ void func_808AC908(BgSpot02Objects* this, PlayState* play) {
     Vec3f pos;
 
     if (GameInteractor_Should(VB_PLAY_ROYAL_FAMILY_TOMB_EXPLODE, play->csCtx.state != 0 && play->csCtx.npcActions[3] != NULL && play->csCtx.npcActions[3]->action == 2, this)) {
-            Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_GRAVE_EXPLOSION);
+            Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_GRAVE_EXPLOSION);
             Flags_SetEventChkInf(EVENTCHKINF_DESTROYED_ROYAL_FAMILY_TOMB);
             this->timer = 25;
             pos.x = (Math_SinS(this->dyna.actor.shape.rot.y) * 50.0f) + this->dyna.actor.world.pos.x;
@@ -180,10 +180,10 @@ void func_808ACAFC(BgSpot02Objects* this, PlayState* play) {
 
 void func_808ACB58(BgSpot02Objects* this, PlayState* play) {
     if (Math_StepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y + 255.0f, 1.0f)) {
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_STONEDOOR_STOP);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_STONEDOOR_STOP);
         this->actionFunc = func_808AC8FC;
     } else {
-        func_8002F974(&this->dyna.actor, NA_SE_EV_WALL_MOVE_SP - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_WALL_MOVE_SP - SFX_FLAG);
     }
 }
 
@@ -275,7 +275,7 @@ void func_808AD3D4(BgSpot02Objects* this, PlayState* play) {
     if (play->csCtx.state != 0 && play->csCtx.npcActions[2] != NULL &&
         play->csCtx.npcActions[2]->action == 2) {
         if (this->timer == 2) {
-            Audio_PlayActorSound2(&this->dyna.actor, NA_SE_IT_EXPLOSION_ICE);
+            Actor_PlaySfx(&this->dyna.actor, NA_SE_IT_EXPLOSION_ICE);
         }
 
         if (this->timer < 32) {

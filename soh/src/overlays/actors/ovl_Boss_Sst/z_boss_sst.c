@@ -458,8 +458,8 @@ void BossSst_HeadIntro(BossSst* this, PlayState* play) {
             if (!this->ready) {
                 sFloor->dyna.actor.params = BONGOFLOOR_HIT;
                 this->ready = true;
-                func_800AA000(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
-                Audio_PlayActorSound2(&sFloor->dyna.actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
+                Rumble_Request(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
+                Actor_PlaySfx(&sFloor->dyna.actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
             } else if (Flags_GetEventChkInf(EVENTCHKINF_BEGAN_BONGO_BONGO_BATTLE)) {
                 sHands[RIGHT]->actor.draw = BossSst_DrawHand;
                 sHands[LEFT]->actor.draw = BossSst_DrawHand;
@@ -781,7 +781,7 @@ void BossSst_HeadCharge(BossSst* this, PlayState* play) {
         this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         sHands[LEFT]->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         sHands[RIGHT]->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
-        func_8002F71C(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
         Player_PlaySfx(&GET_PLAYER(play)->actor, NA_SE_PL_BODY_HIT);
     }
 }
@@ -1308,8 +1308,8 @@ void BossSst_HandDownbeat(BossSst* this, PlayState* play) {
             } else {
                 BossSst_HandSetupDownbeatEnd(this);
             }
-            func_800AA000(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
+            Rumble_Request(this->actor.xyzDistToPlayerSq, 0xFF, 0x14, 0x96);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
         }
     }
 }
@@ -1361,7 +1361,7 @@ void BossSst_HandOffbeat(BossSst* this, PlayState* play) {
         }
 
         if (this->timer == 0) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_TAIKO_LOW);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_TAIKO_LOW);
             BossSst_HandSetupOffbeatEnd(this);
         }
     }
@@ -1444,7 +1444,7 @@ void BossSst_HandRetreat(BossSst* this, PlayState* play) {
         inPosition = Math_ScaledStepToS(&this->actor.shape.rot.y, this->actor.home.rot.y, 0x200);
         inPosition &= Math_ScaledStepToS(&this->actor.shape.rot.z, this->actor.home.rot.z, 0x200);
         inPosition &= Math_ScaledStepToS(&this->handYRotMod, 0, 0x800);
-        func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
         if ((Math_SmoothStepToF(&this->actor.world.pos.y, ROOM_CENTER_Y + 250.0f, 0.5f, 70.0f, 5.0f) < 1.0f) &&
             inPosition && (diff < 10.0f)) {
             this->timer = 8;
@@ -1479,7 +1479,7 @@ void BossSst_HandReadySlam(BossSst* this, PlayState* play) {
         Math_ScaledStepToS(&this->actor.shape.rot.x, -0x1000, 0x100);
         Math_ApproachF(&this->actor.world.pos.x, player->actor.world.pos.x, 0.5f, 40.0f);
         Math_ApproachF(&this->actor.world.pos.z, player->actor.world.pos.z, 0.5f, 40.0f);
-        func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
     }
 }
 
@@ -1489,7 +1489,7 @@ void BossSst_HandSetupSlam(BossSst* this) {
     Animation_MorphToPlayOnce(&this->skelAnime, sHandFlatPoses[this->actor.params], 10.0f);
     BossSst_HandSetDamage(this, 0x20);
     this->ready = false;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_FLY_ATTACK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_FLY_ATTACK);
     this->actionFunc = BossSst_HandSlam;
 }
 
@@ -1519,7 +1519,7 @@ void BossSst_HandSlam(BossSst* this, PlayState* play) {
             this->actor.velocity.y *= 1.5f;
             if (Math_StepToF(&this->actor.world.pos.y, this->actor.floorHeight, this->actor.velocity.y)) {
                 this->ready = true;
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_TAIKO_LOW);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_TAIKO_LOW);
                 BossSst_SpawnShockwave(this);
                 this->colliderCyl.base.atFlags |= AT_ON;
                 Collider_UpdateCylinder(&this->actor, &this->colliderCyl);
@@ -1534,7 +1534,7 @@ void BossSst_HandSlam(BossSst* this, PlayState* play) {
             player->actor.world.pos.z = (Math_CosS(this->actor.yawTowardsPlayer) * 100.0f) + this->actor.world.pos.z;
 
             this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
-            func_8002F71C(play, &this->actor, 5.0f, this->actor.yawTowardsPlayer, 0.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 5.0f, this->actor.yawTowardsPlayer, 0.0f);
         }
 
         Math_ScaledStepToS(&this->actor.shape.rot.x, 0, 0x200);
@@ -1564,7 +1564,7 @@ void BossSst_HandReadySweep(BossSst* this, PlayState* play) {
     if (inPosition) {
         BossSst_HandSetupSweep(this);
     } else {
-        func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
     }
 }
 
@@ -1575,7 +1575,7 @@ void BossSst_HandSetupSweep(BossSst* this) {
     this->handMaxSpeed = 0x300;
     this->handAngSpeed = 0;
     this->ready = false;
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_FLY_ATTACK);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_FLY_ATTACK);
     this->actionFunc = BossSst_HandSweep;
 }
 
@@ -1593,7 +1593,7 @@ void BossSst_HandSweep(BossSst* this, PlayState* play) {
     } else if (this->colliderJntSph.base.atFlags & AT_HIT) {
         this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         this->ready = true;
-        func_8002F71C(play, &this->actor, 5.0f, this->actor.shape.rot.y - (this->vParity * 0x3800), 0.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 5.0f, this->actor.shape.rot.y - (this->vParity * 0x3800), 0.0f);
         Player_PlaySfx(&player->actor, NA_SE_PL_BODY_HIT);
         newTargetYaw = this->actor.shape.rot.y - (this->vParity * 0x1400);
         if (((s16)(newTargetYaw - this->targetYaw) * this->vParity) > 0) {
@@ -1652,11 +1652,11 @@ void BossSst_HandPunch(BossSst* this, PlayState* play) {
         BossSst_HandSetupRetreat(this);
     } else if (this->colliderJntSph.base.atFlags & AT_HIT) {
         Player_PlaySfx(&GET_PLAYER(play)->actor, NA_SE_PL_BODY_HIT);
-        func_8002F71C(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
         BossSst_HandSetupRetreat(this);
     }
 
-    func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
 }
 
 void BossSst_HandSetupReadyClap(BossSst* this) {
@@ -1752,11 +1752,11 @@ void BossSst_HandClap(BossSst* this, PlayState* play) {
 
             if (Math_ScaledStepToS(&this->actor.shape.rot.y, this->actor.home.rot.y, this->handAngSpeed)) {
                 if (this->actor.params == BONGO_LEFT_HAND) {
-                    Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_CLAP);
+                    Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_CLAP);
                 }
                 this->ready = true;
             } else {
-                func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+                Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
             }
 
             this->actor.world.pos.x = (Math_SinS(this->actor.shape.rot.y) * this->radius) + sHead->actor.world.pos.x;
@@ -1847,12 +1847,12 @@ void BossSst_HandGrab(BossSst* this, PlayState* play) {
     } else {
         this->actor.speed *= 1.26f;
         this->actor.speed = CLAMP_MAX(this->actor.speed, 70.0f);
-        func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
     }
 
     if (this->colliderJntSph.base.atFlags & AT_HIT) {
         this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_CATCH);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_CATCH);
         BossSst_HandGrabPlayer(this, play);
         this->timer = CLAMP_MAX(this->timer, 5);
     }
@@ -1896,7 +1896,7 @@ void BossSst_HandCrush(BossSst* this, PlayState* play) {
             play->damagePlayer(play, -8);
         }
         if (Animation_OnFrame(&this->skelAnime, 0.0f)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_CATCH);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_CATCH);
         }
     }
 }
@@ -1970,11 +1970,11 @@ void BossSst_HandSwing(BossSst* this, PlayState* play) {
         BossSst_HandReleasePlayer(this, play, false);
         player->actor.world.pos.x += 70.0f * Math_SinS(this->actor.shape.rot.y);
         player->actor.world.pos.z += 70.0f * Math_CosS(this->actor.shape.rot.y);
-        func_8002F71C(play, &this->actor, 15.0f, this->actor.shape.rot.y, 2.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 15.0f, this->actor.shape.rot.y, 2.0f);
         Player_PlaySfx(&player->actor, NA_SE_PL_BODY_HIT);
     }
 
-    func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
 }
 
 void BossSst_HandSetupReel(BossSst* this) {
@@ -2035,7 +2035,7 @@ void BossSst_HandReadyShake(BossSst* this, PlayState* play) {
     if ((diff < 30.0f) && inPosition) {
         BossSst_HandSetupShake(this);
     } else {
-        func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
     }
 }
 
@@ -2054,7 +2054,7 @@ void BossSst_HandShake(BossSst* this, PlayState* play) {
     this->handYRotMod = (this->vParity * -0x2000) + (sinf(this->timer * (M_PI / 4)) * 0x2800);
 
     if (!(this->timer % 8)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_SHAKEHAND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_SHAKEHAND);
     }
 
     if (HAND_STATE(OTHER_HAND(this)) == HAND_DAMAGED) {
@@ -2092,7 +2092,7 @@ void BossSst_HandReadyCharge(BossSst* this, PlayState* play) {
         this->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         OTHER_HAND(this)->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
         sHead->colliderJntSph.base.atFlags &= ~(AT_ON | AT_HIT);
-        func_8002F71C(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
+        Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 10.0f, this->actor.shape.rot.y, 5.0f);
         Player_PlaySfx(&GET_PLAYER(play)->actor, NA_SE_PL_BODY_HIT);
     }
 }
@@ -2154,7 +2154,7 @@ void BossSst_HandDamage(BossSst* this, PlayState* play) {
 
     if (this->timer == 0) {
         if (this->actor.floorHeight >= 0.0f) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
         }
         BossSst_HandSetupStunned(this);
     }
@@ -2191,7 +2191,7 @@ void BossSst_HandThrash(BossSst* this, PlayState* play) {
             this->amplitude = 0;
             Animation_MorphToPlayOnce(&this->skelAnime, sHandFlatPoses[this->actor.params], 5.0f);
         } else {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_TAIKO_HIGH);
             this->amplitude = -0x800;
             Animation_MorphToPlayOnce(&this->skelAnime, sHandOpenPoses[this->actor.params], 5.0f);
         }
@@ -2289,7 +2289,7 @@ void BossSst_HandRecover(BossSst* this, PlayState* play) {
             this->ready = true;
         }
     }
-    func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
 }
 
 void BossSst_HandSetupFrozen(BossSst* this) {
@@ -2392,7 +2392,7 @@ void BossSst_HandBreakIce(BossSst* this, PlayState* play) {
             }
 
             if (this->timer != 0) {
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_ICE_BROKEN);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_ICE_BROKEN);
             }
 
             OTHER_HAND(this)->handAngSpeed = 5;
@@ -2415,7 +2415,7 @@ void BossSst_HandBreakIce(BossSst* this, PlayState* play) {
         BossSst_HandSetupRetreat(this);
     }
 
-    func_8002F974(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_SHADEST_HAND_FLY - SFX_FLAG);
 }
 
 void BossSst_HandGrabPlayer(BossSst* this, PlayState* play) {
@@ -2441,7 +2441,7 @@ void BossSst_HandReleasePlayer(BossSst* this, PlayState* play, s32 dropPlayer) {
         this->colliderJntSph.base.ocFlags1 |= OC1_ON;
         OTHER_HAND(this)->colliderJntSph.base.ocFlags1 |= OC1_ON;
         if (dropPlayer) {
-            func_8002F71C(play, &this->actor, 0.0f, this->actor.shape.rot.y, 0.0f);
+            Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 0.0f, this->actor.shape.rot.y, 0.0f);
         }
     }
 }
@@ -2558,7 +2558,7 @@ void BossSst_HandCollisionCheck(BossSst* this, PlayState* play) {
             BossSst_HeadSetupDamagedHand(sHead, bothHands);
             Item_DropCollectible(play, &this->actor.world.pos,
                                  (Rand_ZeroOne() < 0.5f) ? ITEM00_ARROWS_SMALL : ITEM00_MAGIC_SMALL);
-            Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_DAMAGE_HAND);
+            Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_DAMAGE_HAND);
         }
     }
 }
@@ -3007,7 +3007,7 @@ void BossSst_SpawnShockwave(BossSst* this) {
     s32 scale = 120;
     s32 alpha = 250;
 
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_SHADEST_HAND_WAVE);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_SHADEST_HAND_WAVE);
     this->effectMode = BONGO_SHOCKWAVE;
 
     for (i = 0; i < 3; i++) {
@@ -3065,7 +3065,7 @@ void BossSst_SpawnIceCrystal(BossSst* this, s32 index) {
     ice->scale = 4000;
 
     if ((index % 2) == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_PL_FREEZE_S);
+        Actor_PlaySfx(&this->actor, NA_SE_PL_FREEZE_S);
     }
 
     ice->epoch++;
@@ -3107,7 +3107,7 @@ void BossSst_IceShatter(BossSst* this) {
     s32 i;
 
     this->effects[0].status = 1;
-    Audio_PlayActorSound2(&this->actor, NA_SE_PL_ICE_BROKEN);
+    Actor_PlaySfx(&this->actor, NA_SE_PL_ICE_BROKEN);
 
     for (i = 0; i < 18; i++) {
         BossSstEffect* ice = &this->effects[i];

@@ -94,7 +94,7 @@ void EnDog_PlayWalkSFX(EnDog* this) {
 
     if (this->skelAnime.animation == walk) {
         if ((this->skelAnime.curFrame == 1.0f) || (this->skelAnime.curFrame == 7.0f)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHIBI_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_CHIBI_WALK);
         }
     }
 }
@@ -104,7 +104,7 @@ void EnDog_PlayRunSFX(EnDog* this) {
 
     if (this->skelAnime.animation == run) {
         if ((this->skelAnime.curFrame == 2.0f) || (this->skelAnime.curFrame == 4.0f)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHIBI_WALK);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_CHIBI_WALK);
         }
     }
 }
@@ -114,7 +114,7 @@ void EnDog_PlayBarkSFX(EnDog* this) {
 
     if (this->skelAnime.animation == bark) {
         if ((this->skelAnime.curFrame == 13.0f) || (this->skelAnime.curFrame == 19.0f)) {
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_SMALL_DOG_BARK);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_SMALL_DOG_BARK);
         }
     }
 }

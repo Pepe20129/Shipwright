@@ -119,7 +119,7 @@ void EnBubble_DamagePlayer(EnBubble* this, PlayState* play) {
     s32 damage = -this->colliderSphere.elements[0].info.toucher.damage;
 
     play->damagePlayer(play, damage);
-    func_8002F7A0(play, &this->actor, 6.0f, this->actor.yawTowardsPlayer, 6.0f);
+    Actor_SetPlayerKnockbackSmallNoDamage(play, &this->actor, 6.0f, this->actor.yawTowardsPlayer, 6.0f);
 }
 
 s32 EnBubble_Explosion(EnBubble* this, PlayState* play) {
@@ -252,7 +252,7 @@ void EnBubble_Fly(EnBubble* this, PlayState* play) {
         this->velocityFromBounce.y = (this->bounceDirection.y * bounceSpeed);
         this->velocityFromBounce.z = (this->bounceDirection.z * bounceSpeed);
         this->sinkSpeed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_AWA_BOUND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_AWA_BOUND);
         this->graphicRotSpeed = 128.0f;
         this->graphicEccentricity = 0.48f;
     } else if (this->actor.bgCheckFlags & 0x20 && sp54.y < 0.0f) {
@@ -271,7 +271,7 @@ void EnBubble_Fly(EnBubble* this, PlayState* play) {
         this->velocityFromBounce.y = (this->bounceDirection.y * bounceSpeed);
         this->velocityFromBounce.z = (this->bounceDirection.z * bounceSpeed);
         this->sinkSpeed = 0.0f;
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_AWA_BOUND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_AWA_BOUND);
         this->graphicRotSpeed = 128.0f;
         this->graphicEccentricity = 0.48f;
     }

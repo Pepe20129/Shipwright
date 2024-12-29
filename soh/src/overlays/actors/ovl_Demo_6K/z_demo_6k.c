@@ -148,7 +148,7 @@ void Demo6K_Init(Actor* thisx, PlayState* play) {
             Actor_SetScale(&this->actor, 0.0f);
             this->initActionFunc = func_8096784C;
             this->actor.velocity.x = this->actor.velocity.y = this->actor.velocity.z = 0.0f;
-            Audio_PlayActorSound2(&this->actor, NA_SE_EV_NABALL_VANISH);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_NABALL_VANISH);
             break;
         case 12:
             Actor_SetScale(&this->actor, 0.0f);
@@ -213,11 +213,11 @@ void func_80966DB0(Demo6K* this, PlayState* play) {
 
 void func_80966E04(Demo6K* this, PlayState* play) {
     if (play->csCtx.frames > 214) {
-        func_8002F948(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
+        Actor_PlaySfx_FlaggedCentered2(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
     }
 
     if (play->csCtx.frames > 264) {
-        func_8002F948(&this->actor, NA_SE_EV_GOD_LIGHTBALL_2 - SFX_FLAG);
+        Actor_PlaySfx_FlaggedCentered2(&this->actor, NA_SE_EV_GOD_LIGHTBALL_2 - SFX_FLAG);
     }
 
     if ((play->csCtx.state != CS_STATE_IDLE) && (play->csCtx.npcActions[6] != NULL) &&
@@ -228,8 +228,8 @@ void func_80966E04(Demo6K* this, PlayState* play) {
 
 void func_80966E98(Demo6K* this, PlayState* play) {
     if (play->csCtx.frames < 353) {
-        func_8002F948(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
-        func_8002F948(&this->actor, NA_SE_EV_GOD_LIGHTBALL_2 - SFX_FLAG);
+        Actor_PlaySfx_FlaggedCentered2(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
+        Actor_PlaySfx_FlaggedCentered2(&this->actor, NA_SE_EV_GOD_LIGHTBALL_2 - SFX_FLAG);
     }
 
     if (play->csCtx.frames == 342) {
@@ -306,7 +306,7 @@ void func_8096712C(Demo6K* this, PlayState* play) {
     this->timer2++;
 
     if ((play->sceneNum == SCENE_INSIDE_GANONS_CASTLE) && (play->csCtx.frames < D_8096932C[this->actor.params - 3])) {
-        func_8002F974(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->actor, NA_SE_EV_LIGHT_GATHER - SFX_FLAG);
     }
 }
 
@@ -394,7 +394,7 @@ void func_809674E0(Demo6K* this, PlayState* play) {
         this->actor.world.pos.y += (19.0f - this->actor.world.pos.y) * temp;
         this->actor.world.pos.z += (1613.0f - this->actor.world.pos.z) * temp;
 
-        Audio_PlayActorSound2(&this->actor, NA_SE_EN_FANTOM_FIRE - SFX_FLAG);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_FANTOM_FIRE - SFX_FLAG);
     }
 
     Lights_PointNoGlowSetInfo(&this->lightInfo, this->actor.world.pos.x, this->actor.world.pos.y,
@@ -471,7 +471,7 @@ void func_80967AD0(Demo6K* this, PlayState* play) {
     if ((play->csCtx.state != CS_STATE_IDLE) && (play->csCtx.npcActions[1] != NULL)) {
         if (play->csCtx.npcActions[1]->action == 2) {
             this->unk_170++;
-            func_8002F948(&this->actor, NA_SE_EV_RAINBOW_SHOWER - SFX_FLAG);
+            Actor_PlaySfx_FlaggedCentered2(&this->actor, NA_SE_EV_RAINBOW_SHOWER - SFX_FLAG);
         }
 
         func_809691BC(this, play, 1);
@@ -512,7 +512,7 @@ void func_80967BF8(Player* player, PlayState* play) {
 }
 
 void func_80967DBC(Demo6K* this, PlayState* play) {
-    Audio_PlayActorSound2(&this->actor, NA_SE_EN_GANON_ATTACK_DEMO - SFX_FLAG);
+    Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_ATTACK_DEMO - SFX_FLAG);
 
     this->timer2++;
 
@@ -526,13 +526,13 @@ void func_80967DBC(Demo6K* this, PlayState* play) {
         if (this->timer2 > 104) {
             func_80967BF8(GET_PLAYER(play), play);
             Actor_Kill(&this->actor);
-            Audio_PlayActorSound2(&GET_PLAYER(play)->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
+            Actor_PlaySfx(&GET_PLAYER(play)->actor, NA_SE_EN_FANTOM_HIT_THUNDER);
         } else if (this->timer2 > 94) {
             Actor_SetScale(&this->actor, this->actor.scale.x + 0.03f);
 
             if (this->timer2 == 95) {
                 osSyncPrintf(VT_FGCOL(CYAN) "  NA_SE_EN_GANON_FIRE_DEMO\n" VT_RST);
-                Audio_PlayActorSound2(&this->actor, NA_SE_EN_GANON_FIRE_DEMO);
+                Actor_PlaySfx(&this->actor, NA_SE_EN_GANON_FIRE_DEMO);
             }
         }
 

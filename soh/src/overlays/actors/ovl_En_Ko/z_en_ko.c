@@ -544,7 +544,7 @@ s16 func_80A97738(PlayState* play, Actor* thisx) {
                 case 0x10B7:
                 case 0x10B8:
                     if (this->unk_210 == 0) {
-                        Audio_PlaySoundGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                        Audio_PlaySfxGeneral(NA_SE_SY_TRE_BOX_APPEAR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultReverb);
                         this->unk_210 = 1;
                     }
@@ -940,7 +940,7 @@ s32 EnKo_AdultSaved(EnKo* this, PlayState* play) {
 void func_80A9877C(EnKo* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
-    if ((play->csCtx.state != 0) || (gDbgCamEnabled != 0)) {
+    if ((play->csCtx.state != 0) || (gDebugCamEnabled != 0)) {
         this->interactInfo.trackPos = play->view.eye;
         this->interactInfo.yOffset = 40.0f;
         if (ENKO_TYPE != ENKO_TYPE_CHILD_0) {
@@ -957,7 +957,7 @@ void func_80A9877C(EnKo* this, PlayState* play) {
         ENKO_TYPE == ENKO_TYPE_CHILD_FADO && play->sceneNum == SCENE_LOST_WOODS) {
         this->actor.textId = INV_CONTENT(ITEM_TRADE_ADULT) > ITEM_ODD_POTION ? 0x10B9 : 0x10DF;
 
-        if (func_8002F368(play) == ENKO_TYPE_CHILD_9) {
+        if (Actor_GetPlayerExchangeItemId(play) == ENKO_TYPE_CHILD_9) {
             this->actor.textId = (Flags_GetInfTable(INFTABLE_BC)) ? 0x10B8 : 0x10B7;
             this->unk_210 = 0;
         }
@@ -1081,7 +1081,7 @@ void func_80A98DB4(EnKo* this, PlayState* play) {
         this->modelAlpha = 255.0f;
         return;
     }
-    if (play->csCtx.state != 0 || gDbgCamEnabled != 0) {
+    if (play->csCtx.state != 0 || gDebugCamEnabled != 0) {
         dist = Math_Vec3f_DistXYZ(&this->actor.world.pos, &play->view.eye) * 0.25f;
     } else {
         dist = this->actor.xzDistToPlayer;

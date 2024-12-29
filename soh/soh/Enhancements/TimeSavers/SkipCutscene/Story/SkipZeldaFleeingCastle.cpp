@@ -34,7 +34,7 @@ void SkipZeldaFleeingCastle_OnActorUpdate(void* actorPtr) {
 
     framesSinceSpawn++;
     if (framesSinceSpawn > 20) {
-        Audio_PlayActorSound2(actor, NA_SE_EV_BOMB_DROP_WATER);
+        Actor_PlaySfx(actor, NA_SE_EV_BOMB_DROP_WATER);
 
         GameInteractor::Instance->UnregisterGameHookForPtr<GameInteractor::OnActorUpdate>(itemOcarinaUpdateHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneInit>(sceneInitHook);

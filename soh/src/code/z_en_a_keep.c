@@ -311,7 +311,7 @@ void EnAObj_Block(EnAObj* this, PlayState* play) {
     Math_SmoothStepToF(&this->dyna.actor.speed, 0.0f, 1.0f, 1.0f, 0.0f);
 
     if (this->dyna.actor.speed != 0.0f) {
-        Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
     }
 
     this->dyna.unk_154 = 0.0f;

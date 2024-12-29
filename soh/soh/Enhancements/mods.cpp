@@ -1072,7 +1072,7 @@ void RegisterAltTrapTypes() {
                 eventTimer = 3;
                 break;
             case ADD_SPEED_TRAP:
-                Audio_PlaySoundGeneral(NA_SE_VO_KZ_MOVE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                Audio_PlaySfxGeneral(NA_SE_VO_KZ_MOVE, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 GameInteractor::State::RunSpeedModifier = -2;
                 statusTimer = 200;
                 Overlay_DisplayText(10, "Speed Decreased!");
@@ -1081,7 +1081,7 @@ void RegisterAltTrapTypes() {
                 eventTimer = 3;
                 break;
             case ADD_VOID_TRAP:
-                Audio_PlaySoundGeneral(NA_SE_EN_GANON_LAUGH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                Audio_PlaySfxGeneral(NA_SE_EN_GANON_LAUGH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 eventTimer = 3;
                 break;
             case ADD_AMMO_TRAP:
@@ -1121,7 +1121,7 @@ void RegisterAltTrapTypes() {
                     AMMO(ITEM_BOW) = AMMO(ITEM_BOW) * 0.5;
                     AMMO(ITEM_BOMB) = AMMO(ITEM_BOMB) * 0.5;
                     AMMO(ITEM_BOMBCHU) = AMMO(ITEM_BOMBCHU) * 0.5;
-                    Audio_PlaySoundGeneral(NA_SE_VO_FR_SMILE_0, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+                    Audio_PlaySfxGeneral(NA_SE_VO_FR_SMILE_0, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                     break;
                 case ADD_TELEPORT_TRAP: {
                     int entrance;

@@ -286,7 +286,7 @@ void UseHammer(Actor* thisx, PlayState* play, u8 started) {
             EffectSsBlast_SpawnWhiteShockwave(play, &shockwavePos, &zeroVec, &zeroVec);
 
             if (this->actor.xzDistToPlayer < 100.0f && this->actor.yDistToPlayer < 35.0f) {
-                func_8002F71C(play, &this->actor, 8.0f, this->actor.yawTowardsPlayer, 8.0f);
+                Actor_SetPlayerKnockbackLargeNoDamage(play, &this->actor, 8.0f, this->actor.yawTowardsPlayer, 8.0f);
             }
         }
     }
@@ -636,7 +636,7 @@ void EnPartner_Update(Actor* thisx, PlayState* play) {
     }
 
     if (this->usedSpell != 0) {
-        func_8002F974(thisx, NA_SE_PL_MAGIC_SOUL_NORMAL - SFX_FLAG);
+        Actor_PlaySfx_Flagged(thisx, NA_SE_PL_MAGIC_SOUL_NORMAL - SFX_FLAG);
     }
 
     if (!Player_InCsMode(play)) {
@@ -646,7 +646,7 @@ void EnPartner_Update(Actor* thisx, PlayState* play) {
             if (itemActor->id == ACTOR_EN_ITEM00) {
                 if (itemActor->params == ITEM00_RUPEE_GREEN || itemActor->params == ITEM00_RUPEE_BLUE ||
                     itemActor->params == ITEM00_RUPEE_RED || itemActor->params == ITEM00_RUPEE_PURPLE ||
-                    itemActor->params == ITEM00_RUPEE_ORANGE || itemActor->params == ITEM00_HEART ||
+                    itemActor->params == ITEM00_RUPEE_ORANGE || itemActor->params == ITEM00_RECOVERY_HEART ||
                     itemActor->params == ITEM00_BOMBS_A || itemActor->params == ITEM00_BOMBS_B ||
                     itemActor->params == ITEM00_ARROWS_SINGLE || itemActor->params == ITEM00_ARROWS_SMALL ||
                     itemActor->params == ITEM00_ARROWS_MEDIUM || itemActor->params == ITEM00_ARROWS_LARGE ||
@@ -736,7 +736,7 @@ void EnPartner_Update(Actor* thisx, PlayState* play) {
     }
 
     if (CHECK_BTN_ALL(sControlInput.press.button, BTN_Z) && this->canMove) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_EV_FAIRY_DASH);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_FAIRY_DASH);
     }
 
     if (CHECK_BTN_ALL(sControlInput.cur.button, BTN_Z) && this->canMove) {

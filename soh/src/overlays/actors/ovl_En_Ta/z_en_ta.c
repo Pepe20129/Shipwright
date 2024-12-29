@@ -319,7 +319,7 @@ void func_80B14570(EnTa* this, PlayState* play) {
         this->unk_2CC = 60;
         Animation_PlayOnce(&this->skelAnime, &gTalonWakeUpAnim);
         this->currentAnimation = &gTalonStandAnim;
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_SURPRISE);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_TA_SURPRISE);
     }
 }
 
@@ -333,7 +333,7 @@ void EnTa_IdleAsleepInCastle(EnTa* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (Actor_TalkOfferAccepted(&this->actor, play)) {
-        s32 exchangeItemId = func_8002F368(play);
+        s32 exchangeItemId = Actor_GetPlayerExchangeItemId(play);
 
         switch (exchangeItemId) {
             case EXCH_ITEM_CHICKEN:
@@ -366,7 +366,7 @@ void EnTa_IdleAsleepInKakariko(EnTa* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (Actor_TalkOfferAccepted(&this->actor, play)) {
-        s32 exchangeItemId = func_8002F368(play);
+        s32 exchangeItemId = Actor_GetPlayerExchangeItemId(play);
 
         switch (exchangeItemId) {
             case EXCH_ITEM_POCKET_CUCCO:
@@ -391,7 +391,7 @@ void func_80B14818(EnTa* this, PlayState* play) {
     s32 framesMod12 = (s32)play->state.frames % 12;
 
     if (framesMod12 == 0 || framesMod12 == 6) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_PL_WALK_GROUND);
+        Actor_PlaySfx(&this->actor, NA_SE_PL_WALK_GROUND);
     }
     if (this->actor.speed < 6.0f) {
         this->actor.speed += 0.4f;
@@ -456,7 +456,7 @@ void func_80B14AF4(EnTa* this, PlayState* play) {
     this->actor.shape.rot.y -= 0xC00;
 
     if (this->unk_2CC == 0) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_CRY_1);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_TA_CRY_1);
         EnTa_SetupAction(this, func_80B14A54, EnTa_AnimRepeatCurrent);
         this->unk_2CC = 65;
         this->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
@@ -724,11 +724,11 @@ void EnTa_RunCuccoGame(EnTa* this, PlayState* play) {
                             return;
                         case 2:
                             this->actor.textId = 0x2083;
-                            Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_CRY_1);
+                            Actor_PlaySfx(&this->actor, NA_SE_VO_TA_CRY_1);
                             break;
                         case 3:
                             this->actor.textId = 0x2082;
-                            Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_SURPRISE);
+                            Actor_PlaySfx(&this->actor, NA_SE_VO_TA_SURPRISE);
                             break;
                     }
                     this->actionFunc = func_80B15260;
@@ -1024,7 +1024,7 @@ void EnTa_IdleSittingInLonLonHouse(EnTa* this, PlayState* play) {
     func_80B13AAC(this, play);
 
     if (func_80B142F4(this, play, this->actor.textId)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_SURPRISE);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_TA_SURPRISE);
 
         if (faceReaction != 0) {
             func_80B14FAC(this, EnTa_TalkGeneralInLonLonHouse);
@@ -1114,7 +1114,7 @@ void EnTa_AnimRepeatCurrent(EnTa* this) {
 void EnTa_AnimSleeping(EnTa* this) {
     if (SkelAnime_Update(&this->skelAnime)) {
         Animation_PlayOnce(&this->skelAnime, this->currentAnimation);
-        Audio_PlayActorSound2(&this->actor, NA_SE_VO_TA_SLEEP);
+        Actor_PlaySfx(&this->actor, NA_SE_VO_TA_SLEEP);
     }
     this->unk_2E0 |= 0xC;
 }

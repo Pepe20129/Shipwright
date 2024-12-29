@@ -362,7 +362,7 @@ void EnGe1_Open_GTGGuard(EnGe1* this, PlayState* play) {
         this->cutsceneTimer = 50;
         Message_CloseTextbox(play);
     } else if ((this->skelAnime.curFrame == 15.0f) || (this->skelAnime.curFrame == 19.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_IT_HAND_CLAP);
+        Actor_PlaySfx(&this->actor, NA_SE_IT_HAND_CLAP);
     }
 }
 
@@ -455,7 +455,7 @@ void EnGe1_OpenGate_GateOp(EnGe1* this, PlayState* play) {
         this->cutsceneTimer = 50;
         Message_CloseTextbox(play);
     } else if ((this->skelAnime.curFrame == 15.0f) || (this->skelAnime.curFrame == 19.0f)) {
-        Audio_PlayActorSound2(&this->actor, NA_SE_IT_HAND_CLAP);
+        Actor_PlaySfx(&this->actor, NA_SE_IT_HAND_CLAP);
     }
 }
 

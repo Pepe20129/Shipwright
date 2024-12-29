@@ -386,7 +386,7 @@ void func_809FE4A4(EnDu* this, PlayState* play) {
         EnDu_SetupAction(this, func_809FE890);
         play->msgCtx.ocarinaMode = OCARINA_MODE_04;
     } else if (play->msgCtx.ocarinaMode == OCARINA_MODE_03) {
-        Audio_PlaySoundGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         if (GameInteractor_Should(VB_PLAY_DARUNIAS_JOY_CS, true)) {
             play->csCtx.segment = SEGMENTED_TO_VIRTUAL(gGoronCityDaruniaCorrectCs);
             gSaveContext.cutsceneTrigger = 1;
@@ -448,16 +448,16 @@ void func_809FE798(EnDu* this, PlayState* play) {
     if (phi_v0 != 0) {
         switch (this->unk_1E2) {
             case 0x50:
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_CHAIN_KEY_UNLOCK_B);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_CHAIN_KEY_UNLOCK_B);
                 break;
             case 0x3C:
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_SLIDE_DOOR_OPEN);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_SLIDE_DOOR_OPEN);
                 break;
             case 0xF:
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_SLIDE_DOOR_CLOSE);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_SLIDE_DOOR_CLOSE);
                 break;
             case 5:
-                Audio_PlayActorSound2(&this->actor, NA_SE_EV_STONE_BOUND);
+                Actor_PlaySfx(&this->actor, NA_SE_EV_STONE_BOUND);
                 break;
         }
         if (this->unk_1E2 >= 0x3D) {

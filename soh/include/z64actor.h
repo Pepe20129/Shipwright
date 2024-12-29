@@ -16,9 +16,18 @@
 #define MASS_IMMOVABLE 0xFF // Cannot be pushed by OC collisions
 #define MASS_HEAVY 0xFE // Can only be pushed by OC collisions with IMMOVABLE and HEAVY objects.
 
+// These are default parameters used for "animation fidgeting", which procedurally generate actor idle animations.
+// These calculations may be performed within individual actors, or by using fidget tables with `Actor_UpdateFidgetTables`.
+#define FIDGET_FREQ_Y 0x814
+#define FIDGET_FREQ_Z 0x940
+#define FIDGET_FREQ_LIMB 0x32
+#define FIDGET_AMPLITUDE 200.0f
+
 struct Actor;
-struct PlayState;
 struct Lights;
+struct PlayState;
+struct TargetContext;
+struct TitleCardContext;
 
 typedef void (*ActorFunc)(struct Actor*, struct PlayState*);
 typedef void (*ActorResetFunc)(void);
@@ -209,19 +218,16 @@ typedef struct ActorShape {
 // Flag controlling the use of `Actor.sfx`. Do not use directly. See Actor_PlaySfx_FlaggedTimer
 #define ACTOR_FLAG_SFX_TIMER (1 << 28)
 
-/*
-BgCheckFlags WIP documentation:
-& 0x001 : Standing on the ground
-& 0x002 : Has touched the ground (only active for 1 frame)
-& 0x004 : Has left the ground (only active for 1 frame)
-& 0x008 : Touching a wall
-& 0x010 : Touching a ceiling
-& 0x020 : On or below water surface
-& 0x040 : Has touched water (actor is responsible for unsetting this the frame it touches the water)
-& 0x080 : Similar to & 0x1 but with no velocity check and is cleared every frame
-& 0x100 : Crushed between a floor and ceiling (triggers a void for player)
-& 0x200 : Unknown (only set/used by player so far)
-*/
+#define BGCHECKFLAG_GROUND (1 << 0) // Standing on the ground
+#define BGCHECKFLAG_GROUND_TOUCH (1 << 1) // Has touched the ground (only active for 1 frame)
+#define BGCHECKFLAG_GROUND_LEAVE (1 << 2) // Has left the ground (only active for 1 frame)
+#define BGCHECKFLAG_WALL (1 << 3) // Touching a wall
+#define BGCHECKFLAG_CEILING (1 << 4) // Touching a ceiling
+#define BGCHECKFLAG_WATER (1 << 5) // In water
+#define BGCHECKFLAG_WATER_TOUCH (1 << 6) // Has touched water (reset when leaving water)
+#define BGCHECKFLAG_GROUND_STRICT (1 << 7) // Strictly on ground (BGCHECKFLAG_GROUND has some leeway)
+#define BGCHECKFLAG_CRUSHED (1 << 8) // Crushed between a floor and ceiling (triggers a void for player)
+#define BGCHECKFLAG_PLAYER_WALL_INTERACT (1 << 9) // Only set/used by player, related to interacting with walls
 
 typedef struct Actor {
     /* 0x000 */ s16 id; // Actor ID
@@ -304,12 +310,10 @@ if neither of the above are set : blue
 0x2000 : translucent, else opaque
 */
 
-#define DYNA_INTERACT_ACTOR_ON_TOP (1 << 0)  // There is an actor standing on the collision of the dynapoly actor
+#define DYNA_INTERACT_ACTOR_ON_TOP (1 << 0) // There is an actor standing on the collision of the dynapoly actor
 #define DYNA_INTERACT_PLAYER_ON_TOP (1 << 1) // The player actor is standing on the collision of the dynapoly actor
-#define DYNA_INTERACT_PLAYER_ABOVE \
-    (1 << 2) // The player is directly above the collision of the dynapoly actor (any distance above)
-#define DYNA_INTERACT_ACTOR_SWITCH_PRESSED \
-    (1 << 3) // An actor that is capable of pressing switches is on top of the dynapoly actor
+#define DYNA_INTERACT_PLAYER_ABOVE (1 << 2) // The player is directly above the collision of the dynapoly actor (any distance above)
+#define DYNA_INTERACT_ACTOR_SWITCH_PRESSED (1 << 3) // An actor that is capable of pressing switches is on top of the dynapoly actor
 
 typedef struct DynaPolyActor {
     /* 0x000 */ struct Actor actor;
@@ -339,7 +343,7 @@ typedef enum Item00Type {
     /* 0x00 */ ITEM00_RUPEE_GREEN,
     /* 0x01 */ ITEM00_RUPEE_BLUE,
     /* 0x02 */ ITEM00_RUPEE_RED,
-    /* 0x03 */ ITEM00_HEART,
+    /* 0x03 */ ITEM00_RECOVERY_HEART,
     /* 0x04 */ ITEM00_BOMBS_A,
     /* 0x05 */ ITEM00_ARROWS_SINGLE,
     /* 0x06 */ ITEM00_HEART_PIECE,
@@ -490,5 +494,76 @@ typedef struct NpcInteractInfo {
     /* 0x18 */ Vec3f trackPos;
     /* 0x24 */ char unk_24[0x4];
 } NpcInteractInfo; // size = 0x28
+
+// Converts a number of bits to a bitmask, helper for params macros
+// e.g. 3 becomes 0b111 (7)
+#define NBITS_TO_MASK(n) \
+    ((1 << (n)) - 1)
+
+// Extracts the `n`-bit value at position `s` in `p`, shifts then masks
+// Unsigned variant, no possibility of sign extension
+#define PARAMS_GET_U(p, s, n) \
+    (((p) >> (s)) & NBITS_TO_MASK(n))
+
+// Extracts the `n`-bit value at position `s` in `p`, masks then shifts
+// Signed variant, possibility of sign extension
+#define PARAMS_GET_S(p, s, n) \
+    (((p) & (NBITS_TO_MASK(n) << (s))) >> (s))
+
+// Extracts all bits past position `s` in `p`
+#define PARAMS_GET_NOMASK(p, s) \
+    ((p) >> (s))
+
+// Extracts the `n`-bit value at position `s` in `p` without shifting it from its current position
+#define PARAMS_GET_NOSHIFT(p, s, n) \
+    ((p) & (NBITS_TO_MASK(n) << (s)))
+
+// Moves the `n`-bit value `p` to bit position `s` for building actor parameters by OR-ing these together
+#define PARAMS_PACK(p, s, n) \
+    (((p) & NBITS_TO_MASK(n)) << (s))
+
+// Moves the value `p` to bit position `s` for building actor parameters by OR-ing these together.
+#define PARAMS_PACK_NOMASK(p, s) \
+    ((p) << (s))
+
+// Generates a bitmask for bit position `s` of length `n`
+#define PARAMS_MAKE_MASK(s, n) PARAMS_GET_NOSHIFT(~0, s, n)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void ActorShape_Init(ActorShape* shape, f32 yOffset, ActorShadowFunc shadowDraw, f32 shadowScale);
+void ActorShadow_DrawCircle(Actor* actor, struct Lights* lights, struct PlayState* play);
+void ActorShadow_DrawWhiteCircle(Actor* actor, struct Lights* lights, struct PlayState* play);
+void ActorShadow_DrawHorse(Actor* actor, struct Lights* lights, struct PlayState* play);
+void ActorShadow_DrawFeet(Actor* actor, struct Lights* lights, struct PlayState* play);
+void Actor_SetFeetPos(Actor* actor, s32 limbIndex, s32 leftFootIndex, Vec3f* leftFootPos, s32 rightFootIndex,
+                      Vec3f* rightFootPos);
+void Actor_ProjectPos(struct PlayState* play, Vec3f* src, Vec3f* xyzDest, f32* cappedInvWDest);
+void Attention_Draw(struct TargetContext* targetCtx, struct PlayState* play);
+s32 Flags_GetSwitch(struct PlayState* play, s32 flag);
+void Flags_SetSwitch(struct PlayState* play, s32 flag);
+void Flags_UnsetSwitch(struct PlayState* play, s32 flag);
+s32 Flags_GetUnknown(struct PlayState* play, s32 flag);
+void Flags_SetUnknown(struct PlayState* play, s32 flag);
+void Flags_UnsetUnknown(struct PlayState* play, s32 flag);
+s32 Flags_GetTreasure(struct PlayState* play, s32 flag);
+void Flags_SetTreasure(struct PlayState* play, s32 flag);
+s32 Flags_GetClear(struct PlayState* play, s32 flag);
+void Flags_SetClear(struct PlayState* play, s32 flag);
+void Flags_UnsetClear(struct PlayState* play, s32 flag);
+s32 Flags_GetTempClear(struct PlayState* play, s32 flag);
+void Flags_SetTempClear(struct PlayState* play, s32 flag);
+void Flags_UnsetTempClear(struct PlayState* play, s32 flag);
+s32 Flags_GetCollectible(struct PlayState* play, s32 flag);
+void Flags_SetCollectible(struct PlayState* play, s32 flag);
+void TitleCard_InitBossName(struct PlayState* play, struct TitleCardContext* titleCtx, void* texture, s16 x, s16 y, u8 width,
+                            u8 height, s16 hasTranslation);
+void TitleCard_InitPlaceName(struct PlayState* play, struct TitleCardContext* titleCtx, void* texture, s32 x, s32 y, s32 width,
+                             s32 height, s32 delay);
+s32 TitleCard_Clear(struct PlayState* play, struct TitleCardContext* titleCtx);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

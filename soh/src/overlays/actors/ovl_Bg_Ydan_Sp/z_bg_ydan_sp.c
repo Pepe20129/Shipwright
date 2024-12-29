@@ -300,7 +300,7 @@ void BgYdanSp_FloorWebIdle(BgYdanSp* this, PlayState* play) {
                 this->dyna.actor.room = -1;
                 this->dyna.actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
                 this->timer = 40;
-                Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_WEB_BROKEN);
+                Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_WEB_BROKEN);
                 this->actionFunc = BgYdanSp_FloorWebBreaking;
                 return;
             }
@@ -333,7 +333,7 @@ void BgYdanSp_FloorWebIdle(BgYdanSp* this, PlayState* play) {
     Math_ApproachZeroF(&this->unk_16C, 1.0f, 0.8f);
     if (this->timer == 13) {
         if (this->unk_16C > 3.0f) {
-            Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_WEB_VIBRATION);
+            Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_WEB_VIBRATION);
         } else {
             Audio_StopSfxById(NA_SE_EV_WEB_VIBRATION);
         }

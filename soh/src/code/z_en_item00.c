@@ -84,8 +84,8 @@ static u8 sItemDropIds[] = {
     ITEM00_RUPEE_BLUE,
     ITEM00_RUPEE_GREEN,
     ITEM00_MAGIC_SMALL,
-    ITEM00_HEART,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     ITEM00_MAGIC_SMALL,
     ITEM00_FLEXIBLE,
@@ -97,9 +97,9 @@ static u8 sItemDropIds[] = {
     ITEM00_MAGIC_SMALL,
     ITEM00_RUPEE_GREEN,
     ITEM00_RUPEE_BLUE,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     ITEM00_FLEXIBLE,
     0xFF,
@@ -113,10 +113,10 @@ static u8 sItemDropIds[] = {
     ITEM00_RUPEE_GREEN,
     ITEM00_MAGIC_SMALL,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     ITEM00_SEEDS,
     ITEM00_SEEDS,
@@ -132,8 +132,8 @@ static u8 sItemDropIds[] = {
     ITEM00_SEEDS,
     ITEM00_SEEDS,
     ITEM00_NUTS,
-    ITEM00_HEART,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_SEEDS,
     0xFF,
     ITEM00_FLEXIBLE,
@@ -149,11 +149,11 @@ static u8 sItemDropIds[] = {
     ITEM00_BOMBS_A,
     0xFF,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
-    ITEM00_HEART,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
     ITEM00_MAGIC_SMALL,
@@ -164,10 +164,10 @@ static u8 sItemDropIds[] = {
     ITEM00_RUPEE_BLUE,
     0xFF,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_FLEXIBLE,
     ITEM00_SEEDS,
     ITEM00_SEEDS,
@@ -178,7 +178,7 @@ static u8 sItemDropIds[] = {
     0xFF,
     ITEM00_RUPEE_GREEN,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
     ITEM00_BOMBS_A,
@@ -194,7 +194,7 @@ static u8 sItemDropIds[] = {
     ITEM00_RUPEE_BLUE,
     0xFF,
     ITEM00_RUPEE_GREEN,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_FLEXIBLE,
     ITEM00_BOMBS_A,
     ITEM00_ARROWS_SMALL,
@@ -253,22 +253,22 @@ static u8 sItemDropIds[] = {
     ITEM00_BOMBS_A,
     0xFF,
     ITEM00_BOMBS_A,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_RUPEE_RED,
     ITEM00_RUPEE_BLUE,
     ITEM00_RUPEE_BLUE,
@@ -299,22 +299,22 @@ static u8 sItemDropIds[] = {
     ITEM00_NUTS,
     0xFF,
     ITEM00_NUTS,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_SEEDS,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     ITEM00_SEEDS,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
-    ITEM00_HEART,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     0xFF,
-    ITEM00_HEART,
+    ITEM00_RECOVERY_HEART,
     ITEM00_SEEDS,
     ITEM00_FLEXIBLE,
 };
@@ -392,7 +392,7 @@ void EnItem00_Init(Actor* thisx, PlayState* play) {
             Actor_SetScale(&this->actor, 0.02f);
             this->scale = 0.02f;
             break;
-        case ITEM00_HEART:
+        case ITEM00_RECOVERY_HEART:
             this->actor.home.rot.z = Rand_CenteredFloat(65535.0f);
             yOffset = 430.0f;
             Actor_SetScale(&this->actor, 0.02f);
@@ -526,7 +526,7 @@ void EnItem00_Init(Actor* thisx, PlayState* play) {
         case ITEM00_RUPEE_ORANGE:
             Item_Give(play, ITEM_RUPEE_GOLD);
             break;
-        case ITEM00_HEART:
+        case ITEM00_RECOVERY_HEART:
             Item_Give(play, ITEM_HEART);
             break;
         case ITEM00_FLEXIBLE:
@@ -594,7 +594,7 @@ void EnItem00_Destroy(Actor* thisx, PlayState* play) {
 }
 
 void func_8001DFC8(EnItem00* this, PlayState* play) {
-    if ((this->actor.params <= ITEM00_RUPEE_RED) || ((this->actor.params == ITEM00_HEART) && (this->despawnTimer < 0)) ||
+    if ((this->actor.params <= ITEM00_RUPEE_RED) || ((this->actor.params == ITEM00_RECOVERY_HEART) && (this->despawnTimer < 0)) ||
         (this->actor.params == ITEM00_HEART_PIECE)) {
         this->actor.shape.rot.y += 960;
     } else {
@@ -674,7 +674,7 @@ void func_8001E304(EnItem00* this, PlayState* play) {
 
     this->despawnTimer++;
 
-    if (this->actor.params == ITEM00_HEART) {
+    if (this->actor.params == ITEM00_RECOVERY_HEART) {
         if (this->actor.velocity.y < 0.0f) {
             this->actor.speed = 0.0f;
             this->actor.gravity = -0.4f;
@@ -742,7 +742,7 @@ void func_8001E5C8(EnItem00* this, PlayState* play) {
 
     if (this->actor.params <= ITEM00_RUPEE_RED) {
         this->actor.shape.rot.y += 960;
-    } else if (this->actor.params == ITEM00_HEART) {
+    } else if (this->actor.params == ITEM00_RECOVERY_HEART) {
         this->actor.shape.rot.y = 0;
     }
 
@@ -769,7 +769,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
 
     // Rotate some drops when 3D drops are on, otherwise reset rotation back to 0 for billboard effect
     if (
-        (this->actor.params == ITEM00_HEART && this->despawnTimer >= 0) ||
+        (this->actor.params == ITEM00_RECOVERY_HEART && this->despawnTimer >= 0) ||
         (this->actor.params >= ITEM00_ARROWS_SMALL && this->actor.params <= ITEM00_SMALL_KEY) ||
         this->actor.params == ITEM00_BOMBS_A ||
         this->actor.params == ITEM00_ARROWS_SINGLE ||
@@ -886,7 +886,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
         case ITEM00_NUTS:
             getItemId = GI_NUTS_5;
             break;
-        case ITEM00_HEART:
+        case ITEM00_RECOVERY_HEART:
             Item_Give(play, ITEM_HEART);
             break;
         case ITEM00_FLEXIBLE:
@@ -967,7 +967,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
     }
 
     if ((*params <= ITEM00_RUPEE_RED) || (*params == ITEM00_RUPEE_ORANGE)) {
-        Audio_PlaySoundGeneral(NA_SE_SY_GET_RUPY, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_GET_RUPY, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
     } else if (getItemId != GI_NONE) {
         if (Actor_HasParent(&this->actor, play)) {
             Flags_SetCollectible(play, this->collectibleFlag);
@@ -975,7 +975,7 @@ void EnItem00_Update(Actor* thisx, PlayState* play) {
         }
         return;
     } else {
-        Audio_PlaySoundGeneral(NA_SE_SY_GET_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySfxGeneral(NA_SE_SY_GET_ITEM, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
     }
 
     Flags_SetCollectible(play, this->collectibleFlag);
@@ -1049,7 +1049,7 @@ void EnItem00_Draw(Actor* thisx, PlayState* play) {
             case ITEM00_HEART_CONTAINER:
                 EnItem00_DrawHeartContainer(this, play);
                 break;
-            case ITEM00_HEART:
+            case ITEM00_RECOVERY_HEART:
                 // Only change despawn-able recovery hearts
                 if (CVarGetInteger(CVAR_ENHANCEMENT("NewDrops"), 0) && this->despawnTimer >= 0) {
                     mtxScale = 16.0f;
@@ -1571,7 +1571,7 @@ s16 func_8001F404(s16 dropId) {
     }
     // clang-format on
 
-    if (dropId == ITEM00_HEART && gSaveContext.healthCapacity == gSaveContext.health) {
+    if (dropId == ITEM00_RECOVERY_HEART && gSaveContext.healthCapacity == gSaveContext.health) {
         return ITEM00_RUPEE_GREEN;
     }
 
@@ -1589,7 +1589,7 @@ EnItem00* Item_DropCollectible(PlayState* play, Vec3f* spawnPos, s16 params) {
 
     params &= 0x3FFF;
 
-    if ((params & 0x00FF) == ITEM00_HEART && CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { return NULL; }
+    if ((params & 0x00FF) == ITEM00_RECOVERY_HEART && CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { return NULL; }
 
     if (((params & 0x00FF) == ITEM00_FLEXIBLE) && !param4000) {
         // TODO: Prevent the cast to EnItem00 here since this is a different actor (En_Elf)
@@ -1634,7 +1634,7 @@ EnItem00* Item_DropCollectible2(PlayState* play, Vec3f* spawnPos, s16 params) {
 
     params &= 0x3FFF;
 
-    if ((params & 0x00FF) == ITEM00_HEART && CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { return NULL; }
+    if ((params & 0x00FF) == ITEM00_RECOVERY_HEART && CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { return NULL; }
     
     if (((params & 0x00FF) == ITEM00_FLEXIBLE) && !param4000) {
         // TODO: Prevent the cast to EnItem00 here since this is a different actor (En_Elf)
@@ -1717,11 +1717,11 @@ void Item_DropCollectibleRandom(PlayState* play, Actor* fromActor, Vec3f* spawnP
         } else if (gSaveContext.health <= 0x30 && !CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { // 3 hearts or less
             params = 0xB * 0x10;
             dropTableIndex = 0x0;
-            dropId = ITEM00_HEART;
+            dropId = ITEM00_RECOVERY_HEART;
         } else if (gSaveContext.health <= 0x50 && !CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0)) { // 5 hearts or less
             params = 0xA * 0x10;
             dropTableIndex = 0x0;
-            dropId = ITEM00_HEART;
+            dropId = ITEM00_RECOVERY_HEART;
         } else if ((gSaveContext.magicLevel != 0) && (gSaveContext.magic == 0)) { // Empty magic meter
             params = 0xA * 0x10;
             dropTableIndex = 0x0;
@@ -1751,7 +1751,7 @@ void Item_DropCollectibleRandom(PlayState* play, Actor* fromActor, Vec3f* spawnP
         }
     }
 
-    if (dropId != 0xFF && (!CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0) || dropId != ITEM00_HEART)) {
+    if (dropId != 0xFF && (!CVarGetInteger(CVAR_ENHANCEMENT("NoHeartDrops"), 0) || dropId != ITEM00_RECOVERY_HEART)) {
         dropQuantity = sDropQuantities[params + dropTableIndex];
         while (dropQuantity > 0) {
             if (!param8000) {
