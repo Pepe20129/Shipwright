@@ -37,8 +37,8 @@ namespace SohUtils {
 
     bool IsStringEmpty(std::string str);
 
-    void SpriteLoad(struct GraphicsContext* gfxCtx, struct SohUtils::Sprite* sprite);
+    void SpriteLoad(struct GraphicsContext* gfxCtx, SohUtils::Sprite* sprite);
 
-    void SpriteDraw(struct GraphicsContext* gfxCtx, struct SohUtils::Sprite* sprite, int left, int top, int width, int height);
+    void SpriteDraw(struct GraphicsContext* gfxCtx, SohUtils::Sprite* sprite, int left, int top, int width, int height);
 } // namespace SohUtils
 #endif
