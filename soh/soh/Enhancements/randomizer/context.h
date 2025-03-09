@@ -91,7 +91,6 @@ class Context {
     std::shared_ptr<Kaleido> GetKaleido();
     TrialInfo* GetTrial(size_t key) const;
     TrialInfo* GetTrial(TrialKey key) const;
-    static Sprite* GetSeedTexture(uint8_t index);
     OptionValue& GetOption(RandomizerSettingKey key);
     OptionValue& GetTrickOption(RandomizerTrick key);
     OptionValue& GetLocationOption(RandomizerCheck key);

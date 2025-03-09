@@ -39,7 +39,6 @@ class Randomizer {
     static const std::string IceTrapRandoMessageTableID;
     static const std::string randoMiscHintsTableID;
 
-    static Sprite* GetSeedTexture(uint8_t index);
     bool SpoilerFileExists(const char* spoilerFileName);
     void LoadMerchantMessages();
     void LoadHintMessages();

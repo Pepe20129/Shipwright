@@ -1491,10 +1491,6 @@ extern "C" uint16_t OTRGetPixelDepth(float x, float y) {
     return wnd->GetPixelDepth(x, y);
 }
 
-extern "C" Sprite* GetSeedTexture(uint8_t index) {
-    return OTRGlobals::Instance->gRandoContext->GetSeedTexture(index);
-}
-
 extern "C" uint8_t GetSeedIconIndex(uint8_t index) {
     return OTRGlobals::Instance->gRandoContext->hashIconIndexes[index];
 }

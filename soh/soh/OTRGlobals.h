@@ -114,7 +114,6 @@ void Controller_UnblockGameInput();
 void* getN64WeirdFrame(s32 i);
 int GetEquipNowMessage(char* buffer, char* src, const int maxBufferSize);
 u32 SpoilerFileExists(const char* spoilerFileName);
-Sprite* GetSeedTexture(uint8_t index);
 uint8_t GetSeedIconIndex(uint8_t index);
 u8 Randomizer_GetSettingValue(RandomizerSettingKey randoSettingKey);
 RandomizerCheck Randomizer_GetCheckFromActor(s16 actorId, s16 sceneNum, s16 actorParams);

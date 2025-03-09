@@ -4,7 +4,18 @@
 #include <vector>
 #include <algorithm>
 #include <array>
-#include "Enhancements/randomizer/randomizerTypes.h"
+#include "soh/Enhancements/randomizer/randomizerTypes.h"
+#include "luslog.h"
+#include <libultraship/libultra/gbi.h>
+#include <assert.h>
+#include "z64.h"
+
+extern "C" {
+#include "functions.h"
+#include "macros.h"
+void FrameInterpolation_RecordCloseChild(void);
+void FrameInterpolation_RecordOpenChild(const void* a, int b);
+}
 
 std::vector<std::string> sceneNames = {
     "Inside the Deku Tree",
@@ -402,4 +413,53 @@ bool SohUtils::IsStringEmpty(std::string str) {
         return true; // The string is empty
     else
         return false; // The string is not empty
+}
+
+void SohUtils::SpriteLoad(GraphicsContext* gfxCtx, SohUtils::Sprite* sprite) {
+    OPEN_DISPS(gfxCtx);
+
+    /*
+     * Due to macro expansion and the token-pasting operator (##), we cannot pass sprite->im_siz in directly.
+     * Instead we must call gDPLoadTextureBlock with the raw IM_SIZ define name itself to properly expand the correct
+     * defines internally.
+     */
+
+    if (sprite->im_siz == G_IM_SIZ_4b) {
+        gDPLoadTextureBlock(POLY_OPA_DISP++, sprite->tex, sprite->im_fmt,
+                            G_IM_SIZ_4b,
+                            sprite->width, sprite->height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    } else if (sprite->im_siz == G_IM_SIZ_8b) {
+        gDPLoadTextureBlock(POLY_OPA_DISP++, sprite->tex, sprite->im_fmt,
+                            G_IM_SIZ_8b,
+                            sprite->width, sprite->height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    } else if (sprite->im_siz == G_IM_SIZ_16b) {
+        gDPLoadTextureBlock(POLY_OPA_DISP++, sprite->tex, sprite->im_fmt,
+                            G_IM_SIZ_16b,
+                            sprite->width, sprite->height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    } else if (sprite->im_siz == G_IM_SIZ_32b) {
+        gDPLoadTextureBlock(POLY_OPA_DISP++, sprite->tex, sprite->im_fmt,
+                            G_IM_SIZ_32b,
+                            sprite->width, sprite->height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
+                            G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    } else {
+        LUSLOG_ERROR("SohUtils::SpriteLoad recieved a sprite with an unsupported im_siz (%d)", sprite->im_siz);
+        assert(false);
+    }
+
+    CLOSE_DISPS(gfxCtx);
+}
+
+void SohUtils::SpriteDraw(GraphicsContext* gfxCtx, SohUtils::Sprite* sprite, int left, int top, int width, int height) {
+    int width_factor = (1 << 10) * sprite->width / width;
+    int height_factor = (1 << 10) * sprite->height / height;
+
+    OPEN_DISPS(gfxCtx);
+
+    gSPWideTextureRectangle(POLY_OPA_DISP++, left << 2, top << 2, (left + width) << 2, (top + height) << 2,
+                            G_TX_RENDERTILE, 0, 0, width_factor, height_factor);
+
+    CLOSE_DISPS(gfxCtx);
 }

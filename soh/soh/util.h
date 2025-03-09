@@ -1,8 +1,22 @@
 #pragma once
+
+#ifdef __cplusplus
 #include <string>
-#include <stdint.h>
+#include <cstdint>
+#include <libultraship/libultra/types.h>
+
+struct GraphicsContext;
 
 namespace SohUtils {
+    typedef struct {
+        char tex[512];
+        u16 width;
+        u16 height;
+        u8 im_fmt;
+        u8 im_siz;
+        u8 id;
+    } Sprite;
+
     const std::string& GetSceneName(int32_t scene);
 
     const std::string& GetItemName(int32_t item);
@@ -22,4 +36,9 @@ namespace SohUtils {
     size_t CopyStringToCharBuffer(char* buffer, const std::string& source, size_t maxBufferSize);
 
     bool IsStringEmpty(std::string str);
+
+    void SpriteLoad(struct GraphicsContext* gfxCtx, struct SohUtils::Sprite* sprite);
+
+    void SpriteDraw(struct GraphicsContext* gfxCtx, struct SohUtils::Sprite* sprite, int left, int top, int width, int height);
 } // namespace SohUtils
+#endif

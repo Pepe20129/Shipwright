@@ -486,10 +486,6 @@ TrialInfo* Context::GetTrial(TrialKey key) const {
     return mTrials->GetTrial(key);
 }
 
-Sprite* Context::GetSeedTexture(const uint8_t index) {
-    return &gSeedTextures[index];
-}
-
 OptionValue& Context::GetOption(const RandomizerSettingKey key) {
     return mOptions[key];
 }
