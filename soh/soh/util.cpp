@@ -416,6 +416,12 @@ bool SohUtils::IsStringEmpty(std::string str) {
 }
 
 void SohUtils::SpriteLoad(GraphicsContext* gfxCtx, SohUtils::Sprite* sprite) {
+
+    extern "C" {
+    void FrameInterpolation_RecordCloseChild(void);
+    void FrameInterpolation_RecordOpenChild(const void* a, int b);
+    }
+
     OPEN_DISPS(gfxCtx);
 
     /*
@@ -455,6 +461,11 @@ void SohUtils::SpriteLoad(GraphicsContext* gfxCtx, SohUtils::Sprite* sprite) {
 void SohUtils::SpriteDraw(GraphicsContext* gfxCtx, SohUtils::Sprite* sprite, int left, int top, int width, int height) {
     int width_factor = (1 << 10) * sprite->width / width;
     int height_factor = (1 << 10) * sprite->height / height;
+
+    extern "C" {
+    void FrameInterpolation_RecordCloseChild(void);
+    void FrameInterpolation_RecordOpenChild(const void* a, int b);
+    }
 
     OPEN_DISPS(gfxCtx);
 
