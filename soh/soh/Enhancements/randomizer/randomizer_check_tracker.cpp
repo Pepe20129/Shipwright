@@ -299,7 +299,8 @@ bool IsCheckHidden(RandomizerCheck rc) {
     bool isJunk = itemLocation->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK;
     bool knownJunk = (seen || scummed) && isJunk;
 
-    return (skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked) || (knownJunk && hideJunk);
+    return (skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked) ||
+           (knownJunk && hideJunk);
 }
 
 void RecalculateAreaTotals(RandomizerCheckArea rcArea) {
@@ -1248,11 +1249,8 @@ bool ShouldShowCheck(RandomizerCheck check) {
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(check);
     RandomizerCheckStatus status = itemLoc->GetCheckStatus();
 
-    if (
-        hideJunk &&
-        (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (hideJunk && (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return false;
     }
 
@@ -1622,11 +1620,8 @@ bool IsVisibleInCheckTracker(RandomizerCheck rc) {
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
     RandomizerCheckStatus status = itemLoc->GetCheckStatus();
 
-    if (
-        hideJunk &&
-        (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (hideJunk && (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return false;
     }
 
@@ -1747,12 +1742,8 @@ void DrawLocation(RandomizerCheck rc) {
         return;
     }
 
-    if (
-        !showHidden &&
-        hideJunk &&
-        (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (!showHidden && hideJunk && (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return;
     }
 
