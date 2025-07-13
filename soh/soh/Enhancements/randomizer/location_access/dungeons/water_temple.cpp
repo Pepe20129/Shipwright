@@ -35,7 +35,7 @@ void RegionTable_Init_WaterTemple() {
         Entrance(RR_WATER_TEMPLE_HIGH_WATER,            []{return logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_DAMAGE_BOOST) && logic->CanUse(RG_BOMB_BAG) && logic->TakeDamage()));}),
         Entrance(RR_WATER_TEMPLE_BLOCK_CORRIDOR,        []{return (logic->CanWaterTempleLowFromHigh || logic->CanWaterTempleMiddle) && (logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW)) && (logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_WATER_CENTRAL_BOW) && (logic->IsAdult || logic->CanWaterTempleMiddle)));}),
         Entrance(RR_WATER_TEMPLE_FALLING_PLATFORM_ROOM, []{return logic->CanWaterTempleHigh && logic->SmallKeys(RR_WATER_TEMPLE, 4);}),
-        Entrance(RR_WATER_TEMPLE_PRE_BOSS_ROOM,         []{return (logic->CanWaterTempleHigh && logic->CanUse(RG_LONGSHOT)) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanUse(RG_HOVER_BOOTS));}),
+        Entrance(RR_WATER_TEMPLE_PRE_BOSS_ROOM,         []{return (logic->CanWaterTempleHigh && logic->CanUse(RG_LONGSHOT)) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanHover();}),
     });
 
     areaTable[RR_WATER_TEMPLE_EAST_LOWER] = Region("Water Temple East Lower", SCENE_WATER_TEMPLE, {

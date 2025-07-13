@@ -12,10 +12,10 @@ void RegionTable_Init_LonLonRanch() {
     }, {
         //Locations
         LOCATION(RC_SONG_FROM_MALON,     logic->IsChild && logic->HasItem(RG_ZELDAS_LETTER) && logic->HasItem(RG_FAIRY_OCARINA) && logic->AtDay),
-        LOCATION(RC_LLR_GS_TREE,         logic->IsChild),
-        LOCATION(RC_LLR_GS_RAIN_SHED,    logic->IsChild && logic->CanGetNightTimeGS()),
-        LOCATION(RC_LLR_GS_HOUSE_WINDOW, logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_LLR_GS_BACK_WALL,    logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_LLR_GS_TREE,         logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_CLOSE, true)),
+        LOCATION(RC_LLR_GS_RAIN_SHED,    logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_CLOSE, true) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_LLR_GS_HOUSE_WINDOW, logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_LLR_GS_BACK_WALL,    logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
         LOCATION(RC_LLR_FRONT_POT_1,     logic->IsChild && logic->CanBreakPots()),
         LOCATION(RC_LLR_FRONT_POT_2,     logic->IsChild && logic->CanBreakPots()),
         LOCATION(RC_LLR_FRONT_POT_3,     logic->IsChild && logic->CanBreakPots()),
@@ -42,6 +42,8 @@ void RegionTable_Init_LonLonRanch() {
     }, {
         //Exits
         Entrance(RR_LON_LON_RANCH, []{return true;}),
+        // possible if items aren't restricted (there's a convoluted glitch that could be implemented in the future)
+        Entrance(RR_LLR_STABLES,   []{return false && logic->CanHover();}),
     });
 
     areaTable[RR_LLR_STABLES] = Region("LLR Stables", SCENE_STABLE, {}, {

@@ -90,6 +90,7 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_SCARECROW_SOUTH_HEART,   logic->CanUse(RG_DISTANT_SCARECROW) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5)),
     }, {
         //Exits
+        // there is a hover to get past the boat but it requires rba & a hess, among other things
         Entrance(RR_SHADOW_TEMPLE_BEYOND_BOAT, []{return logic->CanJumpslashExceptHammer() && logic->CanUse(RG_ZELDAS_LULLABY) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5);}),
     });
 

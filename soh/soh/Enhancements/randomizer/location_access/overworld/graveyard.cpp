@@ -13,9 +13,9 @@ void RegionTable_Init_Graveyard() {
         EventAccess(&logic->BorrowBunnyHood, []{return logic->IsChild && logic->AtDay && logic->BorrowSpookyMask && logic->HasItem(RG_CHILD_WALLET);}),
     }, {
         //Locations
-        LOCATION(RC_GRAVEYARD_FREESTANDING_POH,        (((logic->IsAdult && CanPlantBean(RR_THE_GRAVEYARD)) || logic->CanUse(RG_LONGSHOT)) && logic->CanBreakCrates()) || (ctx->GetTrickOption(RT_GY_POH) && logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_GRAVEYARD_FREESTANDING_POH,        (logic->CanHover() && logic->CanBreakCrates()) || (((logic->IsAdult && CanPlantBean(RR_THE_GRAVEYARD)) || logic->CanUse(RG_LONGSHOT)) && logic->CanBreakCrates()) || (ctx->GetTrickOption(RT_GY_POH) && logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR, logic->HasItem(RG_CHILD_WALLET) && logic->IsChild && logic->AtNight), //TODO: This needs to change
-        LOCATION(RC_GRAVEYARD_GS_WALL,                 logic->IsChild && logic->HookshotOrBoomerang() && logic->AtNight && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GRAVEYARD_GS_WALL,                 logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->AtNight && logic->CanGetNightTimeGS()),
         LOCATION(RC_GRAVEYARD_GS_BEAN_PATCH,           logic->CanSpawnSoilSkull() && logic->CanAttack()),
         LOCATION(RC_GRAVEYARD_BEAN_SPROUT_FAIRY_1,     logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_GRAVEYARD_BEAN_SPROUT_FAIRY_2,     logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
@@ -41,7 +41,7 @@ void RegionTable_Init_Graveyard() {
         Entrance(RR_GRAVEYARD_DAMPES_GRAVE,       []{return logic->IsAdult;}),
         Entrance(RR_GRAVEYARD_DAMPES_HOUSE,       []{return logic->IsAdult && logic->CanOpenOverworldDoor(RG_DAMPES_HUT_KEY) /*|| logic->AtDampeTime*/;}), //TODO: This needs to be handled in ToD rework
         Entrance(RR_KAKARIKO_VILLAGE,             []{return true;}),
-        Entrance(RR_GRAVEYARD_WARP_PAD_REGION,    []{return false;}),
+        Entrance(RR_GRAVEYARD_WARP_PAD_REGION,    []{return logic->CanHover();}),
     });
 
     areaTable[RR_GRAVEYARD_SHIELD_GRAVE] = Region("Graveyard Shield Grave", SCENE_GRAVE_WITH_FAIRYS_FOUNTAIN, {}, {

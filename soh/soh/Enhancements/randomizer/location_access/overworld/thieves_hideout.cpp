@@ -110,8 +110,8 @@ void RegionTable_Init_ThievesHideout() {
         //Exits
         Entrance(RR_TH_KITCHEN_MAIN,       []{return true;}),
         //hookshot to cross using the rafters is implied in logic->CanPassEnemy(RE_GERUDO_GUARD)
-        Entrance(RR_GF_NEAR_GS,            []{return logic->CanPassEnemy(RE_GERUDO_GUARD) || logic->CanUse(RG_HOVER_BOOTS);}),
-        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return logic->CanPassEnemy(RE_GERUDO_GUARD) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_GF_NEAR_GS,            []{return logic->CanPassEnemy(RE_GERUDO_GUARD) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanHover();}),
+        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return logic->CanPassEnemy(RE_GERUDO_GUARD) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanHover();}),
     });
 
     areaTable[RR_TH_BREAK_ROOM] = Region("Thieves Hideout Break Room", SCENE_THIEVES_HIDEOUT, {}, {
@@ -130,12 +130,12 @@ void RegionTable_Init_ThievesHideout() {
         //Exits
         Entrance(RR_GF_BELOW_CHEST,         []{return logic->CanPassEnemy(RE_GERUDO_GUARD);}),
         //Implies logic->CanPassEnemy(RE_GERUDO_GUARD)
-        Entrance(RR_TH_BREAK_ROOM_CORRIDOR, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_TH_BREAK_ROOM_CORRIDOR, []{return logic->CanUse(RG_HOOKSHOT) || logic->CanHover();}),
     });
 
     areaTable[RR_TH_BREAK_ROOM_CORRIDOR] = Region("Thieves Hideout Break Room", SCENE_THIEVES_HIDEOUT, {}, {}, {
         //Exits
-        Entrance(RR_TH_BREAK_ROOM, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_TH_BREAK_ROOM, []{return logic->CanUse(RG_HOOKSHOT) || logic->CanHover();}),
         Entrance(RR_GF_ABOVE_JAIL, []{return true;}),
     });
 }

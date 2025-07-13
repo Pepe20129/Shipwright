@@ -12,7 +12,7 @@ void RegionTable_Init_HauntedWasteland() {
     }, {
         //Exits
         Entrance(RR_GF_OUTSIDE_GATE,   []{return true;}),
-        Entrance(RR_HAUNTED_WASTELAND, []{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_HW_CROSSING);}),
+        Entrance(RR_HAUNTED_WASTELAND, []{return logic->CanHover() || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_HW_CROSSING);}),
     });
 
     areaTable[RR_HAUNTED_WASTELAND] = Region("Haunted Wasteland", SCENE_HAUNTED_WASTELAND, {
@@ -24,7 +24,7 @@ void RegionTable_Init_HauntedWasteland() {
         //Locations
         LOCATION(RC_WASTELAND_CHEST,            logic->HasFireSource()),
         LOCATION(RC_WASTELAND_BOMBCHU_SALESMAN, logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS)),
-        LOCATION(RC_WASTELAND_GS,               logic->HookshotOrBoomerang()),
+        LOCATION(RC_WASTELAND_GS,               logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true)),
         LOCATION(RC_WASTELAND_NEAR_GS_POT_1,    logic->CanBreakPots()),
         LOCATION(RC_WASTELAND_NEAR_GS_POT_2,    logic->CanBreakPots()),
         LOCATION(RC_WASTELAND_NEAR_GS_POT_3,    logic->CanBreakPots()),
@@ -35,7 +35,7 @@ void RegionTable_Init_HauntedWasteland() {
     }, {
         //Exits
         Entrance(RR_WASTELAND_NEAR_COLOSSUS, []{return ctx->GetTrickOption(RT_LENS_HW) || logic->CanUse(RG_LENS_OF_TRUTH);}),
-        Entrance(RR_WASTELAND_NEAR_FORTRESS, []{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_HW_CROSSING);}),
+        Entrance(RR_WASTELAND_NEAR_FORTRESS, []{return logic->CanHover() || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_HW_CROSSING);}),
     });
 
     areaTable[RR_WASTELAND_NEAR_COLOSSUS] = Region("Wasteland Near Colossus", SCENE_HAUNTED_WASTELAND, {}, {

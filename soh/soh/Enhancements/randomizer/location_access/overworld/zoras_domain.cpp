@@ -39,14 +39,14 @@ void RegionTable_Init_ZorasDomain() {
         //Exits
         Entrance(RR_ZR_BEHIND_WATERFALL, []{return true;}),
         Entrance(RR_LH_FROM_SHORTCUT,    []{return logic->IsChild && (logic->HasItem(RG_SILVER_SCALE) || logic->CanUse(RG_IRON_BOOTS));}),
-        Entrance(RR_ZD_BEHIND_KING_ZORA, []{return logic->DeliverLetter || ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_OPEN) || (ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_CLOSED_CHILD) && logic->IsAdult) || (ctx->GetTrickOption(RT_ZD_KING_ZORA_SKIP) && logic->IsAdult);}),
+        Entrance(RR_ZD_BEHIND_KING_ZORA, []{return logic->CanHover() || logic->DeliverLetter || ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_OPEN) || (ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_CLOSED_CHILD) && logic->IsAdult) || (ctx->GetTrickOption(RT_ZD_KING_ZORA_SKIP) && logic->IsAdult);}),
         Entrance(RR_ZD_SHOP,             []{return logic->IsChild || logic->BlueFire();}),
         Entrance(RR_ZORAS_DOMAIN_ISLAND, []{return true;}),
     });
 
     areaTable[RR_ZORAS_DOMAIN_ISLAND] = Region("Zoras Domain Island", SCENE_ZORAS_DOMAIN, {}, {}, {
         //Exits
-        Entrance(RR_ZORAS_DOMAIN,     []{return logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE);}),
+        Entrance(RR_ZORAS_DOMAIN,     []{return logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE) || logic->CanHover();}),
         Entrance(RR_ZD_STORMS_GROTTO, []{return logic->CanOpenStormsGrotto();}),
     });
 
@@ -58,7 +58,7 @@ void RegionTable_Init_ZorasDomain() {
         LOCATION(RC_ZD_BEHIND_KING_ZORA_BEEHIVE, logic->IsChild && logic->CanBreakUpperBeehives()),
     }, {
         //Exits
-        Entrance(RR_ZORAS_DOMAIN,   []{return logic->DeliverLetter || ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_OPEN) || (ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_CLOSED_CHILD) && logic->IsAdult);}),
+        Entrance(RR_ZORAS_DOMAIN,   []{return logic->CanHover() || logic->DeliverLetter || ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_OPEN) || (ctx->GetOption(RSK_ZORAS_FOUNTAIN).Is(RO_ZF_CLOSED_CHILD) && logic->IsAdult);}),
         Entrance(RR_ZORAS_FOUNTAIN, []{return true;}),
     });
 

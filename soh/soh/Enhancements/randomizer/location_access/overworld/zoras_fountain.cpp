@@ -12,7 +12,7 @@ void RegionTable_Init_ZorasFountain() {
     }, {
         //Locations
         LOCATION(RC_ZF_GS_TREE,                      logic->IsChild),
-        LOCATION(RC_ZF_GS_ABOVE_THE_LOG,             logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_ZF_GS_ABOVE_THE_LOG,             logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
         LOCATION(RC_ZF_FAIRY_GOSSIP_STONE_FAIRY,     logic->CallGossipFairyExceptSuns()),
         LOCATION(RC_ZF_FAIRY_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_ZF_JABU_GOSSIP_STONE_FAIRY,      logic->CallGossipFairyExceptSuns()),
@@ -33,6 +33,8 @@ void RegionTable_Init_ZorasFountain() {
         Entrance(RR_ZF_ROCK,                   []{return logic->IsAdult && logic->CanUse(RG_SCARECROW);}),
         Entrance(RR_JABU_JABUS_BELLY_ENTRYWAY, []{return logic->IsChild && (ctx->GetOption(RSK_JABU_OPEN).Is(RO_JABU_OPEN) || logic->CanUse(RG_BOTTLE_WITH_FISH));}),
         Entrance(RR_ZF_GREAT_FAIRY_FOUNTAIN,   []{return logic->HasExplosives() || (ctx->GetTrickOption(RT_ZF_GREAT_FAIRY_WITHOUT_EXPLOSIVES) && logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_SILVER_GAUNTLETS));}),
+        Entrance(RR_ZF_HIDDEN_LEDGE,           []{return logic->CanHover();}),
+        Entrance(RR_ZF_LEDGE,                  []{return logic->CanHover();}),
     });
 
     areaTable[RR_ZF_ICEBERGS] = Region("ZF Icebergs", SCENE_ZORAS_FOUNTAIN, {}, {
@@ -104,7 +106,7 @@ void RegionTable_Init_ZorasFountain() {
 
     areaTable[RR_ZF_ROCK] = Region("ZF Rock", SCENE_ZORAS_FOUNTAIN, {}, {
         //Locations
-        //Has a wonder item
+        //Has a wonder item except in ntsc 1.0
     }, {
         //Exits
         Entrance(RR_ZORAS_FOUNTAIN, []{return true;}),

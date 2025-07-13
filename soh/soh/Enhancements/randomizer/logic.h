@@ -217,6 +217,9 @@ class Logic {
     bool CanUseSword();
     bool CanJumpslashExceptHammer();
     bool CanJumpslash();
+    bool CanCrouchStab();
+    bool CanDoISG();
+    bool CanHover(bool againstWall = false, bool persistentDamageSource = false);
     bool CanHitSwitch(EnemyDistance distance = ED_CLOSE, bool inWater = false);
     bool CanDamage();
     bool CanAttack();

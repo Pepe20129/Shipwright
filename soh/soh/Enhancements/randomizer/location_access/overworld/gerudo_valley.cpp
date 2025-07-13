@@ -10,15 +10,15 @@ void RegionTable_Init_GerudoValley() {
         EventAccess(&logic->BugRock, []{return logic->IsChild;}),
     }, {
         //Locations
-        LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
     }, {
         //Exits
         Entrance(RR_HYRULE_FIELD,     []{return true;}),
-        Entrance(RR_GV_UPPER_STREAM,  []{return logic->IsChild || logic->HasItem(RG_BRONZE_SCALE) || logic->TakeDamage();}),
-        Entrance(RR_GV_CRATE_LEDGE,   []{return logic->IsChild || logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_GV_UPPER_STREAM,  []{return logic->IsChild || logic->HasItem(RG_BRONZE_SCALE) || logic->TakeDamage() || logic->CanHover();}), //can use cucco as child
+        Entrance(RR_GV_CRATE_LEDGE,   []{return logic->IsChild || logic->CanUse(RG_LONGSHOT) || logic->CanHover();}), //can use cucco as child
         Entrance(RR_GV_GROTTO_LEDGE,  []{return true;}),
-        Entrance(RR_GV_FORTRESS_SIDE, []{return (logic->IsAdult && (logic->CanUse(RG_EPONA) || logic->CanUse(RG_LONGSHOT) || ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE) || logic->THRescuedAllCarpenters)) || (logic->IsChild && logic->CanUse(RG_HOOKSHOT));}),
-        Entrance(RR_GV_LOWER_STREAM,  []{return logic->IsChild;}), //can use cucco as child
+        Entrance(RR_GV_FORTRESS_SIDE, []{return logic->CanHover() || (logic->IsAdult && (logic->CanUse(RG_EPONA) || logic->CanUse(RG_LONGSHOT) || ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE) || logic->THRescuedAllCarpenters)) || (logic->IsChild && logic->CanUse(RG_HOOKSHOT));}),
+        Entrance(RR_GV_LOWER_STREAM,  []{return logic->IsChild || logic->CanHover();}), //can use cucco as child
     });
 
     areaTable[RR_GV_UPPER_STREAM] = Region("GV Upper Stream", SCENE_GERUDO_VALLEY, {
@@ -40,6 +40,7 @@ void RegionTable_Init_GerudoValley() {
     }, {
         //Exits
         Entrance(RR_GV_LOWER_STREAM, []{return logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
+        Entrance(RR_GERUDO_VALLEY,   []{return logic->CanHover();}),
     });
 
     // scale/boots logic is outside lower stream, as lower stream combines access to lake hylia for entrance randomizer's sake
@@ -50,6 +51,7 @@ void RegionTable_Init_GerudoValley() {
 
     areaTable[RR_GV_GROTTO_LEDGE] = Region("GV Grotto Ledge", SCENE_GERUDO_VALLEY, {}, {}, {
         //Exits
+        Entrance(RR_GERUDO_VALLEY,     []{return logic->CanHover();}),
         Entrance(RR_GV_UPPER_STREAM,   []{return ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives();}),
         Entrance(RR_GV_LOWER_STREAM,   []{return logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
         Entrance(RR_GV_OCTOROK_GROTTO, []{return logic->CanUse(RG_SILVER_GAUNTLETS);}),
@@ -62,6 +64,7 @@ void RegionTable_Init_GerudoValley() {
         LOCATION(RC_GV_FREESTANDING_POH_CRATE, logic->CanBreakCrates()),
     }, {
         //Exits
+        Entrance(RR_GERUDO_VALLEY,   []{return logic->CanHover();}),
         Entrance(RR_GV_UPPER_STREAM, []{return ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives();}),
         Entrance(RR_GV_LOWER_STREAM, []{return logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
     });
@@ -70,17 +73,17 @@ void RegionTable_Init_GerudoValley() {
         //Locations
         LOCATION(RC_GV_CHEST,          logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
         LOCATION(RC_GV_TRADE_SAW,      logic->IsAdult && logic->CanUse(RG_POACHERS_SAW)),
-        LOCATION(RC_GV_GS_BEHIND_TENT, logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_GV_GS_PILLAR,      logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_BEHIND_TENT, logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_PILLAR,      logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
         LOCATION(RC_GV_CRATE_BRIDGE_1, logic->IsChild && logic->CanBreakCrates()),
         LOCATION(RC_GV_CRATE_BRIDGE_2, logic->IsChild && logic->CanBreakCrates()),
         LOCATION(RC_GV_CRATE_BRIDGE_3, logic->IsChild && logic->CanBreakCrates()),
         LOCATION(RC_GV_CRATE_BRIDGE_4, logic->IsChild && logic->CanBreakCrates()),
     }, {
         //Exits
-        Entrance(RR_GF_OUTSKIRTS,  []{return true;}),
+        Entrance(RR_GF_OUTSKIRTS,      []{return true;}),
         Entrance(RR_GV_UPPER_STREAM,   []{return true;}),
-        Entrance(RR_GERUDO_VALLEY,     []{return logic->IsChild || logic->CanUse(RG_EPONA) || logic->CanUse(RG_LONGSHOT) || ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE) || logic->THRescuedAllCarpenters;}),
+        Entrance(RR_GERUDO_VALLEY,     []{return logic->CanHover() || logic->IsChild || logic->CanUse(RG_EPONA) || logic->CanUse(RG_LONGSHOT) || ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE) || logic->THRescuedAllCarpenters;}),
         Entrance(RR_GV_CARPENTER_TENT, []{return logic->IsAdult;}),
         Entrance(RR_GV_STORMS_GROTTO,  []{return logic->IsAdult && logic->CanOpenStormsGrotto();}),
         Entrance(RR_GV_CRATE_LEDGE,    []{return ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives();}),

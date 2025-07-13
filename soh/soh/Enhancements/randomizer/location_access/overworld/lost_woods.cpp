@@ -31,7 +31,8 @@ void RegionTable_Init_LostWoods() {
                                                                                                               //4 buttons        => 25.3125%
                                                                                                               //5 buttons        => 100%
         LOCATION(RC_LW_OCARINA_MEMORY_GAME,             logic->IsChild && logic->HasItem(RG_FAIRY_OCARINA) && logic->OcarinaButtons() >= 5),
-        LOCATION(RC_LW_TARGET_IN_WOODS,                 logic->IsChild && logic->CanUse(RG_FAIRY_SLINGSHOT)),
+        //                                                                                                       qpa
+        LOCATION(RC_LW_TARGET_IN_WOODS,                 logic->IsChild && (logic->CanUse(RG_FAIRY_SLINGSHOT) || (false && logic->CanHover()))),
         LOCATION(RC_LW_DEKU_SCRUB_NEAR_BRIDGE,          logic->IsChild && logic->CanStunDeku()),
         LOCATION(RC_LW_GS_BEAN_PATCH_NEAR_BRIDGE,       logic->CanSpawnSoilSkull() && logic->CanAttack()),
         //RANDOTODO handle collecting some of these as you leave the shortcut from the other side
@@ -57,7 +58,7 @@ void RegionTable_Init_LostWoods() {
         //Exits
         Entrance(RR_LW_FOREST_EXIT,           []{return true;}),
         Entrance(RR_GC_WOODS_WARP,            []{return true;}),
-        Entrance(RR_LW_BRIDGE,                []{return (logic->IsAdult && (CanPlantBean(RR_THE_LOST_WOODS) || ctx->GetTrickOption(RT_LW_BRIDGE))) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_LW_BRIDGE,                []{return logic->CanHover() || (logic->IsAdult && (CanPlantBean(RR_THE_LOST_WOODS) || ctx->GetTrickOption(RT_LW_BRIDGE))) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_LONGSHOT);}),
         Entrance(RR_ZR_FROM_SHORTCUT,         []{return logic->HasItem(RG_SILVER_SCALE) || logic->CanUse(RG_IRON_BOOTS) || (ctx->GetTrickOption(RT_LOST_WOOD_NAVI_DIVE) && logic->IsChild && logic->HasItem(RG_BRONZE_SCALE) && logic->CanJumpslash());}),
         Entrance(RR_LW_BEYOND_MIDO,           []{return logic->IsChild || logic->CanUse(RG_SARIAS_SONG) || ctx->GetTrickOption(RT_LW_MIDO_BACKFLIP);}),
         Entrance(RR_LW_NEAR_SHORTCUTS_GROTTO, []{return Here(RR_THE_LOST_WOODS, []{return logic->BlastOrSmash();});}),
@@ -70,7 +71,7 @@ void RegionTable_Init_LostWoods() {
         //Locations
         LOCATION(RC_LW_DEKU_SCRUB_NEAR_DEKU_THEATER_RIGHT, logic->IsChild && logic->CanStunDeku()),
         LOCATION(RC_LW_DEKU_SCRUB_NEAR_DEKU_THEATER_LEFT,  logic->IsChild && logic->CanStunDeku()),
-        LOCATION(RC_LW_GS_ABOVE_THEATER,                   logic->IsAdult && ((CanPlantBean(RR_LW_BEYOND_MIDO) && logic->CanAttack()) || (ctx->GetTrickOption(RT_LW_GS_BEAN) && logic->CanUse(RG_HOOKSHOT) && (logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOMBCHU_5) || logic->CanUse(RG_DINS_FIRE)))) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_LW_GS_ABOVE_THEATER,                   logic->IsAdult && (logic->CanHover() || (CanPlantBean(RR_LW_BEYOND_MIDO) && logic->CanAttack()) || (ctx->GetTrickOption(RT_LW_GS_BEAN) && logic->CanUse(RG_HOOKSHOT) && (logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOMBCHU_5) || logic->CanUse(RG_DINS_FIRE)))) && logic->CanGetNightTimeGS()),
         LOCATION(RC_LW_GS_BEAN_PATCH_NEAR_THEATER,         logic->CanSpawnSoilSkull() && (logic->CanAttack() || (ctx->GetOption(RSK_SHUFFLE_SCRUBS).Is(RO_SCRUBS_OFF) && logic->CanReflectNuts()))),
         LOCATION(RC_LW_BOULDER_RUPEE,                      logic->BlastOrSmash()),
         LOCATION(RC_LW_BEAN_SPROUT_NEAR_THEATER_FAIRY_1,   logic->IsChild && logic->HasItem(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),

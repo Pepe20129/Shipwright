@@ -8,7 +8,7 @@ void RegionTable_Init_SacredForestMeadow() {
     areaTable[RR_SFM_ENTRYWAY] = Region("SFM Entryway", SCENE_SACRED_FOREST_MEADOW, {}, {}, {
         //Exits
         Entrance(RR_LW_BEYOND_MIDO,       []{return true;}),
-        Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->IsAdult || logic->CanKillEnemy(RE_WOLFOS);}),
+        Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->IsAdult || logic->CanKillEnemy(RE_WOLFOS) || logic->CanHover();}),
         Entrance(RR_SFM_WOLFOS_GROTTO,    []{return logic->CanOpenBombGrotto();}),
     });
 
@@ -19,7 +19,7 @@ void RegionTable_Init_SacredForestMeadow() {
         //Locations
         LOCATION(RC_SONG_FROM_SARIA,                       logic->IsChild && logic->HasItem(RG_ZELDAS_LETTER)),
         LOCATION(RC_SHEIK_IN_FOREST,                       logic->IsAdult),
-        LOCATION(RC_SFM_GS,                                logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_SFM_GS,                                logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
         LOCATION(RC_SFM_MAZE_LOWER_GOSSIP_STONE_FAIRY,     logic->CallGossipFairyExceptSuns()),
         LOCATION(RC_SFM_MAZE_LOWER_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_SFM_MAZE_UPPER_GOSSIP_STONE_FAIRY,     logic->CallGossipFairyExceptSuns()),

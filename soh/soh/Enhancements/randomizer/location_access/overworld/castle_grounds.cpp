@@ -74,7 +74,7 @@ void RegionTable_Init_CastleGrounds() {
         EventAccess(&logic->WanderingBugs,    []{return true;}),
     }, {
         //Locations
-        LOCATION(RC_HC_GS_STORMS_GROTTO,                     logic->HookshotOrBoomerang()),
+        LOCATION(RC_HC_GS_STORMS_GROTTO,                     logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true)),
         LOCATION(RC_HC_STORMS_GROTTO_GOSSIP_STONE_FAIRY,     logic->CallGossipFairy()),
         LOCATION(RC_HC_STORMS_GROTTO_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_HC_STORMS_GROTTO_GOSSIP_STONE,           true),
@@ -97,7 +97,7 @@ void RegionTable_Init_CastleGrounds() {
         //Exits
         Entrance(RR_CASTLE_GROUNDS,           []{return logic->AtNight;}),
         Entrance(RR_OGC_GREAT_FAIRY_FOUNTAIN, []{return logic->CanUse(RG_GOLDEN_GAUNTLETS) && logic->AtNight;}),
-        Entrance(RR_GANONS_CASTLE_LEDGE,      []{return logic->BuiltRainbowBridge;}),
+        Entrance(RR_GANONS_CASTLE_LEDGE,      []{return logic->BuiltRainbowBridge || logic->CanHover();}),
     });
 
     areaTable[RR_OGC_GREAT_FAIRY_FOUNTAIN] = Region("OGC Great Fairy Fountain", SCENE_GREAT_FAIRYS_FOUNTAIN_MAGIC, {}, {

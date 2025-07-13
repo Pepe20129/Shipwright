@@ -7,7 +7,7 @@ void RegionTable_Init_ZoraRiver() {
     // clang-format off
     areaTable[RR_ZR_FRONT] = Region("ZR Front", SCENE_ZORAS_RIVER, {}, {
         //Locations
-        LOCATION(RC_ZR_GS_TREE,  logic->IsChild && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_CLOSE)),
+        LOCATION(RC_ZR_GS_TREE,  logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_CLOSE)),
         LOCATION(RC_ZR_GRASS_1,  logic->CanCutShrubs()),
         LOCATION(RC_ZR_GRASS_2,  logic->CanCutShrubs()),
         LOCATION(RC_ZR_GRASS_3,  logic->CanCutShrubs()),
@@ -44,9 +44,9 @@ void RegionTable_Init_ZoraRiver() {
         LOCATION(RC_ZR_FROGS_SONG_OF_TIME,                   logic->IsChild && logic->CanUse(RG_SONG_OF_TIME)),
         LOCATION(RC_ZR_NEAR_OPEN_GROTTO_FREESTANDING_POH,    logic->IsChild || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && ctx->GetTrickOption(RT_ZR_LOWER))),
         LOCATION(RC_ZR_NEAR_DOMAIN_FREESTANDING_POH,         logic->IsChild || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && ctx->GetTrickOption(RT_ZR_UPPER))),
-        LOCATION(RC_ZR_GS_LADDER,                            logic->IsChild && logic->CanAttack() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_ZR_GS_NEAR_RAISED_GROTTOS,               logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_ZR_GS_ABOVE_BRIDGE,                      logic->IsAdult && logic->CanUse(RG_HOOKSHOT) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_ZR_GS_LADDER,                            logic->IsChild && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_CLOSE, true) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_ZR_GS_NEAR_RAISED_GROTTOS,               logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) && logic->CanGetNightTimeGS()),
+        LOCATION(RC_ZR_GS_ABOVE_BRIDGE,                      logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_HOOKSHOT, true) && logic->CanGetNightTimeGS()),
         LOCATION(RC_ZR_BEAN_SPROUT_FAIRY_1,                  logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_ZR_BEAN_SPROUT_FAIRY_2,                  logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_ZR_BEAN_SPROUT_FAIRY_3,                  logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),

@@ -339,35 +339,56 @@ void Settings::CreateOptions() {
 
     mExcludeLocationsOptionsAreas.reserve(RCAREA_INVALID);
 
-    // the following are glitches and are currently disabled
+    // the following are currently disabled
+
     // OPT_TRICK(RT_ACUTE_ANGLE_CLIP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
     // Tricks::Tag::GLITCH}, "Acute angle clip", "Enables locations requiring jumpslash clips through walls which meet
-    // at an acute angle."); OPT_TRICK(RT_ADVANCED_CLIPS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
+    // at an acute angle.");
+
+    // OPT_TRICK(RT_ADVANCED_CLIPS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
     // Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Advanced clips", "Enables locations requiring clips through
-    // walls and objects requiring precise jumps or other tricks."); OPT_TRICK(RT_BLANK_A, RCQUEST_BOTH, RA_NONE,
+    // walls and objects requiring precise jumps or other tricks.");
+
+    // OPT_TRICK(RT_BLANK_A, RCQUEST_BOTH, RA_NONE,
     // {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Blank A", "Enables locations requiring
-    // blank A button; NOTE: this requires the 'Quick Putaway' restoration."); OPT_TRICK(RT_DOOM_JUMP, RCQUEST_BOTH,
+    // blank A button; NOTE: this requires the 'Quick Putaway' restoration.");
+
+    // OPT_TRICK(RT_DOOM_JUMP, RCQUEST_BOTH,
     // RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Doom Jump", "Enables locations
-    // requiring doom jumps."); OPT_TRICK(RT_EPG, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
+    // requiring doom jumps.");
+
+    // OPT_TRICK(RT_EPG, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
     // Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "EPG", "Enables locations requiring use of the Entrance Point
-    // Glitch."); OPT_TRICK(RT_EQUIP_SWAP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
+    // Glitch.");
+
+    // OPT_TRICK(RT_EQUIP_SWAP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
     // Tricks::Tag::GLITCH}, "Equip Swap", "Enables locations requiring use of equip swap; NOTE: this may expect the
-    // 'Allow cursor to be over any slot' enhancement to be turned off."); OPT_TRICK(RT_EQUIP_SWAP_EXPECTS_DINS,
+    // 'Allow cursor to be over any slot' enhancement to be turned off.");
+
+    // OPT_TRICK(RT_EQUIP_SWAP_EXPECTS_DINS,
     // RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Equip Swap
     // Require's Din's Fire", "Enables locations requiring use of equip swap once Din's Fire is found.");
+
     // OPT_TRICK(RT_FLAME_STORAGE, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
-    // Tricks::Tag::GLITCH}, "Flame Storage", "Enables locations requiring flame storage."); OPT_TRICK(RT_GROUND_CLIP,
+    // Tricks::Tag::GLITCH}, "Flame Storage", "Enables locations requiring flame storage.");
+
+    // OPT_TRICK(RT_GROUND_CLIP,
     // RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Ground Clip",
-    // "Enables locations requiring ground clips."); OPT_TRICK(RT_GROUND_JUMP, RCQUEST_BOTH, RA_NONE,
+    // "Enables locations requiring ground clips.");
+
+    // OPT_TRICK(RT_GROUND_JUMP, RCQUEST_BOTH, RA_NONE,
     // {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Ground Jump", "Enables locations
-    // requiring ground jumps."); OPT_TRICK(RT_HESS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
+    // requiring ground jumps.");
+
+    // OPT_TRICK(RT_HESS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
     // Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "HESS", "Enables locations requiring a Hyper Extended Super
-    // Slide."); OPT_TRICK(RT_HOOKSHOT_CLIP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
+    // Slide.");
+
+    // OPT_TRICK(RT_HOOKSHOT_CLIP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
     // Tricks::Tag::GLITCH}, "Hookshot Clip", "Enables locations requiring Hookshot clips.");
+
     // OPT_TRICK(RT_HOOKSHOT_JUMP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
-    // Tricks::Tag::GLITCH}, "Hookshot Jump", "Enables locations requiring Hookshot jumps."); OPT_TRICK(RT_ISG,
-    // RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "ISG", "Enables
-    // locations requiring use of the infinite sword glitch.");
+    // Tricks::Tag::GLITCH}, "Hookshot Jump", "Enables locations requiring Hookshot jumps.");
 
     OPT_TRICK(RT_VISIBLE_COLLISION, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE },
               "Pass Through Visible One-Way Collision",
@@ -387,7 +408,9 @@ void Settings::CreateOptions() {
               "The chests encircled in flames in Gerudo Training Ground and in Spirit Temple can be opened by running "
               "into the flames while Link is invincible after taking damage.");
     // disabled for now, can't check for being able to use bunny hood & bunny hood speedup is currently completely
-    // decoupled from rando OPT_TRICK(RT_BUNNY_HOOD_JUMPS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED}, "Bunny Hood
+    // decoupled from rando
+
+    // OPT_TRICK(RT_BUNNY_HOOD_JUMPS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED}, "Bunny Hood
     // Jumps", "Allows reaching locations using Bunny Hood's extended jumps.");
     OPT_TRICK(RT_DAMAGE_BOOST_SIMPLE, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL },
               "Simple damage boosts",
@@ -404,6 +427,15 @@ void Settings::CreateOptions() {
               "apply to MQ Dead Hand bomb flowers.\nUsing blue fire on bombflower to stop rolling goron also requires "
               "\"Stop Link the Goron with Din's Fire\".\nUsing blue fire arrows to break floor in King Dodongo's "
               "chamber also requires \"Dodongo\'s Cavern Smash the Boss Lobby Floor\".");
+    OPT_TRICK(RT_ISG, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Infinite Sword Glitch",
+              "By interrupting a crouchstab, the sword hitbox is never disabled.");
+    OPT_TRICK(RT_HOVERING, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::INTERMEDIATE, Tricks::Tag::GLITCH },
+              "Hovering",
+              "By shielding damage while midair and doing ISG, you can hover in place."
+              "\nIt is possible to the backflip (or sideflip) and shield another damage source to get higher."
+              "\n"
+              "\nRequires the \"Infinite Sword Glitch\" trick to be enabled");
     OPT_TRICK(RT_OPEN_UNDERWATER_CHEST, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
               "Open Underwater Chests",
               "Underwater chests can be opened by wearing iron boots and hookshotting the chest.");
@@ -498,7 +530,9 @@ void Settings::CreateOptions() {
         "Death Mountain Trail Upper Red Rock GS without Hammer",
         "After killing the Skulltula, the token can be collected by backflipping into the rock at the correct angle.");
     // disabled for now, only applies when trade quest is not shuffled so there's a timer (currently not considered in
-    // logic) OPT_TRICK(RT_DMT_BOLERO_BIGGORON, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, {Tricks::Tag::INTERMEDIATE},
+    // logic)
+
+    // OPT_TRICK(RT_DMT_BOLERO_BIGGORON, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, {Tricks::Tag::INTERMEDIATE},
     // "Deliver Eye Drops with Bolero of Fire", "Playing a warp song normally causes a trade item to spoil immediately,
     // however, it is possible use Bolero to reach Biggoron and still deliver the Eye Drops before they spoil. If you do
     // not wear the Goron Tunic, the heat timer inside the crater will override the trade item\'s timer. When you exit
@@ -595,7 +629,9 @@ void Settings::CreateOptions() {
               "Ledge Clip into Training Ground",
               "Adult Link can use a ledge clip to enter Gerudo Training Ground without Gerudo Card.");
     // disabled for now, can't check for being able to use bunny hood & bunny hood speedup is currently completely
-    // decoupled from rando OPT_TRICK(RT_HW_BUNNY_CROSSING, RCQUEST_BOTH, RA_HAUNTED_WASTELAND, {Tricks::Tag::NOVICE},
+    // decoupled from rando
+
+    // OPT_TRICK(RT_HW_BUNNY_CROSSING, RCQUEST_BOTH, RA_HAUNTED_WASTELAND, {Tricks::Tag::NOVICE},
     // "Wasteland Crossing with Bunny Hood", "You can beat the quicksand by using the increased speed of the Bunny Hood.
     // Note that jumping to the carpet merchant as child typically requires a fairly precise jump slash.");
     OPT_TRICK(RT_HW_CROSSING, RCQUEST_BOTH, RA_HAUNTED_WASTELAND, { Tricks::Tag::INTERMEDIATE },
@@ -1048,7 +1084,9 @@ void Settings::CreateOptions() {
         "or Song of Time (in MQ): - Spirit Temple Statue Room Northeast Chest - Spirit Temple GS Lobby - Spirit Temple "
         "MQ Central Chamber Top Left Pot (Left) - Spirit Temple MQ Central Chamber Top Left Pot (Right)");
     // disabled since "Spirit Temple boss shortcuts" (pre-lowers the platform where you break the statues face) isn't a
-    // setting in ship OPT_TRICK(RT_SPIRIT_PLATFORM_HOOKSHOT, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE,
+    // setting in ship
+
+    // OPT_TRICK(RT_SPIRIT_PLATFORM_HOOKSHOT, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE,
     // {Tricks::Tag::INTERMEDIATE}, "Spirit Temple Main Room Hookshot to Boss Platform", "Precise hookshot aiming at the
     // platform chains can be used to reach the boss platform from the middle landings. Using a jump slash immediately
     // after reaching a chain makes aiming more lenient. Relevant only when Spirit Temple boss shortcuts are on.");

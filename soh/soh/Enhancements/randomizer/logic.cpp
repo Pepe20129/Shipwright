@@ -482,7 +482,9 @@ bool Logic::CanDoGlitch(GlitchType glitch) {
 }
 
 // RANDOTODO quantity is a placeholder for proper ammo use calculation logic. in time will want updating to account for
-// ammo capacity Can we kill this enemy
+// ammo capacity
+
+// Can we kill this enemy
 bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wallOrFloor, uint8_t quantity, bool timer,
                          bool inWater) {
     bool killed = false;
@@ -491,6 +493,9 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
         case RE_BREAK_ROOM_GUARD:
             return false;
         case RE_GOLD_SKULLTULA:
+            if (CanHover()) {
+                return true;
+            }
             switch (distance) {
                 case ED_CLOSE:
                     // hammer jumpslash cannot damage these, but hammer swing can
@@ -1073,6 +1078,41 @@ bool Logic::CanJumpslashExceptHammer() {
 
 bool Logic::CanJumpslash() {
     return CanJumpslashExceptHammer() || CanUse(RG_MEGATON_HAMMER);
+}
+
+bool Logic::CanCrouchStab() {
+    return (CanUse(RG_DEKU_SHIELD) || CanUse(RG_MIRROR_SHIELD) || (IsAdult && HasItem(RG_HYLIAN_SHIELD))) && (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
+}
+
+/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab)
+/// @return Whether ISG can be done or not
+bool Logic::CanDoISG() {
+    // need something to interrupt the crouchstab:
+    //  - blocking textbox (sign / npc / enemy navi check)
+    //  - grabable actor (rock / bush / small crate / cucoo / silver gauntelts rock)
+    //  - bombs (should probably be a separate trick as it's harder due to the time limit)
+    //  - bombchus (even harder)
+    return ctx->GetTrickOption(RT_ISG) && CanCrouchStab();
+}
+
+/// @brief Checks if the player can hover (does not account for the static explosion radius enhancement)
+/// @param againstWall Whether the hover must done against a wall or not
+/// @param persistentDamageSource Whether a persistent damage source to shield exists (eg biri hover)
+/// @return Whether hovering an be done or not
+bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
+    return
+        ctx->GetTrickOption(RT_HOVERING) &&
+        CanDoISG() &&
+        (
+            persistentDamageSource ||
+            CanUse(RG_BOMB_BAG) ||
+            (
+                !againstWall &&
+                CanUse(RG_PROGRESSIVE_BOMBCHUS)
+            )
+        ) &&
+        // if not against a wall, need either hover boots to shorten the backflips or an item to do a contorsion hover
+        (againstWall || CanUse(RG_HOVER_BOOTS) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG));
 }
 
 bool Logic::CanHitSwitch(EnemyDistance distance, bool inWater) {
