@@ -3537,11 +3537,11 @@ typedef enum {
     RT_ISG,
     RT_HOVERING,
     // 3ds splits hovering into multiple tricks
-    //RT_HOVERING_BOW_SLINGSHOT,
-    //RT_HOVERING_CONTORTION,
-    //RT_HOVERING_ENEMY,
-    //RT_HOVERING_HOVERBOOTS,
-    //RT_HOVERING_WALL,
+    // RT_HOVERING_BOW_SLINGSHOT,
+    // RT_HOVERING_CONTORTION,
+    // RT_HOVERING_ENEMY,
+    // RT_HOVERING_HOVERBOOTS,
+    // RT_HOVERING_WALL,
     RT_KF_ADULT_GS, // -- location tricks
     RT_LW_BRIDGE,
     RT_LW_MIDO_BACKFLIP,

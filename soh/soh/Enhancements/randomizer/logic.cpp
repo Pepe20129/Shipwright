@@ -1081,7 +1081,8 @@ bool Logic::CanJumpslash() {
 }
 
 bool Logic::CanCrouchStab() {
-    return (CanUse(RG_DEKU_SHIELD) || CanUse(RG_MIRROR_SHIELD) || (IsAdult && HasItem(RG_HYLIAN_SHIELD))) && (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
+    return (CanUse(RG_DEKU_SHIELD) || CanUse(RG_MIRROR_SHIELD) || (IsAdult && HasItem(RG_HYLIAN_SHIELD))) &&
+           (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
 }
 
 /// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab)
@@ -1100,19 +1101,12 @@ bool Logic::CanDoISG() {
 /// @param persistentDamageSource Whether a persistent damage source to shield exists (eg biri hover)
 /// @return Whether hovering an be done or not
 bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
-    return
-        ctx->GetTrickOption(RT_HOVERING) &&
-        CanDoISG() &&
-        (
-            persistentDamageSource ||
-            CanUse(RG_BOMB_BAG) ||
-            (
-                !againstWall &&
-                CanUse(RG_PROGRESSIVE_BOMBCHUS)
-            )
-        ) &&
-        // if not against a wall, need either hover boots to shorten the backflips or an item to do a contorsion hover
-        (againstWall || CanUse(RG_HOVER_BOOTS) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_BOOMERANG));
+    return ctx->GetTrickOption(RT_HOVERING) && CanDoISG() &&
+           (persistentDamageSource || CanUse(RG_BOMB_BAG) || (!againstWall && CanUse(RG_PROGRESSIVE_BOMBCHUS))) &&
+           // if not against a wall, need either hover boots to shorten the backflips or an item to do a contorsion
+           // hover
+           (againstWall || CanUse(RG_HOVER_BOOTS) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) ||
+            CanUse(RG_BOOMERANG));
 }
 
 bool Logic::CanHitSwitch(EnemyDistance distance, bool inWater) {
