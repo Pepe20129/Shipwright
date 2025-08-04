@@ -2222,6 +2222,54 @@ typedef enum {
     // - `s32` limbCount
     // - `*Vec3s` frameTable
     VB_LOAD_PLAYER_ANIMATION_FRAME,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnTakaraMan`
+    VB_TAKARA_MAN_RESET_CHESTS_AND_KEYS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnTakaraMan`
+    VB_TAKARA_MAN_OFFER_GET_ITEM,
+
+    // #### `result`
+    // ```c
+    // Rand_ZeroFloat(1.99f) < 1.0f
+    // ```
+    // #### `args`
+    // - `*EnChanger`
+    VB_EN_CHANGER_SWAP_CHESTS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*DoorShutter`
+    VB_DOOR_SHUTTER_SET_SWITCH_FLAG,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnBox`
+    VB_CHEST_SET_TREASURE_FLAG,
+
+    // #### `result`
+    // ```c
+    // Flags_GetTreasure(play, this->dyna.actor.params & 0x1F)
+    // ```
+    // #### `args`
+    // - `*EnBox`
+    VB_CHEST_CONSIDER_CHEST_OPEN,
 } GIVanillaBehavior;
 
 #endif

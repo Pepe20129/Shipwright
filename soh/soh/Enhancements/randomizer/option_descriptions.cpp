@@ -460,6 +460,8 @@ void Settings::CreateOptionDescriptions() {
         "D-pad.\n"
         "\n"
         "If disabled, only the Claim Check will be found in the pool.";
+    mOptionDescriptions[RSK_SHUFFLE_CHEST_MINIGAME] =
+        "Shuffles the keys and rupees in the Treasure Chest Minigame";
     mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD] =
         "Shuffle the item the cursed rich man in the House of Skulltula gives when you "
         "have collected all 100 Gold Skulltula Tokens.\n"
@@ -532,7 +534,7 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Off - No dungeons will have their keys replaced with keyrings.\n"
         "\n"
-        "Random - A random amount of dungeons (0-8 or 9) will have their keys replaced with keyrings.\n"
+        "Random - A random amount of dungeons (0-8 or 9 or 10) will have their keys replaced with keyrings.\n"
         "\n"
         "Count - A specified amount of randomly selected dungeons will have their keys replaced with keyrings.\n"
         "\n"
@@ -541,9 +543,12 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Selecting key ring for dungeons will have no effect if Small Keys are set to Start With or Vanilla.\n"
         "\n"
+        "Normally, the maximum amount of Key Rings will be 8.\n"
         "If Gerudo Fortress Carpenters is set to Normal, and Gerudo Fortress Keys is set to anything "
         "other than Vanilla, then the maximum amount of Key Rings that can be selected by Random or "
-        "Count will be 9. Otherwise, the maximum amount of Key Rings will be 8.";
+        "Count will be increased by 1.\n"
+        "If the Treasure Chest Game is shuffled, the maximum amount of Key Rings that can be selected by Random or "
+        "Count will be increased by 1.";
     mOptionDescriptions[RSK_GERUDO_KEYS] = "Vanilla - Thieves' Hideout Keys will appear in their vanilla locations.\n"
                                            "\n"
                                            "Any dungeon - Thieves' Hideout Keys can only appear inside of any dungon.\n"

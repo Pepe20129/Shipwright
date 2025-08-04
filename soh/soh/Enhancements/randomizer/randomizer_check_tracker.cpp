@@ -78,6 +78,7 @@ bool showGanonBossKey;
 bool showOcarinas;
 bool show100SkullReward;
 bool showLinksPocket;
+bool showChestGame;
 bool fortressFast;
 bool fortressNormal;
 
@@ -1379,6 +1380,10 @@ void LoadSettings() {
         IS_RANDO ? // don't show Link's Pocket if not randomizer, or if rando and pocket is disabled
             OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LINKS_POCKET) != RO_LINKS_POCKET_NOTHING
                  : false;
+    showChestGame =
+        IS_RANDO ?
+            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_CHEST_MINIGAME) == RO_GENERIC_YES
+                 : false;
 
     if (IS_RANDO) {
         switch (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_TOKENS)) {
@@ -1541,8 +1546,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
         return (loc->GetArea() != RCAREA_INVALID) &&        // don't show Invalid locations
                (loc->GetRCType() != RCTYPE_GOSSIP_STONE) && // TODO: Don't show hints until tracker supports them
                (loc->GetRCType() != RCTYPE_STATIC_HINT) &&  // TODO: Don't show hints until tracker supports them
-               (loc->GetRCType() !=
-                RCTYPE_CHEST_GAME) && // don't show non final reward chest game checks until we support shuffling them
+               (loc->GetRCType() != RCTYPE_CHEST_GAME || showChestGame) && // don't show non final reward chest game checks until we support shuffling them
                (rc != RC_HC_ZELDAS_LETTER) && // don't show zeldas letter until we support shuffling it
                (rc != RC_LINKS_POCKET || showLinksPocket) &&
                OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) &&

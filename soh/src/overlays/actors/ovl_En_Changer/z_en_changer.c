@@ -8,6 +8,8 @@
 #include "vt.h"
 #include "overlays/actors/ovl_Item_Etcetera/z_item_etcetera.h"
 #include "overlays/actors/ovl_En_Ex_Item/z_en_ex_item.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/game-interactor/vanilla-behavior/GIVanillaBehavior.h"
 
 #define FLAGS 0
 
@@ -136,7 +138,7 @@ void EnChanger_Init(Actor* thisx, PlayState* play2) {
     this->rightChestGetItemId = GI_DOOR_KEY;
     rightChestItem = ITEM_ETC_KEY_SMALL_CHEST_GAME;
 
-    if (Rand_ZeroFloat(1.99f) < 1.0f) {
+    if (GameInteractor_Should(VB_EN_CHANGER_SWAP_CHESTS, Rand_ZeroFloat(1.99f) < 1.0f, this)) {
         rightChestParams = (sLoserGetItemIds[play->roomCtx.curRoom.num] << 5) | 0x4000;
         this->rightChestNum = new_var;
         this->rightChestGetItemId = sLoserGetItemIds[play->roomCtx.curRoom.num];

@@ -324,7 +324,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, être #le gagnant parmi 32# donne #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/hay una #probabilidad de 1/32# de ganar #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_ITEM_1] = HintText(CustomMessage("They say that the #first locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_LEFT_1] = HintText(CustomMessage("They say that the #first locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #erste verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #première salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la primera sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -338,7 +338,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #premier ou deuxième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el primer o segundo cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_ITEM_2] = HintText(CustomMessage("They say that the #second locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_LEFT_2] = HintText(CustomMessage("They say that the #second locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #zweite verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #deuxième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la segunda sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -352,7 +352,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #troisième ou quatrième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el tercer o cuarto cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_ITEM_3] = HintText(CustomMessage("They say that the #third locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_LEFT_3] = HintText(CustomMessage("They say that the #third locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #dritte verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #troisième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la tercera sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -366,7 +366,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #cinquième ou sixième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el quinto o sexto cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_ITEM_4] = HintText(CustomMessage("They say that the #fourth locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_LEFT_4] = HintText(CustomMessage("They say that the #fourth locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #vierte verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #quatrième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la cuarta sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -380,7 +380,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #septième ou huitième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el séptimo u octavo cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_ITEM_5] = HintText(CustomMessage("They say that the #fifth locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_LEFT_5] = HintText(CustomMessage("They say that the #fifth locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #fünfte verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #cinquième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la quinta sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -394,7 +394,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #neuvième ou dixième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el noveno o décimo cofre del azar# revela #[[1]]#.
 
-   hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_KEY_1] = HintText(CustomMessage("They say that the #first locked room# in the chest game contains #[[1]]#.",
+   hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_RIGHT_1] = HintText(CustomMessage("They say that the #first locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #erste verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #première salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la primera sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -408,7 +408,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #premier ou deuxième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el primer o segundo cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_KEY_2] = HintText(CustomMessage("They say that the #second locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_RIGHT_2] = HintText(CustomMessage("They say that the #second locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #zweite verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #deuxième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la segunda sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -422,7 +422,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #troisième ou quatrième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el tercer o cuarto cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_KEY_3] = HintText(CustomMessage("They say that the #third locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_RIGHT_3] = HintText(CustomMessage("They say that the #third locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #dritte verschloßene Raum# in der Truhenlotterie, #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #troisième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la tercera sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -436,7 +436,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #cinquième ou sixième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el quinto o sexto cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_KEY_4] = HintText(CustomMessage("They say that the #fourth locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_RIGHT_4] = HintText(CustomMessage("They say that the #fourth locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #vierte verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #quatrième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la cuarta sala del Cofre del Tesoro# aguarda #[[1]]#.
@@ -450,7 +450,7 @@ void StaticData::HintTable_Init() {
                                                                         /*french*/ "Selon moi, le #septième ou huitième coffre à jeu# contient #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                      // /*spanish*/#el séptimo u octavo cofre del azar# revela #[[1]]#.
 
-    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_KEY_5] = HintText(CustomMessage("They say that the #fifth locked room# in the chest game contains #[[1]]#.",
+    hintTextTable[RHT_MARKET_TREASURE_CHEST_GAME_RIGHT_5] = HintText(CustomMessage("They say that the #fifth locked room# in the chest game contains #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß der #fünfte verschloßene Raum# in der Truhenlotterie #[[1]]# enthielte.",
                                                                        /*french*/ "Selon moi, la #cinquième salle# de la Chasse-aux-Trésors contient #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                     // /*spanish*/#en la quinta sala del Cofre del Tesoro# aguarda #[[1]]#.

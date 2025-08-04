@@ -140,7 +140,7 @@ void EnBox_Init(Actor* thisx, PlayState* play2) {
 
     if (play) {} // helps the compiler store play2 into s1
 
-    if (Flags_GetTreasure(play, this->dyna.actor.params & 0x1F)) {
+    if (GameInteractor_Should(VB_CHEST_CONSIDER_CHEST_OPEN, Flags_GetTreasure(play, this->dyna.actor.params & 0x1F), this)) {
         this->alpha = 255;
         this->iceSmokeTimer = 100;
         EnBox_SetupAction(this, EnBox_Open);
@@ -446,7 +446,9 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             }
         }
         osSyncPrintf("Actor_Environment_Tbox_On() %d\n", this->dyna.actor.params & 0x1F);
-        Flags_SetTreasure(play, this->dyna.actor.params & 0x1F);
+        if (GameInteractor_Should(VB_CHEST_SET_TREASURE_FLAG, true, this)) {
+            Flags_SetTreasure(play, this->dyna.actor.params & 0x1F);
+        }
     } else {
         player = GET_PLAYER(play);
         Actor_WorldToActorCoords(&this->dyna.actor, &sp4C, &player->actor.world.pos);
@@ -454,7 +456,7 @@ void EnBox_WaitOpen(EnBox* this, PlayState* play) {
             Player_IsFacingActor(&this->dyna.actor, 0x3000, play)) {
             Actor_OfferGetItemNearby(&this->dyna.actor, play, -(this->dyna.actor.params >> 5 & 0x7F));
         }
-        if (Flags_GetTreasure(play, this->dyna.actor.params & 0x1F)) {
+        if (GameInteractor_Should(VB_CHEST_CONSIDER_CHEST_OPEN, Flags_GetTreasure(play, this->dyna.actor.params & 0x1F), this)) {
             EnBox_SetupAction(this, EnBox_Open);
         }
     }
@@ -580,8 +582,8 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
     GetItemCategory getItemCategory;
 
     int isVanilla = csmc == CSMC_DISABLED || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY)) ||
-                    (play->sceneNum == SCENE_TREASURE_BOX_SHOP &&
-                     this->dyna.actor.room != 6); // Exclude treasure game chests except for the final room
+                    (!Randomizer_GetSettingValue(RSK_SHUFFLE_CHEST_MINIGAME) && play->sceneNum == SCENE_TREASURE_BOX_SHOP &&
+                     this->dyna.actor.room != 6); // exclude treasure game chests except for the final room when not shuffled
 
     if (!isVanilla) {
         GetItemEntry test = this->getItemEntry;

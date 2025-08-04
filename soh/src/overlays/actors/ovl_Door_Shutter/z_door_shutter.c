@@ -387,7 +387,9 @@ void func_80996B0C(DoorShutter* this, PlayState* play) {
         DoorShutter_SetupAction(this, func_80997004);
         this->dyna.actor.velocity.y = 0.0f;
         if (this->unk_16E != 0) {
-            Flags_SetSwitch(play, this->dyna.actor.params & 0x3F);
+            if (GameInteractor_Should(VB_DOOR_SHUTTER_SET_SWITCH_FLAG, true, this)) {
+                Flags_SetSwitch(play, this->dyna.actor.params & 0x3F);
+            }
             if (this->doorType != SHUTTER_BOSS) {
                 gSaveContext.inventory.dungeonKeys[gSaveContext.mapIndex]--;
                 Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_CHAIN_KEY_UNLOCK);

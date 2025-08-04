@@ -231,7 +231,7 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_MERCHANT_PRICES_AFFORDABLE, "Merchant Affordable Prices", CVAR_RANDOMIZER_SETTING("MerchantPricesAffordable"), mOptionDescriptions[RSK_MERCHANT_PRICES_AFFORDABLE]);
     OPT_BOOL(RSK_SHUFFLE_FROG_SONG_RUPEES, "Shuffle Frog Song Rupees", CVAR_RANDOMIZER_SETTING("ShuffleFrogSongRupees"), mOptionDescriptions[RSK_SHUFFLE_FROG_SONG_RUPEES]);
     OPT_BOOL(RSK_SHUFFLE_ADULT_TRADE, "Shuffle Adult Trade", CVAR_RANDOMIZER_SETTING("ShuffleAdultTrade"), mOptionDescriptions[RSK_SHUFFLE_ADULT_TRADE]);
-    OPT_U8(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", {"Off", "On (Separate)", "On (Pack)"});
+    OPT_BOOL(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", CVAR_RANDOMIZER_SETTING("ShuffleChestGame"), mOptionDescriptions[RSK_SHUFFLE_CHEST_MINIGAME]);
     OPT_BOOL(RSK_SHUFFLE_100_GS_REWARD, "Shuffle 100 GS Reward", CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     OPT_U8(RSK_SHUFFLE_BOSS_SOULS, "Shuffle Boss Souls", {"Off", "On", "On + Ganon"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleBossSouls"), mOptionDescriptions[RSK_SHUFFLE_BOSS_SOULS], WidgetType::Combobox);
     OPT_BOOL(RSK_SHUFFLE_DEKU_STICK_BAG, "Shuffle Deku Stick Bag", CVAR_RANDOMIZER_SETTING("ShuffleDekuStickBag"), mOptionDescriptions[RSK_SHUFFLE_DEKU_STICK_BAG], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
@@ -253,7 +253,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_LACS_TOKEN_COUNT, "GCBK Token Count", {NumOpts(0, 100)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("LacsTokenCount"), "", WidgetType::Slider, 100, true);
     OPT_U8(RSK_LACS_OPTIONS, "GCBK LACS Reward Options", {"Standard Reward", "Greg as Reward", "Greg as Wildcard"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("LacsRewardOptions"), mOptionDescriptions[RSK_LACS_OPTIONS], WidgetType::Combobox, RO_LACS_STANDARD_REWARD);
     OPT_U8(RSK_KEYRINGS, "Key Rings", {"Off", "Random", "Count", "Selection"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), mOptionDescriptions[RSK_KEYRINGS], WidgetType::Combobox, RO_KEYRINGS_OFF);
-    OPT_U8(RSK_KEYRINGS_RANDOM_COUNT, "Keyring Dungeon Count", {NumOpts(0, 9)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsRandomCount"), "", WidgetType::Slider, 8);
+    OPT_U8(RSK_KEYRINGS_RANDOM_COUNT, "Keyring Dungeon Count", {NumOpts(0, 10)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsRandomCount"), "", WidgetType::Slider, 8);
     OPT_U8(RSK_KEYRINGS_GERUDO_FORTRESS, "Gerudo Fortress Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGerudoFortress"), "", WidgetType::Combobox, 0);
     OPT_U8(RSK_KEYRINGS_FOREST_TEMPLE, "Forest Temple Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsForestTemple"), "", WidgetType::Combobox, 0);
     OPT_U8(RSK_KEYRINGS_FIRE_TEMPLE, "Fire Temple Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsFireTemple"), "", WidgetType::Combobox, 0);
@@ -262,6 +262,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_KEYRINGS_SHADOW_TEMPLE, "Shadow Temple Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsShadowTemple"), "", WidgetType::Combobox, 0);
     OPT_U8(RSK_KEYRINGS_BOTTOM_OF_THE_WELL, "Bottom of the Well Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsBottomOfTheWell"), "", WidgetType::Combobox, 0);
     OPT_U8(RSK_KEYRINGS_GTG, "Gerudo Training Ground Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGTG"), "", WidgetType::Combobox, 0);
+    OPT_U8(RSK_KEYRINGS_TREASURE_CHEST_GAME, "Treasure Chest Game Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsTreasureChestGame"), "", WidgetType::Combobox, 0);
     OPT_U8(RSK_KEYRINGS_GANONS_CASTLE, "Ganon's Castle Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGanonsCastle"), "", WidgetType::Combobox, 0);
     //Dummied out due to redundancy with TimeSavers.SkipChildStealth until such a time that logic needs to consider child stealth e.g. because it's freestanding checks are added to freestanding shuffle.
     //To undo this dummying, readd this setting to an OptionGroup so it appears in the UI, then edit the timesaver check hooks to look at this, and the timesaver setting to lock itself as needed.
@@ -1295,6 +1296,7 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_MERCHANT_PRICES_AFFORDABLE],
                                   &mOptions[RSK_SHUFFLE_FROG_SONG_RUPEES],
                                   &mOptions[RSK_SHUFFLE_ADULT_TRADE],
+                                  &mOptions[RSK_SHUFFLE_CHEST_MINIGAME],
                                   &mOptions[RSK_SHUFFLE_100_GS_REWARD],
                                   &mOptions[RSK_SHUFFLE_BOSS_SOULS],
                                   &mOptions[RSK_SHUFFLE_FAIRIES],
@@ -1326,6 +1328,7 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE],
                                   &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL],
                                   &mOptions[RSK_KEYRINGS_GTG],
+                                  &mOptions[RSK_KEYRINGS_TREASURE_CHEST_GAME],
                                   &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
                               },
                               WidgetContainerType::COLUMN);
@@ -1565,6 +1568,7 @@ void Settings::CreateOptions() {
                                                  &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE],
                                                  &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL],
                                                  &mOptions[RSK_KEYRINGS_GTG],
+                                                 &mOptions[RSK_KEYRINGS_TREASURE_CHEST_GAME],
                                                  &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
                                              });
     mOptionGroups[RSG_STARTING_ITEMS] =
@@ -2358,6 +2362,7 @@ void Settings::UpdateOptionProperties() {
     mOptions[RSK_KEYRINGS_SHADOW_TEMPLE].Hide();
     mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL].Hide();
     mOptions[RSK_KEYRINGS_GTG].Hide();
+    mOptions[RSK_KEYRINGS_TREASURE_CHEST_GAME].Hide();
     mOptions[RSK_KEYRINGS_GANONS_CASTLE].Hide();
     switch (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), RO_KEYRINGS_OFF)) {
         case RO_KEYRINGS_COUNT:
@@ -2376,16 +2381,25 @@ void Settings::UpdateOptionProperties() {
             mOptions[RSK_KEYRINGS_SHADOW_TEMPLE].Unhide();
             mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL].Unhide();
             mOptions[RSK_KEYRINGS_GTG].Unhide();
+            mOptions[RSK_KEYRINGS_TREASURE_CHEST_GAME].Unhide();
             mOptions[RSK_KEYRINGS_GANONS_CASTLE].Unhide();
         default:
             break;
     }
-    const uint8_t maxKeyringCount =
-        (CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) ==
-             RO_GF_CARPENTERS_NORMAL &&
-         CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) != RO_GERUDO_KEYS_VANILLA)
-            ? 9
-            : 8;
+
+    u8 maxKeyringCount = 8;
+
+    if (
+        CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) == RO_GF_CARPENTERS_NORMAL &&
+        CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) != RO_GERUDO_KEYS_VANILLA
+    ) {
+        maxKeyringCount += 1;
+    }
+
+    if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleChestGame"), RO_GENERIC_NO)) {
+        maxKeyringCount += 1;
+    }
+
     if (mOptions[RSK_KEYRINGS_RANDOM_COUNT].GetOptionCount() != maxKeyringCount + 1) {
         mOptions[RSK_KEYRINGS_RANDOM_COUNT].ChangeOptions(NumOpts(0, maxKeyringCount));
     }
@@ -2612,10 +2626,6 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         mOptions[RSK_STARTING_NUTS].Set(false);
     }
 
-    // RANDOTODO implement chest shuffle with keysanity
-    // ShuffleChestMinigame.Set(cvarSettings[RSK_SHUFFLE_CHEST_MINIGAME]);
-    mOptions[RSK_SHUFFLE_CHEST_MINIGAME].Set(RO_CHEST_GAME_OFF);
-
     // TODO: RandomizeAllSettings(true) when implementing the ability to randomize the options themselves.
     std::array<DungeonInfo*, 12> dungeons = this->GetDungeons()->GetDungeonList();
 
@@ -2742,7 +2752,8 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         &mOptions[RSK_KEYRINGS_FOREST_TEMPLE], &mOptions[RSK_KEYRINGS_FIRE_TEMPLE],
         &mOptions[RSK_KEYRINGS_WATER_TEMPLE],  &mOptions[RSK_KEYRINGS_SPIRIT_TEMPLE],
         &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE], &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL],
-        &mOptions[RSK_KEYRINGS_GTG],           &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
+        &mOptions[RSK_KEYRINGS_GTG],           &mOptions[RSK_KEYRINGS_TREASURE_CHEST_GAME],
+        &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
     };
 
     if (mOptions[RSK_KEYRINGS]) {

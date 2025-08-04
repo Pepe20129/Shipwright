@@ -571,43 +571,6 @@ u8 EnGm_RandoCanGetMedigoronItem() {
            !Flags_GetRandomizerInf(RAND_INF_MERCHANTS_MEDIGORON);
 }
 
-void RandomizerSetChestGameRandomizerInf(RandomizerCheck rc) {
-    switch (rc) {
-        case RC_MARKET_TREASURE_CHEST_GAME_ITEM_1:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_1);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_ITEM_2:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_2);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_ITEM_3:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_3);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_ITEM_4:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_4);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_ITEM_5:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_5);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_KEY_1:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_1);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_KEY_2:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_2);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_KEY_3:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_3);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_KEY_4:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_4);
-            break;
-        case RC_MARKET_TREASURE_CHEST_GAME_KEY_5:
-            Flags_SetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_5);
-            break;
-        default:
-            break;
-    }
-}
-
 void Player_Action_8084E6D4_override(Player* player, PlayState* play) {
     if (LinkAnimation_Update(play, &player->skelAnime)) {
         func_8084DFAC(play, player);
@@ -811,9 +774,6 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             if (!OTRGlobals::Instance->gRandoContext->IsLocationShuffled(rc)) {
                 break;
             }
-
-            // if this is a treasure chest game chest then set the appropriate rando inf
-            RandomizerSetChestGameRandomizerInf(rc);
 
             Player* player = GET_PLAYER(gPlayState);
             Player_SetupWaitForPutAway(gPlayState, player, func_8083A434_override);
@@ -1726,52 +1686,6 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
 }
 
 void RandomizerOnSceneInitHandler(int16_t sceneNum) {
-    // Treasure Chest Game
-    // todo: for now we're just unsetting all of them, we will
-    //       probably need to do something different when we implement shuffle
-    if (sceneNum == SCENE_TREASURE_BOX_SHOP) {
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_1);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_ITEM_1)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_2);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_ITEM_2)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_3);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_ITEM_3)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_4);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_ITEM_4)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_ITEM_5);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_ITEM_5)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_1);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_KEY_1)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_2);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_KEY_2)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_3);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_KEY_3)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_4);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_KEY_4)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        Flags_UnsetRandomizerInf(RAND_INF_MARKET_TREASURE_CHEST_GAME_KEY_5);
-        Rando::Context::GetInstance()
-            ->GetItemLocation(RC_MARKET_TREASURE_CHEST_GAME_KEY_5)
-            ->SetCheckStatus(RCSHOW_UNCHECKED);
-        CheckTracker::RecalculateAllAreaTotals();
-    }
 
     // ENTRTODO: Move all entrance rando handling to a dedicated file
     if (RAND_GET_OPTION(RSK_SHUFFLE_ENTRANCES)) {

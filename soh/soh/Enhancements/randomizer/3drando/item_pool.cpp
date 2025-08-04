@@ -712,12 +712,6 @@ void GenerateItemPool() {
     }
     AddItemToMainPool(RG_CLAIM_CHECK);
 
-    if (ctx->GetOption(RSK_SHUFFLE_CHEST_MINIGAME).Is(RO_CHEST_GAME_SINGLE_KEYS)) {
-        AddItemToMainPool(RG_TREASURE_GAME_SMALL_KEY, 6); // 6 individual keys
-    } else if (ctx->GetOption(RSK_SHUFFLE_CHEST_MINIGAME).Is(RO_CHEST_GAME_PACK)) {
-        AddItemToMainPool(RG_TREASURE_GAME_SMALL_KEY); // 1 key which will behave as a pack of 6
-    }
-
     if (ctx->GetOption(RSK_SHUFFLE_TOKENS).Is(RO_TOKENSANITY_OFF)) {
         for (RandomizerCheck loc : ctx->GetLocations(ctx->allLocations, RCTYPE_SKULL_TOKEN)) {
             ctx->PlaceItemInLocation(loc, RG_GOLD_SKULLTULA_TOKEN, false, true);
@@ -868,6 +862,40 @@ void GenerateItemPool() {
     }
 
     // Keys
+
+    if (ctx->GetOption(RSK_SHUFFLE_CHEST_MINIGAME)) {
+        switch (ctx->GetOption(RSK_KEYRINGS_TREASURE_CHEST_GAME).Get()) {
+            case RO_KEYRINGS_OFF:
+                AddItemToMainPool(RG_TREASURE_GAME_SMALL_KEY, 6);
+                break;
+            // random & count handled in settings.cpp
+            case RO_KEYRINGS_RANDOM:
+            case RO_KEYRINGS_COUNT:
+            case RO_KEYRINGS_SELECTION:
+                switch (ctx->GetOption(RSK_KEYRINGS_TREASURE_CHEST_GAME).Get()) {
+                    case RO_KEYRING_FOR_DUNGEON_OFF:
+                        AddItemToMainPool(RG_TREASURE_GAME_SMALL_KEY, 6);
+                        break;
+                    case RO_KEYRING_FOR_DUNGEON_ON:
+                        AddItemToMainPool(RG_TREASURE_GAME_KEY_RING);
+                        break;
+                    case RO_KEYRING_FOR_DUNGEON_RANDOM:
+                        if (Random(0, 2)) {
+                            AddItemToMainPool(RG_TREASURE_GAME_KEY_RING);
+                        } else {
+                            AddItemToMainPool(RG_TREASURE_GAME_SMALL_KEY, 6);
+                        }
+                        break;
+                    default:
+                        assert(false);
+                        break;
+                }
+                break;
+            default:
+                assert(false);
+                break;
+        }
+    }
 
     // For key rings, need to add as many junk items as "missing" keys
     if (ctx->GetOption(RSK_KEYRINGS).IsNot(RO_KEYRINGS_OFF)) {

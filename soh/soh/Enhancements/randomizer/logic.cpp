@@ -1508,6 +1508,7 @@ std::map<uint32_t, uint32_t> Logic::RandoGetToDungeonScene = {
     { RG_BOTTOM_OF_THE_WELL_SMALL_KEY, SCENE_BOTTOM_OF_THE_WELL },
     { RG_GERUDO_TRAINING_GROUND_SMALL_KEY, SCENE_GERUDO_TRAINING_GROUND },
     { RG_GERUDO_FORTRESS_SMALL_KEY, SCENE_THIEVES_HIDEOUT },
+    { RG_TREASURE_CHEST_GAME_BUILDING_KEY, SCENE_TREASURE_BOX_SHOP },
     { RG_GANONS_CASTLE_SMALL_KEY, SCENE_INSIDE_GANONS_CASTLE },
     { RG_FOREST_TEMPLE_KEY_RING, SCENE_FOREST_TEMPLE },
     { RG_FIRE_TEMPLE_KEY_RING, SCENE_FIRE_TEMPLE },
@@ -1517,6 +1518,7 @@ std::map<uint32_t, uint32_t> Logic::RandoGetToDungeonScene = {
     { RG_BOTTOM_OF_THE_WELL_KEY_RING, SCENE_BOTTOM_OF_THE_WELL },
     { RG_GERUDO_TRAINING_GROUND_KEY_RING, SCENE_GERUDO_TRAINING_GROUND },
     { RG_GERUDO_FORTRESS_KEY_RING, SCENE_THIEVES_HIDEOUT },
+    { RG_TREASURE_GAME_KEY_RING, SCENE_TREASURE_BOX_SHOP },
     { RG_GANONS_CASTLE_KEY_RING, SCENE_INSIDE_GANONS_CASTLE },
     { RG_FOREST_TEMPLE_BOSS_KEY, SCENE_FOREST_TEMPLE },
     { RG_FIRE_TEMPLE_BOSS_KEY, SCENE_FIRE_TEMPLE },
@@ -1910,7 +1912,7 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
         case ITEMTYPE_FORTRESS_SMALLKEY:
         case ITEMTYPE_SMALLKEY: {
             auto randoGet = item.GetRandomizerGet();
-            auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+            auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_TREASURE_GAME_KEY_RING;
             auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
             auto count = GetSmallKeyCount(dungeonIndex);
             if (!state) {
