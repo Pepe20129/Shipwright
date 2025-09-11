@@ -68,7 +68,7 @@ class Entrance {
     void SetIndex(int16_t newIndex);
     std::optional<Entrance*> GetAssumed() const;
     void SetReplacement(Entrance* newReplacement);
-    Entrance* GetReplacement() const;
+    std::optional<Entrance*> GetReplacement() const;
     EntranceType GetType() const;
     void SetType(EntranceType newType);
     std::optional<Entrance*> GetReverse() const;
@@ -89,7 +89,7 @@ class Entrance {
     Entrance* target = nullptr;
     std::optional<Entrance*> reverse = std::nullopt;
     std::optional<Entrance*> assumed = std::nullopt;
-    Entrance* replacement = nullptr;
+    std::optional<Entrance*> replacement = std::nullopt;
     int16_t index = -1;
     bool shuffled = false;
     bool primary = false;

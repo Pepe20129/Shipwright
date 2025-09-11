@@ -92,7 +92,10 @@ static void WriteLocation(std::string sphere, const RandomizerCheck locationKey,
 static void WriteShuffledEntrance(std::string sphereString, Entrance* entrance) {
     int16_t originalIndex = entrance->GetIndex();
     int16_t destinationIndex = -1;
-    int16_t replacementIndex = entrance->GetReplacement()->GetIndex();
+
+    assert(entrance->GetReplacement().has_value());
+
+    int16_t replacementIndex = entrance->GetReplacement().value()->GetIndex();
     int16_t replacementDestinationIndex = -1;
     std::string name = GetEntranceData(originalIndex)->source;
     std::string text = GetEntranceData(replacementIndex)->destination;
@@ -102,9 +105,9 @@ static void WriteShuffledEntrance(std::string sphereString, Entrance* entrance) 
         destinationIndex = entrance->GetReverse().value()->GetIndex();
         // When decouple is off we track the replacement's reverse destination, useful for recording visited entrances
         if (!entrance->IsDecoupled()) {
-            assert(entrance->GetReplacement()->GetReverse().has_value());
+            assert(entrance->GetReplacement().value()->GetReverse().has_value());
 
-            replacementDestinationIndex = entrance->GetReplacement()->GetReverse().value()->GetIndex();
+            replacementDestinationIndex = entrance->GetReplacement().value()->GetReverse().value()->GetIndex();
         }
     }
 

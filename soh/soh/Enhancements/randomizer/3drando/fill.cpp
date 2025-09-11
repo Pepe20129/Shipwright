@@ -241,9 +241,12 @@ void ProcessExits(Region* region, GetAccessibleLocationsStruct& gals, Randomizer
                 gals.entranceSphere.push_back(&exit);
                 exit.AddToPool();
                 // Don't list a two-way coupled entrance from both directions
-                if (exit.GetReverse().has_value() && exit.GetReplacement()->GetReverse().has_value() &&
+
+                assert(exit.GetReplacement().has_value());
+
+                if (exit.GetReverse().has_value() && exit.GetReplacement().value()->GetReverse().has_value() &&
                     !exit.IsDecoupled()) {
-                    exit.GetReplacement()->GetReverse().value()->AddToPool();
+                    exit.GetReplacement().value()->GetReverse().value()->AddToPool();
                 }
             }
         }

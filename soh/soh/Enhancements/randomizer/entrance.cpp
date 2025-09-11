@@ -12,7 +12,7 @@ EntranceLinkInfo NO_RETURN_ENTRANCE = { EntranceType::None, RR_NONE, RR_NONE, -1
 
 Entrance::Entrance(RandomizerRegion connectedRegion_, ConditionFn condition_function_, bool spreadsAreasWithPriority_)
     : connectedRegion(connectedRegion_), condition_function(condition_function_),
-      spreadsAreasWithPriority(spreadsAreasWithPriority_) {
+        spreadsAreasWithPriority(spreadsAreasWithPriority_) {
     originalConnectedRegion = connectedRegion_;
 }
 
@@ -173,10 +173,15 @@ std::optional<Entrance*> Entrance::GetAssumed() const {
 }
 
 void Entrance::SetReplacement(Entrance* newReplacement) {
-    replacement = newReplacement;
+    // ensure that a nullptr never makes its way to the underlying std::optional
+    if (newReplacement == nullptr) {
+        replacement == std::nullopt;
+    } else {
+        replacement = newReplacement;
+    }
 }
 
-Entrance* Entrance::GetReplacement() const {
+std::optional<Entrance*> Entrance::GetReplacement() const {
     return replacement;
 }
 
@@ -707,12 +712,17 @@ static void ChangeConnections(Entrance* entrance, Entrance* targetEntrance) {
     auto message = "Attempting to connect " + entrance->GetName() + " to " + targetEntrance->to_string() + "\n";
     SPDLOG_DEBUG(message);
     entrance->Connect(targetEntrance->Disconnect());
-    entrance->SetReplacement(targetEntrance->GetReplacement());
+
+    assert(targetEntrance->GetReplacement().has_value());
+
+    entrance->SetReplacement(targetEntrance->GetReplacement().value());
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
         assert(entrance->GetReverse().value()->GetAssumed().has_value());
 
-        targetEntrance->GetReplacement()->GetReverse().value()->Connect(entrance->GetReverse().value()->GetAssumed().value()->Disconnect());
-        targetEntrance->GetReplacement()->GetReverse().value()->SetReplacement(entrance->GetReverse().value());
+        assert(entrance->GetReplacement().has_value());
+
+        targetEntrance->GetReplacement().value()->GetReverse().value()->Connect(entrance->GetReverse().value()->GetAssumed().value()->Disconnect());
+        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(entrance->GetReverse().value());
     }
 }
 
@@ -799,10 +809,10 @@ static bool ValidateWorld(Entrance* entrancePlaced) {
             std::vector<Entrance*> alreadyChecked = {};
 
             if (entrance->IsShuffled()) {
-                if (entrance->GetReplacement() != nullptr) {
-
-                    auto replacementName = entrance->GetReplacement()->GetName();
-                    auto reverse = entrance->GetReplacement()->GetReverse();
+                if (entrance->GetReplacement().has_value()) {
+                    auto entranceReplacement = entrance->GetReplacement().value();
+                    auto replacementName = entranceReplacement->GetName();
+                    auto reverse = entranceReplacement->GetReverse();
 
                     assert(reverse.has_value());
 
@@ -883,13 +893,15 @@ static void RestoreConnections(Entrance* entrance, Entrance* targetEntrance) {
     targetEntrance->Connect(entrance->Disconnect());
     entrance->SetReplacement(nullptr);
 
-    assert(targetEntrance->GetReplacement()->GetReverse().has_value());
+    assert(targetEntrance->GetReplacement().has_value());
+
+    assert(targetEntrance->GetReplacement().value()->GetReverse().has_value());
 
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
         assert(entrance->GetReverse().value()->GetAssumed().has_value());
 
-        entrance->GetReverse().value()->GetAssumed().value()->Connect(targetEntrance->GetReplacement()->GetReverse().value()->Disconnect());
-        targetEntrance->GetReplacement()->GetReverse().value()->SetReplacement(nullptr);
+        entrance->GetReverse().value()->GetAssumed().value()->Connect(targetEntrance->GetReplacement().value()->GetReverse().value()->Disconnect());
+        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(nullptr);
     }
 }
 
@@ -906,7 +918,9 @@ static void DeleteTargetEntrance(Entrance* targetEntrance) {
 static void ConfirmReplacement(Entrance* entrance, Entrance* targetEntrance) {
     DeleteTargetEntrance(targetEntrance);
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
-        auto replacedReverse = targetEntrance->GetReplacement()->GetReverse();
+        assert(targetEntrance->GetReplacement().has_value());
+
+        auto replacedReverse = targetEntrance->GetReplacement().value()->GetReverse();
 
         assert(replacedReverse.has_value());
 
@@ -966,7 +980,7 @@ bool EntranceShuffler::PlaceOneWayPriorityEntrance(
     Shuffle(availPool);
 
     for (Entrance* entrance : availPool) {
-        if (entrance->GetReplacement() != nullptr) {
+        if (entrance->GetReplacement().has_value()) {
             continue;
         }
         // Only allow Adult Spawn as sole Nocturne access if hints != mask.
@@ -1443,7 +1457,7 @@ int EntranceShuffler::ShuffleAllEntrances() {
     std::vector<Entrance*> replacedEntrances = {};
     for (auto& pool : oneWayEntrancePools) {
         for (Entrance* entrance : pool.second) {
-            if (entrance->GetReplacement() != nullptr) {
+            if (entrance->GetReplacement().has_value()) {
                 replacedEntrances.push_back(entrance);
             }
         }
@@ -1451,7 +1465,10 @@ int EntranceShuffler::ShuffleAllEntrances() {
     for (auto& pool : oneWayTargetEntrancePools) {
         for (Entrance* remainingTarget : pool.second) {
             auto replacement = remainingTarget->GetReplacement();
-            if (ElementInContainer(replacement, replacedEntrances)) {
+
+            assert(replacement.has_value());
+
+            if (ElementInContainer(replacement.value(), replacedEntrances)) {
                 DeleteTargetEntrance(remainingTarget);
             }
         }
@@ -1466,11 +1483,14 @@ int EntranceShuffler::ShuffleAllEntrances() {
         // Delete all targets that we just placed from other one way target pools so
         // multiple one way entrances don't use the same target
         replacedEntrances =
-            FilterFromPool(pool.second, [](Entrance* entrance) { return entrance->GetReplacement() != nullptr; });
+            FilterFromPool(pool.second, [](Entrance* entrance) { return entrance->GetReplacement().has_value(); });
         for (auto& targetPool : oneWayTargetEntrancePools) {
             for (Entrance* remainingTarget : targetPool.second) {
                 auto replacement = remainingTarget->GetReplacement();
-                if (ElementInContainer(replacement, replacedEntrances)) {
+
+                assert(replacement.has_value());
+
+                if (ElementInContainer(replacement.value(), replacedEntrances)) {
                     DeleteTargetEntrance(remainingTarget);
                 }
             }
@@ -1555,12 +1575,12 @@ int EntranceShuffler::ShuffleAllEntrances() {
         };
 
         for (EntrancePair pair : bossRoomExitPairs) {
-            Entrance* target = pair.second->GetReplacement() != nullptr ? pair.second->GetReplacement() : pair.second;
+            Entrance* target = pair.second->GetReplacement().value_or(pair.second);
 
             if (!ctx->GetOption(RSK_DECOUPLED_ENTRANCES)) {
                 while (bossExits.find(target->GetName()) != bossExits.end()) {
                     Entrance* next = bossExits.at(target->GetName());
-                    target = next->GetReplacement() != nullptr ? next->GetReplacement() : next;
+                    target = next->GetReplacement().value_or(next);
                 }
 
                 if (dungeonExits.find(target->GetName()) != dungeonExits.end()) {
@@ -1608,7 +1628,10 @@ void EntranceShuffler::CreateEntranceOverrides() {
 
         uint8_t type = (uint8_t)entrance->GetType();
         int16_t originalIndex = entrance->GetIndex();
-        int16_t replacementIndex = entrance->GetReplacement()->GetIndex();
+
+        assert(entrance->GetReplacement().has_value());
+
+        int16_t replacementIndex = entrance->GetReplacement().value()->GetIndex();
 
         int16_t destinationIndex = -1;
         int16_t replacementDestinationIndex = -1;
@@ -1616,9 +1639,9 @@ void EntranceShuffler::CreateEntranceOverrides() {
         // Only set destination indices for two way entrances and when decouple entrances
         // is off
         if (entrance->GetReverse().has_value() && !ctx->GetOption(RSK_DECOUPLED_ENTRANCES)) {
-            assert(entrance->GetReplacement()->GetReverse().has_value());
+            assert(entrance->GetReplacement().value()->GetReverse().has_value());
 
-            replacementDestinationIndex = entrance->GetReplacement()->GetReverse().value()->GetIndex();
+            replacementDestinationIndex = entrance->GetReplacement().value()->GetReverse().value()->GetIndex();
             destinationIndex = entrance->GetReverse().value()->GetIndex();
         }
 
