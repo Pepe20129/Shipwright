@@ -1102,5 +1102,7 @@ Rando::Entrance* GetEntrance(RandomizerRegion source, RandomizerRegion destinati
         }
     }
 
+    assert(false);
+
     return nullptr;
 }

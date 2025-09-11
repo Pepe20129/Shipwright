@@ -137,19 +137,19 @@ void Context::PlaceItemInLocation(const RandomizerCheck locKey, const Randomizer
     }
 }
 
-void Context::AddLocation(const RandomizerCheck loc, std::vector<RandomizerCheck>* destination) {
-    if (destination == nullptr) {
+void Context::AddLocation(const RandomizerCheck loc, std::optional<std::vector<RandomizerCheck>*> destination) {
+    if (!destination.has_value()) {
         destination = &allLocations;
     }
-    destination->push_back(loc);
+    destination.value()->push_back(loc);
 }
 
 template <typename Container>
-void Context::AddLocations(const Container& locations, std::vector<RandomizerCheck>* destination) {
-    if (destination == nullptr) {
+void Context::AddLocations(const Container& locations, std::optional<std::vector<RandomizerCheck>*> destination) {
+    if (!destination.has_value()) {
         destination = &allLocations;
     }
-    destination->insert(destination->end(), std::cbegin(locations), std::cend(locations));
+    destination.value()->insert(destination->end(), std::cbegin(locations), std::cend(locations));
 }
 
 bool Context::IsQuestOfLocationActive(RandomizerCheck rc) {
@@ -493,10 +493,10 @@ DungeonInfo* Context::GetDungeon(size_t key) const {
 }
 
 std::shared_ptr<Logic> Context::GetLogic() {
-    if (mLogic.get() == nullptr) {
+    if (!mLogic.has_value()) {
         mLogic = std::make_shared<Logic>();
     }
-    return mLogic;
+    return mLogic.value();
 }
 
 std::shared_ptr<Trials> Context::GetTrials() {
@@ -536,10 +536,10 @@ void Context::LACSCondition(RandoOptionLACSCondition lacsCondition) {
 }
 
 std::shared_ptr<Kaleido> Context::GetKaleido() {
-    if (mKaleido == nullptr) {
+    if (!mKaleido.has_value()) {
         mKaleido = std::make_shared<Kaleido>();
     }
-    return mKaleido;
+    return mKaleido.value();
 }
 
 std::string Context::GetHash() const {

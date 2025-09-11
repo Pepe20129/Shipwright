@@ -727,9 +727,9 @@ static void ChangeConnections(Entrance* entrance, Entrance* targetEntrance) {
 }
 
 static bool EntranceUnreachableAs(Entrance* entrance, uint8_t age, std::vector<Entrance*>& alreadyChecked) {
-
     if (entrance == nullptr) {
         SPDLOG_DEBUG("Entrance is nullptr in EntranceUnreachableAs()");
+        assert(false);
         return true;
     }
 
