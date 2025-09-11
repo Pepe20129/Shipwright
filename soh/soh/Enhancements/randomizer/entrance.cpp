@@ -168,7 +168,7 @@ void Entrance::SetIndex(int16_t newIndex) {
     index = newIndex;
 }
 
-Entrance* Entrance::GetAssumed() const {
+std::optional<Entrance*> Entrance::GetAssumed() const {
     return assumed;
 }
 
@@ -218,11 +218,11 @@ Entrance* Entrance::GetNewTarget() {
 }
 
 Entrance* Entrance::AssumeReachable() {
-    if (assumed == nullptr) {
+    if (!assumed.has_value()) {
         assumed = GetNewTarget();
         Disconnect();
     }
-    return assumed;
+    return assumed.value();
 }
 
 bool Entrance::DoesSpreadAreas() {
@@ -709,7 +709,9 @@ static void ChangeConnections(Entrance* entrance, Entrance* targetEntrance) {
     entrance->Connect(targetEntrance->Disconnect());
     entrance->SetReplacement(targetEntrance->GetReplacement());
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
-        targetEntrance->GetReplacement()->GetReverse().value()->Connect(entrance->GetReverse().value()->GetAssumed()->Disconnect());
+        assert(entrance->GetReverse().value()->GetAssumed().has_value());
+
+        targetEntrance->GetReplacement()->GetReverse().value()->Connect(entrance->GetReverse().value()->GetAssumed().value()->Disconnect());
         targetEntrance->GetReplacement()->GetReverse().value()->SetReplacement(entrance->GetReverse().value());
     }
 }
@@ -884,7 +886,9 @@ static void RestoreConnections(Entrance* entrance, Entrance* targetEntrance) {
     assert(targetEntrance->GetReplacement()->GetReverse().has_value());
 
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
-        entrance->GetReverse().value()->GetAssumed()->Connect(targetEntrance->GetReplacement()->GetReverse().value()->Disconnect());
+        assert(entrance->GetReverse().value()->GetAssumed().has_value());
+
+        entrance->GetReverse().value()->GetAssumed().value()->Connect(targetEntrance->GetReplacement()->GetReverse().value()->Disconnect());
         targetEntrance->GetReplacement()->GetReverse().value()->SetReplacement(nullptr);
     }
 }
@@ -908,7 +912,9 @@ static void ConfirmReplacement(Entrance* entrance, Entrance* targetEntrance) {
 
         assert(replacedReverse.value()->GetReverse().has_value());
 
-        DeleteTargetEntrance(replacedReverse.value()->GetReverse().value()->GetAssumed());
+        assert(replacedReverse.value()->GetReverse().value()->GetAssumed().has_value());
+
+        DeleteTargetEntrance(replacedReverse.value()->GetReverse().value()->GetAssumed().value());
     }
 }
 

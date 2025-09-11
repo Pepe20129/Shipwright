@@ -66,7 +66,7 @@ class Entrance {
     void SetDecoupled();
     int16_t GetIndex() const;
     void SetIndex(int16_t newIndex);
-    Entrance* GetAssumed() const;
+    std::optional<Entrance*> GetAssumed() const;
     void SetReplacement(Entrance* newReplacement);
     Entrance* GetReplacement() const;
     EntranceType GetType() const;
@@ -88,7 +88,7 @@ class Entrance {
     EntranceType type = EntranceType::None;
     Entrance* target = nullptr;
     std::optional<Entrance*> reverse = std::nullopt;
-    Entrance* assumed = nullptr;
+    std::optional<Entrance*> assumed = std::nullopt;
     Entrance* replacement = nullptr;
     int16_t index = -1;
     bool shuffled = false;
