@@ -189,7 +189,7 @@ DungeonInfo* Dungeons::GetDungeon(const DungeonKey key) {
     return &dungeonList[key];
 }
 
-DungeonInfo* Dungeons::GetDungeonFromScene(const uint16_t scene) {
+std::optional<DungeonInfo*> Dungeons::GetDungeonFromScene(const uint16_t scene) {
     switch (scene) {
         case SCENE_DEKU_TREE:
             return &dungeonList[DEKU_TREE];
@@ -216,7 +216,7 @@ DungeonInfo* Dungeons::GetDungeonFromScene(const uint16_t scene) {
         case SCENE_INSIDE_GANONS_CASTLE:
             return &dungeonList[GANONS_CASTLE];
         default:
-            return nullptr;
+            return std::nullopt;
     }
 }
 

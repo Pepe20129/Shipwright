@@ -2109,11 +2109,11 @@ const std::vector<uint8_t>& GetDungeonSmallKeyDoors(SceneID sceneId) {
     static const std::vector<uint8_t> emptyVector;
 
     auto dungeonInfo = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(sceneId);
-    if (dungeonInfo == nullptr) {
+    if (!dungeonInfo.has_value()) {
         return emptyVector;
     }
 
-    bool masterQuest = dungeonInfo->IsMQ();
+    bool masterQuest = dungeonInfo.value()->IsMQ();
 
     // Create a unique key for the dungeon and master quest
     uint8_t key = sceneId | (masterQuest << 7);

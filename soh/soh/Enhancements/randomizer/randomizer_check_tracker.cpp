@@ -817,14 +817,8 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
         return;
     }
     for (auto& loc : Rando::StaticData::GetLocationTable()) {
-        if ((!IS_RANDO && ((loc.GetQuest() == RCQUEST_MQ && !IS_MASTER_QUEST) ||
-                           (loc.GetQuest() == RCQUEST_VANILLA && IS_MASTER_QUEST))) ||
-            (IS_RANDO &&
-             !(OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene()) == nullptr) &&
-             ((OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsMQ() &&
-               loc.GetQuest() == RCQUEST_VANILLA) ||
-              OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsVanilla() &&
-                  loc.GetQuest() == RCQUEST_MQ))) {
+        auto dungeon = OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene());
+        if (IS_RANDO ? (dungeon.has_value() && ((dungeon.value()->IsMQ() && loc.GetQuest() == RCQUEST_VANILLA) || (dungeon.value()->IsVanilla() && loc.GetQuest() == RCQUEST_MQ))) : (IS_MASTER_QUEST ? (loc.GetQuest() == RCQUEST_VANILLA) : (loc.GetQuest() == RCQUEST_MQ))) {
             continue;
         }
         Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
@@ -1185,9 +1179,10 @@ void CheckTrackerWindow::DrawElement() {
                 areaTotalsTooltipSS << "Checked / Total";
 
                 if (showVOrMQ && RandomizerCheckObjects::AreaIsDungeon(rcArea)) {
-                    if (OTRGlobals::Instance->gRandoContext->GetDungeons()
-                            ->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea))
-                            ->IsMQ()) {
+                    auto dungeon = OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea));
+                    if (!dungeon.has_value()) {
+                        assert(false);
+                    } else if (dungeon.value()->IsMQ()) {
                         areaTotalsSS << " - MQ";
                     } else {
                         areaTotalsSS << " - Vanilla";

@@ -76,8 +76,12 @@ bool LocMatchesQuest(Rando::Location loc) {
         return true;
     } else {
         auto dungeon = OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene());
-        return (dungeon->IsMQ() && loc.GetQuest() == RCQUEST_MQ) ||
-               (dungeon->IsVanilla() && loc.GetQuest() == RCQUEST_VANILLA);
+        if (!dungeon.has_value()) {
+            assert(false);
+            return false;
+        }
+        return (dungeon.value()->IsMQ() && loc.GetQuest() == RCQUEST_MQ) ||
+               (dungeon.value()->IsVanilla() && loc.GetQuest() == RCQUEST_VANILLA);
     }
 }
 
@@ -265,8 +269,12 @@ void RandomizerOnSceneFlagSetHandler(int16_t sceneNum, int16_t flagType, int16_t
     }
 
     if (sceneNum == SCENE_SPIRIT_TEMPLE && flagType == FLAG_SCENE_SWITCH) {
-        bool isVanilla =
-            Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla();
+        auto dungeon = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE);
+        if (!dungeon.has_value()) {
+            assert(false);
+            return;
+        }
+        bool isVanilla = dungeon.value()->IsVanilla();
         if (isVanilla && flag == 0x23) {
             Flags_SetRandomizerInf(RAND_INF_SPIRIT_SUN_ON_FLOOR_ON);
         }
@@ -1909,12 +1917,17 @@ void RandomizerOnActorInitHandler(void* actorRef) {
 
     if (actor->id == ACTOR_PLAYER) {
         if (gPlayState->sceneNum == SCENE_SPIRIT_TEMPLE) {
-            bool isVanilla =
-                Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla();
+            auto dungeon = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE);
+            if (!dungeon.has_value()) {
+                assert(false);
+                return;
+            }
+            bool isVanilla = dungeon.value()->IsVanilla();
             if (isVanilla && Flags_GetRandomizerInf(RAND_INF_SPIRIT_SUN_ON_FLOOR_ON)) {
                 Flags_SetSwitch(gPlayState, 0x23);
             }
         }
+        return;
     }
 
     if (actor->id == ACTOR_EN_SI) {

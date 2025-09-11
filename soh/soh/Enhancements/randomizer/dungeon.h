@@ -3,6 +3,7 @@
 #include "randomizerTypes.h"
 
 #include <array>
+#include <optional>
 #include <vector>
 #include <string>
 #include "nlohmann/json.hpp"
@@ -78,7 +79,7 @@ class Dungeons {
     Dungeons();
     ~Dungeons();
     DungeonInfo* GetDungeon(DungeonKey key);
-    DungeonInfo* GetDungeonFromScene(uint16_t scene);
+    std::optional<DungeonInfo*> GetDungeonFromScene(uint16_t scene);
     size_t CountMQ();
     void ClearAllMQ();
     /// @brief Returns a new array of pointers to the DungeonInfo entries.
