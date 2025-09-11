@@ -98,11 +98,13 @@ static void WriteShuffledEntrance(std::string sphereString, Entrance* entrance) 
     std::string text = GetEntranceData(replacementIndex)->destination;
 
     // Track the reverse destination, useful for savewarp handling
-    if (entrance->GetReverse() != nullptr) {
-        destinationIndex = entrance->GetReverse()->GetIndex();
+    if (entrance->GetReverse().has_value()) {
+        destinationIndex = entrance->GetReverse().value()->GetIndex();
         // When decouple is off we track the replacement's reverse destination, useful for recording visited entrances
         if (!entrance->IsDecoupled()) {
-            replacementDestinationIndex = entrance->GetReplacement()->GetReverse()->GetIndex();
+            assert(entrance->GetReplacement()->GetReverse().has_value());
+
+            replacementDestinationIndex = entrance->GetReplacement()->GetReverse().value()->GetIndex();
         }
     }
 
@@ -117,9 +119,9 @@ static void WriteShuffledEntrance(std::string sphereString, Entrance* entrance) 
     jsonData["entrances"].push_back(entranceJson);
 
     // When decoupled entrances is off, handle saving reverse entrances
-    if (entrance->GetReverse() != nullptr && !entrance->IsDecoupled()) {
+    if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
         json reverseEntranceJson = json::object({
-            { "type", entrance->GetReverse()->GetType() },
+            { "type", entrance->GetReverse().value()->GetType() },
             { "index", replacementDestinationIndex },
             { "destination", replacementIndex },
             { "override", destinationIndex },

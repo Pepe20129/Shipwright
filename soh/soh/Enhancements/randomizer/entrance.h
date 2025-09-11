@@ -71,7 +71,7 @@ class Entrance {
     Entrance* GetReplacement() const;
     EntranceType GetType() const;
     void SetType(EntranceType newType);
-    Entrance* GetReverse() const;
+    std::optional<Entrance*> GetReverse() const;
     void Connect(RandomizerRegion newConnectedRegion);
     RandomizerRegion Disconnect();
     void BindTwoWay(Entrance* otherEntrance);
@@ -87,7 +87,7 @@ class Entrance {
 
     EntranceType type = EntranceType::None;
     Entrance* target = nullptr;
-    Entrance* reverse = nullptr;
+    std::optional<Entrance*> reverse = std::nullopt;
     Entrance* assumed = nullptr;
     Entrance* replacement = nullptr;
     int16_t index = -1;
