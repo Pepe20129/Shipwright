@@ -86,7 +86,6 @@ class Entrance {
     ConditionFn condition_function;
 
     EntranceType type = EntranceType::None;
-    Entrance* target = nullptr;
     std::optional<Entrance*> reverse = std::nullopt;
     std::optional<Entrance*> assumed = std::nullopt;
     std::optional<Entrance*> replacement = std::nullopt;
