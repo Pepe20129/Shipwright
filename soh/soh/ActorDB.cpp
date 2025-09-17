@@ -612,8 +612,59 @@ static ActorDBInit EnPartnerInit = {
 };
 extern "C" s16 gEnPartnerId;
 
+#include "Enhancements/mm_actors/ovl_En_Pp/z_en_pp.h"
+static ActorDBInit EnPpInit = {
+    "En_Pp",
+    "Hiploop",
+    ACTORCAT_ENEMY,
+    (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE),
+    OBJECT_GAMEPLAY_KEEP,
+    sizeof(EnPp),
+    (ActorFunc)EnPp_Init,
+    (ActorFunc)EnPp_Destroy,
+    (ActorFunc)EnPp_Update,
+    (ActorFunc)EnPp_Draw,
+    nullptr,
+};
+extern "C" s16 gEnPpId;
+
+#include "Enhancements/mm_actors/ovl_En_Baguo/z_en_baguo.h"
+static ActorDBInit EnBaguoInit = {
+    "En_Baguo",
+    "Nejiron",
+    ACTORCAT_ENEMY,
+    (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE),
+    OBJECT_GAMEPLAY_KEEP,
+    sizeof(EnBaguo),
+    (ActorFunc)EnBaguo_Init,
+    (ActorFunc)EnBaguo_Destroy,
+    (ActorFunc)EnBaguo_Update,
+    nullptr,
+    nullptr,
+};
+extern "C" s16 gEnBaguoId;
+
+#include "Enhancements/mm_actors/ovl_En_Famos/z_en_famos.h"
+static ActorDBInit EnFamosInit = {
+    "En_Famos",
+    "Dark Armos",
+    ACTORCAT_ENEMY,
+    (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE),
+    OBJECT_GAMEPLAY_KEEP,
+    sizeof(EnFamos),
+    (ActorFunc)EnFamos_Init,
+    (ActorFunc)EnFamos_Destroy,
+    (ActorFunc)EnFamos_Update,
+    (ActorFunc)EnFamos_Draw,
+    nullptr,
+};
+extern "C" s16 gEnFamosId;
+
 void ActorDB::AddBuiltInCustomActors() {
     gEnPartnerId = ActorDB::Instance->AddEntry(EnPartnerInit).entry.id;
+    gEnPpId = ActorDB::Instance->AddEntry(EnPpInit).entry.id;
+    gEnBaguoId = ActorDB::Instance->AddEntry(EnBaguoInit).entry.id;
+    gEnFamosId = ActorDB::Instance->AddEntry(EnFamosInit).entry.id;
 }
 
 extern "C" ActorDBEntry* ActorDB_Retrieve(const int id) {

@@ -88,6 +88,8 @@ const char* enemyCVarList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
     CVAR_ENHANCEMENT("RandomizedEnemyList.WhiteKnuckle"),
     CVAR_ENHANCEMENT("RandomizedEnemyList.WhiteWolfos"),
     CVAR_ENHANCEMENT("RandomizedEnemyList.WitheredBaba"),
+    CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Hiploop"),
+    CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Nejiron"),
 };
 
 const char* enemyNameList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
@@ -151,9 +153,11 @@ const char* enemyNameList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
     "Iron Knuckle (White)",
     "Wolfos (White)",
     "Withered Deku Baba",
+    "MM: Hiploop",
+    "MM: Nejiron",
 };
 
-static EnemyEntry randomizedEnemySpawnTable[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
+static EnemyEntry randomizedEnemySpawnTable[] = {
     { ACTOR_EN_ANUBICE_TAG, 1 }, // Anubis
     { ACTOR_EN_AM, -1 },         // Armos
     { ACTOR_EN_CLEAR_TAG, 1 },   // Arwing
@@ -224,6 +228,14 @@ static EnemyEntry randomizedEnemySpawnTable[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] =
     { ACTOR_EN_IK, 3 },       // Iron Knuckle (white, standing)
     { ACTOR_EN_WF, 1 },       // Wolfos (white)
     { ACTOR_EN_KAREBABA, 0 }, // Withered Deku Baba
+};
+
+extern "C" s16 gEnPpId;
+extern "C" s16 gEnBaguoId;
+
+static s16* mmEnemyIds[] = {
+    &gEnPpId,
+    &gEnBaguoId,
 };
 
 static int enemiesToRandomize[] = {
@@ -389,10 +401,14 @@ static std::vector<EnemyEntry> selectedEnemyList;
 void GetSelectedEnemies() {
     selectedEnemyList.clear();
     for (int i = 0; i < RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE; i++) {
-        if (CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemyList.All"), 0)) {
+        if (CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemyList.All"), false)) {
             selectedEnemyList.push_back(randomizedEnemySpawnTable[i]);
-        } else if (CVarGetInteger(enemyCVarList[i], 1)) {
-            selectedEnemyList.push_back(randomizedEnemySpawnTable[i]);
+        } else if (CVarGetInteger(enemyCVarList[i], true)) {
+            if (i >= ARRAY_COUNT(randomizedEnemySpawnTable)) {
+                selectedEnemyList.push_back({ *mmEnemyIds[i - ARRAY_COUNT(randomizedEnemySpawnTable)], 0 });
+            } else {
+                selectedEnemyList.push_back(randomizedEnemySpawnTable[i]);
+            }
         }
     }
     if (selectedEnemyList.size() == 0) {
