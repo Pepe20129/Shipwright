@@ -1570,6 +1570,7 @@ void EnPp_Draw(Actor* thisx, PlayState* play) {
             scale = 0.6f;
         }
 
+        // TODO
         //Actor_DrawDamageEffects(play, &this->actor, this->deadBodyPartsPos, this->deadBodyPartCount, scale, scale, 1.0f,
         //                        ACTOR_DRAW_DMGEFF_BLUE_FIRE);
     }
@@ -1589,6 +1590,7 @@ void EnPp_Draw(Actor* thisx, PlayState* play) {
             this->drawDmgEffFrozenSteamScale = 0.8f;
         }
 
+        // TODO
         //Actor_DrawDamageEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, this->drawDmgEffScale,
         //                        this->drawDmgEffFrozenSteamScale, alpha, this->drawDmgEffType);
     }

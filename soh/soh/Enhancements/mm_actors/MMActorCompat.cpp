@@ -1,3 +1,4 @@
+#define MM_ACTOR_COMPAT_CPLUSPLUS_CHECK_BYPASS
 #include "MMActorCompat.h"
 #include "math.h"
 #include "functions.h"
@@ -319,6 +320,10 @@ extern "C" void Matrix_RotateXFApply(f32 x) {
     }
 }
 
+extern "C" s16 Math_Atan2S_XY(f32 x, f32 y) {
+    return Math_Atan2S(y, x);
+}
+
 extern "C" void Actor_UpdateVelocityWithGravity(Actor* actor) {
     actor->velocity.x = actor->speedXZ * Math_SinS(actor->world.rot.y);
     actor->velocity.z = actor->speedXZ * Math_CosS(actor->world.rot.y);
@@ -393,6 +398,15 @@ extern "C" s32 Collider_InitAndSetCylinder(PlayState* play, ColliderCylinder* co
     return 1;
 }
 
+/**
+ * Fully initializes a ColliderQuad using the values in src.
+ */
+extern "C" s32 Collider_InitAndSetQuad(PlayState* play, ColliderQuad* collider, Actor* actor, ColliderQuadInit* src) {
+    Collider_InitQuad(play, collider);
+    Collider_SetQuad(play, collider, actor, src);
+    return 0;
+}
+
 void func_800B4AEC(PlayState* play, Actor* actor, f32 y) {
     s32 floorBgId;
     f32 yPos = actor->world.pos.y;
@@ -421,6 +435,35 @@ extern "C" u32 SurfaceType_GetData(CollisionContext* colCtx, CollisionPoly* poly
 
 extern "C" FloorProperty SurfaceType_GetFloorProperty2(CollisionContext* colCtx, CollisionPoly* poly, s32 bgId) {
     return (FloorProperty)(SurfaceType_GetData(colCtx, poly, bgId, 0) >> 26 & 0xF);
+}
+
+extern "C" void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel, s16 scale, s16 scaleStep, s32 colorIndex) {
+    static Color_RGBA8 primColor = { 255, 255, 255, 255 };
+    static Color_RGBA8 envColors[] = {
+        { 255, 0, 0, 255 },
+        { 0, 255, 0, 255 },
+        { 0, 0, 255, 255 },
+        { 150, 150, 150, 255 },
+    };
+
+    EffectSsDeadDb_Spawn(
+        /* play      */ play,
+        /* pos       */ pos,
+        /* velocity  */ velocity,
+        /* accel     */ accel,
+        /* scale     */ scale,
+        /* scaleStep */ scaleStep,
+        /* primR     */ primColor.r,
+        /* primG     */ primColor.g,
+        /* primB     */ primColor.b,
+        /* primA     */ primColor.a,
+        /* envR      */ envColors[colorIndex].r,
+        /* envG      */ envColors[colorIndex].g,
+        /* envB      */ envColors[colorIndex].b,
+        /* unused    */ 1,
+        /* arg14     */ 9,
+        /* playSound */ false
+    );
 }
 
 extern "C" void func_800AE5A0(PlayState* play) {

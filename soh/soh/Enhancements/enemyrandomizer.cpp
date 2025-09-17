@@ -8,6 +8,7 @@
 #include "soh/OTRGlobals.h"
 #include "soh/cvar_prefixes.h"
 #include "soh/ResourceManagerHelpers.h"
+#include <tuple>
 
 extern "C" {
 #include <z64.h>
@@ -90,6 +91,7 @@ const char* enemyCVarList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
     CVAR_ENHANCEMENT("RandomizedEnemyList.WitheredBaba"),
     CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Hiploop"),
     CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Nejiron"),
+    CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Garo"),
 };
 
 const char* enemyNameList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
@@ -155,6 +157,7 @@ const char* enemyNameList[RANDOMIZED_ENEMY_SPAWN_TABLE_SIZE] = {
     "Withered Deku Baba",
     "MM: Hiploop",
     "MM: Nejiron",
+    "MM: Garo",
 };
 
 static EnemyEntry randomizedEnemySpawnTable[] = {
@@ -232,10 +235,13 @@ static EnemyEntry randomizedEnemySpawnTable[] = {
 
 extern "C" s16 gEnPpId;
 extern "C" s16 gEnBaguoId;
+extern "C" s16 gEnEncount3Id;
+extern "C" s16 gEnJsoId;
 
-static s16* mmEnemyIds[] = {
-    &gEnPpId,
-    &gEnBaguoId,
+static std::tuple<s16*, s16> mmEnemyIds[] = {
+    { &gEnPpId, 0 },
+    { &gEnBaguoId, 0 },
+    /*{ &gEnEncount3Id, -1 },*/ { &gEnJsoId, 0 },
 };
 
 static int enemiesToRandomize[] = {
@@ -405,7 +411,9 @@ void GetSelectedEnemies() {
             selectedEnemyList.push_back(randomizedEnemySpawnTable[i]);
         } else if (CVarGetInteger(enemyCVarList[i], true)) {
             if (i >= ARRAY_COUNT(randomizedEnemySpawnTable)) {
-                selectedEnemyList.push_back({ *mmEnemyIds[i - ARRAY_COUNT(randomizedEnemySpawnTable)], 0 });
+                std::tuple<s16*, s16> selectedMMEnemy = mmEnemyIds[i - ARRAY_COUNT(randomizedEnemySpawnTable)];
+                EnemyEntry selectedMMEnemyEntry = { *std::get<0>(selectedMMEnemy), std::get<1>(selectedMMEnemy) };
+                selectedEnemyList.push_back(selectedMMEnemyEntry);
             } else {
                 selectedEnemyList.push_back(randomizedEnemySpawnTable[i]);
             }

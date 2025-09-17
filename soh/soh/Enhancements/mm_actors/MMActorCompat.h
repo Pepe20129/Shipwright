@@ -1,10 +1,10 @@
 #pragma once
 
-/** /
 #ifdef __cplusplus
+#ifndef MM_ACTOR_COMPAT_CPLUSPLUS_CHECK_BYPASS
 #error This header file is only to be included in the c files of MM actors
 #endif
-/**/
+#endif
 
 #include "z64.h"
 #include <libultraship/bridge.h>
@@ -21,6 +21,7 @@
 #define NA_SE_EN_HIPLOOP_DEAD 0
 #define NA_SE_EN_HIPLOOP_MASC_OFF 0
 #define NA_SE_EN_COMMON_FREEZE 0
+#define NA_SE_EN_COMMON_EXTINCT_LEV 0
 #define NA_SE_EN_BAKUO_APPEAR 0
 #define NA_SE_EN_BAKUO_VOICE 0
 #define NA_SE_EN_BAKUO_ROLL 0
@@ -38,6 +39,14 @@
 #define NA_SE_EN_SLIME_DAMAGE 0
 #define NA_SE_EN_SLIME_BREAK 0
 #define NA_SE_EN_SLIME_SURFACE 0
+#define NA_SE_EN_ANSATSUSYA_ENTRY 0
+#define NA_SE_EN_ANSATSUSYA_SWORD 0
+#define NA_SE_EN_ANSATSUSYA_MOVING 0
+#define NA_SE_EN_ANSATSUSYA_CRYING 0
+#define NA_SE_EN_ANSATSUSYA_SKIP 0
+#define NA_SE_EN_ANSATSUSYA_DASH_2 0
+#define NA_SE_EN_ANSATSUSYA_DAMAGE 0
+#define NA_SE_EN_ANSATSUSYA_DEAD 0
 
 #define COLORFILTER_BUFFLAG_OPA    0x0000
 #define COLORFILTER_COLORFLAG_BLUE 0x0000
@@ -148,14 +157,24 @@
 #define UPDBGCHECKINFO_FLAG_400 (1 << 10) // check water
 #define UPDBGCHECKINFO_FLAG_800 (1 << 11)
 
+#define TARGET_MODE_5 5
+
 #define Actor_PlaySfx Audio_PlayActorSound2
 #define Gfx_SetupDL25_Opa Gfx_SetupDL_25Opa
 #define Gfx_SetupDL25_Xlu Gfx_SetupDL_25Xlu
 #define Gfx_SetupDL66 Gfx_SetupDL_66
 #define Rumble_Request func_800A9F6C
+#define Effect_Destroy Effect_Delete
+#define GRAPH_ALLOC Graph_Alloc
+#define func_800BC154 Actor_ChangeCategory
+#define func_800B8D50 func_8002F6D4
+#define gRingOfFireDL gEffFireCircleDL
 
 #define Lib_SegmentedToVirtual(addr) SEGMENTED_TO_VIRTUAL(addr)
 #define Actor_PlaySfx_Flagged(...) ((void)0)
+#define SoundSource_PlaySfxEachFrameAtFixedWorldPos(...) ((void)0)
+#define AudioSfx_SetChannelIO(...) ((void)0)
+#define SWITCH_FLAG_NONE -1
 
 #define ABS_ALT(x) ABS(x)
 #define M_PIf M_PI
@@ -196,14 +215,17 @@ void Matrix_MultVecZ(f32 z, Vec3f* dest);
 void Matrix_MultZero(Vec3f* dest);
 void Matrix_RotateZF(f32 z, MatrixMode mode);
 void Matrix_RotateXFApply(f32 x);
+s16 Math_Atan2S_XY(f32 x, f32 y);
 void Actor_UpdateVelocityWithGravity(Actor* actor);
 void Actor_MoveWithGravity(Actor* actor);
 void Actor_MoveWithoutGravity(Actor* actor);
 void Actor_SpawnIceEffects(PlayState* play, Actor* actor, Vec3f bodyPartsPos[], s32 bodyPartsCount, s32 effectsPerBodyPart, f32 scale, f32 scaleRange);
 s32 Collider_InitAndSetJntSph(PlayState* play, ColliderJntSph* sphereGroup, Actor* actor, ColliderJntSphInit* src, ColliderJntSphElement* elements);
 s32 Collider_InitAndSetCylinder(PlayState* play, ColliderCylinder* collider, Actor* actor, ColliderCylinderInit* src);
+s32 Collider_InitAndSetQuad(PlayState* play, ColliderQuad* collider, Actor* actor, ColliderQuadInit* src);
 void ActorShadow_DrawSquare(Actor* actor, Lights* lights, PlayState* play);
 FloorProperty SurfaceType_GetFloorProperty2(CollisionContext* colCtx, CollisionPoly* poly, s32 bgId);
+void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel, s16 scale, s16 scaleStep, s32 colorIndex);
 void func_800AE5A0(PlayState* play);
 
 #ifdef __cplusplus
