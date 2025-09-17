@@ -644,27 +644,10 @@ static ActorDBInit EnBaguoInit = {
 };
 extern "C" s16 gEnBaguoId;
 
-#include "Enhancements/mm_actors/ovl_En_Famos/z_en_famos.h"
-static ActorDBInit EnFamosInit = {
-    "En_Famos",
-    "Dark Armos",
-    ACTORCAT_ENEMY,
-    (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOSTILE),
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(EnFamos),
-    (ActorFunc)EnFamos_Init,
-    (ActorFunc)EnFamos_Destroy,
-    (ActorFunc)EnFamos_Update,
-    (ActorFunc)EnFamos_Draw,
-    nullptr,
-};
-extern "C" s16 gEnFamosId;
-
 void ActorDB::AddBuiltInCustomActors() {
     gEnPartnerId = ActorDB::Instance->AddEntry(EnPartnerInit).entry.id;
     gEnPpId = ActorDB::Instance->AddEntry(EnPpInit).entry.id;
     gEnBaguoId = ActorDB::Instance->AddEntry(EnBaguoInit).entry.id;
-    gEnFamosId = ActorDB::Instance->AddEntry(EnFamosInit).entry.id;
 }
 
 extern "C" ActorDBEntry* ActorDB_Retrieve(const int id) {
