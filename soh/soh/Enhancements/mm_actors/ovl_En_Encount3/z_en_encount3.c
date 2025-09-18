@@ -34,20 +34,14 @@ void EnEncount3_Init(Actor* thisx, PlayState* play) {
     this->unk14A = ENCOUNT3_GET_SPAWN_INDEX(thisx);
     this->childParams = ENCOUNT3_GET_PARAM_F80(thisx);
     this->switchFlag = ENCOUNT3_GET_SWITCH_FLAG(thisx);
-    LUSLOG_INFO(
-        "EnEncount3_Init(0x%X, 0x%X): this->unk14A=%d this->childParams=%d this->switchFlag=%d",
-        thisx,
-        play,
-        this->unk14A,
-        this->childParams,
-        this->switchFlag
-    );
+    LUSLOG_INFO("EnEncount3_Init(0x%X, 0x%X): this->unk14A=%d this->childParams=%d this->switchFlag=%d", thisx, play,
+                this->unk14A, this->childParams, this->switchFlag);
 
     this->unk14A = 0;
     this->childParams = 0;
     this->switchFlag = -1;
 
-    //this->csId = this->actor.csId;
+    // this->csId = this->actor.csId;
     this->unk16C = ENCOUNT3_GET_ROTZ(thisx) * 10.0f;
     if (this->unk16C < 10.0f) {
         this->unk16C = 10.0f;
@@ -83,16 +77,11 @@ void func_809AD084(EnEncount3* this, PlayState* play) {
         return;
     }
     /**/
-    LUSLOG_INFO(
-        "func_809AD084(0x%X, 0x%X): this->timer=%d this->unk16C=%f this->actor.xzDistToPlayer=%f",
-        this,
-        play,
-        this->timer,
-        this->unk16C,
-        this->actor.xzDistToPlayer
-    );
+    LUSLOG_INFO("func_809AD084(0x%X, 0x%X): this->timer=%d this->unk16C=%f this->actor.xzDistToPlayer=%f", this, play,
+                this->timer, this->unk16C, this->actor.xzDistToPlayer);
     /**/
-    if (!(this->unk16C < this->actor.xzDistToPlayer) && /*(Player_GetMask(play) == PLAYER_MASK_GARO)*/true && !D_809AD810) {
+    if (!(this->unk16C < this->actor.xzDistToPlayer) && /*(Player_GetMask(play) == PLAYER_MASK_GARO)*/ true &&
+        !D_809AD810) {
         if (this->timer > 0) {
             this->timer--;
         } else {
@@ -144,28 +133,17 @@ void EnEncount3_Update(Actor* thisx, PlayState* play2) {
             this->unk178 = 0.06f;
         }
 
-        LUSLOG_INFO(
-            "EnEncount3_Update(0x%X, 0x%X): this->unk16C=%f this->actor.xzDistToPlayer=%f this->actionFunc=0x%X func_809AD194=0x%X",
-            thisx,
-            play2,
-            this->unk16C,
-            this->actor.xzDistToPlayer,
-            this->actionFunc,
-            func_809AD194
-        );
+        LUSLOG_INFO("EnEncount3_Update(0x%X, 0x%X): this->unk16C=%f this->actor.xzDistToPlayer=%f "
+                    "this->actionFunc=0x%X func_809AD194=0x%X",
+                    thisx, play2, this->unk16C, this->actor.xzDistToPlayer, this->actionFunc, func_809AD194);
         if (((this->unk16C + 50.0f) /*+ BREG(0)*/) < this->actor.xzDistToPlayer) {
             if (this->actionFunc == func_809AD194) {
                 this->unk148 = 0;
                 this->unk178 = 0.0f;
                 D_809AD810 = false;
                 if (((this->child != NULL) && (this->child->update != NULL)) && (this->child->colChkInfo.health > 0)) {
-                    LUSLOG_INFO(
-                        "EnEncount3_Update(0x%X, 0x%X): Actor_Kill(0x%X) this->child->colChkInfo.health=%d",
-                        thisx,
-                        play2,
-                        this->child,
-                        this->child->colChkInfo.health
-                    );
+                    LUSLOG_INFO("EnEncount3_Update(0x%X, 0x%X): Actor_Kill(0x%X) this->child->colChkInfo.health=%d",
+                                thisx, play2, this->child, this->child->colChkInfo.health);
                     Actor_Kill(this->child);
                     this->child = NULL;
                 }
@@ -194,7 +172,7 @@ void EnEncount3_Update(Actor* thisx, PlayState* play2) {
         Math_ApproachZeroF(&this->unk170, 0.3f, 10.0f);
         Math_ApproachZeroF(&this->unk160, 0.3f, 5.0f);
         if (this->unk160 < 1.0f) {
-            //play->unk_18880 = false;
+            // play->unk_18880 = false;
         }
     } else if (this->unk148 != 0) {
         Math_ApproachF(&this->unk170, 255.0f, 0.4f, 10.0f);

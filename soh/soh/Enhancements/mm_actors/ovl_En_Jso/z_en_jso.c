@@ -121,30 +121,40 @@ static DamageTable sDamageTable = {
     /* Normal Arrow  */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE),
     /* Hammer Swing  */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE), // this is unused in MM ("UNK_DMG_0x06")
     /* Hookshot      */ DMG_ENTRY(0, EN_JSO_DMGEFF_STUN),
-    /* Kokiri Sword  */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Goron Punch" in MM, changed to the base MM sword damage
-    /* Master Sword  */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Sword" in MM, changed to double the base MM sword damage
-    /* Giant's Knife */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is "Goron Pound" in MM, changed to quadruple the base MM sword damage
+    /* Kokiri Sword  */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Goron Punch" in MM, changed to the base MM sword
+                                                          // damage
+    /* Master Sword  */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Sword" in MM, changed to double the base MM sword
+                                                          // damage
+    /* Giant's Knife */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is "Goron Pound" in MM, changed to quadruple the base
+                                                          // MM sword damage
     /* Fire Arrow    */ DMG_ENTRY(2, EN_JSO_DMGEFF_FIRE),
     /* Ice Arrow     */ DMG_ENTRY(2, EN_JSO_DMGEFF_FREEZE),
     /* Light Arrow   */ DMG_ENTRY(2, EN_JSO_DMGEFF_LIGHT_ORB),
-    /* Unk arrow 1   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Goron Spikes" in MM
-    /* Unk arrow 2   */ DMG_ENTRY(0, EN_JSO_DMGEFF_STUN), // this is "Deku Spin" in MM
-    /* Unk arrow 3   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Deku Bubble" in MM
-    /* Fire Magic    */ DMG_ENTRY(2, EN_JSO_DMGEFF_FIRE), // this is "Deku Launch" in MM, changed to match fire arrows
-    /* Ice Magic     */ DMG_ENTRY(2, EN_JSO_DMGEFF_FREEZE), // this is unused in MM ("UNK_DMG_0x12"), changed to match ice arrows
+    /* Unk arrow 1   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE),   // this is "Goron Spikes" in MM
+    /* Unk arrow 2   */ DMG_ENTRY(0, EN_JSO_DMGEFF_STUN),   // this is "Deku Spin" in MM
+    /* Unk arrow 3   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE),   // this is "Deku Bubble" in MM
+    /* Fire Magic    */ DMG_ENTRY(2, EN_JSO_DMGEFF_FIRE),   // this is "Deku Launch" in MM, changed to match fire arrows
+    /* Ice Magic     */ DMG_ENTRY(2, EN_JSO_DMGEFF_FREEZE), // this is unused in MM ("UNK_DMG_0x12"), changed to match
+                                                            // ice arrows
     /* Light Magic   */ DMG_ENTRY(0, EN_JSO_DMGEFF_ELECTRIC_STUN), // this is "Zora barrier" in MM
     /* Shield        */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE),
     /* Mirror Ray    */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE), // this is "Light Ray" in MM
-    /* Kokiri Spin   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Thrown Object" in MM, changed to the base MM sword spin damage
-    /* Giant Spin    */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is "Zora Punch" in MM, changed to quadruple the base MM sword spin damage
-    /* Master Spin   */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Spin Attack" in MM, changed to double the base MM sword spin damage
-    /* Kokiri Jump   */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Sword Beam" in MM, changed to double the base MM sword damage
-    /* Giant Jump    */ DMG_ENTRY(8, EN_JSO_DMGEFF_NONE), // this is "Normal Roll" in MM, changed to octuple the base MM sword damage
-    /* Master Jump   */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is unused in MM ("UNK_DMG_0x1B"), changed to quadruple the base MM sword damage
+    /* Kokiri Spin   */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Thrown Object" in MM, changed to the base MM sword
+                                                          // spin damage
+    /* Giant Spin    */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is "Zora Punch" in MM, changed to quadruple the base
+                                                          // MM sword spin damage
+    /* Master Spin   */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Spin Attack" in MM, changed to double the base MM
+                                                          // sword spin damage
+    /* Kokiri Jump   */ DMG_ENTRY(2, EN_JSO_DMGEFF_NONE), // this is "Sword Beam" in MM, changed to double the base MM
+                                                          // sword damage
+    /* Giant Jump    */ DMG_ENTRY(8, EN_JSO_DMGEFF_NONE), // this is "Normal Roll" in MM, changed to octuple the base MM
+                                                          // sword damage
+    /* Master Jump   */ DMG_ENTRY(4, EN_JSO_DMGEFF_NONE), // this is unused in MM ("UNK_DMG_0x1B"), changed to quadruple
+                                                          // the base MM sword damage
     /* Unknown 1     */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE), // this is unused in MM ("UNK_DMG_0x1C")
     /* Unblockable   */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE),
     /* Hammer Jump   */ DMG_ENTRY(0, EN_JSO_DMGEFF_IMMUNE), // this is unused in MM ("UNK_DMG_0x1E")
-    /* Unknown 2     */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE), // this is "Powder Keg" in MM
+    /* Unknown 2     */ DMG_ENTRY(1, EN_JSO_DMGEFF_NONE),   // this is "Powder Keg" in MM
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -251,7 +261,7 @@ void EnJso_Init(Actor* thisx, PlayState* play) {
     EffectBlureInit1 rightSwordBlureInit;
     EffectBlureInit1 leftSwordBlureInit;
 
-    //this->actor.hintId = TATL_HINT_ID_GARO;
+    // this->actor.hintId = TATL_HINT_ID_GARO;
     this->actor.targetMode = TARGET_MODE_5;
     this->actor.colChkInfo.mass = 80;
     this->actor.colChkInfo.health = 3;
@@ -331,9 +341,9 @@ void EnJso_ChangeAnim(EnJso* this, s32 animIndex) {
 }
 
 void EnJso_SetupIntroCutscene(EnJso* this) {
-    //EnEncount3* parent = (EnEncount3*)this->actor.parent;
+    // EnEncount3* parent = (EnEncount3*)this->actor.parent;
 
-    //this->csId = parent->csId;
+    // this->csId = parent->csId;
     this->swordState = EN_JSO_SWORD_STATE_NONE_DRAWN;
     this->action = EN_JSO_ACTION_INTRO_CUTSCENE;
     this->actor.flags |= ACTOR_FLAG_100000;
@@ -364,16 +374,16 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
 
     switch (this->cutsceneState) {
         case EN_JSO_INTRO_CS_STATE_DONE_OR_STARTED:
-            //if (!CutsceneManager_IsNext(this->csId)) {
-            //    CutsceneManager_Queue(this->csId);
-            //    return;
-            //}
+            // if (!CutsceneManager_IsNext(this->csId)) {
+            //     CutsceneManager_Queue(this->csId);
+            //     return;
+            // }
 
-            //CutsceneManager_StartWithPlayerCs(this->csId, &this->actor);
-            //Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_21);
-            //this->subCamId = CutsceneManager_GetCurrentSubCamId(this->actor.csId);
-            //player->actor.world.pos.x = this->actor.home.pos.x + 30.0f;
-            //player->actor.world.pos.z = this->actor.home.pos.z + 30.0f;
+            // CutsceneManager_StartWithPlayerCs(this->csId, &this->actor);
+            // Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_21);
+            // this->subCamId = CutsceneManager_GetCurrentSubCamId(this->actor.csId);
+            // player->actor.world.pos.x = this->actor.home.pos.x + 30.0f;
+            // player->actor.world.pos.z = this->actor.home.pos.z + 30.0f;
             this->actor.flags &= ~ACTOR_FLAG_TARGETABLE;
             this->subCamEyeNext.x = player->actor.world.pos.x;
             this->subCamEyeNext.y = player->actor.world.pos.y;
@@ -381,8 +391,8 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             this->subCamAtNext.x = player->actor.world.pos.x;
             this->subCamAtNext.y = player->actor.world.pos.y;
             this->subCamAtNext.z = player->actor.world.pos.z;
-            //player->actor.shape.rot.y = player->actor.world.rot.y =
-            //    Math_Vec3f_Yaw(&player->actor.world.pos, &this->actor.world.pos);
+            // player->actor.shape.rot.y = player->actor.world.rot.y =
+            //     Math_Vec3f_Yaw(&player->actor.world.pos, &this->actor.world.pos);
             Math_Vec3f_Copy(&this->subCamEye, &this->subCamEyeNext);
             Math_Vec3f_Copy(&this->subCamAt, &this->subCamAtNext);
             EnJso_ChangeAnim(this, EN_JSO_ANIM_IDLE);
@@ -420,8 +430,8 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             break;
 
         case EN_JSO_INTRO_CS_STATE_WAITING_FOR_TEXTBOX_TO_APPEAR:
-            //player->actor.world.pos.x = this->actor.home.pos.x + 30.0f;
-            //player->actor.world.pos.z = this->actor.home.pos.z + 90.0f;
+            // player->actor.world.pos.x = this->actor.home.pos.x + 30.0f;
+            // player->actor.world.pos.z = this->actor.home.pos.z + 90.0f;
             this->subCamEyeNext.x = player->actor.world.pos.x - 170.0f;
             this->subCamEyeNext.y = player->actor.world.pos.y + 30.0f;
             this->subCamEyeNext.z = player->actor.world.pos.z - 80.0f;
@@ -475,9 +485,9 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             }
 
             if (showTextbox) {
-                //Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_4);
-                //Message_StartTextbox(play, sTextIds[this->textIndex], &this->actor);
-                //this->textIndex++;
+                // Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_4);
+                // Message_StartTextbox(play, sTextIds[this->textIndex], &this->actor);
+                // this->textIndex++;
                 this->actor.shape.yOffset = 970.0f;
                 this->cutsceneTimer = 0;
                 this->cutsceneState++;
@@ -493,11 +503,11 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             this->subCamAtNext.z = player->actor.world.pos.z;
             Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 1, 0xBB8, 0);
 
-            if (true/*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
-                //Message_CloseTextbox(play);
-                //Message_ContinueTextbox(play, sTextIds[this->textIndex]);
+            if (true /*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
+                // Message_CloseTextbox(play);
+                // Message_ContinueTextbox(play, sTextIds[this->textIndex]);
                 this->cutsceneTimer = 0;
-                //this->textIndex++;
+                // this->textIndex++;
                 this->cutsceneState++;
             }
             break;
@@ -505,7 +515,7 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
         case EN_JSO_INTRO_CS_STATE_RAISE_ARM_AND_DRAW_RIGHT_SWORD:
             Math_SmoothStepToS(&this->actor.shape.rot.y, this->actor.yawTowardsPlayer, 1, 0xBB8, 0);
 
-            if (true/*Message_GetState(&play->msgCtx) == TEXT_STATE_10*/) {
+            if (true /*Message_GetState(&play->msgCtx) == TEXT_STATE_10*/) {
                 this->targetRobeRightRot.x = -0x2710;
                 this->targetRobeRightRot.z = -0x2710;
             }
@@ -530,8 +540,8 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             this->subCamAtNext.y = player->actor.world.pos.y + 30.0f;
             this->subCamAtNext.z = player->actor.world.pos.z - 40.0f;
 
-            if (true/*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
-                //Message_CloseTextbox(play);
+            if (true /*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
+                // Message_CloseTextbox(play);
                 this->targetRightArmRot.x = this->targetRightArmRot.y = this->targetRightArmRot.z =
                     this->targetRobeRightRot.x = this->targetRobeRightRot.y = this->targetRobeRightRot.z = 0;
                 this->cutsceneTimer = 0;
@@ -556,7 +566,7 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
 
                     if (parent->actor.update != NULL) {
                         parent->unk148 = 1;
-                        //play->unk_18880 = true;
+                        // play->unk_18880 = true;
                     }
                 }
 
@@ -576,12 +586,12 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
             this->cutsceneTimer++;
 
             if (this->cutsceneTimer >= 10) {
-                //Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_END);
-                //CutsceneManager_Stop(this->csId);
+                // Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_END);
+                // CutsceneManager_Stop(this->csId);
                 this->rightArmRot.x = this->rightArmRot.y = this->rightArmRot.z = this->robeRightRot.x =
                     this->robeRightRot.y = this->robeRightRot.z = 0;
                 this->cutsceneState = EN_JSO_INTRO_CS_STATE_DONE_OR_STARTED;
-                //this->subCamId = SUB_CAM_ID_DONE;
+                // this->subCamId = SUB_CAM_ID_DONE;
                 this->actor.flags &= ~ACTOR_FLAG_100000;
                 this->actor.flags &= ~ACTOR_FLAG_CANT_LOCK_ON;
                 this->actor.flags |= ACTOR_FLAG_TARGETABLE;
@@ -600,12 +610,12 @@ void EnJso_IntroCutscene(EnJso* this, PlayState* play) {
     Math_Vec3f_Copy(&this->subCamEye, &this->subCamEyeNext);
     Math_Vec3f_Copy(&this->subCamAt, &this->subCamAtNext);
 
-    //if (this->subCamId != SUB_CAM_ID_DONE) {
-    //    this->subCamUp.x = 0.0f;
-    //    this->subCamUp.y = 1.0f;
-    //    this->subCamUp.z = 0.0f;
-    //    Play_SetCameraAtEyeUp(play, this->subCamId, &this->subCamAt, &this->subCamEye, &this->subCamUp);
-    //}
+    // if (this->subCamId != SUB_CAM_ID_DONE) {
+    //     this->subCamUp.x = 0.0f;
+    //     this->subCamUp.y = 1.0f;
+    //     this->subCamUp.z = 0.0f;
+    //     Play_SetCameraAtEyeUp(play, this->subCamId, &this->subCamAt, &this->subCamEye, &this->subCamUp);
+    // }
 }
 
 void EnJso_SetupReappear(EnJso* this, PlayState* play) {
@@ -1152,7 +1162,7 @@ void EnJso_Dead(EnJso* this, PlayState* play) {
 
 void EnJso_SetupFallDownAndTalk(EnJso* this, PlayState* play) {
     EnJso_ChangeAnim(this, EN_JSO_ANIM_FALL_DOWN);
-    //this->textIndex = 2;
+    // this->textIndex = 2;
     this->actor.colChkInfo.mass = MASS_IMMOVABLE;
     this->actor.flags |= (ACTOR_FLAG_TARGETABLE | ACTOR_FLAG_FRIENDLY);
     func_800BC154(play, &play->actorCtx, &this->actor, ACTORCAT_NPC);
@@ -1177,9 +1187,9 @@ void EnJso_FallDownAndTalk(EnJso* this, PlayState* play) {
         if (fabsf(player->actor.world.pos.y - this->actor.world.pos.y) < 60.0f) {
             Player* player2 = GET_PLAYER(play);
 
-            //this->actor.textId = sTextIds[this->textIndex];
-            //Message_StartTextbox(play, this->actor.textId, &this->actor);
-            //player2->stateFlags1 |= PLAYER_STATE1_10000000;
+            // this->actor.textId = sTextIds[this->textIndex];
+            // Message_StartTextbox(play, this->actor.textId, &this->actor);
+            // player2->stateFlags1 |= PLAYER_STATE1_10000000;
             player2->actor.freezeTimer = 3;
             this->actor.flags |= ACTOR_FLAG_CANT_LOCK_ON;
             this->actionFunc = EnJso_TellHint;
@@ -1244,10 +1254,10 @@ void EnJso_BurstIntoFlames(EnJso* this, PlayState* play) {
     s32 i;
 
     player->actor.freezeTimer = 3;
-    if (true/*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
+    if (true /*(Message_GetState(&play->msgCtx) == TEXT_STATE_5) && Message_ShouldAdvance(play)*/) {
         Player* player2 = GET_PLAYER(play);
 
-        //Message_CloseTextbox(play);
+        // Message_CloseTextbox(play);
         for (i = 0; i < ARRAY_COUNT(fireVelocityAndAccel); i++) {
             Math_Vec3f_Copy(&firePos, &this->actor.world.pos);
             firePos.x += Rand_CenteredFloat(30.0f);
@@ -1266,7 +1276,7 @@ void EnJso_BurstIntoFlames(EnJso* this, PlayState* play) {
             this->isPlayerLockedOn = false;
         }
 
-        //player2->stateFlags1 &= ~PLAYER_STATE1_10000000;
+        // player2->stateFlags1 &= ~PLAYER_STATE1_10000000;
         Actor_Kill(&this->actor);
     }
 }
@@ -1319,9 +1329,9 @@ void EnJso_UpdateDamage(EnJso* this, PlayState* play) {
                             if (((this->drawDmgEffType != ACTOR_DRAW_DMGEFF_FROZEN_SFX) &&
                                  (this->drawDmgEffType != ACTOR_DRAW_DMGEFF_FROZEN_NO_SFX)) ||
                                 (this->drawDmgEffAlpha == 0)) {
-                                //Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.focus.pos.x,
-                                //            this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0,
-                                //            CLEAR_TAG_PARAMS(CLEAR_TAG_LARGE_LIGHT_RAYS));
+                                // Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.focus.pos.x,
+                                //             this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0,
+                                //             CLEAR_TAG_PARAMS(CLEAR_TAG_LARGE_LIGHT_RAYS));
                                 this->drawDmgEffAlpha = 20;
                                 this->drawDmgEffType = ACTOR_DRAW_DMGEFF_LIGHT_ORBS;
                                 attackDealsDamage = true;
@@ -1507,7 +1517,7 @@ void EnJso_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
 
     if (limbIndex == GARO_LIMB_LEFT_SWORD) {
         if (this->swordState == EN_JSO_SWORD_STATE_KNOCKED_OUT_OF_HANDS) {
-            //Actor_SpawnBodyParts(&this->actor, play, ENPART_PARAMS(ENPART_TYPE_15), dList);
+            // Actor_SpawnBodyParts(&this->actor, play, ENPART_PARAMS(ENPART_TYPE_15), dList);
         }
 
         Matrix_Translate(0.0f, 0.0f, 0.0f, MTXMODE_APPLY);
@@ -1531,7 +1541,7 @@ void EnJso_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
 
     if (limbIndex == GARO_LIMB_RIGHT_SWORD) {
         if (this->swordState == EN_JSO_SWORD_STATE_KNOCKED_OUT_OF_HANDS) {
-            //Actor_SpawnBodyParts(&this->actor, play, ENPART_PARAMS(ENPART_TYPE_15), dList);
+            // Actor_SpawnBodyParts(&this->actor, play, ENPART_PARAMS(ENPART_TYPE_15), dList);
             this->swordState = EN_JSO_SWORD_STATE_NONE_DRAWN;
         }
 
@@ -1650,7 +1660,7 @@ void EnJso_Draw(Actor* thisx, PlayState* play) {
         }
 
         // TODO
-        //Actor_DrawDamageEffects(play, &this->actor, this->bodyPartsPos, EN_JSO_BODYPART_MAX, this->drawDmgEffScale,
+        // Actor_DrawDamageEffects(play, &this->actor, this->bodyPartsPos, EN_JSO_BODYPART_MAX, this->drawDmgEffScale,
         //                        this->drawDmgEffFrozenSteamScale, drawDmgEffAlpha, this->drawDmgEffType);
     }
 

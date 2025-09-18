@@ -329,8 +329,8 @@ extern "C" void Actor_UpdateVelocityWithGravity(Actor* actor) {
     actor->velocity.z = actor->speedXZ * Math_CosS(actor->world.rot.y);
 
     actor->velocity.y += actor->gravity;
-    if (actor->velocity.y < -20.0f/*actor->terminalVelocity*/) {
-        actor->velocity.y = -20.0f/*actor->terminalVelocity*/;
+    if (actor->velocity.y < -20.0f /*actor->terminalVelocity*/) {
+        actor->velocity.y = -20.0f /*actor->terminalVelocity*/;
     }
 }
 
@@ -353,7 +353,7 @@ extern "C" void Actor_MoveWithoutGravity(Actor* actor) {
 }
 
 extern "C" void Actor_SpawnIceEffects(PlayState* play, Actor* actor, Vec3f bodyPartsPos[], s32 bodyPartsCount,
-                           s32 effectsPerBodyPart, f32 scale, f32 scaleRange) {
+                                      s32 effectsPerBodyPart, f32 scale, f32 scaleRange) {
     static Color_RGBA8 sPrimColor = { 170, 255, 255, 255 };
     static Color_RGBA8 sEnvColor = { 200, 200, 255, 255 };
     static Vec3f sAccel = { 0.0f, -1.0f, 0.0f };
@@ -386,13 +386,15 @@ extern "C" void Actor_SpawnIceEffects(PlayState* play, Actor* actor, Vec3f bodyP
     }
 }
 
-extern "C" s32 Collider_InitAndSetJntSph(PlayState* play, ColliderJntSph* sphereGroup, Actor* actor, ColliderJntSphInit* src, ColliderJntSphElement* elements) {
+extern "C" s32 Collider_InitAndSetJntSph(PlayState* play, ColliderJntSph* sphereGroup, Actor* actor,
+                                         ColliderJntSphInit* src, ColliderJntSphElement* elements) {
     Collider_InitJntSph(play, sphereGroup);
     Collider_SetJntSph(play, sphereGroup, actor, src, elements);
     return 0;
 }
 
-extern "C" s32 Collider_InitAndSetCylinder(PlayState* play, ColliderCylinder* collider, Actor* actor, ColliderCylinderInit* src) {
+extern "C" s32 Collider_InitAndSetCylinder(PlayState* play, ColliderCylinder* collider, Actor* actor,
+                                           ColliderCylinderInit* src) {
     Collider_InitCylinder(play, collider);
     Collider_SetCylinder(play, collider, actor, src);
     return 1;
@@ -437,7 +439,8 @@ extern "C" FloorProperty SurfaceType_GetFloorProperty2(CollisionContext* colCtx,
     return (FloorProperty)(SurfaceType_GetData(colCtx, poly, bgId, 0) >> 26 & 0xF);
 }
 
-extern "C" void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel, s16 scale, s16 scaleStep, s32 colorIndex) {
+extern "C" void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel, s16 scale, s16 scaleStep,
+                              s32 colorIndex) {
     static Color_RGBA8 primColor = { 255, 255, 255, 255 };
     static Color_RGBA8 envColors[] = {
         { 255, 0, 0, 255 },
@@ -462,8 +465,7 @@ extern "C" void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3
         /* envB      */ envColors[colorIndex].b,
         /* unused    */ 1,
         /* arg14     */ 9,
-        /* playSound */ false
-    );
+        /* playSound */ false);
 }
 
 extern "C" void func_800AE5A0(PlayState* play) {

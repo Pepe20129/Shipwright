@@ -68,12 +68,13 @@ typedef struct EnPp {
     /* 0x2C8 */ s16 hornColliderOn;
     /* 0x2D0 */ s16 targetRotY;
     /* 0x2D2 */ union {
-                    s16 isCharging;
-                    s16 hasDoneFirstRoar;
-                    s16 hasLandedFromJump;
-                    s16 maskDetachState;
-                } actionVar;
-    /* 0x2D4 */ s16 maskBounceAngularVelocity; // Controls the speed that the Hiploop rotates to face the player when an attack bounces off the mask.
+        s16 isCharging;
+        s16 hasDoneFirstRoar;
+        s16 hasLandedFromJump;
+        s16 maskDetachState;
+    } actionVar;
+    /* 0x2D4 */ s16 maskBounceAngularVelocity; // Controls the speed that the Hiploop rotates to face the player when an
+                                               // attack bounces off the mask.
     /* 0x2D6 */ s16 deadBodyPartsSpawnedCount;
     /* 0x2D8 */ f32 endFrame;
     /* 0x2DC */ f32 chargeAndBounceSpeed;

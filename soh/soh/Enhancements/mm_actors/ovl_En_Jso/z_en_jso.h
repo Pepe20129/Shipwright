@@ -18,10 +18,14 @@ typedef void (*EnJsoActionFunc)(struct EnJso*, PlayState*);
 typedef enum EnJsoHintType {
     /* 0 */ EN_JSO_HINT_FREEZE_OCTOROKS,
     /* 1 */ EN_JSO_HINT_FLATS_LOCATION,
-    /* 2 */ EN_JSO_HINT_VARIABLE_1, // Hints that Pamela's family is in the house or that the Song of Healing can heal Pamela's father
-    /* 3 */ EN_JSO_HINT_VARIABLE_2, // Hints that Pamela leaves the house to check something or that the well is connected to Ikana Castle
-    /* 4 */ EN_JSO_HINT_VARIABLE_3, // Hints that they can restore the river by going to Sharp's cave or that the Gidbos in the well want items
-    /* 5 */ EN_JSO_HINT_VARIABLE_4, // Hints that they need to Song of Storms to stop Sharp or that the items the Gibdos want can be found in the well
+    /* 2 */ EN_JSO_HINT_VARIABLE_1, // Hints that Pamela's family is in the house or that the Song of Healing can heal
+                                    // Pamela's father
+    /* 3 */ EN_JSO_HINT_VARIABLE_2, // Hints that Pamela leaves the house to check something or that the well is
+                                    // connected to Ikana Castle
+    /* 4 */ EN_JSO_HINT_VARIABLE_3, // Hints that they can restore the river by going to Sharp's cave or that the Gidbos
+                                    // in the well want items
+    /* 5 */ EN_JSO_HINT_VARIABLE_4, // Hints that they need to Song of Storms to stop Sharp or that the items the Gibdos
+                                    // want can be found in the well
     /* 6 */ EN_JSO_HINT_DANCING_REDEADS,
     /* 7 */ EN_JSO_HINT_DESTRUCTIBLE_CEILING_IN_CASTLE,
     /* 8 */ EN_JSO_HINT_SECOND_ENTRANCE_TO_CASTLE,
@@ -57,7 +61,8 @@ typedef struct EnJso {
     /* 0x284 */ UNK_TYPE1 unk_284[0x2];
     /* 0x286 */ s16 attackTimer; // while bouncing, the Garo cannot start an attack until this reaches 0
     /* 0x288 */ s16 timer;
-    /* 0x28A */ s16 isGuarding; // Set to false when the guard animation ends, never checked or set otherwise. Name is inferred based on how it's being set.
+    /* 0x28A */ s16 isGuarding; // Set to false when the guard animation ends, never checked or set otherwise. Name is
+                                // inferred based on how it's being set.
     /* 0x28C */ s16 isPlayerLockedOn;
     /* 0x28E */ s16 isAttacking;
     /* 0x290 */ Vec3s robeRightRot;
@@ -70,7 +75,8 @@ typedef struct EnJso {
     /* 0x2B0 */ f32 drawDmgEffFrozenSteamScale;
     /* 0x2B4 */ Vec3f bodyPartsPos[EN_JSO_BODYPART_MAX];
     /* 0x344 */ s16 bodyPartIndex;
-    /* 0x346 */ s16 disableAnimations; // Checked but never set, so it's implicitly always false. Name is inferred based on how it's being checked.
+    /* 0x346 */ s16 disableAnimations; // Checked but never set, so it's implicitly always false. Name is inferred based
+                                       // on how it's being checked.
     /* 0x348 */ s16 textIndex;
     /* 0x34A */ s16 hintType;
     /* 0x34C */ u8 disableBlure;
@@ -101,8 +107,9 @@ typedef struct EnJso {
     /* 0x518 */ Vec3f afterimagePos[EN_JSO_AFTERIMAGE_COUNT];
     /* 0x608 */ Vec3s afterimageRot[EN_JSO_AFTERIMAGE_COUNT];
     /* 0x680 */ Vec3s afterimageJointTable[EN_JSO_AFTERIMAGE_COUNT][GARO_LIMB_MAX];
-    /* 0xFE0 */ Vec3f knockbackVelocity; // Adds a little push backwards when the Garo is bounced off the player's shield, damaged, or stunned
-} EnJso; // size = 0xFEC
+    /* 0xFE0 */ Vec3f knockbackVelocity; // Adds a little push backwards when the Garo is bounced off the player's
+                                         // shield, damaged, or stunned
+} EnJso;                                 // size = 0xFEC
 
 #ifdef __cplusplus
 extern "C" {

@@ -91,29 +91,39 @@ static DamageTable sDamageTable = {
     /* Normal Arrow  */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE),
     /* Hammer Swing  */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP), // this is unused in MM ("UNK_DMG_0x06")
     /* Hookshot      */ DMG_ENTRY(1, EN_PP_DMGEFF_HOOKSHOT),
-    /* Kokiri Sword  */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Goron Punch" in MM, changed to the base MM sword damage
-    /* Master Sword  */ DMG_ENTRY(2, EN_PP_DMGEFF_DAMAGE), // this is "Sword" in MM, changed to double the base MM sword damage
-    /* Giant's Knife */ DMG_ENTRY(4, EN_PP_DMGEFF_DAMAGE), // this is "Goron Pound" in MM, changed to quadruple the base MM sword damage
+    /* Kokiri Sword  */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Goron Punch" in MM, changed to the base MM sword
+                                                           // damage
+    /* Master Sword  */ DMG_ENTRY(2, EN_PP_DMGEFF_DAMAGE), // this is "Sword" in MM, changed to double the base MM sword
+                                                           // damage
+    /* Giant's Knife */ DMG_ENTRY(4, EN_PP_DMGEFF_DAMAGE), // this is "Goron Pound" in MM, changed to quadruple the base
+                                                           // MM sword damage
     /* Fire Arrow    */ DMG_ENTRY(1, EN_PP_DMGEFF_FIRE),
     /* Ice Arrow     */ DMG_ENTRY(1, EN_PP_DMGEFF_FREEZE),
     /* Light Arrow   */ DMG_ENTRY(2, EN_PP_DMGEFF_LIGHT_ORB),
     /* Unk arrow 1   */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Goron Spikes" in MM
-    /* Unk arrow 2   */ DMG_ENTRY(0, EN_PP_DMGEFF_STUN), // this is "Deku Spin" in MM
+    /* Unk arrow 2   */ DMG_ENTRY(0, EN_PP_DMGEFF_STUN),   // this is "Deku Spin" in MM
     /* Unk arrow 3   */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Deku Bubble" in MM
-    /* Fire Magic    */ DMG_ENTRY(2, EN_PP_DMGEFF_FIRE), // this is "Deku Launch" in MM, changed to match fire arrows
-    /* Ice Magic     */ DMG_ENTRY(2, EN_PP_DMGEFF_FREEZE), // this is unused in MM ("UNK_DMG_0x12"), changed to match ice arrows
+    /* Fire Magic    */ DMG_ENTRY(2, EN_PP_DMGEFF_FIRE),   // this is "Deku Launch" in MM, changed to match fire arrows
+    /* Ice Magic     */ DMG_ENTRY(2, EN_PP_DMGEFF_FREEZE), // this is unused in MM ("UNK_DMG_0x12"), changed to match
+                                                           // ice arrows
     /* Light Magic   */ DMG_ENTRY(0, EN_PP_DMGEFF_ELECTRIC_STUN), // this is "Zora barrier" in MM
     /* Shield        */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP),
-    /* Mirror Ray    */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP), // this is "Light Ray" in MM
-    /* Kokiri Spin   */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Thrown Object" in MM, changed to the base MM sword spin damage
-    /* Giant Spin    */ DMG_ENTRY(4, EN_PP_DMGEFF_DAMAGE), // this is "Zora Punch" in MM, changed to quadruple the base MM sword spin damage
-    /* Master Spin   */ DMG_ENTRY(2, EN_PP_DMGEFF_DAMAGE), // this is "Spin Attack" in MM, changed to double the base MM sword spin damage
-    /* Kokiri Jump   */ DMG_ENTRY(2, EN_PP_DMGEFF_JUMP), // this is "Sword Beam" in MM, changed to double the base MM sword damage
-    /* Giant Jump    */ DMG_ENTRY(8, EN_PP_DMGEFF_JUMP), // this is "Normal Roll" in MM, changed to quadruple the base MM sword damage
-    /* Master Jump   */ DMG_ENTRY(8, EN_PP_DMGEFF_JUMP), // this is unused in MM ("UNK_DMG_0x1B"), changed to quadruple the base MM sword damage
+    /* Mirror Ray    */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP),   // this is "Light Ray" in MM
+    /* Kokiri Spin   */ DMG_ENTRY(1, EN_PP_DMGEFF_DAMAGE), // this is "Thrown Object" in MM, changed to the base MM
+                                                           // sword spin damage
+    /* Giant Spin    */ DMG_ENTRY(4, EN_PP_DMGEFF_DAMAGE), // this is "Zora Punch" in MM, changed to quadruple the base
+                                                           // MM sword spin damage
+    /* Master Spin   */ DMG_ENTRY(2, EN_PP_DMGEFF_DAMAGE), // this is "Spin Attack" in MM, changed to double the base MM
+                                                           // sword spin damage
+    /* Kokiri Jump   */ DMG_ENTRY(2, EN_PP_DMGEFF_JUMP),   // this is "Sword Beam" in MM, changed to double the base MM
+                                                           // sword damage
+    /* Giant Jump    */ DMG_ENTRY(8, EN_PP_DMGEFF_JUMP),   // this is "Normal Roll" in MM, changed to quadruple the base
+                                                           // MM sword damage
+    /* Master Jump   */ DMG_ENTRY(8, EN_PP_DMGEFF_JUMP), // this is unused in MM ("UNK_DMG_0x1B"), changed to quadruple
+                                                         // the base MM sword damage
     /* Unknown 1     */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP), // this is unused in MM ("UNK_DMG_0x1C")
     /* Unblockable   */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP),
-    /* Hammer Jump   */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP), // this is unused in MM ("UNK_DMG_0x1E")
+    /* Hammer Jump   */ DMG_ENTRY(0, EN_PP_DMGEFF_JUMP),           // this is unused in MM ("UNK_DMG_0x1E")
     /* Unknown 2     */ DMG_ENTRY(1, EN_PP_DMGEFF_KNOCK_OFF_MASK), // this is "Powder Keg" in MM
 };
 
@@ -255,9 +265,11 @@ void EnPp_Init(Actor* thisx, PlayState* play) {
         EnPp_BodyPart_SetupMove(this);
     } else {
         Collider_InitJntSph(play, &this->maskCollider);
-        Collider_SetJntSph(play, &this->maskCollider, &this->actor, &sMaskColliderJntSphInit, this->maskColliderElements);
+        Collider_SetJntSph(play, &this->maskCollider, &this->actor, &sMaskColliderJntSphInit,
+                           this->maskColliderElements);
         Collider_InitJntSph(play, &this->bodyCollider);
-        Collider_SetJntSph(play, &this->bodyCollider, &this->actor, &sBodyColliderJntSphInit, this->bodyColliderElements);
+        Collider_SetJntSph(play, &this->bodyCollider, &this->actor, &sBodyColliderJntSphInit,
+                           this->bodyColliderElements);
 
         this->bodyCollider.elements[0].dim.scale = 1.0f;
         if (EN_PP_GET_TYPE(&this->actor) > EN_PP_TYPE_MASKED) {
@@ -857,7 +869,7 @@ void EnPp_StunnedOrFrozen(EnPp* this, PlayState* play) {
     if ((this->secondaryTimer == 0) && (this->drawDmgEffTimer == 0)) {
         if ((this->drawDmgEffType == ACTOR_DRAW_DMGEFF_FROZEN_SFX) ||
             (this->drawDmgEffType == ACTOR_DRAW_DMGEFF_FROZEN_NO_SFX)) {
-            //Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
+            // Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
             this->drawDmgEffTimer = 0;
             this->drawDmgEffType = ACTOR_DRAW_DMGEFF_FIRE;
         }
@@ -893,7 +905,7 @@ void EnPp_SetupDamaged(EnPp* this, PlayState* play) {
     if (((this->drawDmgEffType == ACTOR_DRAW_DMGEFF_FROZEN_SFX) ||
          (this->drawDmgEffType == ACTOR_DRAW_DMGEFF_FROZEN_NO_SFX)) &&
         (this->drawDmgEffTimer != 0)) {
-        //Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
+        // Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
         this->drawDmgEffTimer = 0;
         this->drawDmgEffType = ACTOR_DRAW_DMGEFF_FIRE;
     }
@@ -1013,7 +1025,7 @@ void EnPp_Dead(EnPp* this, PlayState* play) {
             return;
         }
 
-        //Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
+        // Actor_SpawnIceEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, 2, 0.7f, 0.4f);
         this->drawDmgEffTimer = 0;
         this->drawDmgEffType = ACTOR_DRAW_DMGEFF_FIRE;
     }
@@ -1130,8 +1142,8 @@ void EnPp_Mask_Detach(EnPp* this, PlayState* play) {
                             maskFirePos.x += Rand_CenteredFloat(20.0f);
                             maskFirePos.y = this->actor.floorHeight;
                             maskFirePos.z += Rand_CenteredFloat(20.0f);
-                            //func_800B3030(play, &maskFirePos, &sMaskFireVelocityAndAccel[i],
-                            //              &sMaskFireVelocityAndAccel[i], 70, 0, 2);
+                            // func_800B3030(play, &maskFirePos, &sMaskFireVelocityAndAccel[i],
+                            //               &sMaskFireVelocityAndAccel[i], 70, 0, 2);
                         }
 
                         Actor_Kill(&this->actor);
@@ -1307,8 +1319,7 @@ void EnPp_UpdateDamage(EnPp* this, PlayState* play) {
                                  (this->drawDmgEffType != ACTOR_DRAW_DMGEFF_FROZEN_NO_SFX)) ||
                                 (this->drawDmgEffTimer == 0))) {
                         Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.focus.pos.x,
-                                    this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0,
-                                    4, false);
+                                    this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0, 4, false);
                         Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 255, COLORFILTER_BUFFLAG_OPA,
                                              25);
                         this->drawDmgEffTimer = 20;
@@ -1408,9 +1419,7 @@ void EnPp_Update(Actor* thisx, PlayState* play) {
         }
     }
 
-    Actor_UpdateBgCheckInfo(play, &this->actor, 35.0f, 40.0f, 40.0f,
-                            1 | 2 | 4 |
-                                8 | 0x10);
+    Actor_UpdateBgCheckInfo(play, &this->actor, 35.0f, 40.0f, 40.0f, 1 | 2 | 4 | 8 | 0x10);
     if (this->action != EN_PP_ACTION_BODY_PART_MOVE) {
         this->actor.shape.rot.y = this->actor.world.rot.y;
     }
@@ -1571,7 +1580,8 @@ void EnPp_Draw(Actor* thisx, PlayState* play) {
         }
 
         // TODO
-        //Actor_DrawDamageEffects(play, &this->actor, this->deadBodyPartsPos, this->deadBodyPartCount, scale, scale, 1.0f,
+        // Actor_DrawDamageEffects(play, &this->actor, this->deadBodyPartsPos, this->deadBodyPartCount, scale,
+        // scale, 1.0f,
         //                        ACTOR_DRAW_DMGEFF_BLUE_FIRE);
     }
 
@@ -1591,7 +1601,7 @@ void EnPp_Draw(Actor* thisx, PlayState* play) {
         }
 
         // TODO
-        //Actor_DrawDamageEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, this->drawDmgEffScale,
+        // Actor_DrawDamageEffects(play, &this->actor, this->bodyPartsPos, EN_PP_BODYPART_MAX, this->drawDmgEffScale,
         //                        this->drawDmgEffFrozenSteamScale, alpha, this->drawDmgEffType);
     }
 

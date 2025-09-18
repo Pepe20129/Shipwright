@@ -91,12 +91,12 @@ static DamageTable sDamageTable = {
     /* Fire Arrow    */ DMG_ENTRY(0, NEJIRON_DMGEFF_RECOIL),
     /* Ice Arrow     */ DMG_ENTRY(0, NEJIRON_DMGEFF_RECOIL),
     /* Light Arrow   */ DMG_ENTRY(1, NEJIRON_DMGEFF_KILL),
-    /* Unk arrow 1   */ DMG_ENTRY(2, NEJIRON_DMGEFF_KILL), // this is "Goron Spikes" in MM
+    /* Unk arrow 1   */ DMG_ENTRY(2, NEJIRON_DMGEFF_KILL),   // this is "Goron Spikes" in MM
     /* Unk arrow 2   */ DMG_ENTRY(0, NEJIRON_DMGEFF_RECOIL), // this is "Deku Spin" in MM
     /* Unk arrow 3   */ DMG_ENTRY(0, NEJIRON_DMGEFF_RECOIL), // this is "Deku Bubble" in MM
     /* Fire Magic    */ DMG_ENTRY(1, NEJIRON_DMGEFF_RECOIL), // this is "Deku Launch" in MM, changed to recoil
     /* Ice Magic     */ DMG_ENTRY(0, NEJIRON_DMGEFF_RECOIL), // this is unused in MM ("UNK_DMG_0x12")
-    /* Light Magic   */ DMG_ENTRY(0, NEJIRON_DMGEFF_NONE), // this is "Zora barrier" in MM
+    /* Light Magic   */ DMG_ENTRY(0, NEJIRON_DMGEFF_NONE),   // this is "Zora barrier" in MM
     /* Shield        */ DMG_ENTRY(0, NEJIRON_DMGEFF_NONE),
     /* Mirror Ray    */ DMG_ENTRY(0, NEJIRON_DMGEFF_NONE), // this is "Light Ray" in MM
     /* Kokiri Spin   */ DMG_ENTRY(0, NEJIRON_DMGEFF_KILL), // this is "Thrown Object" in MM, changed to kill
@@ -337,7 +337,8 @@ void EnBaguo_CheckForDetonation(EnBaguo* this, PlayState* play) {
                 }
 
                 // spawns an arwing? ACTOR_EN_CLEAR_TAG might be another actor in MM
-                //Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.world.pos.x, this->actor.world.pos.y,
+                // Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.world.pos.x,
+                // this->actor.world.pos.y,
                 //            this->actor.world.pos.z, 0, 0, 0, 4, false);
                 Actor_PlaySfx(&this->actor, NA_SE_IT_BOMB_EXPLOSION);
                 Actor_PlaySfx(&this->actor, NA_SE_EN_BAKUO_DEAD);
