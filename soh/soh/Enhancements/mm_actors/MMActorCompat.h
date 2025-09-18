@@ -227,7 +227,7 @@ void ActorShadow_DrawSquare(Actor* actor, Lights* lights, PlayState* play);
 FloorProperty SurfaceType_GetFloorProperty2(CollisionContext* colCtx, CollisionPoly* poly, s32 bgId);
 void func_800B3030(PlayState* play, Vec3f* pos, Vec3f* velocity, Vec3f* accel, s16 scale, s16 scaleStep, s32 colorIndex);
 void func_800AE5A0(PlayState* play);
-
+s32 BgCheck_SphVsFirstWall(CollisionContext* colCtx, Vec3f* center, f32 radius);
 #ifdef __cplusplus
 }
 #endif
