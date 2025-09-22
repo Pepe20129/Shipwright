@@ -54,6 +54,7 @@ extern "C" {
 #include "src/overlays/actors/ovl_En_Xc/z_en_xc.h"
 #include "src/overlays/actors/ovl_Fishing/z_fishing.h"
 #include "src/overlays/actors/ovl_En_Mk/z_en_mk.h"
+#include "src/overlays/actors/ovl_En_Ishi/z_en_ishi.h"
 #include "draw.h"
 
 extern SaveContext gSaveContext;
@@ -2181,6 +2182,18 @@ void RandomizerOnActorInitHandler(void* actorRef) {
         if (rc != RC_UNKNOWN_CHECK) {
             ((EnBox*)actor)->getItemEntry = Randomizer_GetItemFromKnownCheck(rc, actor->params >> 5 & 0x7F);
             EnBox_UpdateSizeAndTexture((EnBox*)actor, gPlayState);
+        }
+    }
+
+    if (actor->id == ACTOR_EN_ISHI) {
+        // If dungeon entrance randomizer is on, remove the grey boulders that normally
+        // block child link from reaching the Fire Temple entrance
+        if (
+            Randomizer_GetSettingValue(RSK_SHUFFLE_DUNGEON_ENTRANCES) != RO_DUNGEON_ENTRANCE_SHUFFLE_OFF &&
+            ((EnIshi*)actor)->type == ROCK_LARGE &&
+            gPlayState->sceneNum == SCENE_DEATH_MOUNTAIN_CRATER
+        ) {
+            Actor_Kill(actor);
         }
     }
 }
