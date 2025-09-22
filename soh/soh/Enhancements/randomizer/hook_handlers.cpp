@@ -1732,6 +1732,15 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             }
             break;
         }
+        case VB_COUNT_EPONA_AS_OBTAINED: {
+            *should &= CHECK_QUEST_ITEM(QUEST_SONG_EPONA) &&
+                GameInteractor_Should(VB_HAVE_OCARINA_NOTE_D5, true) &&
+                GameInteractor_Should(VB_HAVE_OCARINA_NOTE_B4, true) &&
+                GameInteractor_Should(VB_HAVE_OCARINA_NOTE_A4, true) &&
+                (INV_CONTENT(ITEM_OCARINA_FAIRY) != ITEM_NONE);
+
+            break;
+        }
         case VB_FREEZE_ON_SKULL_TOKEN:
         case VB_TRADE_TIMER_ODD_MUSHROOM:
         case VB_TRADE_TIMER_FROG:

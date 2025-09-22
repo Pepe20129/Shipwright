@@ -2253,6 +2253,14 @@ typedef enum {
     // #### `args`
     // - `*DoorShutter`
     VB_BE_NEAR_DOOR_SHUTTER,
+
+    // #### `result`
+    // ```c
+    // Flags_GetEventChkInf(EVENTCHKINF_EPONA_OBTAINED) != 0
+    // ```
+    // #### `args`
+    // - None
+    VB_COUNT_EPONA_AS_OBTAINED,
 } GIVanillaBehavior;
 
 #endif
