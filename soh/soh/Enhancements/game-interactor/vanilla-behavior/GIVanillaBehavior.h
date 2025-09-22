@@ -2272,6 +2272,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_FORCE_CLOSE_HYRULE_BRIDGE,
+
+    // #### `result`
+    // ```c
+    // CUR_EQUIP_VALUE(EQUIP_TYPE_TUNIC) != EQUIP_VALUE_TUNIC_KOKIRI)
+    // ```
+    // #### `args`
+    // - None
+    VB_LIKE_LIKE_TRY_TO_STEAL_TUNIC,
 } GIVanillaBehavior;
 
 #endif
