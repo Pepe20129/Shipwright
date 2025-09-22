@@ -2170,6 +2170,14 @@ void RandomizerOnActorInitHandler(void* actorRef) {
     if (actor->id == ACTOR_PLAYER && RAND_GET_OPTION(RSK_SHUFFLE_ENTRANCES)) {
         Grotto_SanitizeEntranceType();
     }
+
+    if (actor->id == ACTOR_EN_BOX) {
+        RandomizerCheck rc = Randomizer_GetCheckFromActor(actor->id, gPlayState->sceneNum, actor->params);
+        if (rc != RC_UNKNOWN_CHECK) {
+            ((EnBox*)actor)->getItemEntry = Randomizer_GetItemFromKnownCheck(rc, actor->params >> 5 & 0x7F);
+            EnBox_UpdateSizeAndTexture((EnBox*)actor, gPlayState);
+        }
+    }
 }
 
 void RandomizerOnGameFrameUpdateHandler() {
