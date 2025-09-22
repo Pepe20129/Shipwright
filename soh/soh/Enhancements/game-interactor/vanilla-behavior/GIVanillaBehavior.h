@@ -2261,6 +2261,17 @@ typedef enum {
     // #### `args`
     // - None
     VB_COUNT_EPONA_AS_OBTAINED,
+
+    // #### `result`
+    // ```c
+    // CHECK_QUEST_ITEM(QUEST_KOKIRI_EMERALD) &&
+    // CHECK_QUEST_ITEM(QUEST_GORON_RUBY) &&
+    // CHECK_QUEST_ITEM(QUEST_ZORA_SAPPHIRE) &&
+    // !Flags_GetEventChkInf(EVENTCHKINF_ZELDA_FLED_HYRULE_CASTLE)
+    // ```
+    // #### `args`
+    // - None
+    VB_FORCE_CLOSE_HYRULE_BRIDGE,
 } GIVanillaBehavior;
 
 #endif

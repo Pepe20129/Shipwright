@@ -1741,6 +1741,11 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
 
             break;
         }
+        case VB_FORCE_CLOSE_HYRULE_BRIDGE: {
+            // To accomodate hyrule castle exit, don't close the bridge
+            *should = false;
+            break;
+        }
         case VB_FREEZE_ON_SKULL_TOKEN:
         case VB_TRADE_TIMER_ODD_MUSHROOM:
         case VB_TRADE_TIMER_FROG:
