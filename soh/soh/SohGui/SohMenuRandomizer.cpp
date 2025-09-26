@@ -1,5 +1,6 @@
 #include "SohMenu.h"
 #include "soh/OTRGlobals.h"
+#include "ImGuiUtils.h"
 
 namespace SohGui {
 
@@ -16,8 +17,24 @@ void SohMenu::AddMenuRandomizer() {
     // Add Randomizer Menu
     AddMenuEntry("Randomizer", CVAR_SETTING("Menu.RandomizerSidebarSection"));
 
+    // Information
+    WidgetPath path = { "Randomizer", "Information", SECTION_COLUMN_1 };
+    AddSidebarEntry("Randomizer", path.sidebarName, 1);
+    AddWidget(path, "General Information", WIDGET_SEPARATOR_TEXT)
+        .RaceDisable(false)
+        .HideInSearch(true);
+    AddWidget(path, "Text", WIDGET_CUSTOM)
+        .RaceDisable(false)
+        .HideInSearch(true)
+        .CustomFunction([](WidgetInfo& info) {
+            ImGuiUtils::TextColored(
+                "The randomizer is a gamemode which blah blah blah\n\n\nAlso, §ccolored §dtext§f!\nwow\n\n"
+                "§00§11§22§33§44§55§66§77§88§99§aa§bb§cc§dd§ee§ff"
+            );
+        });
+
     // Seed Settings
-    WidgetPath path = { "Randomizer", "Seed Settings", SECTION_COLUMN_1 };
+    path.sidebarName = "Seed Settings";
     AddSidebarEntry("Randomizer", path.sidebarName, 1);
     AddWidget(path, "Popout Randomizer Settings Window", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("RandomizerSettings"))
