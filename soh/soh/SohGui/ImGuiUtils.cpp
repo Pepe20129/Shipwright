@@ -3,6 +3,9 @@
 #include <Window.h>
 #include "assets/soh_assets.h"
 #include "soh/Enhancements/randomizer/rando_hash.h"
+#include "soh/util.h"
+#include <unordered_map>
+#include "luslog.h"
 
 std::map<uint32_t, ItemMapEntry> itemMapping = {
     ITEM_MAP_ENTRY(ITEM_STICK),
@@ -253,5 +256,98 @@ void RegisterImGuiItemIcons() {
 
     for (const auto& entry : gSeedTextures) {
         Ship::Context::GetInstance()->GetWindow()->GetGui()->LoadGuiTexture(entry.tex, entry.tex, ImVec4(1, 1, 1, 1));
+    }
+}
+
+const ImVec4 black        = ImVec4(0.0f,  0.0f,  0.0f,  1.0f);
+const ImVec4 dark_blue    = ImVec4(0.0f,  0.0f,  0.66f, 1.0f);
+const ImVec4 dark_green   = ImVec4(0.0f,  0.66f, 0.0f,  1.0f);
+const ImVec4 dark_aqua    = ImVec4(0.0f,  0.66f, 0.66f, 1.0f);
+const ImVec4 dark_red     = ImVec4(0.66f, 0.0f,  0.0f,  1.0f);
+const ImVec4 dark_purple  = ImVec4(0.66f, 0.0f,  0.66f, 1.0f);
+const ImVec4 gold         = ImVec4(1.0f,  0.66f, 0.0f,  1.0f);
+const ImVec4 gray         = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
+const ImVec4 dark_gray    = ImVec4(0.33f, 0.33f, 0.33f, 1.0f);
+const ImVec4 blue         = ImVec4(0.33f, 0.33f, 1.0f,  1.0f);
+const ImVec4 green        = ImVec4(0.33f, 1.0f,  0.33f, 1.0f);
+const ImVec4 aqua         = ImVec4(0.33f, 1.0f,  1.0f,  1.0f);
+const ImVec4 red          = ImVec4(1.0f,  0.33f, 0.33f, 1.0f);
+const ImVec4 light_purple = ImVec4(1.0f,  0.33f, 1.0f,  1.0f);
+const ImVec4 yellow       = ImVec4(1.0f,  1.0f,  0.33f, 1.0f);
+const ImVec4 white        = ImVec4(1.0f,  1.0f,  1.0f,  1.0f);
+
+static const std::unordered_map<char, ImVec4> charsToColors = {
+    { '0', black },
+    { '1', dark_blue },
+    { '2', dark_green },
+    { '3', dark_aqua },
+    { '4', dark_red },
+    { '5', dark_purple },
+    { '6', gold },
+    { '7', gray },
+    { '8', dark_gray },
+    { '9', blue },
+    { 'a', green },
+    { 'b', aqua },
+    { 'c', red },
+    { 'd', light_purple },
+    { 'e', yellow },
+    { 'f', white },
+};
+
+// used for making SameLine work, segment shouldn't contain '§' as this doesn't handle it
+void TextSplitByNewlines(std::string segment, ImVec4 color) {
+    std::vector<std::string> lines = SohUtils::SplitString(segment, "\n");
+
+    for (int i = 0; i < lines.size(); i += 1) {
+        ImGui::TextColored(color, "%s", lines.at(i).c_str());
+    }
+}
+
+namespace ImGuiUtils {
+    void TextColored(std::string str) {
+        // no colors
+        if (str.find("§") == std::string::npos) {
+            ImGui::Text("%s", str.c_str());
+            return;
+        }
+
+        std::vector<std::string> segments = SohUtils::SplitString(str, "§");
+
+        assert(segments.size() >= 2);
+
+        ImVec4 currentColor = white;
+
+        // first segment
+        TextSplitByNewlines(segments[0], currentColor);
+
+        // the rest of segments
+        for (int i = 1; i < segments.size(); i += 1) {
+            std::string currentSegment = segments[i];
+
+            // TODO: fix situations like "§§§c" for a '§' followed by red text
+
+            // 2 '§'s in a row
+            if (currentSegment.size() == 0) {
+                ImGui::SameLine(0.0f, 0.0f);
+                ImGui::TextColored(currentColor, "%s", "§");
+                continue;
+            }
+
+            char codeChar = currentSegment[0];
+
+            if (charsToColors.contains(codeChar)) {
+                currentColor = charsToColors.at(codeChar);
+            } else {
+                LUSLOG_WARN("charsToColors doesn't contain codeChar (%c) in segment %d", codeChar, i);
+                assert(false);
+            }
+
+            // remove the code char from the segment
+            currentSegment.erase(0, 1);
+
+            ImGui::SameLine(0.0f, 0.0f);
+            TextSplitByNewlines(currentSegment, currentColor);
+        }
     }
 }

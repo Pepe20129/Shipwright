@@ -78,4 +78,28 @@ extern std::map<QuestItem, SongMapEntry> songMapping;
 // Maps song ids to info for use in ImGui
 extern std::array<SongMapEntry, 12> vanillaSongMapping;
 
+namespace ImGuiUtils {
+    // Renders text with colors embeded in the text itself.
+    // Colors are signified by the '§' character followed by
+    // a character 0-9 or a-f to get the following colors:
+    // - 0: black
+    // - 1: dark_blue
+    // - 2: dark_green
+    // - 3: dark_aqua
+    // - 4: dark_red
+    // - 5: dark_purple
+    // - 6: gold
+    // - 7: gray
+    // - 8: dark_gray
+    // - 9: blue
+    // - a: green
+    // - b: aqua
+    // - c: red
+    // - d: light_purple
+    // - e: yellow
+    // - f: white
+    // 2 '§'s in a row can be used for an unescaped '§'
+    void TextColored(std::string str);
+}
+
 #endif // IM_GUI_UTILS_H
