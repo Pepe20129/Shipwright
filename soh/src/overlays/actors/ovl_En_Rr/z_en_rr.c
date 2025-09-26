@@ -307,7 +307,8 @@ void EnRr_SetupReleasePlayer(EnRr* this, PlayState* play) {
             this->retreat = true;
         }
     }
-    if (GameInteractor_Should(VB_LIKE_LIKE_TRY_TO_STEAL_TUNIC, CUR_EQUIP_VALUE(EQUIP_TYPE_TUNIC) != EQUIP_VALUE_TUNIC_KOKIRI)) {
+    if (GameInteractor_Should(VB_LIKE_LIKE_TRY_TO_STEAL_TUNIC,
+                              CUR_EQUIP_VALUE(EQUIP_TYPE_TUNIC) != EQUIP_VALUE_TUNIC_KOKIRI)) {
         tunic = Inventory_DeleteEquipment(play, EQUIP_TYPE_TUNIC);
         if (tunic != 0) {
             this->eatenTunic = tunic;

@@ -76,13 +76,10 @@ void func_8006D0EC(PlayState* play, Player* player) {
         Actor* horseActor =
             Actor_Spawn(&play->actorCtx, play, ACTOR_EN_HORSE, -25.0f, 0.0f, -1600.0f, 0, -0x4000, 0, 1, true);
         assert(horseActor != NULL);
-    } else if (
-        (play->sceneNum == gSaveContext.horseData.scene) &&
-        (
-            GameInteractor_Should(VB_COUNT_EPONA_AS_OBTAINED, Flags_GetEventChkInf(EVENTCHKINF_EPONA_OBTAINED) != 0) ||
-            DREG(1) != 0
-        )
-    ) {
+    } else if ((play->sceneNum == gSaveContext.horseData.scene) &&
+               (GameInteractor_Should(VB_COUNT_EPONA_AS_OBTAINED,
+                                      Flags_GetEventChkInf(EVENTCHKINF_EPONA_OBTAINED) != 0) ||
+                DREG(1) != 0)) {
         // "Set by existence of horse %d %d %d"
         osSyncPrintf("馬存在によるセット %d %d %d\n", gSaveContext.horseData.scene,
                      Flags_GetEventChkInf(EVENTCHKINF_EPONA_OBTAINED), DREG(1));
