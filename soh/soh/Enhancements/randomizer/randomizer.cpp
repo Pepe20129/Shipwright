@@ -27,6 +27,7 @@
 #include <functional>
 #include "draw.h"
 #include "soh/OTRGlobals.h"
+#include <ship/window/FileDropMgr.h>
 #include "soh/SohGui/UIWidgets.hpp"
 #include "static_data.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
@@ -387,6 +388,29 @@ static const char* frenchRupeeNames[39] = {
     "Pièces",   "Plastyks",    "Pokédollars", "Pokémon", "Radis",      "Rubis",    "Zennies",
 };
 
+bool Rando_HandleSpoilerDrop(char* filePath) {
+    if (SohUtils::IsStringEmpty(filePath)) {
+        return false;
+    }
+
+    try {
+        std::ifstream stream(filePath);
+        if (!stream) {
+            return false;
+        }
+
+        nlohmann::json json;
+        stream >> json;
+
+        if (json.contains("version") && json.contains("finalSeed")) {
+            CVarSetString(CVAR_GENERAL("RandomizerDroppedFile"), filePath);
+            CVarSetInteger(CVAR_GENERAL("RandomizerNewFileDropped"), 1);
+            return true;
+        }
+    } catch (std::exception& e) {}
+    return false;
+}
+
 Randomizer::Randomizer() {
     Rando::StaticData::InitItemTable();
     Rando::StaticData::InitLocationTable();
@@ -403,6 +427,8 @@ Randomizer::Randomizer() {
     for (size_t c = 0; c < Rando::StaticData::hintTypeNames.size(); c++) {
         SpoilerfileHintTypeNameToEnum[Rando::StaticData::hintTypeNames[(HintType)c].GetEnglish(MF_CLEAN)] = (HintType)c;
     }
+
+    Ship::Context::GetInstance()->GetFileDropMgr()->RegisterDropHandler(Rando_HandleSpoilerDrop);
 }
 
 Randomizer::~Randomizer() {
@@ -472,26 +498,74 @@ std::unordered_map<s16, s16> getItemIdToItemId = {
 #pragma GCC optimize("O0")
 #endif
 bool Randomizer::SpoilerFileExists(const char* spoilerFileName) {
-    if (strcmp(spoilerFileName, "") != 0) {
-        std::ifstream spoilerFileStream(SohUtils::Sanitize(spoilerFileName));
+    static std::unordered_map<std::string, bool> existsCache;
+    static std::unordered_map<std::string, std::filesystem::file_time_type> lastModifiedCache;
+
+    if (strcmp(spoilerFileName, "") == 0) {
+        return false;
+    }
+
+    std::string sanitizedFileName = SohUtils::Sanitize(spoilerFileName);
+
+    try {
+        // Check if file exists and get last modified time
+        std::filesystem::path filePath(sanitizedFileName);
+        if (!std::filesystem::exists(filePath)) {
+            // Cache and return false if file doesn't exist
+            existsCache[sanitizedFileName] = false;
+            lastModifiedCache.erase(sanitizedFileName);
+            return false;
+        }
+
+        auto currentLastModified = std::filesystem::last_write_time(filePath);
+
+        // Check cache first
+        auto existsCacheIt = existsCache.find(sanitizedFileName);
+        auto lastModifiedCacheIt = lastModifiedCache.find(sanitizedFileName);
+
+        // If we have a valid cache entry and the file hasn't been modified
+        if (existsCacheIt != existsCache.end() && lastModifiedCacheIt != lastModifiedCache.end() &&
+            lastModifiedCacheIt->second == currentLastModified) {
+            return existsCacheIt->second;
+        }
+
+        // Cache miss or file modified - need to check contents
+        std::ifstream spoilerFileStream(sanitizedFileName);
         if (spoilerFileStream) {
             nlohmann::json contents;
             spoilerFileStream >> contents;
             spoilerFileStream.close();
-            if (contents.contains("version") &&
-                strcmp(std::string(contents["version"]).c_str(), (char*)gBuildVersion) == 0) {
-                return true;
-            } else {
+
+            bool isValid = contents.contains("version") &&
+                           strcmp(std::string(contents["version"]).c_str(), (char*)gBuildVersion) == 0;
+
+            if (!isValid) {
                 SohGui::RegisterPopup(
                     "Old Spoiler Version",
                     "The spoiler file located at\n" + std::string(spoilerFileName) +
                         "\nwas made by a version that doesn't match the currently running version.\n" +
                         "Loading for this file has been cancelled.");
+                CVarClear(CVAR_GENERAL("SpoilerLog"));
+                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
-        }
-    }
 
-    return false;
+            // Update cache
+            existsCache[sanitizedFileName] = isValid;
+            lastModifiedCache[sanitizedFileName] = currentLastModified;
+            return isValid;
+        }
+
+        // File couldn't be opened
+        existsCache[sanitizedFileName] = false;
+        lastModifiedCache.erase(sanitizedFileName);
+        return false;
+
+    } catch (const std::filesystem::filesystem_error&) {
+        // Handle filesystem errors by invalidating cache
+        existsCache[sanitizedFileName] = false;
+        lastModifiedCache.erase(sanitizedFileName);
+        return false;
+    }
 }
 #ifdef _MSC_VER
 #pragma optimize("", on)
@@ -1706,22 +1780,22 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_KF_TWINS_HOUSE_POT_2, RAND_INF_KF_TWINS_HOUSE_POT_2 },
     { RC_KF_BROTHERS_HOUSE_POT_1, RAND_INF_KF_BROTHERS_HOUSE_POT_1 },
     { RC_KF_BROTHERS_HOUSE_POT_2, RAND_INF_KF_BROTHERS_HOUSE_POT_2 },
-    { RC_GF_BREAK_ROOM_POT_1, RAND_INF_GF_BREAK_ROOM_POT_1 },
-    { RC_GF_BREAK_ROOM_POT_2, RAND_INF_GF_BREAK_ROOM_POT_2 },
-    { RC_GF_KITCHEN_POT_1, RAND_INF_GF_KITCHEN_POT_1 },
-    { RC_GF_KITCHEN_POT_2, RAND_INF_GF_KITCHEN_POT_2 },
-    { RC_GF_NORTH_F1_CARPENTER_POT_1, RAND_INF_GF_NORTH_F1_CARPENTER_POT_1 },
-    { RC_GF_NORTH_F1_CARPENTER_POT_2, RAND_INF_GF_NORTH_F1_CARPENTER_POT_2 },
-    { RC_GF_NORTH_F1_CARPENTER_POT_3, RAND_INF_GF_NORTH_F1_CARPENTER_POT_3 },
-    { RC_GF_NORTH_F2_CARPENTER_POT_1, RAND_INF_GF_NORTH_F2_CARPENTER_POT_1 },
-    { RC_GF_NORTH_F2_CARPENTER_POT_2, RAND_INF_GF_NORTH_F2_CARPENTER_POT_2 },
-    { RC_GF_SOUTH_F1_CARPENTER_POT_1, RAND_INF_GF_SOUTH_F1_CARPENTER_POT_1 },
-    { RC_GF_SOUTH_F1_CARPENTER_POT_2, RAND_INF_GF_SOUTH_F1_CARPENTER_POT_2 },
-    { RC_GF_SOUTH_F1_CARPENTER_POT_3, RAND_INF_GF_SOUTH_F1_CARPENTER_POT_3 },
-    { RC_GF_SOUTH_F1_CARPENTER_CELL_POT_1, RAND_INF_GF_SOUTH_F1_CARPENTER_CELL_POT_1 },
-    { RC_GF_SOUTH_F1_CARPENTER_CELL_POT_2, RAND_INF_GF_SOUTH_F1_CARPENTER_CELL_POT_2 },
-    { RC_GF_SOUTH_F1_CARPENTER_CELL_POT_3, RAND_INF_GF_SOUTH_F1_CARPENTER_CELL_POT_3 },
-    { RC_GF_SOUTH_F1_CARPENTER_CELL_POT_4, RAND_INF_GF_SOUTH_F1_CARPENTER_CELL_POT_4 },
+    { RC_TH_BREAK_ROOM_FRONT_POT, RAND_INF_TH_BREAK_ROOM_FRONT_POT },
+    { RC_TH_BREAK_ROOM_BACK_POT, RAND_INF_TH_BREAK_ROOM_BACK_POT },
+    { RC_TH_KITCHEN_POT_1, RAND_INF_TH_KITCHEN_POT_1 },
+    { RC_TH_KITCHEN_POT_2, RAND_INF_TH_KITCHEN_POT_2 },
+    { RC_TH_1_TORCH_CELL_RIGHT_POT, RAND_INF_TH_1_TORCH_CELL_RIGHT_POT },
+    { RC_TH_1_TORCH_CELL_MID_POT, RAND_INF_TH_1_TORCH_CELL_MID_POT },
+    { RC_TH_1_TORCH_CELL_LEFT_POT, RAND_INF_TH_1_TORCH_CELL_LEFT_POT },
+    { RC_TH_STEEP_SLOPE_RIGHT_POT, RAND_INF_TH_STEEP_SLOPE_RIGHT_POT },
+    { RC_TH_STEEP_SLOPE_LEFT_POT, RAND_INF_TH_STEEP_SLOPE_LEFT_POT },
+    { RC_TH_NEAR_DOUBLE_CELL_RIGHT_POT, RAND_INF_TH_NEAR_DOUBLE_CELL_RIGHT_POT },
+    { RC_TH_NEAR_DOUBLE_CELL_MID_POT, RAND_INF_TH_NEAR_DOUBLE_CELL_MID_POT },
+    { RC_TH_NEAR_DOUBLE_CELL_LEFT_POT, RAND_INF_NEAR_DOUBLE_CELL_LEFT_POT },
+    { RC_TH_RIGHTMOST_JAILED_POT, RAND_INF_TH_RIGHTMOST_JAILED_POT },
+    { RC_TH_RIGHT_MIDDLE_JAILED_POT, RAND_INF_TH_RIGHT_MIDDLE_JAILED_POT },
+    { RC_TH_LEFT_MIDDLE_JAILED_POT, RAND_INF_TH_LEFT_MIDDLE_JAILED_POT },
+    { RC_TH_LEFTMOST_JAILED_POT, RAND_INF_TH_LEFTMOST_JAILED_POT },
     { RC_WASTELAND_NEAR_GS_POT_1, RAND_INF_WASTELAND_NEAR_GS_POT_1 },
     { RC_WASTELAND_NEAR_GS_POT_2, RAND_INF_WASTELAND_NEAR_GS_POT_2 },
     { RC_WASTELAND_NEAR_GS_POT_3, RAND_INF_WASTELAND_NEAR_GS_POT_3 },
@@ -2272,136 +2346,136 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
         RAND_INF_GF_ABOVE_JAIL_CRATE,
     },
     {
-        RC_GF_OUTSIDE_CENTER_CRATE_1,
-        RAND_INF_GF_OUTSIDE_CENTER_CRATE_1,
+        RC_GF_SOUTHMOST_CENTER_CRATE,
+        RAND_INF_GF_SOUTHMOST_CENTER_CRATE,
     },
     {
-        RC_GF_OUTSIDE_CENTER_CRATE_2,
-        RAND_INF_GF_OUTSIDE_CENTER_CRATE_2,
+        RC_GF_MID_SOUTH_CENTER_CRATE,
+        RAND_INF_GF_MID_SOUTH_CENTER_CRATE,
     },
     {
-        RC_GF_OUTSIDE_CENTER_CRATE_3,
-        RAND_INF_GF_OUTSIDE_CENTER_CRATE_3,
+        RC_GF_MID_NORTH_CENTER_CRATE,
+        RAND_INF_GF_MID_NORTH_CENTER_CRATE,
     },
     {
-        RC_GF_OUTSIDE_CENTER_CRATE_4,
-        RAND_INF_GF_OUTSIDE_CENTER_CRATE_4,
+        RC_GF_NORTHMOST_CENTER_CRATE,
+        RAND_INF_GF_NORTHMOST_CENTER_CRATE,
     },
     {
-        RC_GF_OUTSIDE_LEFT_CRATE_1,
-        RAND_INF_GF_OUTSIDE_LEFT_CRATE_1,
+        RC_GF_OUTSKIRTS_NE_CRATE,
+        RAND_INF_GF_OUTSKIRTS_NE_CRATE,
     },
     {
-        RC_GF_OUTSIDE_LEFT_CRATE_2,
-        RAND_INF_GF_OUTSIDE_LEFT_CRATE_2,
+        RC_GF_OUTSKIRTS_NW_CRATE,
+        RAND_INF_GF_OUTSKIRTS_NW_CRATE,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_1,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_1,
+        RC_GF_HBA_RANGE_CRATE_1,
+        RAND_INF_GF_HBA_RANGE_CRATE_1,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_2,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_2,
+        RC_GF_HBA_RANGE_CRATE_2,
+        RAND_INF_GF_HBA_RANGE_CRATE_2,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_3,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_3,
+        RC_GF_HBA_RANGE_CRATE_3,
+        RAND_INF_GF_HBA_RANGE_CRATE_3,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_4,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_4,
+        RC_GF_HBA_RANGE_CRATE_4,
+        RAND_INF_GF_HBA_RANGE_CRATE_4,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_5,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_5,
+        RC_GF_HBA_RANGE_CRATE_5,
+        RAND_INF_GF_HBA_RANGE_CRATE_5,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_6,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_6,
+        RC_GF_HBA_RANGE_CRATE_6,
+        RAND_INF_GF_HBA_RANGE_CRATE_6,
     },
     {
-        RC_GF_ARCHERY_RANGE_CRATE_7,
-        RAND_INF_GF_ARCHERY_RANGE_CRATE_7,
+        RC_GF_HBA_RANGE_CRATE_7,
+        RAND_INF_GF_HBA_RANGE_CRATE_7,
     },
     {
-        RC_GF_ARCHERY_START_CRATE_1,
-        RAND_INF_GF_ARCHERY_START_CRATE_1,
+        RC_GF_HBA_CANOPY_EAST_CRATE,
+        RAND_INF_GF_HBA_CANOPY_EAST_CRATE,
     },
     {
-        RC_GF_ARCHERY_START_CRATE_2,
-        RAND_INF_GF_ARCHERY_START_CRATE_2,
+        RC_GF_HBA_CANOPY_WEST_CRATE,
+        RAND_INF_GF_HBA_CANOPY_WEST_CRATE,
     },
     {
-        RC_GF_ARCHERY_LEFT_END_CRATE_1,
-        RAND_INF_GF_ARCHERY_LEFT_END_CRATE_1,
+        RC_GF_NORTH_TARGET_EAST_CRATE,
+        RAND_INF_GF_NORTH_TARGET_EAST_CRATE,
     },
     {
-        RC_GF_ARCHERY_LEFT_END_CRATE_2,
-        RAND_INF_GF_ARCHERY_LEFT_END_CRATE_2,
+        RC_GF_NORTH_TARGET_WEST_CRATE,
+        RAND_INF_GF_NORTH_TARGET_WEST_CRATE,
     },
     {
-        RC_GF_ARCHERY_LEFT_END_CHILD_CRATE,
-        RAND_INF_GF_ARCHERY_LEFT_END_CHILD_CRATE,
+        RC_GF_NORTH_TARGET_CHILD_CRATE,
+        RAND_INF_GF_NORTH_TARGET_CHILD_CRATE,
     },
     {
-        RC_GF_ARCHERY_RIGHT_END_CRATE_1,
-        RAND_INF_GF_ARCHERY_RIGHT_END_CRATE_1,
+        RC_GF_SOUTH_TARGET_EAST_CRATE,
+        RAND_INF_GF_SOUTH_TARGET_EAST_CRATE,
     },
     {
-        RC_GF_ARCHERY_RIGHT_END_CRATE_2,
-        RAND_INF_GF_ARCHERY_RIGHT_END_CRATE_2,
+        RC_GF_SOUTH_TARGET_WEST_CRATE,
+        RAND_INF_GF_SOUTH_TARGET_WEST_CRATE,
     },
     {
-        RC_GF_KITCHEN_CRATE_1,
-        RAND_INF_GF_KITCHEN_CRATE_1,
+        RC_TH_NEAR_KITCHEN_LEFTMOST_CRATE,
+        RAND_INF_TH_NEAR_KITCHEN_LEFTMOST_CRATE,
     },
     {
-        RC_GF_KITCHEN_CRATE_2,
-        RAND_INF_GF_KITCHEN_CRATE_2,
+        RC_TH_NEAR_KITCHEN_MID_LEFT_CRATE,
+        RAND_INF_TH_NEAR_KITCHEN_MID_LEFT_CRATE,
     },
     {
-        RC_GF_KITCHEN_CRATE_3,
-        RAND_INF_GF_KITCHEN_CRATE_3,
+        RC_TH_NEAR_KITCHEN_MID_RIGHT_CRATE,
+        RAND_INF_TH_NEAR_KITCHEN_MID_RIGHT_CRATE,
     },
     {
-        RC_GF_KITCHEN_CRATE_4,
-        RAND_INF_GF_KITCHEN_CRATE_4,
+        RC_TH_NEAR_KITCHEN_RIGHTMOST_CRATE,
+        RAND_INF_TH_NEAR_KITCHEN_RIGHTMOST_CRATE,
     },
     {
-        RC_GF_KITCHEN_CRATE_5,
-        RAND_INF_GF_KITCHEN_CRATE_5,
+        RC_TH_KITCHEN_CRATE,
+        RAND_INF_TH_KITCHEN_CRATE,
     },
     {
-        RC_GF_BREAK_ROOM_CRATE_1,
-        RAND_INF_GF_BREAK_ROOM_CRATE_1,
+        RC_TH_BREAK_HALLWAY_OUTER_CRATE,
+        RAND_INF_TH_BREAK_HALLWAY_OUTER_CRATE,
     },
     {
-        RC_GF_BREAK_ROOM_CRATE_2,
-        RAND_INF_GF_BREAK_ROOM_CRATE_2,
+        RC_TH_BREAK_HALLWAY_INNER_CRATE,
+        RAND_INF_TH_BREAK_HALLWAY_INNER_CRATE,
     },
     {
-        RC_GF_BREAK_ROOM_CRATE_3,
-        RAND_INF_GF_BREAK_ROOM_CRATE_3,
+        RC_TH_BREAK_ROOM_RIGHT_CRATE,
+        RAND_INF_TH_BREAK_ROOM_RIGHT_CRATE,
     },
     {
-        RC_GF_BREAK_ROOM_CRATE_4,
-        RAND_INF_GF_BREAK_ROOM_CRATE_4,
+        RC_TH_BREAK_ROOM_LEFT_CRATE,
+        RAND_INF_TH_BREAK_ROOM_LEFT_CRATE,
     },
     {
-        RC_GF_NORTH_F1_CARPENTER_CRATE,
-        RAND_INF_GF_NORTH_F1_CARPENTER_CRATE,
+        RC_TH_1_TORCH_CELL_CRATE,
+        RAND_INF_TH_1_TORCH_CELL_CRATE,
     },
     {
-        RC_GF_NORTH_F3_CARPENTER_CRATE,
-        RAND_INF_GF_NORTH_F3_CARPENTER_CRATE,
+        RC_TH_DEAD_END_CELL_CRATE,
+        RAND_INF_TH_DEAD_END_CELL_CRATE,
     },
     {
-        RC_GF_SOUTH_F2_CARPENTER_CRATE_1,
-        RAND_INF_GF_SOUTH_F2_CARPENTER_CRATE_1,
+        RC_TH_DOUBLE_CELL_LEFT_CRATE,
+        RAND_INF_TH_DOUBLE_CELL_LEFT_CRATE,
     },
     {
-        RC_GF_SOUTH_F2_CARPENTER_CRATE_2,
-        RAND_INF_GF_SOUTH_F2_CARPENTER_CRATE_2,
+        RC_TH_DOUBLE_CELL_RIGHT_CRATE,
+        RAND_INF_TH_DOUBLE_CELL_RIGHT_CRATE,
     },
     {
         RC_HW_BEFORE_QUICKSAND_CRATE,
@@ -3258,6 +3332,69 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
         RC_SPIRIT_TEMPLE_MQ_BEAMOS_SMALL_CRATE,
         RAND_INF_SPIRIT_TEMPLE_MQ_BEAMOS_SMALL_CRATE,
     },
+    { RC_MARKET_TREE, RAND_INF_MARKET_TREE },
+    { RC_HC_NEAR_GUARDS_TREE_1, RAND_INF_HC_NEAR_GUARDS_TREE_1 },
+    { RC_HC_NEAR_GUARDS_TREE_2, RAND_INF_HC_NEAR_GUARDS_TREE_2 },
+    { RC_HC_NEAR_GUARDS_TREE_3, RAND_INF_HC_NEAR_GUARDS_TREE_3 },
+    { RC_HC_NEAR_GUARDS_TREE_4, RAND_INF_HC_NEAR_GUARDS_TREE_4 },
+    { RC_HC_NEAR_GUARDS_TREE_5, RAND_INF_HC_NEAR_GUARDS_TREE_5 },
+    { RC_HC_NEAR_GUARDS_TREE_6, RAND_INF_HC_NEAR_GUARDS_TREE_6 },
+    { RC_HC_SKULLTULA_TREE, RAND_INF_HC_SKULLTULA_TREE },
+    { RC_HC_GROTTO_TREE, RAND_INF_HC_GROTTO_TREE },
+    { RC_HC_NL_TREE_1, RAND_INF_HC_NL_TREE_1 },
+    { RC_HC_NL_TREE_2, RAND_INF_HC_NL_TREE_2 },
+    { RC_HF_NEAR_KAK_TREE, RAND_INF_HF_NEAR_KAK_TREE },
+    { RC_HF_NEAR_KAK_SMALL_TREE, RAND_INF_HF_NEAR_KAK_SMALL_TREE },
+    { RC_HF_NEAR_MARKET_TREE_1, RAND_INF_HF_NEAR_MARKET_TREE_1 },
+    { RC_HF_NEAR_MARKET_TREE_2, RAND_INF_HF_NEAR_MARKET_TREE_2 },
+    { RC_HF_NEAR_MARKET_TREE_3, RAND_INF_HF_NEAR_MARKET_TREE_3 },
+    { RC_HF_NEAR_LLR_TREE, RAND_INF_HF_NEAR_LLR_TREE },
+    { RC_HF_NEAR_LH_TREE, RAND_INF_HF_NEAR_LH_TREE },
+    { RC_HF_CHILD_NEAR_GV_TREE, RAND_INF_HF_CHILD_NEAR_GV_TREE },
+    { RC_HF_ADULT_NEAR_GV_TREE, RAND_INF_HF_ADULT_NEAR_GV_TREE },
+    { RC_HF_NEAR_ZR_TREE, RAND_INF_HF_NEAR_ZR_TREE },
+    { RC_HF_NORTHWEST_TREE_1, RAND_INF_HF_NORTHWEST_TREE_1 },
+    { RC_HF_NORTHWEST_TREE_2, RAND_INF_HF_NORTHWEST_TREE_2 },
+    { RC_HF_NORTHWEST_TREE_3, RAND_INF_HF_NORTHWEST_TREE_3 },
+    { RC_HF_NORTHWEST_TREE_4, RAND_INF_HF_NORTHWEST_TREE_4 },
+    { RC_HF_NORTHWEST_TREE_5, RAND_INF_HF_NORTHWEST_TREE_5 },
+    { RC_HF_NORTHWEST_TREE_6, RAND_INF_HF_NORTHWEST_TREE_6 },
+    { RC_HF_EAST_TREE_1, RAND_INF_HF_EAST_TREE_1 },
+    { RC_HF_EAST_TREE_2, RAND_INF_HF_EAST_TREE_2 },
+    { RC_HF_EAST_TREE_3, RAND_INF_HF_EAST_TREE_3 },
+    { RC_HF_EAST_TREE_4, RAND_INF_HF_EAST_TREE_4 },
+    { RC_HF_EAST_TREE_5, RAND_INF_HF_EAST_TREE_5 },
+    { RC_HF_EAST_TREE_6, RAND_INF_HF_EAST_TREE_6 },
+    { RC_HF_SOUTHEAST_TREE_1, RAND_INF_HF_SOUTHEAST_TREE_1 },
+    { RC_HF_SOUTHEAST_TREE_2, RAND_INF_HF_SOUTHEAST_TREE_2 },
+    { RC_HF_SOUTHEAST_TREE_3, RAND_INF_HF_SOUTHEAST_TREE_3 },
+    { RC_HF_SOUTHEAST_TREE_4, RAND_INF_HF_SOUTHEAST_TREE_4 },
+    { RC_HF_SOUTHEAST_TREE_5, RAND_INF_HF_SOUTHEAST_TREE_5 },
+    { RC_HF_SOUTHEAST_TREE_6, RAND_INF_HF_SOUTHEAST_TREE_6 },
+    { RC_HF_SOUTHEAST_TREE_7, RAND_INF_HF_SOUTHEAST_TREE_7 },
+    { RC_HF_SOUTHEAST_TREE_8, RAND_INF_HF_SOUTHEAST_TREE_8 },
+    { RC_HF_SOUTHEAST_TREE_9, RAND_INF_HF_SOUTHEAST_TREE_9 },
+    { RC_HF_SOUTHEAST_TREE_10, RAND_INF_HF_SOUTHEAST_TREE_10 },
+    { RC_HF_SOUTHEAST_TREE_11, RAND_INF_HF_SOUTHEAST_TREE_11 },
+    { RC_HF_SOUTHEAST_TREE_12, RAND_INF_HF_SOUTHEAST_TREE_12 },
+    { RC_HF_SOUTHEAST_TREE_13, RAND_INF_HF_SOUTHEAST_TREE_13 },
+    { RC_HF_SOUTHEAST_TREE_14, RAND_INF_HF_SOUTHEAST_TREE_14 },
+    { RC_HF_SOUTHEAST_TREE_15, RAND_INF_HF_SOUTHEAST_TREE_15 },
+    { RC_HF_SOUTHEAST_TREE_16, RAND_INF_HF_SOUTHEAST_TREE_16 },
+    { RC_HF_SOUTHEAST_TREE_17, RAND_INF_HF_SOUTHEAST_TREE_17 },
+    { RC_HF_SOUTHEAST_TREE_18, RAND_INF_HF_SOUTHEAST_TREE_18 },
+    { RC_HF_SOUTHEAST_TREE_19, RAND_INF_HF_SOUTHEAST_TREE_19 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_1, RAND_INF_HF_CHILD_SOUTHEAST_TREE_1 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_2, RAND_INF_HF_CHILD_SOUTHEAST_TREE_2 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_3, RAND_INF_HF_CHILD_SOUTHEAST_TREE_3 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_4, RAND_INF_HF_CHILD_SOUTHEAST_TREE_4 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_5, RAND_INF_HF_CHILD_SOUTHEAST_TREE_5 },
+    { RC_HF_CHILD_SOUTHEAST_TREE_6, RAND_INF_HF_CHILD_SOUTHEAST_TREE_6 },
+    { RC_HF_TEKTITE_GROTTO_TREE, RAND_INF_HF_TEKTITE_GROTTO_TREE },
+    { RC_ZF_TREE, RAND_INF_ZF_TREE },
+    { RC_ZR_TREE, RAND_INF_ZR_TREE },
+    { RC_KAK_TREE, RAND_INF_KAK_TREE },
+    { RC_LLR_TREE, RAND_INF_LLR_TREE },
 };
 
 BeehiveIdentity Randomizer::IdentifyBeehive(s32 sceneNum, s16 xPosition, s32 respawnData) {
@@ -3679,6 +3816,27 @@ SmallCrateIdentity Randomizer::IdentifySmallCrate(s32 sceneNum, s32 posX, s32 po
     return smallCrateIdentity;
 }
 
+TreeIdentity Randomizer::IdentifyTree(s32 sceneNum, s32 posX, s32 posZ) {
+    struct TreeIdentity treeIdentity;
+
+    if (sceneNum == SCENE_MARKET_NIGHT) {
+        sceneNum = SCENE_MARKET_DAY;
+    }
+
+    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
+    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WOOD02, sceneNum, actorParams);
+    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK &&
+        (location->GetRCType() != RCTYPE_NLTREE || GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) {
+        treeIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
+        treeIdentity.randomizerCheck = location->GetRandomizerCheck();
+        return treeIdentity;
+    }
+
+    treeIdentity.randomizerInf = RAND_INF_MAX;
+    treeIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
+    return treeIdentity;
+}
+
 u8 Randomizer::GetRandoSettingValue(RandomizerSettingKey randoSettingKey) {
     return Rando::Context::GetInstance()->GetOption(randoSettingKey).Get();
 }
@@ -3713,7 +3871,7 @@ std::thread randoThread;
 
 void GenerateRandomizerImgui(std::string seed = "") {
     CVarSetInteger(CVAR_GENERAL("RandoGenerating"), 1);
-    CVarSave();
+    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     auto ctx = Rando::Context::GetInstance();
     // RANDOTODO proper UI for selecting if a spoiler loaded should be used for settings
     Rando::Settings::GetInstance()->SetAllToContext();
@@ -3752,6 +3910,8 @@ void GenerateRandomizerImgui(std::string seed = "") {
     Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
 
     generated = 1;
+
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGenerationCompletion>();
 }
 
 bool GenerateRandomizer(std::string seed /*= ""*/) {
@@ -3761,6 +3921,7 @@ bool GenerateRandomizer(std::string seed /*= ""*/) {
     }
     if (CVarGetInteger(CVAR_GENERAL("RandoGenerating"), 0) == 0) {
         randoThread = std::thread(&GenerateRandomizerImgui, seed);
+
         return true;
     }
     return false;
@@ -5071,12 +5232,12 @@ CustomMessage Randomizer::GetIceTrapMessage() {
         "Das ist kein Item - das ist Karma.",
         "Und wieder hat Dich 'ne Kiste besiegt.",
         "Rauru lacht Dich aus.",
-        "Saria hat sich gerade entfreundet.",
+        "Salia hat sich gerade entfreundet.",
         "Prinzessin Ruto hat die Verlobung aufgelöst.",
         "Kein Seed, kein Ärger!",
         "Diese Truhe wurde Ihnen präsentiert von: ABSICHT!",
         "Nicht heute.",
-        "Nächster halt, #Frosthausen#!",
+        "Nächster Halt, #Frosthausen#!",
         "Genau so nützlich wie Navi im Bosskampf.",
         "Zelda? Die kennt Dich nicht.",
         "Zufall? Nein. Absicht!",
@@ -5119,11 +5280,11 @@ CustomMessage Randomizer::GetIceTrapMessage() {
         "Der Spind von Davy Jones!",
         "Herzog Onkled lacht Dich aus.",
         "GEWINNER!",
-        "vERLIERER!",
+        "VERLIERER!",
         "Drücke B, Unten und Select um zu überleben.",
         "#Chill# mal jetzt.",
         "Hier halt mal eben.",
-        "Sony lacht Dich aus",
+        "Sony lacht Dich aus!",
         "Dieses Item ist nicht in deinem Land verfügbar.",
         "Es ist wichtig, die #Kühltruhe# mal für einen Tag auszuschalten.",
         "#Kacknoob#!",
@@ -5735,6 +5896,53 @@ void RandomizerSettingsWindow::InitElement() {
     mSettings->UpdateOptionProperties();
 }
 
+static std::unordered_map<RandomizerGet, GameplayStatTimestamp> randomizerGetToStatsTimeStamp = {
+    { RG_GOHMA_SOUL, TIMESTAMP_FOUND_GOHMA_SOUL },
+    { RG_KING_DODONGO_SOUL, TIMESTAMP_FOUND_KING_DODONGO_SOUL },
+    { RG_BARINADE_SOUL, TIMESTAMP_FOUND_BARINADE_SOUL },
+    { RG_PHANTOM_GANON_SOUL, TIMESTAMP_FOUND_PHANTOM_GANON_SOUL },
+    { RG_VOLVAGIA_SOUL, TIMESTAMP_FOUND_VOLVAGIA_SOUL },
+    { RG_MORPHA_SOUL, TIMESTAMP_FOUND_MORPHA_SOUL },
+    { RG_BONGO_BONGO_SOUL, TIMESTAMP_FOUND_BONGO_BONGO_SOUL },
+    { RG_TWINROVA_SOUL, TIMESTAMP_FOUND_TWINROVA_SOUL },
+    { RG_GANON_SOUL, TIMESTAMP_FOUND_GANON_SOUL },
+
+    { RG_BRONZE_SCALE, TIMESTAMP_FOUND_BRONZE_SCALE },
+
+    { RG_OCARINA_A_BUTTON, TIMESTAMP_FOUND_OCARINA_A_BUTTON },
+    { RG_OCARINA_C_UP_BUTTON, TIMESTAMP_FOUND_OCARINA_C_UP_BUTTON },
+    { RG_OCARINA_C_DOWN_BUTTON, TIMESTAMP_FOUND_OCARINA_C_DOWN_BUTTON },
+    { RG_OCARINA_C_LEFT_BUTTON, TIMESTAMP_FOUND_OCARINA_C_LEFT_BUTTON },
+    { RG_OCARINA_C_RIGHT_BUTTON, TIMESTAMP_FOUND_OCARINA_C_RIGHT_BUTTON },
+
+    { RG_FISHING_POLE, TIMESTAMP_FOUND_FISHING_POLE },
+
+    { RG_GUARD_HOUSE_KEY, TIMESTAMP_FOUND_GUARD_HOUSE_KEY },
+    { RG_MARKET_BAZAAR_KEY, TIMESTAMP_FOUND_MARKET_BAZAAR_KEY },
+    { RG_MARKET_POTION_SHOP_KEY, TIMESTAMP_FOUND_MARKET_POTION_SHOP_KEY },
+    { RG_MASK_SHOP_KEY, TIMESTAMP_FOUND_MASK_SHOP_KEY },
+    { RG_MARKET_SHOOTING_GALLERY_KEY, TIMESTAMP_FOUND_MARKET_SHOOTING_GALLERY_KEY },
+    { RG_BOMBCHU_BOWLING_KEY, TIMESTAMP_FOUND_BOMBCHU_BOWLING_KEY },
+    { RG_TREASURE_CHEST_GAME_BUILDING_KEY, TIMESTAMP_FOUND_TREASURE_CHEST_GAME_BUILDING_KEY },
+    { RG_BOMBCHU_SHOP_KEY, TIMESTAMP_FOUND_BOMBCHU_SHOP_KEY },
+    { RG_RICHARDS_HOUSE_KEY, TIMESTAMP_FOUND_RICHARDS_HOUSE_KEY },
+    { RG_ALLEY_HOUSE_KEY, TIMESTAMP_FOUND_ALLEY_HOUSE_KEY },
+    { RG_KAK_BAZAAR_KEY, TIMESTAMP_FOUND_KAK_BAZAAR_KEY },
+    { RG_KAK_POTION_SHOP_KEY, TIMESTAMP_FOUND_KAK_POTION_SHOP_KEY },
+    { RG_BOSS_HOUSE_KEY, TIMESTAMP_FOUND_BOSS_HOUSE_KEY },
+    { RG_GRANNYS_POTION_SHOP_KEY, TIMESTAMP_FOUND_GRANNYS_POTION_SHOP_KEY },
+    { RG_SKULLTULA_HOUSE_KEY, TIMESTAMP_FOUND_SKULLTULA_HOUSE_KEY },
+    { RG_IMPAS_HOUSE_KEY, TIMESTAMP_FOUND_IMPAS_HOUSE_KEY },
+    { RG_WINDMILL_KEY, TIMESTAMP_FOUND_WINDMILL_KEY },
+    { RG_KAK_SHOOTING_GALLERY_KEY, TIMESTAMP_FOUND_KAK_SHOOTING_GALLERY_KEY },
+    { RG_DAMPES_HUT_KEY, TIMESTAMP_FOUND_DAMPES_HUT_KEY },
+    { RG_TALONS_HOUSE_KEY, TIMESTAMP_FOUND_TALONS_HOUSE_KEY },
+    { RG_STABLES_KEY, TIMESTAMP_FOUND_STABLES_KEY },
+    { RG_BACK_TOWER_KEY, TIMESTAMP_FOUND_BACK_TOWER_KEY },
+    { RG_HYLIA_LAB_KEY, TIMESTAMP_FOUND_HYLIA_LAB_KEY },
+    { RG_FISHING_HOLE_KEY, TIMESTAMP_FOUND_FISHING_HOLE_KEY },
+};
+
 // Gameplay stat tracking: Update time the item was acquired
 // (special cases for rando items)
 void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
@@ -5749,6 +5957,12 @@ void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
     // Use ITEM_KEY_BOSS to timestamp Ganon's boss key
     if (item == RG_GANONS_CASTLE_BOSS_KEY) {
         gSaveContext.ship.stats.itemTimestamp[ITEM_KEY_BOSS] = time;
+        return;
+    }
+
+    if (randomizerGetToStatsTimeStamp.contains((RandomizerGet)item)) {
+        gSaveContext.ship.stats.itemTimestamp[randomizerGetToStatsTimeStamp[(RandomizerGet)item]] = time;
+        return;
     }
 
     // Count any bottled item as a bottle
@@ -5758,6 +5972,7 @@ void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
         }
         return;
     }
+
     // Count any bombchu pack as bombchus
     if ((item >= RG_BOMBCHU_5 && item <= RG_BOMBCHU_20) || item == RG_PROGRESSIVE_BOMBCHUS) {
         if (gSaveContext.ship.stats.itemTimestamp[ITEM_BOMBCHU] = 0) {
@@ -5765,11 +5980,15 @@ void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
         }
         return;
     }
+
     if (item == RG_MAGIC_SINGLE) {
         gSaveContext.ship.stats.itemTimestamp[ITEM_SINGLE_MAGIC] = time;
+        return;
     }
+
     if (item == RG_DOUBLE_DEFENSE) {
         gSaveContext.ship.stats.itemTimestamp[ITEM_DOUBLE_DEFENSE] = time;
+        return;
     }
 }
 

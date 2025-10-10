@@ -1,5 +1,5 @@
 #include "debugconsole.h"
-#include <Utils.h>
+#include <ship/utils/Utils.h>
 #include "savestates.h"
 #include "soh/ActorDB.h"
 
@@ -15,10 +15,10 @@
 
 #define Path _Path
 #define PATH_HACK
-#include <utils/StringHelper.h>
+#include <ship/utils/StringHelper.h>
 
-#include <Window.h>
-#include <Context.h>
+#include <ship/window/Window.h>
+#include <ship/Context.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #undef PATH_HACK
@@ -1130,7 +1130,7 @@ static bool SpeedModifierHandler(std::shared_ptr<Ship::Console> Console, const s
         ERROR_MESSAGE("[SOH] Unexpected arguments passed");
         return 1;
     }
-    GameInteractionEffectBase* effect = new GameInteractionEffect::ModifyRunSpeedModifier();
+    GameInteractionEffectBase* effect = new GameInteractionEffect::ModifyMovementSpeedMultiplier();
 
     try {
         dynamic_cast<ParameterizedGameInteractionEffect*>(effect)->parameters[0] = std::stoi(args[1], nullptr, 10);
@@ -1471,10 +1471,7 @@ static bool AvailableChecksProcessUndiscoveredExitsHandler(std::shared_ptr<Ship:
     INFO_MESSAGE("[SOH] Available Checks - Process Undiscovered Exits %s",
                  logic->ACProcessUndiscoveredExits ? "enabled" : "disabled");
 
-    if (GameInteractor::IsSaveLoaded(true)) {
-        CheckTracker::RecalculateAvailableChecks();
-    }
-
+    CheckTracker::RecalculateAvailableChecks();
     return 0;
 }
 

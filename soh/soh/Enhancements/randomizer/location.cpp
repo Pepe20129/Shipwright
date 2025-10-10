@@ -54,8 +54,9 @@ const std::string& Rando::Location::GetShortName() const {
 
 bool Rando::Location::IsDungeon() const {
     return (checkType != RCTYPE_SKULL_TOKEN &&
-            (scene <= SCENE_GERUDO_TRAINING_GROUND || scene == SCENE_INSIDE_GANONS_CASTLE ||
-             (scene >= SCENE_DEKU_TREE_BOSS && scene <= SCENE_GANONDORF_BOSS))) ||
+                (scene <= SCENE_GERUDO_TRAINING_GROUND || scene == SCENE_INSIDE_GANONS_CASTLE ||
+                 (scene >= SCENE_DEKU_TREE_BOSS && scene <= SCENE_GANONDORF_BOSS)) ||
+            (rc == RC_SPIRIT_TEMPLE_SILVER_GAUNTLETS_CHEST || rc == RC_SPIRIT_TEMPLE_MIRROR_SHIELD_CHEST)) ||
            (checkType == RCTYPE_SKULL_TOKEN && scene <= SCENE_ICE_CAVERN);
 }
 
@@ -562,6 +563,24 @@ Rando::Location Rando::Location::SmallCrate(RandomizerCheck rc, RandomizerCheckQ
                                             RandomizerHintTextKey hintKey, RandomizerGet vanillaItem,
                                             SpoilerCollectionCheck collectionCheck) {
     return { rc,     quest_,         RCTYPE_SMALL_CRATE,    area_,   ACTOR_OBJ_KIBAKO,
+             scene_, actorParams_,   std::move(shortName_), hintKey, vanillaItem,
+             false,  collectionCheck };
+}
+
+Rando::Location Rando::Location::Tree(RandomizerCheck rc, RandomizerCheckQuest quest_, RandomizerCheckArea area_,
+                                      SceneID scene_, int32_t actorParams_, std::string&& shortName_,
+                                      RandomizerHintTextKey hintKey, RandomizerGet vanillaItem,
+                                      SpoilerCollectionCheck collectionCheck) {
+    return { rc,     quest_,         RCTYPE_TREE,           area_,   ACTOR_EN_WOOD02,
+             scene_, actorParams_,   std::move(shortName_), hintKey, vanillaItem,
+             false,  collectionCheck };
+}
+
+Rando::Location Rando::Location::NLTree(RandomizerCheck rc, RandomizerCheckQuest quest_, RandomizerCheckArea area_,
+                                        SceneID scene_, int32_t actorParams_, std::string&& shortName_,
+                                        RandomizerHintTextKey hintKey, RandomizerGet vanillaItem,
+                                        SpoilerCollectionCheck collectionCheck) {
+    return { rc,     quest_,         RCTYPE_NLTREE,         area_,   ACTOR_EN_WOOD02,
              scene_, actorParams_,   std::move(shortName_), hintKey, vanillaItem,
              false,  collectionCheck };
 }

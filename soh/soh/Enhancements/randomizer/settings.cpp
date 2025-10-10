@@ -8,7 +8,7 @@
 
 #include <utility>
 
-#include "consolevariablebridge.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 
 namespace Rando {
 std::shared_ptr<Settings> Settings::mInstance;
@@ -120,6 +120,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_DOOR_OF_TIME, "Door of Time", {"Closed", "Song only", "Open"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("DoorOfTime"), mOptionDescriptions[RSK_DOOR_OF_TIME], WidgetType::Combobox);
     OPT_U8(RSK_ZORAS_FOUNTAIN, "Zora's Fountain", {"Closed", "Closed as child", "Open"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ZorasFountain"), mOptionDescriptions[RSK_ZORAS_FOUNTAIN]);
     OPT_U8(RSK_SLEEPING_WATERFALL, "Sleeping Waterfall", {"Closed", "Open"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("SleepingWaterfall"), mOptionDescriptions[RSK_SLEEPING_WATERFALL]);
+    OPT_U8(RSK_JABU_OPEN, "Jabu-Jabu", {"Closed", "Open"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("JabuJabu"), mOptionDescriptions[RSK_JABU_OPEN]);
     OPT_BOOL(RSK_LOCK_OVERWORLD_DOORS, "Lock Overworld Doors", CVAR_RANDOMIZER_SETTING("LockOverworldDoors"), mOptionDescriptions[RSK_LOCK_OVERWORLD_DOORS]);
     OPT_U8(RSK_GERUDO_FORTRESS, "Fortress Carpenters", {"Normal", "Fast", "Free"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("FortressCarpenters"), mOptionDescriptions[RSK_GERUDO_FORTRESS]);
     OPT_U8(RSK_RAINBOW_BRIDGE, "Rainbow Bridge", {"Vanilla", "Always open", "Stones", "Medallions", "Dungeon rewards", "Dungeons", "Tokens", "Greg"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("RainbowBridge"), mOptionDescriptions[RSK_RAINBOW_BRIDGE], WidgetType::Combobox, RO_BRIDGE_VANILLA, false, IMFLAG_NONE);
@@ -216,6 +217,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_SHUFFLE_POTS, "Shuffle Pots", {"Off", "Dungeons", "Overworld", "All Pots"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShufflePots"), mOptionDescriptions[RSK_SHUFFLE_POTS], WidgetType::Combobox, RO_SHUFFLE_POTS_OFF);
     OPT_U8(RSK_SHUFFLE_GRASS, "Shuffle Grass", {"Off", "Dungeons", "Overworld", "All Grass/Bushes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleGrass"), mOptionDescriptions[RSK_SHUFFLE_GRASS], WidgetType::Combobox, RO_SHUFFLE_GRASS_OFF);
     OPT_U8(RSK_SHUFFLE_CRATES, "Shuffle Crates", {"Off", "Dungeons", "Overworld", "All Crates"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleCrates"), mOptionDescriptions[RSK_SHUFFLE_CRATES], WidgetType::Combobox, RO_SHUFFLE_CRATES_OFF);
+    OPT_BOOL(RSK_SHUFFLE_TREES, "Shuffle Trees", CVAR_RANDOMIZER_SETTING("ShuffleTrees"), mOptionDescriptions[RSK_SHUFFLE_TREES]);
     OPT_BOOL(RSK_SHUFFLE_FISHING_POLE, "Shuffle Fishing Pole", CVAR_RANDOMIZER_SETTING("ShuffleFishingPole"), mOptionDescriptions[RSK_SHUFFLE_FISHING_POLE]);
     OPT_U8(RSK_SHUFFLE_MERCHANTS, "Shuffle Merchants", {"Off", "Bean Merchant Only", "All But Beans", "All"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleMerchants"), mOptionDescriptions[RSK_SHUFFLE_MERCHANTS], WidgetType::Combobox, RO_SHUFFLE_MERCHANTS_OFF, IMFLAG_NONE);
     OPT_U8(RSK_MERCHANT_PRICES, "Merchant Prices", {"Vanilla", "Cheap Balanced", "Balanced", "Fixed", "Range", "Set By Wallet"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("MerchantPrices"), mOptionDescriptions[RSK_MERCHANT_PRICES], WidgetType::Combobox, RO_PRICE_VANILLA, false, IMFLAG_NONE);
@@ -280,6 +282,7 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_GREG_HINT, "Greg the Green Rupee Hint", CVAR_RANDOMIZER_SETTING("GregHint"), mOptionDescriptions[RSK_GREG_HINT], IMFLAG_NONE);
     OPT_BOOL(RSK_LOACH_HINT, "Hyrule Loach Hint", CVAR_RANDOMIZER_SETTING("LoachHint"), mOptionDescriptions[RSK_LOACH_HINT], IMFLAG_NONE);
     OPT_BOOL(RSK_SARIA_HINT, "Saria's Hint", CVAR_RANDOMIZER_SETTING("SariaHint"), mOptionDescriptions[RSK_SARIA_HINT], IMFLAG_NONE);
+    OPT_BOOL(RSK_MIDO_HINT, "Mido's Hint", CVAR_RANDOMIZER_SETTING("MidoHint"), mOptionDescriptions[RSK_MIDO_HINT], IMFLAG_NONE);
     OPT_BOOL(RSK_FISHING_POLE_HINT, "Fishing Pole Hint", CVAR_RANDOMIZER_SETTING("FishingPoleHint"), mOptionDescriptions[RSK_FISHING_POLE_HINT], IMFLAG_NONE);
     OPT_BOOL(RSK_FROGS_HINT, "Frog Ocarina Game Hint", CVAR_RANDOMIZER_SETTING("FrogsHint"), mOptionDescriptions[RSK_FROGS_HINT], IMFLAG_NONE);
     OPT_BOOL(RSK_OOT_HINT, "Ocarina of Time Hint", CVAR_RANDOMIZER_SETTING("OoTHint"), mOptionDescriptions[RSK_OOT_HINT], IMFLAG_NONE);
@@ -303,6 +306,7 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_SUNLIGHT_ARROWS, "Sunlight Arrows", CVAR_RANDOMIZER_SETTING("SunlightArrows"), mOptionDescriptions[RSK_SUNLIGHT_ARROWS]);
     OPT_U8(RSK_INFINITE_UPGRADES, "Infinite Upgrades", {"Off", "Progressive", "Condensed Progressive"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("InfiniteUpgrades"), mOptionDescriptions[RSK_INFINITE_UPGRADES]);
     OPT_BOOL(RSK_SKELETON_KEY, "Skeleton Key", CVAR_RANDOMIZER_SETTING("SkeletonKey"), mOptionDescriptions[RSK_SKELETON_KEY]);
+    OPT_BOOL(RSK_SLINGBOW_BREAK_BEEHIVES, "Slingshot/Bow Can Break Beehives", CVAR_RANDOMIZER_SETTING("SlingBowBeehives"), mOptionDescriptions[RSK_SLINGBOW_BREAK_BEEHIVES]);
     OPT_U8(RSK_ITEM_POOL, "Item Pool", {"Plentiful", "Balanced", "Scarce", "Minimal"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ItemPool"), mOptionDescriptions[RSK_ITEM_POOL], WidgetType::Combobox, RO_ITEM_POOL_BALANCED);
     OPT_U8(RSK_ICE_TRAPS, "Ice Traps", {"Off", "Normal", "Extra", "Mayhem", "Onslaught"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("IceTraps"), mOptionDescriptions[RSK_ICE_TRAPS], WidgetType::Combobox, RO_ICE_TRAPS_NORMAL);
     // TODO: Remove Double Defense, Progressive Goron Sword
@@ -357,9 +361,7 @@ void Settings::CreateOptions() {
     // OPT_TRICK(RT_FLAME_STORAGE, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
     // Tricks::Tag::GLITCH}, "Flame Storage", "Enables locations requiring flame storage."); OPT_TRICK(RT_GROUND_CLIP,
     // RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Ground Clip",
-    // "Enables locations requiring ground clips."); OPT_TRICK(RT_GROUND_JUMP, RCQUEST_BOTH, RA_NONE,
-    // {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "Ground Jump", "Enables locations
-    // requiring ground jumps."); OPT_TRICK(RT_HESS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
+    // "Enables locations requiring ground clips."); OPT_TRICK(RT_HESS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED,
     // Tricks::Tag::EXPERIMENTAL, Tricks::Tag::GLITCH}, "HESS", "Enables locations requiring a Hyper Extended Super
     // Slide."); OPT_TRICK(RT_HOOKSHOT_CLIP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL,
     // Tricks::Tag::GLITCH}, "Hookshot Clip", "Enables locations requiring Hookshot clips.");
@@ -403,6 +405,23 @@ void Settings::CreateOptions() {
               "apply to MQ Dead Hand bomb flowers.\nUsing blue fire on bombflower to stop rolling goron also requires "
               "\"Stop Link the Goron with Din's Fire\".\nUsing blue fire arrows to break floor in King Dodongo's "
               "chamber also requires \"Dodongo\'s Cavern Smash the Boss Lobby Floor\".");
+    OPT_TRICK(RT_OPEN_UNDERWATER_CHEST, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Open Underwater Chests",
+              "Underwater chests can be opened by wearing iron boots and hookshotting the chest.");
+    OPT_TRICK(RT_HOOKSHOT_EXTENSION, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::INTERMEDIATE },
+              "Hookshot/Projectile Extension",
+              "Slightly extends range. Also allows clipping projectile past collision. Used for:\n"
+              "- Crossing Gerudo Valley with Hookshot\n"
+              "- Retrieving DMT Gold Skulltula beside bomb flower\n"
+              "- Hitting switch through wall in Spirit Temple's big mirror room with Bow, Slingshot, or Hookshot\n"
+              "- Hitting switch through wall in Spirit Trial with Bow or Slingshot");
+    OPT_TRICK(RT_GROUND_JUMP, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH }, "Ground Jump",
+              "Enables requiring ground jumps.");
+    OPT_TRICK(RT_GROUND_JUMP_HARD, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::INTERMEDIATE, Tricks::Tag::GLITCH },
+              "Hard Ground Jumps",
+              "Enables ground jumps which require some precision outside of setting up jump:\n- While using Hover "
+              "Boots in Forest Temple Courtyard to reach upper ledge\n- While using Hover Boots in Shadow Temple "
+              "invisible spike room to reach door\n- Jumping past second step in Ice Cavern");
     OPT_TRICK(RT_KF_ADULT_GS, RCQUEST_BOTH, RA_KOKIRI_FOREST, { Tricks::Tag::NOVICE },
               "Adult Kokiri Forest GS with Hover Boots",
               "Can be obtained without Hookshot by using the Hover Boots off of one of the roots.");
@@ -423,6 +442,9 @@ void Settings::CreateOptions() {
               "Hyrule Castle Storms Grotto GS with Just Boomerang",
               "With precise throws, the Boomerang alone can kill the Skulltula and collect the token, without first "
               "needing to blow up the wall.");
+    OPT_TRICK(RT_HF_BIG_POE_WITHOUT_EPONA, RCQUEST_BOTH, RA_HYRULE_FIELD, { Tricks::Tag::NOVICE },
+              "Big Poe without Epona",
+              "Big Poes have a chance of appearing without Epona, you can shoot them quickly with only bow.");
     OPT_TRICK(RT_KAK_MAN_ON_ROOF, RCQUEST_BOTH, RA_KAKARIKO_VILLAGE, { Tricks::Tag::NOVICE },
               "Man on Roof without Hookshot",
               "Can be reached by side-hopping off the watchtower as either age, or by jumping onto the potion shop's "
@@ -465,10 +487,6 @@ void Settings::CreateOptions() {
               "Death Mountain Trail Chest with Strength",
               "Child Link can blow up the wall using a nearby bomb flower. You must backwalk with the flower and then "
               "quickly throw it toward the wall.");
-    OPT_TRICK(RT_DMT_HOOKSHOT_LOWER_GS, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, { Tricks::Tag::INTERMEDIATE },
-              "Death Mountain Trail Lower Red Rock GS with Hookshot",
-              "After killing the Skulltula, the token can be fished out of the rock without needing to destroy it, by "
-              "using the Hookshot in the correct way.");
     OPT_TRICK(RT_DMT_HOVERS_LOWER_GS, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, { Tricks::Tag::ADVANCED },
               "Death Mountain Trail Lower Red Rock GS with Hover Boots",
               "After killing the Skulltula, the token can be collected without needing to destroy the rock by "
@@ -555,7 +573,7 @@ void Settings::CreateOptions() {
               "A precise jump slash can kill the Skulltula and recoil back onto the top of the frozen waterfall. To "
               "kill it, the logic normally guarantees one of Hookshot, Bow, or Magic.");
     OPT_TRICK(RT_ZF_GREAT_FAIRY_WITHOUT_EXPLOSIVES, RCQUEST_BOTH, RA_ZORAS_FOUNTAIN, { Tricks::Tag::NOVICE },
-              "Zora\'s Fountain Great Fairy Without Explosives",
+              "Zora\'s Fountain Great Fairy without Explosives",
               "It's possible to use silver gauntlets to pick up the silver rock and hammer to break the rock below it, "
               "allowing you to ledge grab the edge of the hole and get past the breakable wall (hammer can't break the "
               "wall itself).");
@@ -574,16 +592,19 @@ void Settings::CreateOptions() {
               "Gerudo Valley Crate PoH as Adult with Hover Boots",
               "From the far side of Gerudo Valley, a precise Hover Boots movement and jump-slash recoil can allow "
               "adult to reach the ledge with the crate PoH without needing Longshot. You will take fall damage.");
-    OPT_TRICK(RT_GF_KITCHEN, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
-              "Thieves\' Hideout \"Kitchen\" with No Additional Items",
-              "Allows passing through the kitchen by avoiding being seen by the guards. The logic normally guarantees "
-              "Bow or Hookshot to stun them from a distance, or Hover Boots to cross the room without needing to deal "
-              "with the guards.");
+    OPT_TRICK(RT_PASS_GUARDS_WITH_NOTHING, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
+              "Sneak Past Moving Gerudo Guards with No Items",
+              "The logic normally guarantees Bow or Hookshot to stun them from a distance,"
+              "but every moving guard can be passed with basic movement and AI manipulation");
     OPT_TRICK(RT_GF_JUMP, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE }, "Gerudo\'s Fortress Ledge Jumps",
-              "Adult can jump onto the top roof of the fortress without going through the interior of the hideout.");
+              "It is possible to navigate the rooves of Fortress with unintuative jumps to reach additional areas "
+              "without going inside.");
     OPT_TRICK(RT_GF_WARRIOR_WITH_DIFFICULT_WEAPON, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Gerudo\'s Fortress Warriors with Difficult Weapons",
               "Warriors can be defeated with Slingshot or Bombchus.");
+    OPT_TRICK(RT_GF_LEDGE_CLIP_INTO_GTG, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Ledge Clip into Training Ground",
+              "Adult Link can use a ledge clip to enter Gerudo Training Ground without Gerudo Card.");
     // disabled for now, can't check for being able to use bunny hood & bunny hood speedup is currently completely
     // decoupled from rando OPT_TRICK(RT_HW_BUNNY_CROSSING, RCQUEST_BOTH, RA_HAUNTED_WASTELAND, {Tricks::Tag::NOVICE},
     // "Wasteland Crossing with Bunny Hood", "You can beat the quicksand by using the increased speed of the Bunny Hood.
@@ -640,8 +661,8 @@ void Settings::CreateOptions() {
               "Dodongo\'s Cavern Vines GS from Below with Longshot",
               "The vines upon which this Skulltula rests are one-sided collision. You can use the Longshot to get it "
               "from below, by shooting it through the vines, bypassing the need to lower the staircase.");
-    OPT_TRICK(RT_DC_STAIRCASE, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
-              "Dodongo\'s Cavern Staircase with Bow",
+    OPT_TRICK(RT_DC_STAIRS_WITH_BOW, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
+              "Dodongo\'s Cavern Stairs with Bow",
               "The Bow can be used to knock down the stairs with two well-timed shots.");
     OPT_TRICK(RT_DC_SLINGSHOT_SKIP, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::EXPERT },
               "Dodongo\'s Cavern Child Slingshot Skips",
@@ -660,6 +681,12 @@ void Settings::CreateOptions() {
               "The bombable floor before King Dodongo can be destroyed with Hammer if hit in the very center. This is "
               "only relevant with Shuffle Boss Entrances or if Dodongo's Cavern is MQ and either variant of "
               "\"Dodongo's Cavern MQ Light the Eyes with Strength\" is on.");
+    OPT_TRICK(RT_DC_DODONGO_CHU, RCQUEST_BOTH, RA_DODONGOS_CAVERN, { Tricks::Tag::ADVANCED },
+              "Dodongo\'s Cavern Dodongo without Bombchus",
+              "With precise timing you can feed King Dodongo a bombchu during a backflip");
+    OPT_TRICK(RT_DC_MQ_STAIRS_WITH_ONLY_STRENGTH, RCQUEST_MQ, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
+              "Dodongo\'s Cavern MQ Stairs With Only Strength",
+              "Taking a bomb from the back can be used to lower stairs without using stick to drop bomb from wall.");
     OPT_TRICK(RT_DC_MQ_CHILD_BOMBS, RCQUEST_MQ, RA_DODONGOS_CAVERN, { Tricks::Tag::ADVANCED },
               "Dodongo\'s Cavern MQ Early Bomb Bag Area as Child",
               "With a precise jump slash from above, you can reach the Bomb Bag area as only child without needing a "
@@ -938,6 +965,8 @@ void Settings::CreateOptions() {
         "Water Temple MQ North Basement GS without Small Key",
         "There is an invisible Hookshot target that can be used to get over the gate that blocks you from going to "
         "this Skulltula early, skipping a small key as well as needing Hovers or Scarecrow to reach the locked door.");
+    OPT_TRICK(RT_WATER_MORPHA_WITHOUT_HOOKSHOT, RCQUEST_BOTH, RA_WATER_TEMPLE, { Tricks::Tag::EXTREME },
+              "Water Temple Morpha without Hookshot", "It is possible to slash at Morpha without hookshot.");
     OPT_TRICK(RT_LENS_SHADOW, RCQUEST_VANILLA, RA_SHADOW_TEMPLE, { Tricks::Tag::NOVICE },
               "Shadow Temple Stationary Objects without Lens of Truth",
               "Removes the requirements for the Lens of Truth in Shadow Temple for most areas in the dungeon except "
@@ -950,17 +979,20 @@ void Settings::CreateOptions() {
               "Shadow Temple Bongo Bongo without Lens of Truth",
               "Bongo Bongo can be defeated without the use of Lens of Truth, as the hands give a pretty good idea of "
               "where the eye is.");
-    OPT_TRICK(RT_SHADOW_UMBRELLA, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::EXPERT },
+    OPT_TRICK(RT_SHADOW_UMBRELLA_HOVER, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::EXPERT },
               "Shadow Temple Stone Umbrella Skip",
               "A very precise Hover Boots movement from off of the lower chest can get you on top of the crushing "
               "spikes without needing to pull the block. Applies to both Vanilla and Master Quest.");
+    OPT_TRICK(RT_SHADOW_UMBRELLA_CLIP, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Shadow Temple Stone Umbrella Clip",
+              "Backflipping as the falling spikes fall clips above without needing any other requirements. "
+              "Applies to both Vanilla and Master Quest.");
     OPT_TRICK(RT_SHADOW_UMBRELLA_GS, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::EXPERT },
               "Shadow Temple Falling Spikes GS with Hover Boots",
               "After killing the Skulltula, a very precise Hover Boots movement from off of the lower chest can get "
               "you on top of the crushing spikes without needing to pull the block. From there, another very precise "
               "Hover Boots movement can be used to obtain the token without needing the Hookshot. Applies to both "
-              "Vanilla and Master Quest. For obtaining the chests in this room with just Hover Boots, be sure to "
-              "enable \"Shadow Temple Stone Umbrella Skip\".");
+              "Vanilla and Master Quest.");
     OPT_TRICK(RT_SHADOW_FREESTANDING_KEY, RCQUEST_VANILLA, RA_SHADOW_TEMPLE, { Tricks::Tag::NOVICE },
               "Shadow Temple Freestanding Key with Bombchu",
               "Release the Bombchu with good timing so that it explodes near the bottom of the pot.");
@@ -1100,7 +1132,7 @@ void Settings::CreateOptions() {
               "Gerudo Training Ground MQ Left Side Silver Rupees with Hookshot",
               "The highest Silver Rupee can be obtained by hookshooting the target and then immediately jump slashing "
               "toward the Rupee.");
-    OPT_TRICK(RT_GTG_MQ_WIHTOUT_HOOKSHOT, RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, { Tricks::Tag::INTERMEDIATE },
+    OPT_TRICK(RT_GTG_MQ_WITHOUT_HOOKSHOT, RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, { Tricks::Tag::INTERMEDIATE },
               "Gerudo Training Ground MQ Left Side Silver Rupees without Hookshot",
               "After collecting the rest of the Silver Rupees in the room, you can reach the final Silver Rupee on the "
               "ceiling by being pulled up into it after getting grabbed by the Wallmaster. The Wallmaster will not "
@@ -1159,6 +1191,7 @@ void Settings::CreateOptions() {
                                                                      &mOptions[RSK_DOOR_OF_TIME],
                                                                      &mOptions[RSK_ZORAS_FOUNTAIN],
                                                                      &mOptions[RSK_SLEEPING_WATERFALL],
+                                                                     &mOptions[RSK_JABU_OPEN],
                                                                      &mOptions[RSK_LOCK_OVERWORLD_DOORS],
                                                                  },
                                                                  WidgetContainerType::COLUMN);
@@ -1263,6 +1296,7 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_SHUFFLE_COWS],
                                   &mOptions[RSK_SHUFFLE_POTS],
                                   &mOptions[RSK_SHUFFLE_CRATES],
+                                  &mOptions[RSK_SHUFFLE_TREES],
                                   &mOptions[RSK_SHUFFLE_MERCHANTS],
                                   &mOptions[RSK_MERCHANT_PRICES],
                                   &mOptions[RSK_MERCHANT_PRICES_FIXED_PRICE],
@@ -1333,14 +1367,31 @@ void Settings::CreateOptions() {
                                                                      WidgetContainerType::SECTION);
     mOptionGroups[RSG_EXTRA_HINTS_IMGUI] = OptionGroup::SubGroup(
         "Extra Hints",
-        { &mOptions[RSK_TOT_ALTAR_HINT],     &mOptions[RSK_GANONDORF_HINT],     &mOptions[RSK_SHEIK_LA_HINT],
-          &mOptions[RSK_DAMPES_DIARY_HINT],  &mOptions[RSK_GREG_HINT],          &mOptions[RSK_LOACH_HINT],
-          &mOptions[RSK_SARIA_HINT],         &mOptions[RSK_FROGS_HINT],         &mOptions[RSK_OOT_HINT],
-          &mOptions[RSK_BIGGORON_HINT],      &mOptions[RSK_BIG_POES_HINT],      &mOptions[RSK_CHICKENS_HINT],
-          &mOptions[RSK_MALON_HINT],         &mOptions[RSK_HBA_HINT],           &mOptions[RSK_FISHING_POLE_HINT],
-          &mOptions[RSK_WARP_SONG_HINTS],    &mOptions[RSK_SCRUB_TEXT_HINT],    &mOptions[RSK_MERCHANT_TEXT_HINT],
-          &mOptions[RSK_KAK_10_SKULLS_HINT], &mOptions[RSK_KAK_20_SKULLS_HINT], &mOptions[RSK_KAK_30_SKULLS_HINT],
-          &mOptions[RSK_KAK_40_SKULLS_HINT], &mOptions[RSK_KAK_50_SKULLS_HINT], &mOptions[RSK_KAK_100_SKULLS_HINT],
+        { &mOptions[RSK_TOT_ALTAR_HINT],
+          &mOptions[RSK_GANONDORF_HINT],
+          &mOptions[RSK_SHEIK_LA_HINT],
+          &mOptions[RSK_DAMPES_DIARY_HINT],
+          &mOptions[RSK_GREG_HINT],
+          &mOptions[RSK_LOACH_HINT],
+          &mOptions[RSK_SARIA_HINT],
+          &mOptions[RSK_MIDO_HINT],
+          &mOptions[RSK_FROGS_HINT],
+          &mOptions[RSK_OOT_HINT],
+          &mOptions[RSK_BIGGORON_HINT],
+          &mOptions[RSK_BIG_POES_HINT],
+          &mOptions[RSK_CHICKENS_HINT],
+          &mOptions[RSK_MALON_HINT],
+          &mOptions[RSK_HBA_HINT],
+          &mOptions[RSK_FISHING_POLE_HINT],
+          &mOptions[RSK_WARP_SONG_HINTS],
+          &mOptions[RSK_SCRUB_TEXT_HINT],
+          &mOptions[RSK_MERCHANT_TEXT_HINT],
+          &mOptions[RSK_KAK_10_SKULLS_HINT],
+          &mOptions[RSK_KAK_20_SKULLS_HINT],
+          &mOptions[RSK_KAK_30_SKULLS_HINT],
+          &mOptions[RSK_KAK_40_SKULLS_HINT],
+          &mOptions[RSK_KAK_50_SKULLS_HINT],
+          &mOptions[RSK_KAK_100_SKULLS_HINT],
           &mOptions[RSK_MASK_SHOP_HINT] },
         WidgetContainerType::SECTION, "This setting adds some hints at locations other than Gossip Stones.");
     mOptionGroups[RSG_ITEM_POOL_HINTS_IMGUI_COLUMN] =
@@ -1359,6 +1410,7 @@ void Settings::CreateOptions() {
                                                                              &mOptions[RSK_SUNLIGHT_ARROWS],
                                                                              &mOptions[RSK_INFINITE_UPGRADES],
                                                                              &mOptions[RSK_SKELETON_KEY],
+                                                                             &mOptions[RSK_SLINGBOW_BREAK_BEEHIVES],
                                                                          },
                                                                          WidgetContainerType::COLUMN);
     mOptionGroups[RSG_GAMEPLAY_IMGUI_TABLE] =
@@ -1413,6 +1465,7 @@ void Settings::CreateOptions() {
                                                                &mOptions[RSK_DOOR_OF_TIME],
                                                                &mOptions[RSK_ZORAS_FOUNTAIN],
                                                                &mOptions[RSK_SLEEPING_WATERFALL],
+                                                               &mOptions[RSK_JABU_OPEN],
                                                                &mOptions[RSK_LOCK_OVERWORLD_DOORS],
                                                                &mOptions[RSK_GERUDO_FORTRESS],
                                                                &mOptions[RSK_RAINBOW_BRIDGE],
@@ -1495,6 +1548,7 @@ void Settings::CreateOptions() {
                                             &mOptions[RSK_SHUFFLE_COWS],
                                             &mOptions[RSK_SHUFFLE_POTS],
                                             &mOptions[RSK_SHUFFLE_CRATES],
+                                            &mOptions[RSK_SHUFFLE_TREES],
                                             &mOptions[RSK_SHUFFLE_KOKIRI_SWORD],
                                             &mOptions[RSK_SHUFFLE_OCARINA],
                                             &mOptions[RSK_SHUFFLE_OCARINA_BUTTONS],
@@ -1599,6 +1653,7 @@ void Settings::CreateOptions() {
                                               &mOptions[RSK_GREG_HINT],
                                               &mOptions[RSK_LOACH_HINT],
                                               &mOptions[RSK_SARIA_HINT],
+                                              &mOptions[RSK_MIDO_HINT],
                                               &mOptions[RSK_FROGS_HINT],
                                               &mOptions[RSK_OOT_HINT],
                                               &mOptions[RSK_WARP_SONG_HINTS],
@@ -1623,6 +1678,7 @@ void Settings::CreateOptions() {
                                               &mOptions[RSK_SUNLIGHT_ARROWS],
                                               &mOptions[RSK_INFINITE_UPGRADES],
                                               &mOptions[RSK_SKELETON_KEY],
+                                              &mOptions[RSK_SLINGBOW_BREAK_BEEHIVES],
                                           });
     mOptionGroups[RSG_ITEM_POOL] = OptionGroup(
         "Item Pool Settings", std::initializer_list<Option*>({ &mOptions[RSK_ITEM_POOL], &mOptions[RSK_ICE_TRAPS] }));
@@ -1812,10 +1868,9 @@ void Settings::UpdateOptionProperties() {
     } else {
         mOptionGroups[RSG_AREA_ACCESS_IMGUI].Enable();
         // Starting Age - Disabled when Forest is set to Closed or under very specific conditions
-        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ClosedForest"), RO_CLOSED_FOREST_ON) == RO_CLOSED_FOREST_ON ||
-            (CVarGetInteger(CVAR_RANDOMIZER_SETTING("DoorOfTime"), RO_DOOROFTIME_CLOSED) == RO_DOOROFTIME_CLOSED &&
-             CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleOcarinas"), RO_GENERIC_OFF) ==
-                 RO_GENERIC_OFF)) /* closed door of time with ocarina shuffle off */ {
+        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("DoorOfTime"), RO_DOOROFTIME_CLOSED) == RO_DOOROFTIME_CLOSED &&
+            CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleOcarinas"), RO_GENERIC_OFF) ==
+                RO_GENERIC_OFF) /* closed door of time with ocarina shuffle off */ {
             mOptions[RSK_STARTING_AGE].Disable(
                 "This option is disabled due to other options making the game unbeatable.");
         } else {
@@ -2496,10 +2551,16 @@ void Settings::UpdateOptionProperties() {
             "setting where you present the loach to the fishing pond owner.");
     }
 
-    if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("CuccosToReturn"), 7) == 0) {
-        mOptions[RSK_CHICKENS_HINT].Disable("Anju will just give you the item instead with 0 chickens.");
+    if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("BigPoeTargetCount"), 10) == 0) {
+        mOptions[RSK_BIG_POES_HINT].Disable("Poe Collector will just give you the item instead with 0 big poes.");
     } else {
-        mOptions[RSK_CHICKENS_HINT].Enable();
+        mOptions[RSK_BIG_POES_HINT].Enable();
+    }
+    if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleBeehives"), RO_GENERIC_OFF)) {
+        mOptions[RSK_SLINGBOW_BREAK_BEEHIVES].Enable();
+    } else {
+        mOptions[RSK_SLINGBOW_BREAK_BEEHIVES].Disable(
+            "This option is disabled because Shuffle Beehives is not enabled.");
     }
 }
 
@@ -2512,8 +2573,7 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
     }
 
     // With certain access settings, the seed is only beatable if Starting Age is set to Child.
-    if (mOptions[RSK_FOREST].Is(RO_CLOSED_FOREST_ON) ||
-        (mOptions[RSK_DOOR_OF_TIME].Is(RO_DOOROFTIME_CLOSED) && !mOptions[RSK_SHUFFLE_OCARINA])) {
+    if (mOptions[RSK_DOOR_OF_TIME].Is(RO_DOOROFTIME_CLOSED) && !mOptions[RSK_SHUFFLE_OCARINA]) {
         mOptions[RSK_STARTING_AGE].Set(RO_AGE_CHILD);
     }
 
@@ -2575,7 +2635,7 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
     }
     if (!mOptions[RSK_SHUFFLE_MASTER_SWORD]) {
         if (mOptions[RSK_STARTING_MASTER_SWORD]) {
-            this->GetItemLocation(RC_MASTER_SWORD_PEDESTAL)->SetExcludedOption(1);
+            this->GetItemLocation(RC_TOT_MASTER_SWORD)->SetExcludedOption(1);
         }
     }
     if (!mOptions[RSK_SHUFFLE_OCARINA]) {
@@ -2825,13 +2885,6 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
 
     if (!mOptions[RSK_MIXED_ENTRANCE_POOLS] || !grottoShuffle) {
         mOptions[RSK_MIX_GROTTO_ENTRANCES].Set(RO_GENERIC_OFF);
-    }
-
-    if (mOptions[RSK_FOREST].Is(RO_CLOSED_FOREST_ON) &&
-        (mOptions[RSK_SHUFFLE_INTERIOR_ENTRANCES].Is(RO_INTERIOR_ENTRANCE_SHUFFLE_ALL) ||
-         mOptions[RSK_SHUFFLE_OVERWORLD_ENTRANCES] || mOptions[RSK_SHUFFLE_OVERWORLD_SPAWNS] ||
-         mOptions[RSK_DECOUPLED_ENTRANCES] || mOptions[RSK_MIXED_ENTRANCE_POOLS])) {
-        mOptions[RSK_FOREST].Set(RO_CLOSED_FOREST_DEKU_ONLY);
     }
 
     if (mOptions[RSK_STARTING_AGE].Is(RO_AGE_RANDOM)) {

@@ -10,7 +10,7 @@
 
 #ifdef __cplusplus
 #include <memory>
-#include <Resource.h>
+#include <ship/resource/Resource.h>
 
 std::shared_ptr<Ship::IResource> ResourceMgr_GetResourceByNameHandlingMQ(const char* path);
 
@@ -51,8 +51,9 @@ void ResourceMgr_UnpatchGfxByName(const char* path, const char* patchName);
 char* ResourceMgr_LoadArrayByNameAsVec3s(const char* path);
 Vtx* ResourceMgr_LoadVtxByCRC(uint64_t crc);
 Vtx* ResourceMgr_LoadVtxByName(char* path);
-SoundFont* ResourceMgr_LoadAudioSoundFont(const char* path);
+SoundFont* ResourceMgr_LoadAudioSoundFontByName(const char* path);
 SequenceData ResourceMgr_LoadSeqByName(const char* path);
+SequenceData* ResourceMgr_LoadSeqPtrByName(const char* path);
 SoundFontSample* ResourceMgr_LoadAudioSample(const char* path);
 CollisionHeader* ResourceMgr_LoadColByName(const char* path);
 bool ResourceMgr_IsAltAssetsEnabled();

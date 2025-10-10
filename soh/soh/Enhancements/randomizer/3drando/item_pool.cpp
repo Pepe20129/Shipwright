@@ -354,7 +354,7 @@ void PlaceJunkInExcludedLocation(const RandomizerCheck il) {
     // place a non-advancement item in this location
     auto ctx = Rando::Context::GetInstance();
     for (size_t i = 0; i < ItemPool.size(); i++) {
-        if (!Rando::StaticData::RetrieveItem(ItemPool[i]).IsAdvancement()) {
+        if (Rando::StaticData::RetrieveItem(ItemPool[i]).GetCategory() == ITEM_CATEGORY_JUNK) {
             ctx->PlaceItemInLocation(il, ItemPool[i]);
             ItemPool.erase(ItemPool.begin() + i);
             return;
@@ -604,17 +604,23 @@ void GenerateItemPool() {
                              ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
     PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive);
 
+    // Shuffle Trees
+    bool treesActive = (bool)ctx->GetOption(RSK_SHUFFLE_TREES);
+    PlaceItemsForType(RCTYPE_TREE, treesActive, false);
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC)) {
+        PlaceItemsForType(RCTYPE_NLTREE, treesActive, false);
+    }
+
     // Shuffle Crates
     bool overworldCratesActive = ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_OVERWORLD) ||
                                  ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL);
-    bool overworldNLCratesActive = ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC) &&
-                                   (ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_OVERWORLD) ||
-                                    ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL));
     bool dungeonCratesActive = ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_DUNGEONS) ||
                                ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL);
     PlaceItemsForType(RCTYPE_CRATE, overworldCratesActive, dungeonCratesActive);
-    PlaceItemsForType(RCTYPE_NLCRATE, overworldNLCratesActive, dungeonCratesActive);
     PlaceItemsForType(RCTYPE_SMALL_CRATE, overworldCratesActive, dungeonCratesActive);
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC)) {
+        PlaceItemsForType(RCTYPE_NLCRATE, overworldCratesActive, dungeonCratesActive);
+    }
 
     auto fsMode = ctx->GetOption(RSK_FISHSANITY);
     if (fsMode.IsNot(RO_FISHSANITY_OFF)) {
@@ -811,16 +817,16 @@ void GenerateItemPool() {
 
     // Gerudo Fortress
     if (ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE)) {
-        ctx->PlaceItemInLocation(RC_GF_NORTH_F1_CARPENTER, RG_RECOVERY_HEART, false, true);
-        ctx->PlaceItemInLocation(RC_GF_NORTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
-        ctx->PlaceItemInLocation(RC_GF_SOUTH_F1_CARPENTER, RG_RECOVERY_HEART, false, true);
-        ctx->PlaceItemInLocation(RC_GF_SOUTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
+        ctx->PlaceItemInLocation(RC_TH_1_TORCH_CARPENTER, RG_RECOVERY_HEART, false, true);
+        ctx->PlaceItemInLocation(RC_TH_DEAD_END_CARPENTER, RG_RECOVERY_HEART, false, true);
+        ctx->PlaceItemInLocation(RC_TH_DOUBLE_CELL_CARPENTER, RG_RECOVERY_HEART, false, true);
+        ctx->PlaceItemInLocation(RC_TH_STEEP_SLOPE_CARPENTER, RG_RECOVERY_HEART, false, true);
     } else if (ctx->GetOption(RSK_GERUDO_KEYS).IsNot(RO_GERUDO_KEYS_VANILLA)) {
         if (ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FAST)) {
             AddItemToMainPool(RG_GERUDO_FORTRESS_SMALL_KEY);
-            ctx->PlaceItemInLocation(RC_GF_NORTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F1_CARPENTER, RG_RECOVERY_HEART, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DEAD_END_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DOUBLE_CELL_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_STEEP_SLOPE_CARPENTER, RG_RECOVERY_HEART, false, true);
         } else {
             // Only add key ring if 4 Fortress keys necessary
             if (ctx->GetOption(RSK_KEYRINGS_GERUDO_FORTRESS) && ctx->GetOption(RSK_KEYRINGS)) {
@@ -843,15 +849,15 @@ void GenerateItemPool() {
         }
     } else {
         if (ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FAST)) {
-            ctx->PlaceItemInLocation(RC_GF_NORTH_F1_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
-            ctx->PlaceItemInLocation(RC_GF_NORTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F1_CARPENTER, RG_RECOVERY_HEART, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F2_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_1_TORCH_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DEAD_END_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DOUBLE_CELL_CARPENTER, RG_RECOVERY_HEART, false, true);
+            ctx->PlaceItemInLocation(RC_TH_STEEP_SLOPE_CARPENTER, RG_RECOVERY_HEART, false, true);
         } else {
-            ctx->PlaceItemInLocation(RC_GF_NORTH_F1_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
-            ctx->PlaceItemInLocation(RC_GF_NORTH_F2_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F1_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
-            ctx->PlaceItemInLocation(RC_GF_SOUTH_F2_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
+            ctx->PlaceItemInLocation(RC_TH_1_TORCH_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DEAD_END_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
+            ctx->PlaceItemInLocation(RC_TH_DOUBLE_CELL_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
+            ctx->PlaceItemInLocation(RC_TH_STEEP_SLOPE_CARPENTER, RG_GERUDO_FORTRESS_SMALL_KEY, false, true);
         }
     }
 
@@ -861,10 +867,10 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_GERUDO_MEMBERSHIP_CARD);
         ctx->possibleIceTrapModels.push_back(RG_GERUDO_MEMBERSHIP_CARD);
     } else if (ctx->GetOption(RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD)) {
-        AddItemToPool(PendingJunkPool, RG_GERUDO_MEMBERSHIP_CARD);
-        ctx->PlaceItemInLocation(RC_GF_GERUDO_MEMBERSHIP_CARD, RG_ICE_TRAP, false, true);
+        AddItemToPool(ItemPool, RG_GERUDO_MEMBERSHIP_CARD);
+        ctx->PlaceItemInLocation(RC_TH_FREED_CARPENTERS, RG_ICE_TRAP, false, true);
     } else {
-        ctx->PlaceItemInLocation(RC_GF_GERUDO_MEMBERSHIP_CARD, RG_GERUDO_MEMBERSHIP_CARD, false, true);
+        ctx->PlaceItemInLocation(RC_TH_FREED_CARPENTERS, RG_GERUDO_MEMBERSHIP_CARD, false, true);
     }
 
     // Keys

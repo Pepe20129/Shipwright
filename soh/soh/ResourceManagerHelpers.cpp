@@ -11,8 +11,9 @@
 #include "resource/type/Array.h"
 #include "resource/type/Skeleton.h"
 #include "resource/type/PlayerAnimation.h"
-#include <Fast3D/Fast3dWindow.h>
-#include <DisplayList.h>
+#include <fast/Fast3dWindow.h>
+#include <fast/resource/ResourceType.h>
+#include <fast/resource/type/DisplayList.h>
 
 extern "C" PlayState* gPlayState;
 
@@ -429,11 +430,16 @@ extern "C" SequenceData ResourceMgr_LoadSeqByName(const char* path) {
     return *sequence;
 }
 
+extern "C" SequenceData* ResourceMgr_LoadSeqPtrByName(const char* path) {
+    SequenceData* sequence = (SequenceData*)ResourceGetDataByName(path);
+    return sequence;
+}
+
 extern "C" SoundFontSample* ResourceMgr_LoadAudioSample(const char* path) {
     return (SoundFontSample*)ResourceGetDataByName(path);
 }
 
-extern "C" SoundFont* ResourceMgr_LoadAudioSoundFont(const char* path) {
+extern "C" SoundFont* ResourceMgr_LoadAudioSoundFontByName(const char* path) {
     return (SoundFont*)ResourceGetDataByName(path);
 }
 

@@ -1,10 +1,9 @@
-#include <libultraship/bridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
-#include "functions.h"
-#include "macros.h"
 
 extern "C" {
+#include "functions.h"
+#include "macros.h"
 extern PlayState* gPlayState;
 extern SaveContext gSaveContext;
 }
@@ -67,4 +66,4 @@ void RegisterDaytimeGoldSkultullas() {
     COND_HOOK(OnSceneSpawnActors, CVAR_DAYTIME_GS_VALUE, OnSpawnNighttimeGoldSkulltula);
 }
 
-static RegisterShipInitFunc initFunc_DaytimeGoldSkulltulas(RegisterDaytimeGoldSkultullas, { CVAR_DAYTIME_GS_NAME });
+static RegisterShipInitFunc initFunc(RegisterDaytimeGoldSkultullas, { CVAR_DAYTIME_GS_NAME });

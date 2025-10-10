@@ -8,6 +8,7 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/SohGui/UIWidgets.hpp"
 #include "soh/SohGui/SohGui.hpp"
+#include "soh/SohGui/SohMenu.h"
 #include "dungeon.h"
 #include "entrance.h"
 #include "location_access.h"
@@ -19,6 +20,7 @@
 #include <vector>
 #include <set>
 #include <libultraship/libultraship.h>
+#include <libultraship/controller/controldeck/ControlDeck.h>
 #include "location.h"
 #include "item_location.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
@@ -39,9 +41,22 @@ extern std::vector<ItemTrackerItem> dungeonRewardMedallions;
 extern std::vector<ItemTrackerItem> songItems;
 extern std::vector<ItemTrackerItem> equipmentItems;
 
+namespace SohGui {
+extern std::shared_ptr<SohMenu> mSohMenu;
+}
+
 using json = nlohmann::json;
+using namespace UIWidgets;
 
 namespace CheckTracker {
+static WidgetInfo backgroundColorWidget;
+static WidgetInfo windowTypeWidget;
+static WidgetInfo dungeonSpoilerWidget;
+static WidgetInfo hideUnshuffledShopWidget;
+static WidgetInfo showGSWidget;
+static WidgetInfo showLogicWidget;
+static WidgetInfo hideJunkWidget;
+static WidgetInfo checkAvailabilityWidget;
 
 // settings
 bool showShops;
@@ -68,6 +83,7 @@ bool showOverworldGrass;
 bool showDungeonGrass;
 bool showOverworldCrates;
 bool showDungeonCrates;
+bool showTrees;
 bool showFrogSongRupees;
 bool showFairies;
 bool showStartingMapsCompasses;
@@ -507,6 +523,9 @@ void SetShopSeen(uint32_t sceneNum, bool prices) {
 }
 
 void CheckTrackerLoadGame(int32_t fileNum) {
+    if (IS_BOSS_RUSH) {
+        return;
+    }
     LoadSettings();
     TrySetAreas();
     for (auto& entry : Rando::StaticData::GetLocationTable()) {
@@ -599,7 +618,7 @@ void CheckTrackerLoadGame(int32_t fileNum) {
         Rando::Context::GetInstance()->GetEntranceShuffler()->ApplyEntranceOverrides();
     }
 
-    RecalculateAvailableChecks();
+    recalculateAvailable = true;
 }
 
 void CheckTrackerShopSlotChange(uint8_t cursorSlot, int16_t basePrice) {
@@ -766,7 +785,7 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             if ((flag == EVENTCHKINF_CARPENTERS_FREE(0) || flag == EVENTCHKINF_CARPENTERS_FREE(1) ||
                  flag == EVENTCHKINF_CARPENTERS_FREE(2) || flag == EVENTCHKINF_CARPENTERS_FREE(3)) &&
                 GET_EVENTCHKINF_CARPENTERS_FREE_ALL()) {
-                SetCheckCollected(RC_GF_GERUDO_MEMBERSHIP_CARD);
+                SetCheckCollected(RC_TH_FREED_CARPENTERS);
                 return;
             }
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_EVENT_CHK_INF;
@@ -1013,6 +1032,11 @@ void CheckTrackerWindow::DrawElement() {
         return;
     }
 
+    if (recalculateAvailable) {
+        recalculateAvailable = false;
+        RecalculateAvailableChecks();
+    }
+
     SceneID sceneId = SCENE_ID_MAX;
     if (gPlayState != nullptr) {
         sceneId = (SceneID)gPlayState->sceneNum;
@@ -1085,7 +1109,7 @@ void CheckTrackerWindow::DrawElement() {
         totalChecksSS << totalChecksAvailable << " Available / ";
     }
     totalChecksSS << totalChecksGotten << " Checked / " << totalChecks << " Total";
-    ImGui::Text(totalChecksSS.str().c_str());
+    ImGui::Text("%s", totalChecksSS.str().c_str());
 
     UIWidgets::PaddedSeparator();
 
@@ -1194,7 +1218,7 @@ void CheckTrackerWindow::DrawElement() {
                     }
                 }
 
-                ImGui::Text(areaTotalsSS.str().c_str());
+                ImGui::Text("%s", areaTotalsSS.str().c_str());
                 UIWidgets::Tooltip(areaTotalsTooltipSS.str().c_str());
             } else {
                 ImGui::Text("???");
@@ -1463,6 +1487,7 @@ void LoadSettings() {
                 showDungeonCrates = false;
                 break;
         }
+        showTrees = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_TREES);
     } else { // Vanilla
         showOverworldTokens = true;
         showDungeonTokens = true;
@@ -1472,6 +1497,7 @@ void LoadSettings() {
         showDungeonGrass = false;
         showOverworldCrates = false;
         showDungeonCrates = false;
+        showTrees = false;
     }
 
     fortressFast = false;
@@ -1548,9 +1574,9 @@ bool IsCheckShuffled(RandomizerCheck rc) {
         return (loc->GetArea() != RCAREA_INVALID) &&        // don't show Invalid locations
                (loc->GetRCType() != RCTYPE_GOSSIP_STONE) && // TODO: Don't show hints until tracker supports them
                (loc->GetRCType() != RCTYPE_STATIC_HINT) &&  // TODO: Don't show hints until tracker supports them
-               (loc->GetRCType() !=
-                RCTYPE_CHEST_GAME) && // don't show non final reward chest game checks until we support shuffling them
-               (rc != RC_HC_ZELDAS_LETTER) && // don't show zeldas letter until we support shuffling it
+               (loc->GetRCType() != RCTYPE_CHEST_GAME) &&   // don't show non final reward chest game checks until we
+                                                            // support shuffling them
+               (rc != RC_HC_ZELDAS_LETTER) &&               // don't show zeldas letter until we support shuffling it
                (rc != RC_LINKS_POCKET || showLinksPocket) &&
                OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) &&
                (loc->GetRCType() != RCTYPE_SHOP ||
@@ -1584,6 +1610,10 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                (loc->GetRCType() != RCTYPE_SMALL_CRATE ||
                 (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
                 (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+               (loc->GetRCType() != RCTYPE_TREE || showTrees) &&
+               (loc->GetRCType() != RCTYPE_NLTREE ||
+                (showTrees &&
+                 OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) &&
                (loc->GetRCType() != RCTYPE_COW || showCows) &&
                (loc->GetRCType() != RCTYPE_FISH ||
                 OTRGlobals::Instance->gRandoContext->GetFishsanity()->GetFishLocationIncluded(loc)) &&
@@ -1604,10 +1634,10 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                (loc->GetRCType() != RCTYPE_BOSS_KEY || showBossKeysanity) &&
                (loc->GetRCType() != RCTYPE_GANON_BOSS_KEY || showGanonBossKey) &&
                (rc != RC_KAK_100_GOLD_SKULLTULA_REWARD || show100SkullReward) &&
-               (loc->GetRCType() != RCTYPE_GF_KEY && rc != RC_GF_GERUDO_MEMBERSHIP_CARD ||
-                (showGerudoCard && rc == RC_GF_GERUDO_MEMBERSHIP_CARD) ||
+               (loc->GetRCType() != RCTYPE_GF_KEY && rc != RC_TH_FREED_CARPENTERS ||
+                (showGerudoCard && rc == RC_TH_FREED_CARPENTERS) ||
                 (fortressNormal && showGerudoFortressKeys && loc->GetRCType() == RCTYPE_GF_KEY) ||
-                (fortressFast && showGerudoFortressKeys && rc == RC_GF_NORTH_F1_CARPENTER));
+                (fortressFast && showGerudoFortressKeys && rc == RC_TH_1_TORCH_CARPENTER));
     } else if (loc->IsVanillaCompletion()) {
         return (OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) || rc == RC_GIFT_FROM_RAURU) &&
                rc != RC_LINKS_POCKET;
@@ -1626,10 +1656,11 @@ bool IsVisibleInCheckTracker(RandomizerCheck rc) {
     }
 
     if (IS_RANDO) {
-        return IsCheckShuffled(rc) ||
-               (alwaysShowGS && loc->GetRCType() == RCTYPE_SKULL_TOKEN &&
-                OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc)) ||
-               (loc->GetRCType() == RCTYPE_SHOP && showShops && !hideShopUnshuffledChecks);
+        return !Rando::Context::GetInstance()->GetItemLocation(rc)->IsExcluded() &&
+               (IsCheckShuffled(rc) ||
+                (alwaysShowGS && loc->GetRCType() == RCTYPE_SKULL_TOKEN &&
+                 OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc)) ||
+                (loc->GetRCType() == RCTYPE_SHOP && showShops && !hideShopUnshuffledChecks));
     } else {
         return loc->IsVanillaCompletion() &&
                (!loc->IsDungeon() || (loc->IsDungeon() && loc->GetQuest() == gSaveContext.ship.quest.id));
@@ -2028,7 +2059,7 @@ void ImGuiDrawTwoColorPickerSection(const char* text, const char* cvarMainName, 
 }
 
 void RecalculateAvailableChecks(RandomizerRegion startingRegion /* = RR_ROOT */) {
-    if (!enableAvailableChecks) {
+    if (!enableAvailableChecks || !GameInteractor::IsSaveLoaded()) {
         return;
     }
 
@@ -2036,6 +2067,7 @@ void RecalculateAvailableChecks(RandomizerRegion startingRegion /* = RR_ROOT */)
     StartPerformanceTimer(PT_RECALCULATE_AVAILABLE_CHECKS);
 
     const auto& ctx = Rando::Context::GetInstance();
+    logic = ctx->GetLogic();
 
     std::vector<RandomizerCheck> targetLocations;
     targetLocations.reserve(RC_MAX);
@@ -2100,10 +2132,6 @@ static std::unordered_map<int32_t, const char*> buttonStrings = {
 };
 
 void CheckTrackerSettingsWindow::DrawElement() {
-    if (recalculateAvailable) {
-        recalculateAvailable = false;
-        RecalculateAvailableChecks();
-    }
     ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, { 8.0f, 8.0f });
     if (ImGui::BeginTable("CheckTrackerSettingsTable", 2, ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersV)) {
         ImGui::TableSetupColumn("General settings", ImGuiTableColumnFlags_WidthStretch, 200.0f);
@@ -2111,22 +2139,14 @@ void CheckTrackerSettingsWindow::DrawElement() {
         ImGui::TableHeadersRow();
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-        UIWidgets::CVarColorPicker("BG Color", CVAR_TRACKER_CHECK("BgColor"), Color_Bg_Default, true,
-                                   UIWidgets::ColorPickerResetButton | UIWidgets::ColorPickerRandomButton, THEME_COLOR);
-        ImGui::PopItemWidth();
+        SohGui::mSohMenu->MenuDrawItem(backgroundColorWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
 
-        UIWidgets::CVarCombobox("Window Type", CVAR_TRACKER_CHECK("WindowType"), windowType,
-                                UIWidgets::ComboboxOptions()
-                                    .LabelPosition(UIWidgets::LabelPositions::Far)
-                                    .ComponentAlignment(UIWidgets::ComponentAlignments::Right)
-                                    .Color(THEME_COLOR)
-                                    .DefaultIndex(TRACKER_WINDOW_WINDOW));
+        SohGui::mSohMenu->MenuDrawItem(windowTypeWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
 
         if (CVarGetInteger(CVAR_TRACKER_CHECK("WindowType"), TRACKER_WINDOW_WINDOW) == TRACKER_WINDOW_FLOATING) {
             UIWidgets::CVarCheckbox("Enable Dragging", CVAR_TRACKER_CHECK("Draggable"),
                                     UIWidgets::CheckboxOptions().Color(THEME_COLOR));
-            UIWidgets::CVarCheckbox("Only enable while paused", CVAR_TRACKER_CHECK("ShowOnlyPaused"),
+            UIWidgets::CVarCheckbox("Only Enable While Paused", CVAR_TRACKER_CHECK("ShowOnlyPaused"),
                                     UIWidgets::CheckboxOptions().Color(THEME_COLOR));
             UIWidgets::CVarCombobox("Display Mode", CVAR_TRACKER_CHECK("DisplayType"), displayType,
                                     UIWidgets::ComboboxOptions()
@@ -2151,48 +2171,19 @@ void CheckTrackerSettingsWindow::DrawElement() {
             }
         }
         ImGui::BeginDisabled(CVarGetInteger(CVAR_SETTING("DisableChanges"), 0));
-        UIWidgets::CVarCheckbox("Vanilla/MQ Dungeon Spoilers", CVAR_TRACKER_CHECK("MQSpoilers"),
-                                UIWidgets::CheckboxOptions()
-                                    .Tooltip("If enabled, Vanilla/MQ dungeons will show on the tracker immediately. "
-                                             "Otherwise, Vanilla/MQ dungeon locations must be unlocked.")
-                                    .Color(THEME_COLOR));
+        SohGui::mSohMenu->MenuDrawItem(dungeonSpoilerWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
         ImGui::EndDisabled();
-        if (UIWidgets::CVarCheckbox(
-                "Hide unshuffled shop item checks", CVAR_TRACKER_CHECK("HideUnshuffledShopChecks"),
-                UIWidgets::CheckboxOptions()
-                    .Tooltip("If enabled, will prevent the tracker from displaying slots with non-shop-item shuffles.")
-                    .Color(THEME_COLOR))) {
-            hideShopUnshuffledChecks = CVarGetInteger(CVAR_TRACKER_CHECK("HideUnshuffledShopChecks"), 0);
-            UpdateFilters();
-        }
-        if (UIWidgets::CVarCheckbox(
-                "Always show gold skulltulas", CVAR_TRACKER_CHECK("AlwaysShowGSLocs"),
-                UIWidgets::CheckboxOptions()
-                    .Tooltip("If enabled, will show GS locations in the tracker regardless of tokensanity settings.")
-                    .Color(THEME_COLOR))) {
-            alwaysShowGS = !alwaysShowGS;
-            UpdateFilters();
-        }
-        UIWidgets::CVarCheckbox("Show Logic", CVAR_TRACKER_CHECK("ShowLogic"),
-                                UIWidgets::CheckboxOptions()
-                                    .Tooltip("If enabled, will show a check's logic when hovering over it.")
-                                    .Color(THEME_COLOR));
-        UIWidgets::CVarCheckbox("Hide Junk", CVAR_TRACKER_CHECK("Junk.Hide"),
-                                UIWidgets::CheckboxOptions()
-                                    .Tooltip("If enabled, checks that are known to be junk will be hidden.")
-                                    .Color(THEME_COLOR));
-        ImGui::BeginDisabled(CVarGetInteger(CVAR_SETTING("DisableChanges"), 0));
-        if (UIWidgets::CVarCheckbox("Enable Available Checks", CVAR_TRACKER_CHECK("EnableAvailableChecks"),
-                                    UIWidgets::CheckboxOptions()
-                                        .Tooltip("If enabled, will show the checks that are available to be collected "
-                                                 "with your current progress.")
-                                        .Color(THEME_COLOR))) {
-            enableAvailableChecks = CVarGetInteger(CVAR_TRACKER_CHECK("EnableAvailableChecks"), 0);
 
-            if (GameInteractor::IsSaveLoaded(true)) {
-                RecalculateAvailableChecks();
-            }
-        }
+        SohGui::mSohMenu->MenuDrawItem(hideUnshuffledShopWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+
+        SohGui::mSohMenu->MenuDrawItem(showGSWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+
+        SohGui::mSohMenu->MenuDrawItem(showLogicWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+
+        SohGui::mSohMenu->MenuDrawItem(hideJunkWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+
+        ImGui::BeginDisabled(CVarGetInteger(CVAR_SETTING("DisableChanges"), 0));
+        SohGui::mSohMenu->MenuDrawItem(checkAvailabilityWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
         ImGui::EndDisabled();
 
         // Filtering settings
@@ -2250,8 +2241,8 @@ void CheckTrackerSettingsWindow::DrawElement() {
             "Checks that you saved the game while having collected.", THEME_COLOR);
 
         ImGui::PopStyleVar(1);
+        ImGui::EndTable();
     }
-    ImGui::EndTable();
 }
 
 void CheckTrackerWindow::InitElement() {
@@ -2269,4 +2260,81 @@ void CheckTrackerWindow::InitElement() {
 
 void CheckTrackerWindow::UpdateElement() {
 }
+
+void RegisterCheckTrackerWidgets() {
+    backgroundColorWidget = { .name = "Background Color##CheckTrackerBgColor",
+                              .type = WidgetType::WIDGET_CVAR_COLOR_PICKER };
+    backgroundColorWidget.CVar(CVAR_TRACKER_CHECK("BgColor"))
+        .Options(
+            ColorPickerOptions().Color(THEME_COLOR).DefaultValue(Color_Bg_Default).UseAlpha().ShowReset().ShowRandom());
+    SohGui::mSohMenu->AddSearchWidget({ backgroundColorWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    windowTypeWidget = { .name = "Window Type", .type = WidgetType::WIDGET_CVAR_COMBOBOX };
+    windowTypeWidget.CVar(CVAR_TRACKER_CHECK("WindowType"))
+        .Options(ComboboxOptions()
+                     .DefaultIndex(TRACKER_WINDOW_WINDOW)
+                     .ComponentAlignment(ComponentAlignments::Right)
+                     .LabelPosition(LabelPositions::Far)
+                     .Color(THEME_COLOR)
+                     .ComboMap(windowType));
+    SohGui::mSohMenu->AddSearchWidget({ windowTypeWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    dungeonSpoilerWidget = { .name = "Vanilla/MQ Dungeon Spoilers", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    dungeonSpoilerWidget.CVar(CVAR_TRACKER_CHECK("MQSpoilers"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("If enabled, Vanilla/MQ dungeons will show on the tracker immediately. "
+                              "Otherwise, Vanilla/MQ dungeon locations must be unlocked."));
+    SohGui::mSohMenu->AddSearchWidget({ dungeonSpoilerWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    hideUnshuffledShopWidget = { .name = "Hide Unshuffled Shop Item Checks", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    hideUnshuffledShopWidget.CVar(CVAR_TRACKER_CHECK("HideUnshuffledShopChecks"))
+        .Options(
+            CheckboxOptions()
+                .Color(THEME_COLOR)
+                .Tooltip("If enabled, will prevent the tracker from displaying slots with non-shop-item shuffles."))
+        .Callback([&](WidgetInfo& info) {
+            hideShopUnshuffledChecks = CVarGetInteger(CVAR_TRACKER_CHECK("HideUnshuffledShopChecks"), 0);
+            UpdateFilters();
+        });
+    SohGui::mSohMenu->AddSearchWidget({ hideUnshuffledShopWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    showGSWidget = { .name = "Always Show Gold Skulltulas", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    showGSWidget.CVar(CVAR_TRACKER_CHECK("AlwaysShowGSLocs"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("If enabled, will show GS locations in the tracker regardless of tokensanity settings."))
+        .Callback([&](WidgetInfo& info) {
+            alwaysShowGS = !alwaysShowGS;
+            UpdateFilters();
+        });
+    SohGui::mSohMenu->AddSearchWidget({ showGSWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    showLogicWidget = { .name = "Show Logic", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    showLogicWidget.CVar(CVAR_TRACKER_CHECK("ShowLogic"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("If enabled, will show a check's logic when hovering over it."));
+    SohGui::mSohMenu->AddSearchWidget({ showLogicWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    hideJunkWidget = { .name = "Hide Junk", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    hideJunkWidget.CVar(CVAR_TRACKER_CHECK("Junk.Hide"))
+        .Options(CheckboxOptions()
+                     .Tooltip("If enabled, checks that are known to be junk will be hidden.")
+                     .Color(THEME_COLOR));
+    SohGui::mSohMenu->AddSearchWidget({ hideJunkWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    checkAvailabilityWidget = { .name = "Enable Available Checks", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    checkAvailabilityWidget.CVar(CVAR_TRACKER_CHECK("EnableAvailableChecks"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("If enabled, will show the checks that are available to be collected "
+                              "with your current progress."))
+        .Callback([&](WidgetInfo& info) {
+            enableAvailableChecks = CVarGetInteger(CVAR_TRACKER_CHECK("EnableAvailableChecks"), 0);
+            RecalculateAvailableChecks();
+        });
+}
+
+static RegisterMenuInitFunc menuInitFunc(RegisterCheckTrackerWidgets);
 } // namespace CheckTracker
