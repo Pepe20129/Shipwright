@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include <stdint.h>
 
 namespace SohUtils {
@@ -23,4 +24,7 @@ size_t CopyStringToCharBuffer(char* buffer, const std::string& source, size_t ma
 
 bool IsStringEmpty(std::string str);
 uint32_t Hash(std::string str);
+
+std::vector<std::string> SplitString(const std::string& str, char delimiter);
+std::vector<std::string> SplitString(const std::string& str, const std::string& delimiter);
 } // namespace SohUtils

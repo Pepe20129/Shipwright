@@ -794,3 +794,32 @@ uint32_t SohUtils::Hash(std::string str) {
     }
     return hval;
 }
+
+// https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+std::vector<std::string> SohUtils::SplitString(const std::string& str, char delimiter) {
+    std::vector<std::string> result;
+    std::stringstream ss(str);
+    std::string part;
+
+    while (std::getline(ss, part, delimiter)) {
+        result.push_back(part);
+    }
+
+    return result;
+}
+
+// https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+std::vector<std::string> SohUtils::SplitString(const std::string& str, const std::string& delimiter) {
+    std::string newStr = str;
+    std::vector<std::string> tokens;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = newStr.find(delimiter)) != std::string::npos) {
+        token = newStr.substr(0, pos);
+        tokens.push_back(token);
+        newStr.erase(0, pos + delimiter.length());
+    }
+    tokens.push_back(newStr);
+
+    return tokens;
+}
