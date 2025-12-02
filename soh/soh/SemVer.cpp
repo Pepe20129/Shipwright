@@ -857,7 +857,15 @@ std::optional<SemanticVersionRange> SemanticVersionRange::Parse(const std::strin
     for (const std::string& comparatorSetString : comparatorSetStrings) {
         std::vector<std::string> comparatorStrings = SohUtils::SplitString(comparatorSetString, " ");
 
-        // TODO
+        std::vector<SemanticVersionComparator> comparators;
+
+        for (const std::string& comparatorString : comparatorStrings) {
+            SemanticVersionComparator comparator = SemanticVersionComparator::Parse(comparatorString, includePrereleases);
+
+            comparators.push_back(comparator);
+        }
+
+        comparatorStrings.push_back(comparatorSets);
     }
 
     return SemanticVersionRange::New(comparatorSets);
@@ -916,19 +924,25 @@ SemanticVersionRange SemanticVersionRange::Clone() const {
 }
 
 bool SemanticVersionRange::operator==(const SemanticVersionRange& other) const {
-    // TODO
-    /*
-	for (const SemanticVersionRange& semanticVersionRange : comparatorSets) {
-		if (!other.comparatorSets.Contains(semanticVersionRange)) {
-			return false;
-		}
-	}
-	for (const SemanticVersionRange& semanticVersionRange : other.comparatorSets) {
-		if (!comparatorSets.Contains(semanticVersionRange)) {
-			return false;
-		}
-	}
-    */
+    if (comparatorSets.size() == 0 && other.comparatorSets.size() == 0) {
+        return true;
+    }
+
+    if (comparatorSets.size() != other.comparatorSets.size()) {
+        return false;
+    }
+
+    for (int i = 0; i < comparatorSets.size(); i += 1) {
+        if (comparatorSets[i].size() != other.comparatorSets[i].size()) {
+            return false;
+        }
+
+        for (int j = 0; j < comparatorSets[i].size(); j += 1) {
+            if (comparatorSets[i][j] != other.comparatorSets[i][j]) {
+                return false;
+            }
+        }
+    }
 
 	return true;
 }
