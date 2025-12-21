@@ -11,6 +11,12 @@ static const std::unordered_map<int32_t, const char*> logLevels = {
     { DEBUG_LOG_OFF, "Off" },
 };
 
+#ifdef _DEBUG
+DebugLogOption defaultLogLevel = DEBUG_LOG_TRACE;
+#else
+DebugLogOption defaultLogLevel = DEBUG_LOG_INFO;
+#endif
+
 static const std::unordered_map<int32_t, const char*> debugSaveFileModes = {
     { 0, "Off" },
     { 1, "Vanilla" },
@@ -110,10 +116,11 @@ void SohMenu::AddMenuDevTools() {
         .Options(ComboboxOptions()
                      .Tooltip("The log level determines which messages are printed to the console."
                               " This does not affect the log file output")
-                     .ComboMap(logLevels))
+                     .ComboMap(logLevels)
+                     .DefaultIndex(defaultLogLevel))
         .Callback([](WidgetInfo& info) {
             Ship::Context::GetInstance()->GetLogger()->set_level(
-                (spdlog::level::level_enum)CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), DEBUG_LOG_DEBUG));
+                (spdlog::level::level_enum)CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), defaultLogLevel));
         })
         .PreFunc([](WidgetInfo& info) { info.isHidden = mSohMenu->disabledMap.at(DISABLE_FOR_DEBUG_MODE_OFF).active; });
 
@@ -124,6 +131,7 @@ void SohMenu::AddMenuDevTools() {
         .CVar(CVAR_WINDOW("SohStats"))
         .RaceDisable(false)
         .WindowName("Stats##Soh")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Stats Window."));
 
     // Console
@@ -132,6 +140,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Console", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("SohConsole"))
         .WindowName("Console##SoH")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Console Window."));
 
     // Save Editor
@@ -140,6 +149,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Save Editor", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("SaveEditor"))
         .WindowName("Save Editor")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Save Editor Window."));
 
     // Hook Debugger
@@ -148,6 +158,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Hook Debugger", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("HookDebugger"))
         .WindowName("Hook Debugger")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Hook Debugger Window."));
 
     // Collision Viewer
@@ -156,6 +167,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Collision Viewer", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("CollisionViewer"))
         .WindowName("Collision Viewer")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Collision Viewer Window."));
 
     // Actor Viewer
@@ -164,6 +176,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Actor Viewer", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("ActorViewer"))
         .WindowName("Actor Viewer")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Actor Viewer Window."));
 
     // Display List Viewer
@@ -172,6 +185,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Display List Viewer", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("DisplayListViewer"))
         .WindowName("Display List Viewer")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Display List Viewer Window."));
 
     // Value Viewer
@@ -180,6 +194,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Value Viewer", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("ValueViewer"))
         .WindowName("Value Viewer")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Value Viewer Window."));
 
     // Message Viewer
@@ -188,6 +203,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Message Viewer", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("MessageViewer"))
         .WindowName("Message Viewer")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Message Viewer Window."));
 
     // Gfx Debugger
@@ -196,6 +212,7 @@ void SohMenu::AddMenuDevTools() {
     AddWidget(path, "Popout Gfx Debugger", WIDGET_WINDOW_BUTTON)
         .CVar(CVAR_WINDOW("SohGfxDebugger"))
         .WindowName("GfxDebugger##SoH")
+        .HideInSearch(true)
         .Options(WindowButtonOptions().Tooltip("Enables the separate Gfx Debugger Window."));
 }
 

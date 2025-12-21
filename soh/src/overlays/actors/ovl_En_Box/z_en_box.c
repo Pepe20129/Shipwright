@@ -567,8 +567,10 @@ void EnBox_Update(Actor* thisx, PlayState* play) {
             Actor_SetFocus(&this->dyna.actor, 40.0f);
     }
 
-    if ((this->dyna.actor.params >> 5 & 0x7F) == GI_ICE_TRAP && this->actionFunc == EnBox_Open &&
-        this->skelanime.curFrame > 45 && this->iceSmokeTimer < 100) {
+    if (GameInteractor_Should(VB_CHEST_USE_ICE_EFFECT,
+                              (this->dyna.actor.params >> 5 & 0x7F) == GI_ICE_TRAP && this->actionFunc == EnBox_Open &&
+                                  this->skelanime.curFrame > 45 && this->iceSmokeTimer < 100,
+                              this)) {
         EnBox_SpawnIceSmoke(this, play);
     }
 }
@@ -589,7 +591,7 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
         // If they have bombchus, don't consider the bombchu item major
         if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU &&
             ((this->getItemEntry.modIndex == MOD_RANDOMIZER &&
-              this->getItemEntry.getItemId == RG_PROGRESSIVE_BOMBCHUS) ||
+              this->getItemEntry.getItemId == RG_PROGRESSIVE_BOMBCHU_BAG) ||
              (this->getItemEntry.modIndex == MOD_NONE &&
               (this->getItemEntry.getItemId == GI_BOMBCHUS_5 || this->getItemEntry.getItemId == GI_BOMBCHUS_10 ||
                this->getItemEntry.getItemId == GI_BOMBCHUS_20)))) {

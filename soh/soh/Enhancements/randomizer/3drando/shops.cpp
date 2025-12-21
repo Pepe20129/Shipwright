@@ -434,12 +434,12 @@ void InitTrickNames() {
     };
     trickNameTable[RG_BROKEN_SWORD] = {
         Text{ "Broken Biggoron's Sword", "Épée brisée de Grogoron",
-              "zerbr. Biggoron-Schwert" },                                                // "Espada de Biggoron rota"
-        Text{ "Broken Giant's Knife", "Lame des Géants brisée", "zerbr. Langschwert" },   // "Daga gigante rota"
-        Text{ "Broken Noble Sword", "Épée noble brisée", "zerbr. Edelschwert" },          // "Espada noble rota"
-        Text{ "Broken Picori Blade", "Épée Minish brisée", "zerbr. Schwert der Minish" }, // "Espada minish rota"
+              "Zerbr. Biggoron-Schwert" },                                                // "Espada de Biggoron rota"
+        Text{ "Broken Giant's Knife", "Lame des Géants brisée", "Zerbr. Langschwert" },   // "Daga gigante rota"
+        Text{ "Broken Noble Sword", "Épée noble brisée", "Zerbr. Edelschwert" },          // "Espada noble rota"
+        Text{ "Broken Picori Blade", "Épée Minish brisée", "Zerbr. Schwert der Minish" }, // "Espada minish rota"
         Text{ "Decayed Master Sword", "Épée de légende pourrie",
-              "zerfr. Master-Schwert" }, // "Espada decadente de leyenda"
+              "Zerf. Master-Schwert" }, // "Espada decadente de leyenda"
     };
     trickNameTable[RG_PRESCRIPTION] = {
         Text{ "Biggoron's Prescription", "Ordonnance de Grogoron", "Biggorons Rezept" }, // "Receta de Biggoron"
@@ -563,14 +563,12 @@ void InitTrickNames() {
         Text{ "Progressive Rod Capacity", "Capacité de tiges (prog.)",
               "Stock-Kapazität (prog.)" }, // "Mayor capacidad de cetros deku"
     };
-    trickNameTable[RG_PROGRESSIVE_BOMBCHUS] = {
+    trickNameTable[RG_PROGRESSIVE_BOMBCHU_BAG] = {
         Text{ "Progressive Bomblings", "Bombinsectes (prog.)", "Bombenmäuse (prog.)€" }, // "Bombinsectos progresivos"
         Text{ "Progressive Sentrobe Bombs", "Bombe de Sphérodrone (prog.)",
               "Rokopterbomben (prog.)€" },                                          // "Bomba de helicobot progresivo"
         Text{ "Progressive Bomb-ombs", "Bombe Soldat (prog.)", "Bob-omb (prog.)" }, // "Soldado bomba progresivo"
         Text{ "Progressive Missiles", "Missiles (prog.)", "Missiles (prog.)€" },    // "Misiles progresivos"
-        Text{ "Progressive Bombchu Bag", "Sac à Bombchu (prog.)",
-              "Krabbelminenbeutel (prog.)" }, // "Bombachus progresivos"
     };
     trickNameTable[RG_PROGRESSIVE_MAGIC_METER] = {
         Text{ "Progressive Stamina Meter", "Jauge d'endurance (prog.)",
@@ -691,7 +689,7 @@ void InitTrickNames() {
 
     trickNameTable[RG_RUTOS_LETTER] = {
         Text{ "Bottle with Maggie's Letter", "Flacon avec lettre de Maggy",
-              "Flasche (Dolores Brief)" }, // "Carta de Dolores"
+              "Flasche (Dolores' Brief)" }, // "Carta de Dolores"
         Text{ "Bottle with Letter to Kafei", "Flacon avec lettre pour Kafei",
               "Flasche (Brief an Kafei)" }, // "Carta para Kafei"
         Text{ "Bottle with Zelda's Letter", "Flacon avec Lettre de Zelda",
@@ -717,7 +715,7 @@ void InitTrickNames() {
     };
     trickNameTable[RG_SARIAS_SONG] = {
         Text{ "Mido's Song", "La chanson de Mido", "Midos Lied" },         // "La canción de Mido"
-        Text{ "Kass' Theme", "Le thème de Kass", "Kashiwa Thema" },        // "El tema de Kass"
+        Text{ "Kass' Theme", "Le thème de Kass", "Kashiwas Thema" },       // "El tema de Kass"
         Text{ "Tune of Echoes", "Chant des Échos ", "Melodie des Echos" }, // "Melodía del Eco"
     };
     trickNameTable[RG_SUNS_SONG] = {
@@ -916,7 +914,7 @@ void InitTrickNames() {
     };
     trickNameTable[RG_MORPHA_SOUL] = {
         Text{ "Dihydrogen Monoxide", "Monoxyde de Dihydrogène", "Dihydrogenmonoxid" },
-        Text{ "Morpha Molecules", "Molécule de Morpha", "Morphas Molekyle" },
+        Text{ "Morpha Molecules", "Molécule de Morpha", "Morphas Moleküle" },
         Text{ "Wet Stuff", "Truc Mouillé", "nasses Zeug" },
     };
     trickNameTable[RG_BONGO_BONGO_SOUL] = {
@@ -1114,7 +1112,7 @@ void InitTrickNames() {
     };
     trickNameTable[GI_CUCCO] = {
         Text{"D.I.Y. Alarm Clock", "Réveille-matin improvisé", "Improvisierter Wecker"}, // "Alarma emplumada"
-        Text{"Kakariko Cucco", "Cocotte Cocorico", "Kakariko Huhn" }, // "Cuco de Kakariko"
+        Text{"Kakariko Cucco", "Cocotte Cocorico", "Kakariko-Huhn" }, // "Cuco de Kakariko"
         Text{"Hatched Cucco", "Cocotte éclose", "Geschlüpftes Küken" }, // "Pollo"
     };
     trickNameTable[GI_MASK_KEATON] = {

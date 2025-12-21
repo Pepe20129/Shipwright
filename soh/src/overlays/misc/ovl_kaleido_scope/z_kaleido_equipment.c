@@ -183,10 +183,6 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
     s16 cursorX;
     s16 cursorY;
     s16 oldCursorPoint;
-    bool dpad = (CVarGetInteger(CVAR_SETTING("DPadOnPause"), 0) && !CHECK_BTN_ALL(input->cur.button, BTN_CUP));
-    bool pauseAnyCursor =
-        (CVarGetInteger(CVAR_ENHANCEMENT("PauseAnyCursor"), 0) == PAUSE_ANY_CURSOR_RANDO_ONLY && IS_RANDO) ||
-        (CVarGetInteger(CVAR_ENHANCEMENT("PauseAnyCursor"), 0) == PAUSE_ANY_CURSOR_ALWAYS_ON);
 
     OPEN_DISPS(play->state.gfxCtx);
 
@@ -204,6 +200,11 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
     }
 
     if ((pauseCtx->state == 6) && (pauseCtx->unk_1E4 == 0) && (pauseCtx->pageIndex == PAUSE_EQUIP)) {
+        bool dpad = (CVarGetInteger(CVAR_SETTING("DPadOnPause"), 0) && !CHECK_BTN_ALL(input->cur.button, BTN_CUP));
+        bool pauseAnyCursor =
+            (CVarGetInteger(CVAR_ENHANCEMENT("PauseAnyCursor"), 0) == PAUSE_ANY_CURSOR_RANDO_ONLY && IS_RANDO) ||
+            (CVarGetInteger(CVAR_ENHANCEMENT("PauseAnyCursor"), 0) == PAUSE_ANY_CURSOR_ALWAYS_ON);
+
         oldCursorPoint = pauseCtx->cursorPoint[PAUSE_EQUIP];
         pauseCtx->cursorColorSet = 0;
 
@@ -641,8 +642,8 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
                     pauseCtx->unk_1E4 = 7;
                     sEquipTimer = 10;
                 } else if (CVarGetInteger(CVAR_ENHANCEMENT("AssignableTunicsAndBoots"), 0) != 0) {
-                    // Only allow assigning tunic and boots to c-buttons
-                    if (pauseCtx->cursorY[PAUSE_EQUIP] > 1) {
+                    // Only allow assigning shield, tunic and boots to c-buttons
+                    if (pauseCtx->cursorY[PAUSE_EQUIP] > 0) {
                         if (CHECK_OWNED_EQUIP(pauseCtx->cursorY[PAUSE_EQUIP], pauseCtx->cursorX[PAUSE_EQUIP] - 1)) {
                             u16 slot = 0;
                             switch (cursorItem) {
@@ -663,6 +664,15 @@ void KaleidoScope_DrawEquipment(PlayState* play) {
                                     break;
                                 case ITEM_BOOTS_HOVER:
                                     slot = SLOT_BOOTS_HOVER;
+                                    break;
+                                case ITEM_SHIELD_DEKU:
+                                    slot = SLOT_SHIELD_DEKU;
+                                    break;
+                                case ITEM_SHIELD_HYLIAN:
+                                    slot = SLOT_SHIELD_HYLIAN;
+                                    break;
+                                case ITEM_SHIELD_MIRROR:
+                                    slot = SLOT_SHIELD_MIRROR;
                                     break;
                                 default:
                                     break;

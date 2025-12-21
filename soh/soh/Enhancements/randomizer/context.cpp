@@ -16,6 +16,9 @@
 
 #include <fstream>
 #include <spdlog/spdlog.h>
+extern "C" {
+#include <functions.h>
+}
 
 namespace Rando {
 std::weak_ptr<Context> Context::mContext;
@@ -52,7 +55,10 @@ Context::Context() {
         &mOptions[RSK_SHUFFLE_FROG_SONG_RUPEES],
         &mOptions[RSK_SHUFFLE_ADULT_TRADE],
         &mOptions[RSK_SHUFFLE_100_GS_REWARD],
-        &mOptions[RSK_SHUFFLE_FAIRIES],
+        &mOptions[RSK_SHUFFLE_FOUNTAIN_FAIRIES],
+        &mOptions[RSK_SHUFFLE_STONE_FAIRIES],
+        &mOptions[RSK_SHUFFLE_BEAN_FAIRIES],
+        &mOptions[RSK_SHUFFLE_SONG_FAIRIES],
         &mOptions[RSK_GOSSIP_STONE_HINTS],
     };
 }
@@ -124,8 +130,7 @@ void Context::PlaceItemInLocation(const RandomizerCheck locKey, const Randomizer
     SPDLOG_DEBUG(StaticData::RetrieveItem(item).GetName().GetEnglish() + " placed at " +
                  StaticData::GetLocation(locKey)->GetName() + "\n");
 
-    if (applyEffectImmediately || mOptions[RSK_LOGIC_RULES].Is(RO_LOGIC_GLITCHLESS) ||
-        mOptions[RSK_LOGIC_RULES].Is(RO_LOGIC_VANILLA)) {
+    if (applyEffectImmediately || mOptions[RSK_LOGIC_RULES].Is(RO_LOGIC_GLITCHLESS)) {
         StaticData::RetrieveItem(item).ApplyEffect();
     }
 
@@ -161,12 +166,16 @@ bool Context::IsQuestOfLocationActive(RandomizerCheck rc) {
 
 void Context::GenerateLocationPool() {
     allLocations.clear();
+    overworldLocations.clear();
+    for (auto dungeon : ctx->GetDungeons()->GetDungeonList()) {
+        dungeon->locations.clear();
+    }
     for (Location& location : StaticData::GetLocationTable()) {
         // skip RCs that shouldn't be in the pool for any reason (i.e. settings, unsupported check type, etc.)
         // TODO: Exclude checks for some of the older shuffles from the pool too i.e. Frog Songs, Scrubs, etc.)
         if (location.GetRandomizerCheck() == RC_UNKNOWN_CHECK ||
             location.GetRandomizerCheck() == RC_TRIFORCE_COMPLETED || // already in pool
-            (location.GetRandomizerCheck() == RC_MASTER_SWORD_PEDESTAL &&
+            (location.GetRandomizerCheck() == RC_TOT_MASTER_SWORD &&
              mOptions[RSK_SHUFFLE_MASTER_SWORD].Is(RO_GENERIC_OFF)) ||
             (location.GetRandomizerCheck() == RC_KAK_100_GOLD_SKULLTULA_REWARD &&
              mOptions[RSK_SHUFFLE_100_GS_REWARD].Is(RO_GENERIC_OFF)) ||
@@ -180,7 +189,6 @@ void Context::GenerateLocationPool() {
                location.GetRandomizerCheck() == RC_LW_DEKU_SCRUB_NEAR_BRIDGE ||
                location.GetRandomizerCheck() == RC_HF_DEKU_SCRUB_GROTTO)) ||
             (location.GetRCType() == RCTYPE_ADULT_TRADE && mOptions[RSK_SHUFFLE_ADULT_TRADE].Is(RO_GENERIC_OFF)) ||
-            (location.GetRCType() == RCTYPE_SONG_LOCATION && mOptions[RSK_SHUFFLE_SONGS].Is(RO_SONG_SHUFFLE_OFF)) ||
             (location.GetRCType() == RCTYPE_COW && mOptions[RSK_SHUFFLE_COWS].Is(RO_GENERIC_OFF)) ||
             (location.GetRandomizerCheck() == RC_LH_HYRULE_LOACH &&
              mOptions[RSK_FISHSANITY].IsNot(RO_FISHSANITY_HYRULE_LOACH)) ||
@@ -189,9 +197,15 @@ void Context::GenerateLocationPool() {
             (location.GetRCType() == RCTYPE_GRASS && mOptions[RSK_SHUFFLE_GRASS].Is(RO_SHUFFLE_GRASS_OFF)) ||
             (location.GetRCType() == RCTYPE_CRATE && mOptions[RSK_SHUFFLE_CRATES].Is(RO_SHUFFLE_CRATES_OFF)) ||
             (location.GetRCType() == RCTYPE_NLCRATE && (mOptions[RSK_SHUFFLE_CRATES].Is(RO_SHUFFLE_CRATES_OFF) ||
-                                                        !mOptions[RSK_LOGIC_RULES].Is(RO_LOGIC_NO_LOGIC))) ||
+                                                        mOptions[RSK_LOGIC_RULES].IsNot(RO_LOGIC_NO_LOGIC))) ||
             (location.GetRCType() == RCTYPE_SMALL_CRATE && mOptions[RSK_SHUFFLE_CRATES].Is(RO_SHUFFLE_CRATES_OFF)) ||
-            (location.GetRCType() == RCTYPE_FAIRY && !mOptions[RSK_SHUFFLE_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_FOUNTAIN_FAIRY && !mOptions[RSK_SHUFFLE_FOUNTAIN_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_STONE_FAIRY && !mOptions[RSK_SHUFFLE_STONE_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_BEAN_FAIRY && !mOptions[RSK_SHUFFLE_BEAN_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_SONG_FAIRY && !mOptions[RSK_SHUFFLE_SONG_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_TREE && !mOptions[RSK_SHUFFLE_TREES]) ||
+            (location.GetRCType() == RCTYPE_NLTREE &&
+             (!mOptions[RSK_SHUFFLE_TREES] || mOptions[RSK_LOGIC_RULES].IsNot(RO_LOGIC_NO_LOGIC))) ||
             (location.GetRCType() == RCTYPE_FREESTANDING &&
              mOptions[RSK_SHUFFLE_FREESTANDING].Is(RO_SHUFFLE_FREESTANDING_OFF)) ||
             (location.GetRCType() == RCTYPE_BEEHIVE && !mOptions[RSK_SHUFFLE_BEEHIVES])) {
@@ -538,6 +552,56 @@ std::string Context::GetHash() const {
 
 void Context::SetHash(std::string hash) {
     mHash = std::move(hash);
+}
+
+uint8_t Context::GetBombchuCapacity() {
+    switch (mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
+        case 0:
+            return 0;
+        case 1:
+            return 20;
+        case 2:
+            return 30;
+        case 3:
+            return 50;
+        default:
+            return 0;
+    }
+}
+
+void Context::HandleGetBombchuBag() {
+    if (GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_SINGLE)) {
+        if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_NONE) {
+            INV_CONTENT(ITEM_BOMBCHU) = ITEM_BOMBCHU;
+            AMMO(ITEM_BOMBCHU) = 20;
+        } else if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_INFINITE_UPGRADES)) {
+            Flags_SetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS);
+        } else {
+            AMMO(ITEM_BOMBCHU) += 10;
+            if (AMMO(ITEM_BOMBCHU) > 50) {
+                AMMO(ITEM_BOMBCHU) = 50;
+            }
+        }
+        return;
+    }
+    switch (mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
+        case 0:
+        case 1:
+        case 2:
+            mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel++;
+            if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_NONE) {
+                INV_CONTENT(ITEM_BOMBCHU) = ITEM_BOMBCHU;
+            } else if (GetOption(RSK_INFINITE_UPGRADES).Is(RO_INF_UPGRADES_CONDENSED_PROGRESSIVE)) {
+                Flags_SetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS);
+            }
+            AMMO(ITEM_BOMBCHU) = GetBombchuCapacity();
+            return;
+        case 3:
+            if (GetOption(RSK_INFINITE_UPGRADES).IsNot(RO_INF_UPGRADES_OFF)) {
+                Flags_SetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS);
+            }
+            return;
+    }
 }
 
 const std::string& Context::GetSeedString() const {

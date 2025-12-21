@@ -540,6 +540,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - None
+    VB_FLASH_SCREEN_FOR_FINISHING_BLOW,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `*BgHeavyBlock`
     VB_FREEZE_LINK_FOR_BLOCK_THROW,
 
@@ -1177,6 +1185,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_HEARTS_INCREASE_WITH_CONTAINERS,
+
+    // #### `result`
+    // ```c
     // (respawnFlag == 1) || (respawnFlag == -1)
     // ```
     // #### `args`
@@ -1361,6 +1377,22 @@ typedef enum {
     // #### `args`
     // - `*EnDs`
     VB_OFFER_BLUE_POTION,
+
+    // #### `result`
+    // ```c
+    // this->switchFlag >= 0
+    // ```
+    // #### `args`
+    // - `*EnOkarinaTag`
+    VB_OKARINA_TAG_COMPLETE,
+
+    // #### `result`
+    // ```c
+    // (this->switchFlag >= 0) && (Flags_GetSwitch(play, this->switchFlag))
+    // ```
+    // #### `args`
+    // - `*EnOkarinaTag`
+    VB_OKARINA_TAG_COMPLETED,
 
     // #### `result`
     // ```c
@@ -2155,6 +2187,23 @@ typedef enum {
     // - `*EnWood02`
     VB_TREE_DROP_COLLECTIBLE,
 
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*ObjWood02`
+    VB_TREE_SETUP_DRAW,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*ObjWood02`
+    VB_TREE_DROP_ITEM,
+
+    // #### `result`
     // ```c
     // true
     // ```
@@ -2222,6 +2271,117 @@ typedef enum {
     // - `s32` limbCount
     // - `*Vec3s` frameTable
     VB_LOAD_PLAYER_ANIMATION_FRAME,
+
+    // #### `result`
+    // ```c
+    // DoorWarp1_PlayerInRange(this, play)
+    // ```
+    // #### `args`
+    // - `*DoorWarp1`
+    VB_BLUE_WARP_CONSIDER_ADULT_IN_RANGE,
+
+    // #### `result`
+    // ```c
+    // (CVarGetInteger(CVAR_GAMEPLAY_STATS("ShowIngameTimer"), 0) && gSaveContext.fileNum >= 0 && gSaveContext.fileNum
+    // <= 2)
+    // ```
+    // #### `args`
+    // - `*PlayState`
+    VB_SHOW_GAMEPLAY_TIMER,
+
+    // (this->dyna.actor.params >> 5 & 0x7F) == GI_ICE_TRAP && this->actionFunc == EnBox_Open &&
+    // this->skelanime.curFrame > 45 && this->iceSmokeTimer < 100
+    // ```
+    // #### `args`
+    // - `*EnBox`
+    VB_CHEST_USE_ICE_EFFECT,
+
+    // #### `result`
+    // ```c
+    // arg3 < fabsf(sp1C.x) || arg4 < fabsf(sp1C.y)
+    // ```
+    // #### `args`
+    // - `*DoorShutter`
+    VB_BE_NEAR_DOOR_SHUTTER,
+
+    // #### `result`
+    // ```c
+    // CVarGetInteger(CVAR_ENHANCEMENT("3DSceneRender"), 0)
+    // ```
+    // #### `args`
+    // - None
+    VB_DRAW_2D_BACKGROUND,
+
+    // #### `result`
+    // ```c
+    // CVarGetInteger(CVAR_ENHANCEMENT("3DSceneRender"), 0)
+    // ```
+    // #### `args`
+    // - None
+    VB_LOAD_SKYBOX,
+
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_SET_STATIC_PREV_FLOOR_TYPE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_SET_STATIC_FLOOR_TYPE,
+
+    // #### `result`
+    // ```c
+    // false
+    // ```
+    // #### `args`
+    // - *EnGirlACanBuyResult
+    VB_CAN_BUY_BOMBCHUS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_CHECK_BOMBCHU_CAPACITY,
+
+    // #### `result`
+    // ```c
+    // false
+    // ```
+    // #### `args`
+    // - int16_t
+    VB_COLOR_AMMO_GREEN,
+
+    // (this->collider.base.acFlags & AC_HIT) && !Player_InCsMode(play) &&
+    //   (player->meleeWeaponAnimation == 22 || player->meleeWeaponAnimation == 23)
+    // ```
+    // #### `args`
+    // - `*BgHidanDalm`
+    VB_HAMMER_TOTEM_BREAK,
+
+    // #### `result`
+    // ```c
+    // Actor_GetCollidedExplosive(play, &this->collider.base) != NULL
+    // ```
+    // #### `args`
+    // - `*BgHidanKowarerukabe`
+    VB_FIRE_TEMPLE_BOMBABLE_WALL_BREAK,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*Color_RGB8`
+    VB_APPLY_TUNIC_COLOR,
+
 } GIVanillaBehavior;
 
 #endif

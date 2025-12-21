@@ -350,19 +350,6 @@ static void ReplaceMaxItem(const RandomizerGet itemToReplace, int max) {
     }
 }
 
-void PlaceJunkInExcludedLocation(const RandomizerCheck il) {
-    // place a non-advancement item in this location
-    auto ctx = Rando::Context::GetInstance();
-    for (size_t i = 0; i < ItemPool.size(); i++) {
-        if (Rando::StaticData::RetrieveItem(ItemPool[i]).GetCategory() == ITEM_CATEGORY_JUNK) {
-            ctx->PlaceItemInLocation(il, ItemPool[i]);
-            ItemPool.erase(ItemPool.begin() + i);
-            return;
-        }
-    }
-    SPDLOG_ERROR("ERROR: No Junk to Place!!!");
-}
-
 static void PlaceVanillaMapsAndCompasses() {
     auto ctx = Rando::Context::GetInstance();
     for (auto dungeon : ctx->GetDungeons()->GetDungeonList()) {
@@ -421,7 +408,7 @@ static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, 
 }
 
 static void SetScarceItemPool() {
-    ReplaceMaxItem(RG_PROGRESSIVE_BOMBCHUS, 3);
+    ReplaceMaxItem(RG_PROGRESSIVE_BOMBCHU_BAG, ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_SINGLE) ? 3 : 2);
     ReplaceMaxItem(RG_BOMBCHU_5, 1);
     ReplaceMaxItem(RG_BOMBCHU_10, 2);
     ReplaceMaxItem(RG_BOMBCHU_20, 0);
@@ -437,7 +424,7 @@ static void SetScarceItemPool() {
 
 static void SetMinimalItemPool() {
     auto ctx = Rando::Context::GetInstance();
-    ReplaceMaxItem(RG_PROGRESSIVE_BOMBCHUS, 1);
+    ReplaceMaxItem(RG_PROGRESSIVE_BOMBCHU_BAG, 1);
     ReplaceMaxItem(RG_BOMBCHU_5, 1);
     ReplaceMaxItem(RG_BOMBCHU_10, 0);
     ReplaceMaxItem(RG_BOMBCHU_20, 0);
@@ -604,17 +591,23 @@ void GenerateItemPool() {
                              ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
     PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive);
 
+    // Shuffle Trees
+    bool treesActive = (bool)ctx->GetOption(RSK_SHUFFLE_TREES);
+    PlaceItemsForType(RCTYPE_TREE, treesActive, false);
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC)) {
+        PlaceItemsForType(RCTYPE_NLTREE, treesActive, false);
+    }
+
     // Shuffle Crates
     bool overworldCratesActive = ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_OVERWORLD) ||
                                  ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL);
-    bool overworldNLCratesActive = ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC) &&
-                                   (ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_OVERWORLD) ||
-                                    ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL));
     bool dungeonCratesActive = ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_DUNGEONS) ||
                                ctx->GetOption(RSK_SHUFFLE_CRATES).Is(RO_SHUFFLE_CRATES_ALL);
     PlaceItemsForType(RCTYPE_CRATE, overworldCratesActive, dungeonCratesActive);
-    PlaceItemsForType(RCTYPE_NLCRATE, overworldNLCratesActive, dungeonCratesActive);
     PlaceItemsForType(RCTYPE_SMALL_CRATE, overworldCratesActive, dungeonCratesActive);
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC)) {
+        PlaceItemsForType(RCTYPE_NLCRATE, overworldCratesActive, dungeonCratesActive);
+    }
 
     auto fsMode = ctx->GetOption(RSK_FISHSANITY);
     if (fsMode.IsNot(RO_FISHSANITY_OFF)) {
@@ -660,6 +653,9 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_PROGRESSIVE_STICK_UPGRADE);
         AddItemToMainPool(RG_PROGRESSIVE_MAGIC_METER);
         AddItemToMainPool(RG_PROGRESSIVE_WALLET);
+        if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_PROGRESSIVE)) {
+            AddItemToMainPool(RG_PROGRESSIVE_BOMBCHU_BAG);
+        }
     }
 
     if (ctx->GetOption(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_BEANS_ONLY) ||
@@ -678,9 +674,9 @@ void GenerateItemPool() {
         if (/*!ProgressiveGoronSword TODO: Implement Progressive Goron Sword*/ true) {
             AddItemToMainPool(RG_GIANTS_KNIFE);
         }
-        if (ctx->GetOption(RSK_BOMBCHU_BAG)) {
-            AddItemToMainPool(RG_PROGRESSIVE_BOMBCHUS);
-        } else {
+        if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_SINGLE)) {
+            AddItemToMainPool(RG_PROGRESSIVE_BOMBCHU_BAG);
+        } else if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_NONE)) {
             AddItemToMainPool(RG_BOMBCHU_10);
         }
     } else {
@@ -792,8 +788,13 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_PROGRESSIVE_NUT_UPGRADE);
     }
 
-    if (ctx->GetOption(RSK_BOMBCHU_BAG)) {
-        AddItemToMainPool(RG_PROGRESSIVE_BOMBCHUS, 5);
+    if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_SINGLE)) {
+        AddItemToMainPool(RG_PROGRESSIVE_BOMBCHU_BAG, 5);
+    } else if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_PROGRESSIVE)) {
+        AddItemToMainPool(RG_PROGRESSIVE_BOMBCHU_BAG, 3);
+        if (ctx->GetOption(RSK_ITEM_POOL).Is(RO_ITEM_POOL_PLENTIFUL)) {
+            AddItemToPool(PendingJunkPool, RG_PROGRESSIVE_BOMBCHU_BAG);
+        }
     } else {
         AddItemToMainPool(RG_BOMBCHU_5);
         AddItemToMainPool(RG_BOMBCHU_10, 3);
@@ -861,7 +862,7 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_GERUDO_MEMBERSHIP_CARD);
         ctx->possibleIceTrapModels.push_back(RG_GERUDO_MEMBERSHIP_CARD);
     } else if (ctx->GetOption(RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD)) {
-        AddItemToPool(PendingJunkPool, RG_GERUDO_MEMBERSHIP_CARD);
+        AddItemToPool(ItemPool, RG_GERUDO_MEMBERSHIP_CARD);
         ctx->PlaceItemInLocation(RC_TH_FREED_CARPENTERS, RG_ICE_TRAP, false, true);
     } else {
         ctx->PlaceItemInLocation(RC_TH_FREED_CARPENTERS, RG_GERUDO_MEMBERSHIP_CARD, false, true);
@@ -990,13 +991,44 @@ void GenerateItemPool() {
         AddItemsToPool(ItemPool, shopsanityRupees); // Shopsanity gets extra large rupees
     }
 
-    // Shuffle Fairies
-    if (ctx->GetOption(RSK_SHUFFLE_FAIRIES)) {
-        for (auto rc : Rando::StaticData::GetOverworldFairyLocations()) {
+    // Shuffle Fountain Fairies
+    if (ctx->GetOption(RSK_SHUFFLE_FOUNTAIN_FAIRIES)) {
+        for (auto rc : Rando::StaticData::GetFountainFairyLocations()) {
             AddItemToMainPool(GetJunkItem());
         }
-        // 8 extra for Ganon's Castle + 2 Dodongo's Cavern Gossip Stone + 3 Shadow Temple
-        int extra = 13;
+        // 8 extra for Ganon's Castle
+        int extra = 8;
+        for (int i = 0; i < extra; i++) {
+            AddItemToMainPool(GetJunkItem());
+        }
+    }
+
+    // Shuffle Gossip Stone Fairies
+    if (ctx->GetOption(RSK_SHUFFLE_STONE_FAIRIES)) {
+        for (auto rc : Rando::StaticData::GetStoneFairyLocations()) {
+            AddItemToMainPool(GetJunkItem());
+        }
+        // 2 Dodongo's Cavern Gossip Stone
+        int extra = 2;
+        for (int i = 0; i < extra; i++) {
+            AddItemToMainPool(GetJunkItem());
+        }
+    }
+
+    // Shuffle Bean Fairies
+    if (ctx->GetOption(RSK_SHUFFLE_BEAN_FAIRIES)) {
+        for (auto rc : Rando::StaticData::GetBeanFairyLocations()) {
+            AddItemToMainPool(GetJunkItem());
+        }
+    }
+
+    // Shuffle Song Fairies
+    if (ctx->GetOption(RSK_SHUFFLE_SONG_FAIRIES)) {
+        for (auto rc : Rando::StaticData::GetSongFairyLocations()) {
+            AddItemToMainPool(GetJunkItem());
+        }
+        // 3 Shadow Temple
+        int extra = 3;
         extra += ctx->GetDungeon(Rando::FIRE_TEMPLE)->IsVanilla() ? 0 : 2;
         extra += ctx->GetDungeon(Rando::WATER_TEMPLE)->IsVanilla() ? 0 : 3;
         extra += ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsVanilla() ? 2 : 1;

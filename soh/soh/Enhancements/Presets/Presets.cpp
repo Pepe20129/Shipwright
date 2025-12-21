@@ -2,11 +2,11 @@
 #include <variant>
 #include <string>
 #include <fstream>
-#include <config/Config.h>
+#include <ship/config/Config.h>
 #include <libultraship/classes.h>
 #include <nlohmann/json.hpp>
 #include <libultraship/libultraship.h>
-#include <Json.h>
+#include <ship/resource/type/Json.h>
 #include "soh/OTRGlobals.h"
 #include "soh/SohGui/MenuTypes.h"
 #include "soh/SohGui/SohMenu.h"
@@ -61,7 +61,9 @@ void PresetCheckboxStyle(const ImVec4& color) {
 }
 
 static BlockInfo blockInfo[PRESET_SECTION_MAX] = {
-    { { CVAR_PREFIX_SETTING, CVAR_PREFIX_WINDOW }, ICON_FA_COG, { "Settings", "settings" } },
+    { { CVAR_PREFIX_SETTING, CVAR_PREFIX_WINDOW, CVAR_PREFIX_GAMEPLAY_STATS },
+      ICON_FA_COG,
+      { "Settings", "settings" } },
     { { CVAR_PREFIX_ENHANCEMENT, CVAR_PREFIX_RANDOMIZER_ENHANCEMENT, CVAR_PREFIX_CHEAT },
       ICON_FA_PLUS_CIRCLE,
       { "Enhancements", "enhancements" } },
@@ -96,12 +98,28 @@ void applyPreset(std::string presetName, std::vector<PresetSection> includeSecti
                 }
             }
             auto section = info.presetValues["blocks"][blockInfo[i].names[1]];
+            std::string sectionStrategy = "overwrite";
+            if (info.presetValues.contains("blockStrategy") &&
+                info.presetValues["blockStrategy"].contains(blockInfo[i].names[1])) {
+                sectionStrategy = info.presetValues["blockStrategy"][blockInfo[i].names[1]];
+            }
+
             for (auto& item : section.items()) {
                 if (section[item.key()].is_null()) {
                     CVarClearBlock(item.key().c_str());
                 } else {
+                    auto block = item.value();
+                    if (sectionStrategy == "merge") {
+                        auto currentJson = Ship::Context::GetInstance()->GetConfig()->GetNestedJson();
+                        if (currentJson.contains("CVars") && currentJson["CVars"].contains(item.key())) {
+                            block = currentJson["CVars"][item.key()];
+                            // Recursively merge the two json objects
+                            block.update(item.value(), true);
+                        }
+                    }
+
                     Ship::Context::GetInstance()->GetConfig()->SetBlock(fmt::format("{}.{}", "CVars", item.key()),
-                                                                        item.value());
+                                                                        block);
                     Ship::Context::GetInstance()->GetConsoleVariables()->Load();
                 }
             }
@@ -111,6 +129,7 @@ void applyPreset(std::string presetName, std::vector<PresetSection> includeSecti
         }
     }
     ShipInit::InitAll();
+    OTRGlobals::Instance->ScaleImGui();
 }
 
 void DrawPresetSelector(std::vector<PresetSection> includeSections, std::string presetLoc, bool disabled) {
@@ -233,6 +252,7 @@ void SavePreset(std::string& presetName) {
         fs::create_directory(presetFolder);
     }
     presets[presetName].presetValues["presetName"] = presetName;
+    presets[presetName].presetValues["fileType"] = FILE_TYPE_PRESET;
     std::ofstream file(
         fmt::format("{}/{}.json", Ship::Context::GetInstance()->LocateFileAcrossAppDirs("presets"), presetName));
     file << presets[presetName].presetValues.dump(4);
@@ -395,7 +415,7 @@ void PresetsCustomWidget(WidgetInfo& info) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
             ImGui::AlignTextToFramePadding();
-            ImGui::Text(name.c_str());
+            ImGui::Text("%s", name.c_str());
             for (int i = PRESET_SECTION_SETTINGS; i < PRESET_SECTION_MAX; i++) {
                 ImGui::TableNextColumn();
                 DrawSectionCheck(name, !info.presetValues["blocks"].contains(blockInfo[i].names[1]), &info.apply[i],
@@ -437,10 +457,12 @@ void PresetsCustomWidget(WidgetInfo& info) {
 void RegisterPresetsWidgets() {
     SohGui::mSohMenu->AddSidebarEntry("Settings", "Presets", 1);
     WidgetPath path = { "Settings", "Presets", SECTION_COLUMN_1 };
-    SohGui::mSohMenu->AddWidget(path, "PresetsWidget", WIDGET_CUSTOM).CustomFunction(PresetsCustomWidget);
+    SohGui::mSohMenu->AddWidget(path, "PresetsWidget", WIDGET_CUSTOM)
+        .CustomFunction(PresetsCustomWidget)
+        .HideInSearch(true);
     presetFolder = Ship::Context::GetInstance()->GetPathRelativeToAppDirectory("presets");
     std::fill_n(saveSection, PRESET_SECTION_MAX, true);
     LoadPresets();
 }
 
-static RegisterMenuInitFunc initFunc(RegisterPresetsWidgets);
+static RegisterMenuInitFunc menuInitFunc(RegisterPresetsWidgets);
