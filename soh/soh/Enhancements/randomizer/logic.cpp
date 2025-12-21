@@ -1087,7 +1087,7 @@ bool Logic::CanCrouchStab() {
            (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
 }
 
-/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab)
+/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab, you can use navi when not in a dungeon)
 /// @return Whether ISG can be done or not
 bool Logic::CanDoISG() {
     // need something to interrupt the crouchstab:
@@ -1104,7 +1104,7 @@ bool Logic::CanDoISG() {
 /// @return Whether hovering an be done or not
 bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
     return ctx->GetTrickOption(RT_HOVERING) && CanDoISG() &&
-           (persistentDamageSource || CanUse(RG_BOMB_BAG) || (!againstWall && CanUse(RG_PROGRESSIVE_BOMBCHUS))) &&
+           (persistentDamageSource || CanUse(RG_BOMB_BAG) || (!againstWall && CanUse(RG_BOMBCHU_5))) &&
            // if not against a wall, need either hover boots to shorten the backflips or an item to do a contorsion
            // hover
            (againstWall || CanUse(RG_HOVER_BOOTS) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) ||
