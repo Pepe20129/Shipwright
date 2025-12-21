@@ -1087,7 +1087,8 @@ bool Logic::CanCrouchStab() {
            (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
 }
 
-/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab, you can use navi when not in a dungeon)
+/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab, you can use navi
+/// when not in a dungeon)
 /// @return Whether ISG can be done or not
 bool Logic::CanDoISG() {
     // need something to interrupt the crouchstab:
