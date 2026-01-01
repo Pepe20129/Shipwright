@@ -1106,22 +1106,26 @@ bool Logic::CanCrouchStab() {
            (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
 }
 
-/// @brief Checks if the player can do ISG (does not check for being able to interrupt the crouchstab, you can use navi
-/// when not in a dungeon)
-/// @return Whether ISG can be done or not
+/// @brief Checks if you can do ISG
+/// @return Whether you can do ISG or not
+/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon without enemies nearby.
+/// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
 bool Logic::CanDoISG() {
     // need something to interrupt the crouchstab:
-    //  - blocking textbox (sign / npc / enemy navi check)
+    //  - blocking textbox (sign / npc / navi enemy check / random navi talk outside of dungeons)
     //  - grabable actor (rock / bush / small crate / cucoo / silver gauntelts rock)
     //  - bombs (should probably be a separate trick as it's harder due to the time limit)
     //  - bombchus (even harder)
     return ctx->GetTrickOption(RT_ISG) && CanCrouchStab();
 }
 
-/// @brief Checks if the player can hover (does not account for the static explosion radius enhancement)
+/// @brief Checks if you can hover
 /// @param againstWall Whether the hover must done against a wall or not
-/// @param persistentDamageSource Whether a persistent damage source to shield exists (eg biri hover)
-/// @return Whether hovering an be done or not
+/// @param persistentDamageSource Whether a persistent damage source to shield exists (e.g. a biri in biri hover)
+/// @return Whether you can hover or not
+/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon without enemies nearby.
+/// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
+/// @note Does not account for the static explosion radius enhancement
 bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
     return ctx->GetTrickOption(RT_HOVERING) && CanDoISG() &&
            (persistentDamageSource || CanUse(RG_BOMB_BAG) || (!againstWall && CanUse(RG_BOMBCHU_5))) &&
