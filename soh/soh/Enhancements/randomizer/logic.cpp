@@ -1108,7 +1108,8 @@ bool Logic::CanCrouchStab() {
 
 /// @brief Checks if you can do ISG
 /// @return Whether you can do ISG or not
-/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon without enemies nearby.
+/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon
+/// without enemies nearby.
 /// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
 bool Logic::CanDoISG() {
     // need something to interrupt the crouchstab:
@@ -1123,7 +1124,8 @@ bool Logic::CanDoISG() {
 /// @param againstWall Whether the hover must done against a wall or not
 /// @param persistentDamageSource Whether a persistent damage source to shield exists (e.g. a biri in biri hover)
 /// @return Whether you can hover or not
-/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon without enemies nearby.
+/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon
+/// without enemies nearby.
 /// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
 /// @note Does not account for the static explosion radius enhancement
 bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
