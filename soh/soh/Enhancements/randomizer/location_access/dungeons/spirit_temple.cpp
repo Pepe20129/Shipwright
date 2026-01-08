@@ -39,8 +39,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_FOYER,               []{return logic->IsChild/*CanUse(RG_CRAWL)*/;}),
         Entrance(RR_SPIRIT_TEMPLE_CHILD_BOXES,         []{return logic->IsChild/*CanUse(RG_CRAWL)*/;}),
-        //Implies logic->CanKillEnemy(RE_KEESE)
-        Entrance(RR_SPIRIT_TEMPLE_SWITCH_BRIDGE_SOUTH, []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_ARMOS);});}),
+        Entrance(RR_SPIRIT_TEMPLE_SWITCH_BRIDGE_SOUTH, []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_ARMOS) && IMPLIED(logic->CanKillEnemy(RE_KEESE));});}),
         Entrance(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_SOUTH,  []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_ARMOS);});}),
     });
 
@@ -617,11 +616,10 @@ void RegionTable_Init_SpiritTemple() {
         EventAccess(LOGIC_FAIRY_ACCESS,              []{return logic->Get(LOGIC_SPIRIT_MQ_TURNTABLE_ENEMY);}),
     }, {
         //Locations
-        //implies logic->CanBreakPots()
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_1, logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_2, logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_3, logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_4, logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_1, (logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)) && IMPLIED(logic->CanBreakPots())),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_2, (logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)) && IMPLIED(logic->CanBreakPots())),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_3, (logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)) && IMPLIED(logic->CanBreakPots())),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_4, (logic->CanUse(RG_BOOMERANG) || logic->CanKillEnemy(RE_STALFOS)) && IMPLIED(logic->CanBreakPots())),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_GIBDO_POTS,            []{return true;}),
@@ -684,8 +682,7 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR] = Region("Spirit Temple MQ Sun on Floor Room", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
-        //Implies CanKillEnemy(RE_LIKE_LIKE)
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_CLIMB_NORTH_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR, []{return logic->CanKillEnemy(RE_BEAMOS);})),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_CLIMB_NORTH_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR, []{return logic->CanKillEnemy(RE_BEAMOS) && IMPLIED(logic->CanKillEnemy(RE_LIKE_LIKE));})),
         //Sunlights only temp spawn this chest, which is unintuitive/a bug.
         LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_CLIMB_SOUTH_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR, []{return (logic->HasExplosives() || logic->SunlightArrows()) && logic->CanUse(RG_HOOKSHOT);})),
     }, {
@@ -894,8 +891,8 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_3_SUNS_ROOM_2F] = Region("Spirit Temple MQ Three Suns Room 2F", SCENE_SPIRIT_TEMPLE, {
         //Events
-        //implies logic->CanKillEnemy(RE_WALLMASTER). If we have lights, we can kill stalfos and wallmasters with bow
-        EventAccess(LOGIC_SPIRIT_MQ_3SUNS_ENEMIES, []{return (logic->CanUse(RG_MIRROR_SHIELD) && logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2)) || logic->SunlightArrows();}),
+        //If we have lights, we can kill stalfos and wallmasters with bow
+        EventAccess(LOGIC_SPIRIT_MQ_3SUNS_ENEMIES, []{return ((logic->CanUse(RG_MIRROR_SHIELD) && logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2)) || logic->SunlightArrows()) && IMPLIED(logic->CanKillEnemy(RE_WALLMASTER));}),
     }, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_ADULT, []{return true;}),

@@ -253,8 +253,7 @@ void RegionTable_Init_GerudoTrainingGround() {
         EventAccess(LOGIC_GTG_PUSHED_HEAVY_BLOCK,               []{return logic->CanUse(RG_SILVER_GAUNTLETS) && logic->CanAvoidEnemy(RE_STALFOS, true, 2);}),
     }, {
         //Locations
-        //implies logic->CanKillEnemy(RE_BIG_SKULLTULA)
-        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BEFORE_HEAVY_BLOCK_CHEST, logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2, true)),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BEFORE_HEAVY_BLOCK_CHEST, logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2, true) && IMPLIED(logic->CanKillEnemy(RE_BIG_SKULLTULA))),
     }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM,      []{return true;}),
@@ -269,8 +268,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_ROOM_BEHIND_BLOCK] = Region("Gerudo Training Ground MQ Room Behind Block", SCENE_GERUDO_TRAINING_GROUND, {}, {
         //Locations
-        //implies logic->CanKillEnemy(RE_SPIKE)
-        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_HEAVY_BLOCK_CHEST, logic->CanKillEnemy(RE_FREEZARD)),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_HEAVY_BLOCK_CHEST, logic->CanKillEnemy(RE_FREEZARD) && IMPLIED(logic->CanKillEnemy(RE_SPIKE))),
     }, {
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_BEHIND_BLOCK, []{return true;}),
     });
@@ -302,8 +300,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SLUG_ROOM] = Region("Gerudo Training Ground MQ Torch Slug Room", SCENE_GERUDO_TRAINING_GROUND, {}, {
         //Locations
-        //implies logic->CanKillEnemy(RE_TORCH_SLUG)
-        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_SECOND_IRON_KNUCKLE_CHEST, logic->CanKillEnemy(RE_IRON_KNUCKLE)),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_SECOND_IRON_KNUCKLE_CHEST, logic->CanKillEnemy(RE_IRON_KNUCKLE) && IMPLIED(logic->CanKillEnemy(RE_TORCH_SLUG))),
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_FLAME_CIRCLE_CHEST,        logic->CanHitSwitch(ED_BOMB_THROW)),
     }, {
         //Exits

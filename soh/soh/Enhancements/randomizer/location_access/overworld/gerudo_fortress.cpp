@@ -226,8 +226,7 @@ void RegionTable_Init_GerudoFortress() {
         LOCATION(RC_GF_HBA_CANOPY_WEST_CRATE,    logic->CanBreakCrates()),
         LOCATION(RC_GF_NORTH_TARGET_EAST_CRATE,  logic->CanBreakCrates()),
         LOCATION(RC_GF_NORTH_TARGET_WEST_CRATE,  logic->IsAdult || (logic->BlastOrSmash() || logic->HookshotOrBoomerang() || logic->CanUse(RG_HOVER_BOOTS))),
-        //implies logic->CanBreakCrates()
-        LOCATION(RC_GF_NORTH_TARGET_CHILD_CRATE, logic->IsChild && logic->BlastOrSmash()),
+        LOCATION(RC_GF_NORTH_TARGET_CHILD_CRATE, logic->IsChild && logic->BlastOrSmash() && IMPLIED(logic->CanBreakCrates())),
         LOCATION(RC_GF_SOUTH_TARGET_EAST_CRATE,  logic->CanBreakCrates()),
         LOCATION(RC_GF_SOUTH_TARGET_WEST_CRATE,  logic->CanBreakCrates()),
     }, {

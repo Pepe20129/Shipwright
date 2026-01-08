@@ -17,6 +17,15 @@ extern "C" {
 extern PlayState* gPlayState;
 }
 
+bool CheckImplied(bool value) {
+    if (!value) {
+        LUSLOG_ERROR("CheckImplied failed");
+        assert(false);
+    }
+
+    return value;
+}
+
 // generic grotto event list
 std::vector<EventAccess> grottoEvents;
 

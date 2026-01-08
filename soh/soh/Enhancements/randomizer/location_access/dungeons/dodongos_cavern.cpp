@@ -413,7 +413,7 @@ void RegionTable_Init_DodongosCavern() {
         Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY,              []{return logic->TakeDamage();}),
         Entrance(RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM,       []{return true;}),
         Entrance(RR_DODONGOS_CAVERN_MQ_LARVAE_ROOM,        []{return logic->HasFireSourceWithTorch();}),//torch checks here need strength 0 with sticks when that is implemented
-        Entrance(RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM,     []{return AnyAgeTime([]{return logic->HasFireSourceWithTorch();});}), //Includes an implied CanPass(RE_BIG_SKULLTULA)
+        Entrance(RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM,     []{return AnyAgeTime([]{return logic->HasFireSourceWithTorch();}) && IMPLIED(logic->CanPassEnemy(RE_BIG_SKULLTULA));}),
         //Bunny hood jump can make it as child
         Entrance(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, []{return (logic->IsAdult && (true /* str0 */ || ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->CanGroundJump())) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS,     []{return logic->CanUse(RG_STICKS) && logic->HasItem(RG_GORONS_BRACELET);}), //Implies access to RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM from here
@@ -431,8 +431,8 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_LARVAE_ROOM] = Region("Dodongos Cavern MQ Larvae Room", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CHEST,   true), //implied logic->CanKillEnemy(RE_GOHMA_LARVA) based on entry reqs with a trick to kill with nuts
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_LARVAE_ROOM,      logic->CanBreakCrates()), //implied logic->CanKillEnemy(RE_GOLD_SKULTULLA) based on entry reqs. Add crate logic when BONKO is added
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CHEST,   IMPLIED(logic->CanKillEnemy(RE_GOHMA_LARVA))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_LARVAE_ROOM,      logic->CanBreakCrates() && IMPLIED(logic->CanKillEnemy(RE_GOLD_SKULLTULA))), //Add crate logic when BONKO is added
         LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_2, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_3, logic->CanBreakCrates()),
@@ -441,12 +441,12 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_6, logic->CanBreakCrates()),
     }, {
         //Exits
-        Entrance(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER, []{return true;}), //implied logic->CanKillEnemy(RE_GOHMA_LARVA) based on entry reqs with a trick to kill with nuts
+        Entrance(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER, []{return IMPLIED(logic->CanKillEnemy(RE_GOHMA_LARVA));}),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS] = Region("Dodongos Cavern MQ Before Upper Lizalfos", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_LIZALFOS_ROOM,     logic->BlastOrSmash()), //Implied CanGetEnemyDrop(RE_GOLD_SKULLTULA)
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_LIZALFOS_ROOM,     logic->BlastOrSmash() && IMPLIED(logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA))),
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_1, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_2, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_3, logic->CanBreakPots()),
@@ -541,8 +541,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_MAD_SCRUB_ROOM] = Region("Dodongos Cavern Mad Scrub Room", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM, (logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true))), //Implies you can avoid/kill the enemies with what you use on the skull, if this assumption is broken, add
-                                                                                                    //&& (AnyAgeTime([]{return logic->CanKillEnemy(RE_FIRE_KEESE) && logic->CanKillEnemy(RE_MAD_SCRUB);}) || (logic->CanAvoidEnemy(RE_FIRE_KEESE) && logic->CanAvoidEnemy(RE_MAD_SCRUB)))
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG, true) &&  IMPLIED(AnyAgeTime([]{return logic->CanKillEnemy(RE_FIRE_KEESE) && logic->CanKillEnemy(RE_MAD_SCRUB);}) || (logic->CanAvoidEnemy(RE_FIRE_KEESE) && logic->CanAvoidEnemy(RE_MAD_SCRUB)))),
         LOCATION(RC_DODONGOS_CAVERN_MQ_SCRUB_GRASS_1, logic->CanCutShrubs()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_SCRUB_GRASS_2, logic->CanCutShrubs()),
     }, {

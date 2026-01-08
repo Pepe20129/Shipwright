@@ -336,8 +336,7 @@ void RegionTable_Init_GanonsCastle() {
     areaTable[RR_GANONS_CASTLE_MQ_LOBBY] = Region("Ganon's Castle MQ Lobby", SCENE_INSIDE_GANONS_CASTLE, {}, {}, {
         //Exits
         Entrance(RR_GANONS_CASTLE_ENTRYWAY, []{return logic->CanPassEnemy(RE_GREEN_BUBBLE) || AnyAgeTime([]{return logic->CanKillEnemy(RE_IRON_KNUCKLE) && logic->CanKillEnemy(RE_ARMOS);});}),
-        //Implies CanKillEnemy(RE_GREEN_BUBBLE)
-        Entrance(RR_GANONS_CASTLE_MQ_MAIN,  []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_IRON_KNUCKLE) && logic->CanKillEnemy(RE_ARMOS);});}),
+        Entrance(RR_GANONS_CASTLE_MQ_MAIN,  []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_IRON_KNUCKLE) && logic->CanKillEnemy(RE_ARMOS) && IMPLIED(logic->CanKillEnemy(RE_GREEN_BUBBLE));});}),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_MAIN] = Region("Ganon's Castle MQ Main", SCENE_INSIDE_GANONS_CASTLE, {}, {

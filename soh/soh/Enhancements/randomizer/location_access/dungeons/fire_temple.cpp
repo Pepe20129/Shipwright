@@ -603,8 +603,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_MQ_GS_GORON_CAGE] = Region("Fire Temple MQ GS Goron Cage", SCENE_FIRE_TEMPLE, {}, {
         //Locations
-        //implies CanGetEnemyDrop(RE_GOLD_SKULLTULA)
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR, logic->CanUse(RG_MEGATON_HAMMER) && IMPLIED(logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA))),
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM, []{return true;}),

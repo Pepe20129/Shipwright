@@ -164,8 +164,7 @@ void RegionTable_Init_JabuJabusBelly() {
         EventAccess(LOGIC_JABU_NORTH_TENTACLE, []{return logic->CanKillEnemy(RE_TENTACLE, ED_BOOMERANG);}),
     }, {}, {
         //Exits
-        //implied logic->CanKillEnemy(RE_BARI)
-        Entrance(RR_JABU_JABUS_BELLY_TO_FORK_NORTH, []{return logic->Get(LOGIC_JABU_NORTH_TENTACLE);}),
+        Entrance(RR_JABU_JABUS_BELLY_TO_FORK_NORTH, []{return logic->Get(LOGIC_JABU_NORTH_TENTACLE) && IMPLIED(logic->CanKillEnemy(RE_BARI));}),
     });
 
     // this handles spawning in tentacle
@@ -423,8 +422,7 @@ void RegionTable_Init_JabuJabusBelly() {
 
     areaTable[RR_JABU_JABUS_BELLY_MQ_FORK_NORTH_EAST] = Region("Jabu Jabus Belly MQ Fork North East", SCENE_JABU_JABU, {}, {
         //Locations
-        //Implies CanKillEnemy(RE_LIKE_LIKE)
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_FALLING_LIKE_LIKE_ROOM_CHEST, logic->CanUse(RG_FAIRY_SLINGSHOT)),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_FALLING_LIKE_LIKE_ROOM_CHEST, logic->CanUse(RG_FAIRY_SLINGSHOT) && IMPLIED(logic->CanKillEnemy(RE_LIKE_LIKE))),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_LIKE_LIKES_POT_1,             logic->CanBreakPots()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_LIKE_LIKES_POT_2,             logic->CanBreakPots()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_FALLING_LIKE_LIKE_GRASS,      logic->CanCutShrubs()),

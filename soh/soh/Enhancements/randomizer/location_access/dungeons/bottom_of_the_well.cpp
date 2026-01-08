@@ -271,11 +271,11 @@ void RegionTable_Init_BottomOfTheWell() {
         EventAccess(LOGIC_BOTW_MQ_OPENED_GATES, []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
     }, {
         //Locations
-        //Implies CanBreakPots(). Hitting this with rang through the wall is possible but would be a trick.
+        //Hitting this with rang through the wall is possible but would be a trick.
         //Instead of blowing up the boulder, you can aim through the lower left side with sling(either age) or as child with bow
         //Not even bow extension seems to get adult's bow to work
         //this would be a trick
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT,  AnyAgeTime([]{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT,  AnyAgeTime([]{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets() && IMPLIED(logic->CanBreakPots())),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_LEFT_HEART,  logic->HasExplosives()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_RIGHT_HEART, logic->HasExplosives()),
     }, {

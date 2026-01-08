@@ -10,6 +10,13 @@
 #include "soh/Enhancements/randomizer/logic.h"
 #include "soh/Enhancements/randomizer/dungeon.h"
 
+#ifdef NDEBUG
+#define IMPLIED(value) true
+#else
+#define IMPLIED(value) CheckImplied(value)
+bool CheckImplied(bool value);
+#endif
+
 #define TIME_PASSES true
 #define TIME_DOESNT_PASS false
 

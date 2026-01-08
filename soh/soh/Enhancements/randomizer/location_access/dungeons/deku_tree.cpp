@@ -251,8 +251,7 @@ void RegionTable_Init_DekuTree() {
         EventAccess(LOGIC_NUT_ACCESS,   []{return logic->CanGetDekuBabaNuts();}),
     }, {
         //Locations
-        //Implies CanKillEnemy(RE_GOHMA_LARVA)
-        LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_CHEST,           logic->CanKillEnemy(RE_DEKU_BABA)),
+        LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_CHEST,           logic->CanKillEnemy(RE_DEKU_BABA) && IMPLIED(logic->CanKillEnemy(RE_GOHMA_LARVA))),
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_BACK_CHEST, logic->HasFireSourceWithTorch() || (logic->IsAdult && logic->CanUse(RG_FAIRY_BOW))),
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_HEART,      true),
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_1,         logic->CanCutShrubs()),
@@ -326,8 +325,7 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_MQ_BASEMENT_SOUTHEAST_ROOM] = Region("Deku Tree MQ Southeast Room", SCENE_DEKU_TREE, {
         //Events
-        //Implies CanKillEnemy(RE_GOHMA_LARVA)
-        EventAccess(LOGIC_DEKU_TREE_MQ_CLEARED_SE_ROOM, []{return logic->CanKillEnemy(RE_MAD_SCRUB);}),
+        EventAccess(LOGIC_DEKU_TREE_MQ_CLEARED_SE_ROOM, []{return logic->CanKillEnemy(RE_MAD_SCRUB) && IMPLIED(logic->CanKillEnemy(RE_GOHMA_LARVA));}),
     }, {
         //Locations
         LOCATION(RC_DEKU_TREE_MQ_BASEMENT_TORCHES_GRASS_1, logic->CanCutShrubs()),

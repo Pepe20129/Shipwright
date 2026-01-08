@@ -143,8 +143,7 @@ void RegionTable_Init_ThievesHideout() {
     }, {
         //Exits
         Entrance(RR_GF_BELOW_CHEST,         []{return logic->CanPassEnemy(RE_GERUDO_GUARD);}),
-        //Implies logic->CanPassEnemy(RE_GERUDO_GUARD)
-        Entrance(RR_TH_BREAK_ROOM_CORRIDOR, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_TH_BREAK_ROOM_CORRIDOR, []{return logic->CanUse(RG_HOOKSHOT) && IMPLIED(logic->CanPassEnemy(RE_GERUDO_GUARD));}),
     });
 
     areaTable[RR_TH_BREAK_ROOM_CORRIDOR] = Region("Thieves Hideout Break Room", SCENE_THIEVES_HIDEOUT, {}, {}, {
