@@ -74,7 +74,8 @@ class Logic {
     bool CanCrouchStab();
     bool CanInterruptCrouchStab(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
     bool CanDoISG(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
-    bool CanHover(bool blockingTextboxAvaliable, bool grabableActorAvaliable, bool againstWall = false, bool persistentDamageSource = false);
+    bool CanHover(bool blockingTextboxAvaliable, bool grabableActorAvaliable, bool againstWall = false,
+                  bool persistentDamageSource = false);
     bool CanClearStalagmite();
     bool CanHitSwitch(EnemyDistance distance = ED_CLOSE, bool inWater = false);
     bool CanDamage();
