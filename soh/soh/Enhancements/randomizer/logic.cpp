@@ -2579,11 +2579,11 @@ bool Logic::IsFireLoopLocked() {
 }
 
 bool Logic::ReachScarecrow() {
-    return ScarecrowsSong() && CanUse(RG_HOOKSHOT);
+    return (ScarecrowsSong() && CanUse(RG_HOOKSHOT)) || CanHover();
 }
 
 bool Logic::ReachDistantScarecrow() {
-    return ScarecrowsSong() && CanUse(RG_LONGSHOT);
+    return (ScarecrowsSong() && CanUse(RG_LONGSHOT)) || CanHover();
 }
 
 bool Logic::SummonEpona() {
