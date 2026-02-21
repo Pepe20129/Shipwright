@@ -5,8 +5,6 @@
 
 #include "soh/Enhancements/gameconsole.h"
 #include "soh/frame_interpolation.h"
-#include "soh/Enhancements/debugconsole.h"
-#include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include <overlays/actors/ovl_En_Niw/z_en_niw.h>
 #include <overlays/misc/ovl_kaleido_scope/z_kaleido_scope.h>
 #include "soh/Enhancements/enhancementTypes.h"
@@ -594,6 +592,10 @@ void Play_Init(GameState* thisx) {
         gSlotAgeReqs[SLOT_TRADE_CHILD] = AGE_REQ_CHILD;
     }
 
+    // Handle Rocs Feather requiement
+    gItemAgeReqs[ITEM_ROCS_FEATHER] = AGE_REQ_NONE;
+    gSlotAgeReqs[SLOT_NAYRUS_LOVE] = AGE_REQ_NONE;
+
     func_800304DC(play, &play->actorCtx, play->linkActorEntry);
 
     while (!func_800973FC(play, &play->roomCtx)) {
@@ -686,6 +688,9 @@ void Play_Init(GameState* thisx) {
                     GET_PLAYER(play)->actor.world.pos.y + Player_GetHeight(GET_PLAYER(play)) + 5.0f,
                     GET_PLAYER(play)->actor.world.pos.z, 0, 0, 0, 1, true);
     }
+
+    // nextEntranceIndex was not initialized, so the previous value was carried over during soft resets.
+    gPlayState->nextEntranceIndex = gSaveContext.entranceIndex;
 }
 
 void Play_Update(PlayState* play) {
