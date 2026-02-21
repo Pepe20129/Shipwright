@@ -36,11 +36,11 @@ void RegionTable_Init_ZorasFountain() {
         ENTRANCE(RR_ZF_LAKEBED,                logic->CanUse(RG_IRON_BOOTS)),
         //child can break the brown rock without lifting the silver rock and it stays gone for adult, but it's not intuitive and there's no reasonable case where it matters.
         ENTRANCE(RR_ZF_HIDDEN_CAVE,            logic->CanUse(RG_SILVER_GAUNTLETS) && logic->BlastOrSmash()),
-        ENTRANCE(RR_ZF_ROCK,                   logic->IsAdult && logic->ReachScarecrow()),
+        ENTRANCE(RR_ZF_ROCK,                   logic->IsAdult && logic->ReachScarecrow(true, true)),
         ENTRANCE(RR_JABU_JABUS_BELLY_ENTRYWAY, logic->IsChild && (ctx->GetOption(RSK_JABU_OPEN).Is(RO_JABU_OPEN) || logic->CanUse(RG_BOTTLE_WITH_FISH))),
         ENTRANCE(RR_ZF_GREAT_FAIRY_FOUNTAIN,   logic->HasExplosives() || (ctx->GetTrickOption(RT_ZF_GREAT_FAIRY_WITHOUT_EXPLOSIVES) && logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_SILVER_GAUNTLETS))),
-        ENTRANCE(RR_ZF_HIDDEN_LEDGE,           logic->CanHover()),
-        ENTRANCE(RR_ZF_LEDGE,                  logic->CanHover()),
+        ENTRANCE(RR_ZF_HIDDEN_LEDGE,           logic->CanHover(true, true)),
+        ENTRANCE(RR_ZF_LEDGE,                  logic->CanHover(true, true)),
     });
 
     areaTable[RR_ZF_ICEBERGS] = Region("ZF Icebergs", SCENE_ZORAS_FOUNTAIN, {}, {

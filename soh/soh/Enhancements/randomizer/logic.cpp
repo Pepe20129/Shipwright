@@ -550,7 +550,8 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
         case RE_BREAK_ROOM_GUARD:
             return false;
         case RE_GOLD_SKULLTULA:
-            if (CanHover()) {
+            // TODO: propagate from new params from CanKillEnemy
+            if (CanHover(false, false)) {
                 return true;
             }
             switch (distance) {
@@ -1226,30 +1227,33 @@ bool Logic::CanCrouchStab() {
            (CanUseSword() || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER));
 }
 
+/// @brief Checks if you can interrupt a crouch stab
+/// @return Whether you can interrupt a crouch stab or not
+/// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check / random navi talk outside of dungeons)
+/// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo / silver gauntelts rock)
+bool Logic::CanInterruptCrouchStab(bool blockingTextboxAvaliable, bool grabableActorAvaliable) {
+    // bombs will be a separate trick as it's harder due to the time limit
+    // bombchus will be another trick as it's even harder
+    return blockingTextboxAvaliable || grabableActorAvaliable || (false && CanUse(RG_BOMB_BAG)) || (false && CanUse(RG_BOMBCHU_5));
+}
+
 /// @brief Checks if you can do ISG
+/// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check / random navi talk outside of dungeons) to interrupt the crouchstab
+/// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo / silver gauntelts rock) to interrupt the crouchstab
 /// @return Whether you can do ISG or not
-/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon
-/// without enemies nearby.
-/// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
-bool Logic::CanDoISG() {
-    // need something to interrupt the crouchstab:
-    //  - blocking textbox (sign / npc / navi enemy check / random navi talk outside of dungeons)
-    //  - grabable actor (rock / bush / small crate / cucoo / silver gauntelts rock)
-    //  - bombs (should probably be a separate trick as it's harder due to the time limit)
-    //  - bombchus (even harder)
-    return ctx->GetTrickOption(RT_ISG) && CanCrouchStab();
+bool Logic::CanDoISG(bool blockingTextboxAvaliable, bool grabableActorAvaliable) {
+    return ctx->GetTrickOption(RT_ISG) && CanCrouchStab() && CanInterruptCrouchStab(blockingTextboxAvaliable, grabableActorAvaliable);
 }
 
 /// @brief Checks if you can hover
 /// @param againstWall Whether the hover must done against a wall or not
 /// @param persistentDamageSource Whether a persistent damage source to shield exists (e.g. a biri in biri hover)
+/// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check / random navi talk outside of dungeons) to interrupt the crouchstab
+/// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo / silver gauntelts rock) to interrupt the crouchstab
 /// @return Whether you can hover or not
-/// @warning Doesn't check for being able to interrupt the crouchstab, you can use navi unless you're in a dungeon
-/// without enemies nearby.
-/// @warning Currently doesn't matter as the only logical use of ISG inside a dungeon is for biri hover in jabu.
 /// @note Does not account for the static explosion radius enhancement
-bool Logic::CanHover(bool againstWall, bool persistentDamageSource) {
-    return ctx->GetTrickOption(RT_HOVERING) && CanDoISG() &&
+bool Logic::CanHover(bool blockingTextboxAvaliable, bool grabableActorAvaliable, bool againstWall, bool persistentDamageSource) {
+    return ctx->GetTrickOption(RT_HOVERING) && CanDoISG(blockingTextboxAvaliable, grabableActorAvaliable) &&
            (persistentDamageSource || CanUse(RG_BOMB_BAG) || (!againstWall && CanUse(RG_BOMBCHU_5))) &&
            // if not against a wall, need either hover boots to shorten the backflips or an item to do a contorsion
            // hover
@@ -2578,12 +2582,20 @@ bool Logic::IsFireLoopLocked() {
            ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON);
 }
 
-bool Logic::ReachScarecrow() {
-    return (ScarecrowsSong() && CanUse(RG_HOOKSHOT)) || CanHover();
+/// @brief Checks if you can reach a close (hookshot distance) scarecrow
+/// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check / random navi talk outside of dungeons) to interrupt the crouchstab in the case of getting to the scarecrow by hovering
+/// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo / silver gauntelts rock) to interrupt the crouchstab in the case of getting to the scarecrow by hovering
+/// @returns Whether you can reach a close (hookshot distance) scarecrow or not
+bool Logic::ReachScarecrow(bool blockingTextboxAvaliable, bool grabableActorAvaliable) {
+    return (ScarecrowsSong() && CanUse(RG_HOOKSHOT)) || CanHover(blockingTextboxAvaliable, grabableActorAvaliable);
 }
 
-bool Logic::ReachDistantScarecrow() {
-    return (ScarecrowsSong() && CanUse(RG_LONGSHOT)) || CanHover();
+/// @brief Checks if you can reach a distant scarecrow
+/// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check / random navi talk outside of dungeons) to interrupt the crouchstab in the case of getting to the scarecrow by hovering
+/// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo / silver gauntelts rock) to interrupt the crouchstab in the case of getting to the scarecrow by hovering
+/// @returns Whether you can reach a distant scarecrow or not
+bool Logic::ReachDistantScarecrow(bool blockingTextboxAvaliable, bool grabableActorAvaliable) {
+    return (ScarecrowsSong() && CanUse(RG_LONGSHOT)) || CanHover(blockingTextboxAvaliable, grabableActorAvaliable);
 }
 
 bool Logic::SummonEpona() {
@@ -2606,7 +2618,7 @@ bool Logic::SpiritExplosiveKeyLogic() {
 }
 
 bool Logic::SpiritWestToSkull() {
-    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_STATUE_JUMP)) || CanUse(RG_HOVER_BOOTS) || ReachScarecrow();
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_STATUE_JUMP)) || CanUse(RG_HOVER_BOOTS) || ReachScarecrow(true, true);
 }
 
 bool Logic::SpiritSunBlockSouthLedge() {

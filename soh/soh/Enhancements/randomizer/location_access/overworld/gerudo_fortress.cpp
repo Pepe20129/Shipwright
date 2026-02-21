@@ -147,7 +147,7 @@ void RegionTable_Init_GerudoFortress() {
         ENTRANCE(RR_GF_TOP_OF_LOWER_VINES,    true),
         ENTRANCE(RR_GF_SLOPED_ROOF,           true),
         ENTRANCE(RR_GF_BOTTOM_OF_UPPER_VINES, true),
-        ENTRANCE(RR_GF_NEAR_CHEST,            logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->ReachScarecrow()) || logic->CanUse(RG_LONGSHOT)),
+        ENTRANCE(RR_GF_NEAR_CHEST,            logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->ReachScarecrow(true, false)) || logic->CanUse(RG_LONGSHOT)),
     });
 
     areaTable[RR_GF_NEAR_CHEST] = Region("GF Near Chest", SCENE_GERUDOS_FORTRESS, {}, {

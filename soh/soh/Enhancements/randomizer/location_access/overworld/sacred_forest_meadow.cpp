@@ -8,7 +8,7 @@ void RegionTable_Init_SacredForestMeadow() {
     areaTable[RR_SFM_ENTRYWAY] = Region("SFM Entryway", SCENE_SACRED_FOREST_MEADOW, {}, {}, {
         //Exits
         ENTRANCE(RR_LW_BEYOND_MIDO,       true),
-        ENTRANCE(RR_SACRED_FOREST_MEADOW, logic->IsAdult || logic->CanKillEnemy(RE_WOLFOS) || logic->CanHover()),
+        ENTRANCE(RR_SACRED_FOREST_MEADOW, logic->IsAdult || logic->CanKillEnemy(RE_WOLFOS) || logic->CanHover(true, true)),
         ENTRANCE(RR_SFM_WOLFOS_GROTTO,    logic->CanOpenBombGrotto()),
     });
 

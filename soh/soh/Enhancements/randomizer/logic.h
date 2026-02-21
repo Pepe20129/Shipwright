@@ -72,8 +72,9 @@ class Logic {
     bool CanJumpslashExceptHammer();
     bool CanJumpslash();
     bool CanCrouchStab();
-    bool CanDoISG();
-    bool CanHover(bool againstWall = false, bool persistentDamageSource = false);
+    bool CanInterruptCrouchStab(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
+    bool CanDoISG(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
+    bool CanHover(bool blockingTextboxAvaliable, bool grabableActorAvaliable, bool againstWall = false, bool persistentDamageSource = false);
     bool CanClearStalagmite();
     bool CanHitSwitch(EnemyDistance distance = ED_CLOSE, bool inWater = false);
     bool CanDamage();
@@ -118,8 +119,8 @@ class Logic {
     bool CanBuildRainbowBridge();
     bool CanTriggerLACS();
     bool IsFireLoopLocked();
-    bool ReachScarecrow();
-    bool ReachDistantScarecrow();
+    bool ReachScarecrow(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
+    bool ReachDistantScarecrow(bool blockingTextboxAvaliable, bool grabableActorAvaliable);
     bool SummonEpona();
     void Reset(bool resetSaveContext = true);
     void SetContext(std::shared_ptr<Context> _ctx);

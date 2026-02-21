@@ -501,8 +501,8 @@ void RegionTable_Init_ForestTemple() {
     }, {
         //Exits
         ENTRANCE(RR_FOREST_TEMPLE_MQ_RED_DOORMAT_HALLWAY, true),
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE,  ((logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanGroundJump())) && 
-                                                           (logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_HOVER_BOOTS))) || 
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE,  ((logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanGroundJump())) &&
+                                                           (logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_HOVER_BOOTS))) ||
                                                           (logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS) && logic->CanUse(RG_HOOKSHOT))),
         ENTRANCE(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,        logic->Get(LOGIC_FOREST_CAN_TWIST_HALLWAY) && logic->CanUse(RG_HOOKSHOT)),
     });
@@ -510,13 +510,13 @@ void RegionTable_Init_ForestTemple() {
     areaTable[RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE] = Region("Forest Temple MQ Lower Block Puzzle", SCENE_FOREST_TEMPLE, {
         //Events
         //It is barely possible to get this as child with master + hovers, but it's tight without bunny speed
-        EVENT_ACCESS(LOGIC_FOREST_CAN_TWIST_HALLWAY,     (ctx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) && logic->CanUse(RG_HOVER_BOOTS) && 
-                                                          (logic->IsAdult && logic->CanJumpslash()) || 
+        EVENT_ACCESS(LOGIC_FOREST_CAN_TWIST_HALLWAY,     (ctx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) && logic->CanUse(RG_HOVER_BOOTS) &&
+                                                          (logic->IsAdult && logic->CanJumpslash()) ||
                                                           (logic->CanUse(RG_STICKS) || logic->CanUse(RG_BIGGORON_SWORD) || (logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS) && logic->CanUse(RG_MASTER_SWORD))))),
     }, {}, {
         //Exits
         ENTRANCE(RR_FOREST_TEMPLE_MQ_BLOCK_PUZZLE_FLOOR,  true),
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE, (logic->HasItem(RG_GORONS_BRACELET) && (logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanGroundJump()))) || 
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE, (logic->HasItem(RG_GORONS_BRACELET) && (logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanGroundJump()))) ||
                                                            logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS)),
         ENTRANCE(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,        logic->Get(LOGIC_FOREST_CAN_TWIST_HALLWAY) && logic->CanUse(RG_HOVER_BOOTS)),
     });
@@ -524,16 +524,16 @@ void RegionTable_Init_ForestTemple() {
     areaTable[RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE] = Region("Forest Temple MQ Middle Block Puzzle", SCENE_FOREST_TEMPLE, {
         //Events
         EVENT_ACCESS(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS, (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_LONGSHOT))),
-        EVENT_ACCESS(LOGIC_FOREST_CAN_TWIST_HALLWAY,     ctx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) && 
-                                                         (logic->IsAdult && logic->CanJumpslash()) || 
+        EVENT_ACCESS(LOGIC_FOREST_CAN_TWIST_HALLWAY,     ctx->GetTrickOption(RT_FOREST_MQ_JS_HALLWAY_SWITCH) &&
+                                                         (logic->IsAdult && logic->CanJumpslash()) ||
                                                           (logic->CanUse(RG_HOVER_BOOTS) && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MASTER_SWORD)))),
     }, {}, {
         //Exits
         ENTRANCE(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, true),
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE, (logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) || 
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE, (logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) ||
                                                          (logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS) && logic->CanUse(RG_HOOKSHOT))),
         //Hammer cannot recoil from here, but can make the jump forwards with a hammer jumpslash as adult
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,       logic->Get(LOGIC_FOREST_CAN_TWIST_HALLWAY) && logic->CanUse(RG_HOVER_BOOTS) || 
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,       logic->Get(LOGIC_FOREST_CAN_TWIST_HALLWAY) && logic->CanUse(RG_HOVER_BOOTS) ||
                                                          (ctx->GetTrickOption(RT_FOREST_OUTSIDE_BACKDOOR) && (logic->CanJumpslashExceptHammer() || (logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER))))),
     });
 
@@ -689,7 +689,7 @@ void RegionTable_Init_ForestTemple() {
         //Exits
         ENTRANCE(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,          true),
         ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,           true),
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_DOORFRAME, logic->CanHammerRecoilHover() || 
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_DOORFRAME, logic->CanHammerRecoilHover() ||
                                                              ((ctx->GetTrickOption(RT_FOREST_DOORFRAME) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanJumpslash())) ||
                                                              (logic->IsChild && (ctx->GetTrickOption(RT_FOREST_MQ_CHILD_DOORFRAME) || logic->CanMiddairGroundJump()))),
         //N64 logic doesn't check damage but I always take some so I'm adding it
