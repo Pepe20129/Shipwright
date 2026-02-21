@@ -1439,8 +1439,10 @@ void Settings::CreateOptions() {
               "\"Stop Link the Goron with Din's Fire\".\nUsing blue fire arrows to break floor in King Dodongo's "
               "chamber also requires \"Dodongo\'s Cavern Smash the Boss Lobby Floor\".");
     OPT_TRICK(RT_ISG, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH }, "Infinite Sword Glitch",
+              "ISG",
               "By interrupting a crouchstab, the sword hitbox is never disabled.");
     OPT_TRICK(RT_HOVERING, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::INTERMEDIATE, Tricks::Tag::GLITCH }, "Hovering",
+              "Hover",
               "By shielding damage while midair and doing ISG, you can hover in place."
               "\nIt is possible to the backflip (or sideflip) and shield another damage source to get higher."
               "\n"
