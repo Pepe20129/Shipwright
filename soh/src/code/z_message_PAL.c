@@ -2713,6 +2713,9 @@ void Message_OpenText(PlayState* play, u16 textId) {
     Font* font = &msgCtx->font;
     s16 textBoxType;
 
+    bool loadFromMessageTable = true;
+    GameInteractor_ExecuteOnOpenText(&textId, &loadFromMessageTable);
+
     sDisplayNextMessageAsEnglish = false;
 
     if (msgCtx->msgMode == MSGMODE_NONE) {
@@ -2782,7 +2785,7 @@ void Message_OpenText(PlayState* play, u16 textId) {
         gSaveContext.eventInf[0] = gSaveContext.eventInf[1] = gSaveContext.eventInf[2] = gSaveContext.eventInf[3] = 0;
     }
 
-    if (CustomMessage_RetrieveIfExists(play)) {
+    if (!loadFromMessageTable) {
         osSyncPrintf("Found custom message");
         if (gSaveContext.language == LANGUAGE_JPN) {
             sDisplayNextMessageAsEnglish = true;
@@ -3856,23 +3859,7 @@ void Message_DrawMain(PlayState* play, Gfx** p) {
 
                     u8 songItemId = ITEM_SONG_MINUET + gOcarinaSongItemMap[msgCtx->ocarinaStaff->state];
 
-                    if ((songItemId == ITEM_SONG_MINUET &&
-                         GameInteractor_Should(VB_GIVE_ITEM_MINUET_OF_FOREST, true)) ||
-                        (songItemId == ITEM_SONG_BOLERO && GameInteractor_Should(VB_GIVE_ITEM_BOLERO_OF_FIRE, true)) ||
-                        (songItemId == ITEM_SONG_SERENADE &&
-                         GameInteractor_Should(VB_GIVE_ITEM_SERENADE_OF_WATER, true)) ||
-                        (songItemId == ITEM_SONG_REQUIEM &&
-                         GameInteractor_Should(VB_GIVE_ITEM_REQUIEM_OF_SPIRIT, true)) ||
-                        (songItemId == ITEM_SONG_NOCTURNE &&
-                         GameInteractor_Should(VB_GIVE_ITEM_NOCTURNE_OF_SHADOW, true)) ||
-                        (songItemId == ITEM_SONG_PRELUDE &&
-                         GameInteractor_Should(VB_GIVE_ITEM_PRELUDE_OF_LIGHT, true)) ||
-                        (songItemId == ITEM_SONG_LULLABY && GameInteractor_Should(VB_GIVE_ITEM_ZELDAS_LULLABY, true)) ||
-                        (songItemId == ITEM_SONG_EPONA && GameInteractor_Should(VB_GIVE_ITEM_EPONAS_SONG, true)) ||
-                        (songItemId == ITEM_SONG_SARIA && GameInteractor_Should(VB_GIVE_ITEM_SARIAS_SONG, true)) ||
-                        (songItemId == ITEM_SONG_SUN && GameInteractor_Should(VB_GIVE_ITEM_SUNS_SONG, true)) ||
-                        (songItemId == ITEM_SONG_TIME && GameInteractor_Should(VB_GIVE_ITEM_SONG_OF_TIME, true)) ||
-                        (songItemId == ITEM_SONG_STORMS && GameInteractor_Should(VB_GIVE_ITEM_SONG_OF_STORMS, true))) {
+                    if (GameInteractor_Should(VB_GIVE_ITEM_SONG, true, songItemId)) {
                         Item_Give(play, songItemId);
                     }
 
@@ -4653,7 +4640,7 @@ void Message_Update(PlayState* play) {
             }
             if ((msgCtx->textId >= 0xC2 && msgCtx->textId < 0xC7) ||
                 (msgCtx->textId >= 0xFA && msgCtx->textId < 0xFE)) {
-                gSaveContext.healthAccumulator = 0x140; // Refill 20 hearts
+                gSaveContext.healthAccumulator = MAX_HEALTH; // Refill 20 hearts
             }
             if (msgCtx->textId == 0x301F || msgCtx->textId == 0xA || msgCtx->textId == 0xC || msgCtx->textId == 0xCF ||
                 msgCtx->textId == 0x21C || msgCtx->textId == 9 || msgCtx->textId == 0x4078 ||
@@ -4691,12 +4678,9 @@ void Message_Update(PlayState* play) {
             }
             if ((s32)(gSaveContext.inventory.questItems & 0xF0000000) == 0x40000000) {
                 gSaveContext.inventory.questItems ^= 0x40000000;
-                if (!CVarGetInteger(CVAR_ENHANCEMENT("HurtContainer"), 0)) {
-                    gSaveContext.healthCapacity += 0x10;
-                    gSaveContext.health += 0x10;
-                } else {
-                    gSaveContext.healthCapacity -= 0x10;
-                    gSaveContext.health -= 0x10;
+                if (GameInteractor_Should(VB_HEARTS_INCREASE_WITH_CONTAINERS, true)) {
+                    gSaveContext.healthCapacity += FULL_HEART_HEALTH;
+                    gSaveContext.health += FULL_HEART_HEALTH;
                 }
             }
             if (msgCtx->ocarinaAction != OCARINA_ACTION_CHECK_NOWARP_DONE) {

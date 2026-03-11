@@ -2,12 +2,10 @@
 #include "soh_assets.h"
 #include "static_data.h"
 #include "soh/ObjectExtension/ObjectExtension.h"
-#include "soh/Enhancements/enhancementTypes.h"
 
 extern "C" {
 #include "variables.h"
 #include "overlays/actors/ovl_En_Kusa/z_en_kusa.h"
-#include "objects/gameplay_field_keep/gameplay_field_keep.h"
 #include "objects/object_kusa/object_kusa.h"
 extern PlayState* gPlayState;
 }
@@ -15,11 +13,10 @@ extern PlayState* gPlayState;
 extern void EnItem00_DrawRandomizedItem(EnItem00* enItem00, PlayState* play);
 
 void DrawTypeOfGrass(EnKusa* grassActor, Gfx* bushDList, Gfx* grassDList, PlayState* play) {
-    // Actor params is -255 for regrowable grass.
-    if (grassActor->actor.params == -255) {
-        Gfx_DrawDListOpa(play, grassDList);
-    } else {
+    if ((grassActor->actor.params & 3) == 0) {
         Gfx_DrawDListOpa(play, bushDList);
+    } else {
+        Gfx_DrawDListOpa(play, grassDList);
     }
 }
 
@@ -28,18 +25,17 @@ extern "C" void EnKusa_RandomizerDraw(Actor* thisx, PlayState* play) {
     static Gfx* dLists[] = { (Gfx*)gRandoBushJunkDL, (Gfx*)gRandoCuttableGrassJunkDL, (Gfx*)gRandoCuttableGrassJunkDL };
     auto grassActor = ((EnKusa*)thisx);
 
-    const auto grassIdentity = ObjectExtension::GetInstance().Get<GrassIdentity>(thisx);
+    const auto grassIdentity = ObjectExtension::GetInstance().Get<CheckIdentity>(thisx);
 
     OPEN_DISPS(play->state.gfxCtx);
     Gfx_SetupDL_25Opa(play->state.gfxCtx);
 
     if (grassIdentity != nullptr && grassIdentity->randomizerCheck != RC_MAX &&
         Flags_GetRandomizerInf(grassIdentity->randomizerInf) == 0) {
-        int csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), CSMC_DISABLED);
+        bool csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), 0);
         int requiresStoneAgony = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeDependsStoneOfAgony"), 0);
 
-        if ((csmc == CSMC_BOTH || csmc == CSMC_TEXTURE) &&
-            (!requiresStoneAgony || (requiresStoneAgony && CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY)))) {
+        if (csmc && (!requiresStoneAgony || (requiresStoneAgony && CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY)))) {
             auto itemEntry =
                 Rando::Context::GetInstance()->GetFinalGIEntry(grassIdentity->randomizerCheck, true, GI_NONE);
             GetItemCategory getItemCategory = itemEntry.getItemCategory;
@@ -49,18 +45,10 @@ extern "C" void EnKusa_RandomizerDraw(Actor* thisx, PlayState* play) {
                     DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushJunkDL, (Gfx*)gRandoCuttableGrassJunkDL, play);
                     break;
                 case ITEM_CATEGORY_LESSER:
-                    switch (itemEntry.itemId) {
-                        case ITEM_HEART_PIECE:
-                        case ITEM_HEART_PIECE_2:
-                        case ITEM_HEART_CONTAINER:
-                            DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushHeartDL, (Gfx*)gRandoCuttableGrassHeartDL,
-                                            play);
-                            break;
-                        default:
-                            DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushMinorDL, (Gfx*)gRandoCuttableGrassMinorDL,
-                                            play);
-                            break;
-                    }
+                    DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushMinorDL, (Gfx*)gRandoCuttableGrassMinorDL, play);
+                    break;
+                case ITEM_CATEGORY_HEALTH:
+                    DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushHeartDL, (Gfx*)gRandoCuttableGrassHeartDL, play);
                     break;
                 case ITEM_CATEGORY_BOSS_KEY:
                     DrawTypeOfGrass(grassActor, (Gfx*)gRandoBushBossKeyDL, (Gfx*)gRandoCuttableGrassBossKeyDL, play);
@@ -91,18 +79,18 @@ extern "C" void EnKusa_RandomizerDraw(Actor* thisx, PlayState* play) {
 }
 
 uint8_t EnKusa_RandomizerHoldsItem(EnKusa* grassActor, PlayState* play) {
-    const auto grassIdentity = ObjectExtension::GetInstance().Get<GrassIdentity>(&grassActor->actor);
+    const auto grassIdentity = ObjectExtension::GetInstance().Get<CheckIdentity>(&grassActor->actor);
 
     if (grassIdentity == nullptr || grassIdentity->randomizerCheck == RC_MAX)
         return false;
 
     RandomizerCheck rc = grassIdentity->randomizerCheck;
     uint8_t isDungeon = Rando::StaticData::GetLocation(rc)->IsDungeon();
-    uint8_t grassSetting = RAND_GET_OPTION(RSK_SHUFFLE_GRASS);
+    auto grassSetting = RAND_GET_OPTION(RSK_SHUFFLE_GRASS);
 
     // Don't pull randomized item if grass isn't randomized or is already checked
-    if (!IS_RANDO || (grassSetting == RO_SHUFFLE_GRASS_OVERWORLD && isDungeon) ||
-        (grassSetting == RO_SHUFFLE_GRASS_DUNGEONS && !isDungeon) ||
+    if (!IS_RANDO || (grassSetting.Is(RO_SHUFFLE_GRASS_OVERWORLD) && isDungeon) ||
+        (grassSetting.Is(RO_SHUFFLE_GRASS_DUNGEONS) && !isDungeon) ||
         Flags_GetRandomizerInf(grassIdentity->randomizerInf) || rc == RC_UNKNOWN_CHECK) {
         return false;
     } else {
@@ -111,7 +99,7 @@ uint8_t EnKusa_RandomizerHoldsItem(EnKusa* grassActor, PlayState* play) {
 }
 
 void EnKusa_RandomizerSpawnCollectible(EnKusa* grassActor, PlayState* play) {
-    const auto grassIdentity = ObjectExtension::GetInstance().Get<GrassIdentity>(&grassActor->actor);
+    const auto grassIdentity = ObjectExtension::GetInstance().Get<CheckIdentity>(&grassActor->actor);
     if (grassIdentity == nullptr) {
         return;
     }
@@ -136,7 +124,7 @@ void EnKusa_RandomizerInit(void* actorRef) {
 
     auto grassIdentity = OTRGlobals::Instance->gRandomizer->IdentifyGrass(
         gPlayState->sceneNum, (s16)actor->world.pos.x, (s16)actor->world.pos.z, respawnData, gPlayState->linkAgeOnLoad);
-    ObjectExtension::GetInstance().Set<GrassIdentity>(actor, std::move(grassIdentity));
+    ObjectExtension::GetInstance().Set<CheckIdentity>(actor, std::move(grassIdentity));
 }
 
 void RegisterShuffleGrass() {
@@ -158,7 +146,7 @@ void RegisterShuffleGrass() {
         EnKusa* grassActor = va_arg(args, EnKusa*);
         if (EnKusa_RandomizerHoldsItem(grassActor, gPlayState)) {
             EnKusa_RandomizerSpawnCollectible(grassActor, gPlayState);
-            ObjectExtension::GetInstance().Set<GrassIdentity>(&grassActor->actor, std::move(GrassIdentity{
+            ObjectExtension::GetInstance().Set<CheckIdentity>(&grassActor->actor, std::move(CheckIdentity{
                                                                                       .randomizerInf = RAND_INF_MAX,
                                                                                       .randomizerCheck = RC_MAX,
                                                                                   }));
@@ -399,8 +387,8 @@ void Rando::StaticData::RegisterGrassLocations() {
     locationTable[RC_DEKU_TREE_LOBBY_GRASS_1]                          =   Location::Grass(RC_DEKU_TREE_LOBBY_GRASS_1,                                   RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(391, -156),    "Lobby Grass 1",                 RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_LOBBY_GRASS_1));
     locationTable[RC_DEKU_TREE_LOBBY_GRASS_2]                          =   Location::Grass(RC_DEKU_TREE_LOBBY_GRASS_2,                                   RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(355, -233),    "Lobby Grass 2",                 RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_LOBBY_GRASS_2));
     locationTable[RC_DEKU_TREE_LOBBY_GRASS_3]                          =   Location::Grass(RC_DEKU_TREE_LOBBY_GRASS_3,                                   RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(307, -289),    "Lobby Grass 3",                 RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_LOBBY_GRASS_3));
-    locationTable[RC_DEKU_TREE_LOBBY_GRASS_4]                          =   Location::Grass(RC_DEKU_TREE_LOBBY_GRASS_4,                                   RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(80, -414),     "Lobby Grass 4",                 RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_LOBBY_GRASS_4));
-    locationTable[RC_DEKU_TREE_LOBBY_GRASS_5]                          =   Location::Grass(RC_DEKU_TREE_LOBBY_GRASS_5,                                   RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(142, -399),    "Lobby Grass 5",                 RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_LOBBY_GRASS_5));
+    locationTable[RC_DEKU_TREE_2F_GRASS_1]                             =   Location::Grass(RC_DEKU_TREE_2F_GRASS_1,                                      RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(80, -414),     "2F Grass 1",                    RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_2F_GRASS_1));
+    locationTable[RC_DEKU_TREE_2F_GRASS_2]                             =   Location::Grass(RC_DEKU_TREE_2F_GRASS_2,                                      RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(142, -399),    "2F Grass 2",                    RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_2F_GRASS_2));
     locationTable[RC_DEKU_TREE_SLINGSHOT_GRASS_1]                      =   Location::Grass(RC_DEKU_TREE_SLINGSHOT_GRASS_1,                               RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(-1018, 1263),  "Slingshot Grass 1",             RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_SLINGSHOT_GRASS_1));
     locationTable[RC_DEKU_TREE_SLINGSHOT_GRASS_2]                      =   Location::Grass(RC_DEKU_TREE_SLINGSHOT_GRASS_2,                               RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(-1005, 1216),  "Slingshot Grass 2",             RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_SLINGSHOT_GRASS_2));
     locationTable[RC_DEKU_TREE_SLINGSHOT_GRASS_3]                      =   Location::Grass(RC_DEKU_TREE_SLINGSHOT_GRASS_3,                               RCQUEST_VANILLA, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,               TWO_ACTOR_PARAMS(-1280, 1026),  "Slingshot Grass 3",             RHT_DEKU_TREE_GRASS,              RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_SLINGSHOT_GRASS_3));
@@ -444,8 +432,8 @@ void Rando::StaticData::RegisterGrassLocations() {
     locationTable[RC_DEKU_TREE_MQ_LOBBY_GRASS_3]                       =   Location::Grass(RC_DEKU_TREE_MQ_LOBBY_GRASS_3,                       RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(308, -291),    "MQ Lobby Grass 3",              RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_LOBBY_GRASS_3));
     locationTable[RC_DEKU_TREE_MQ_LOBBY_GRASS_4]                       =   Location::Grass(RC_DEKU_TREE_MQ_LOBBY_GRASS_4,                       RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(81, -416),     "MQ Lobby Grass 4",              RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_LOBBY_GRASS_4));
     locationTable[RC_DEKU_TREE_MQ_LOBBY_GRASS_5]                       =   Location::Grass(RC_DEKU_TREE_MQ_LOBBY_GRASS_5,                       RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(143, -401),    "MQ Lobby Grass 5",              RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_LOBBY_GRASS_5));
-    locationTable[RC_DEKU_TREE_MQ_LOBBY_GRASS_6]                       =   Location::Grass(RC_DEKU_TREE_MQ_LOBBY_GRASS_6,                       RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-11, -344),    "MQ Lobby Grass 6",              RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_LOBBY_GRASS_6));
-    locationTable[RC_DEKU_TREE_MQ_LOBBY_GRASS_7]                       =   Location::Grass(RC_DEKU_TREE_MQ_LOBBY_GRASS_7,                       RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-159, -302),   "MQ Lobby Grass 7",              RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_LOBBY_GRASS_7));
+    locationTable[RC_DEKU_TREE_MQ_2F_GRASS_1]                          =   Location::Grass(RC_DEKU_TREE_MQ_2F_GRASS_1,                          RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-11, -344),    "MQ 2F Grass 1",                 RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_2F_GRASS_1));
+    locationTable[RC_DEKU_TREE_MQ_2F_GRASS_2]                          =   Location::Grass(RC_DEKU_TREE_MQ_2F_GRASS_2,                          RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-159, -302),   "MQ 2F Grass 2",                 RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_2F_GRASS_2));
     locationTable[RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_1]                   =   Location::Grass(RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_1,                   RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-636, 161),    "MQ Slingshot Grass 1",          RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_SLINGSHOT_GRASS_1));
     locationTable[RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_2]                   =   Location::Grass(RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_2,                   RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-693, 182),    "MQ Slingshot Grass 2",          RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_SLINGSHOT_GRASS_2));
     locationTable[RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_3]                   =   Location::Grass(RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_3,                   RCQUEST_MQ, RCAREA_DEKU_TREE,             SCENE_DEKU_TREE,                   TWO_ACTOR_PARAMS(-1443, 167),   "MQ Slingshot Grass 3",          RHT_DEKU_TREE_GRASS,                    RG_BLUE_RUPEE,     SpoilerCollectionCheck::RandomizerInf(RAND_INF_DEKU_TREE_MQ_SLINGSHOT_GRASS_3));
@@ -529,6 +517,5 @@ void Rando::StaticData::RegisterGrassLocations() {
     // clang-format on
 }
 
-static ObjectExtension::Register<GrassIdentity> RegisterGrassIdentity;
 static RegisterShipInitFunc registerShuffleGrass(RegisterShuffleGrass, { "IS_RANDO" });
-static RegisterShipInitFunc registerShuffleGrassLocations(Rando::StaticData::RegisterGrassLocations);
+static RegisterShipInitFunc registerGrassLocations(Rando::StaticData::RegisterGrassLocations);

@@ -3,7 +3,6 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_oF1d_map/object_oF1d_map.h"
 #include "soh/frame_interpolation.h"
-#include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
@@ -1068,7 +1067,7 @@ void EnGo2_BiggoronSetTextId(EnGo2* this, PlayState* play, Player* player) {
                 this->actor.textId = 0x3058;
             }
             if (this->actor.textId == 0x3059) {
-                gSaveContext.subTimerState = 0;
+                gSaveContext.subTimerState = SUBTIMER_STATE_OFF;
             }
             player->actor.textId = this->actor.textId;
 
