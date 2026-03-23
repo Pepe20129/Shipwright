@@ -122,6 +122,19 @@ typedef struct MMEnemyEntry {
     int16_t params;
 } MMEnemyEntry;
 
+extern "C" s16 gEnPpId;
+extern "C" s16 gEnBaguoId;
+extern "C" s16 gEnEncount3Id;
+extern "C" s16 gEnJsoId;
+
+// clang-format off
+static MMEnemyEntry mmRandomizedEnemySpawnTable[] = {
+    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Hiploop"), "Hiploop", &gEnPpId,    0 }, // Hiploop
+    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Nejiron"), "Nejiron", &gEnBaguoId, 0 }, // Nejiron
+    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Garo"),    "Garo",    &gEnJsoId,   0 }, // Garo
+};
+// clang-format on
+
 #define ENEMY_ENTRY_TYPE_OOT 0
 #define ENEMY_ENTRY_TYPE_MM 1
 
@@ -168,19 +181,6 @@ typedef struct EnemyEntry {
         }
     }
 } EnemyEntry;
-
-extern "C" s16 gEnPpId;
-extern "C" s16 gEnBaguoId;
-extern "C" s16 gEnEncount3Id;
-extern "C" s16 gEnJsoId;
-
-// clang-format off
-static MMEnemyEntry mmRandomizedEnemySpawnTable[] = {
-    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Hiploop"), "Hiploop", &gEnPpId,    0 }, // Hiploop
-    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Nejiron"), "Nejiron", &gEnBaguoId, 0 }, // Nejiron
-    { CVAR_ENHANCEMENT("RandomizedEnemyList.MM.Garo"),    "Garo",    &gEnJsoId,   0 }, // Garo
-};
-// clang-format on
 
 static int enemiesToRandomize[] = {
     ACTOR_EN_ANUBICE_TAG, // Anubis
