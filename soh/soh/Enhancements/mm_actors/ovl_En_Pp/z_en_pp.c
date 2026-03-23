@@ -1079,7 +1079,7 @@ void EnPp_Mask_SetupDetach(EnPp* this, PlayState* play) {
     s32 yawDiff;
     EnPp* pp = (EnPp*)Actor_Spawn(&play->actorCtx, play, gEnPpId, this->actor.world.pos.x, this->actor.world.pos.y,
                                   this->actor.world.pos.z, this->actor.world.rot.x, this->actor.shape.rot.y,
-                                  this->actor.world.rot.z, EN_PP_TYPE_UNMASKED, false);
+                                  this->actor.world.rot.z, EN_PP_TYPE_UNMASKED);
 
     if (pp != NULL) {
         if (this->chargesInStraightLines) {
@@ -1319,7 +1319,7 @@ void EnPp_UpdateDamage(EnPp* this, PlayState* play) {
                                  (this->drawDmgEffType != ACTOR_DRAW_DMGEFF_FROZEN_NO_SFX)) ||
                                 (this->drawDmgEffTimer == 0))) {
                         Actor_Spawn(&play->actorCtx, play, ACTOR_EN_CLEAR_TAG, this->actor.focus.pos.x,
-                                    this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0, 4, false);
+                                    this->actor.focus.pos.y, this->actor.focus.pos.z, 0, 0, 0, 4);
                         Actor_SetColorFilter(&this->actor, COLORFILTER_COLORFLAG_GRAY, 255, COLORFILTER_BUFFLAG_OPA,
                                              25);
                         this->drawDmgEffTimer = 20;
@@ -1551,7 +1551,7 @@ void EnPp_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, 
                  (limbIndex == HIPLOOP_LIMB_RIGHT_WING_MIDDLE) || (limbIndex == HIPLOOP_LIMB_CENTER_WING_MIDDLE))) {
                 Actor_Spawn(&play->actorCtx, play, gEnPpId, this->actor.world.pos.x, this->actor.world.pos.y,
                             this->actor.world.pos.z, this->actor.world.rot.x, this->actor.world.rot.y,
-                            this->actor.world.rot.z, limbIndex + 7, false);
+                            this->actor.world.rot.z, limbIndex + 7);
                 this->deadBodyPartsSpawnedCount++;
                 if (this->deadBodyPartsSpawnedCount >= 6) {
                     this->action = EN_PP_ACTION_DONE_SPAWNING_BODY_PARTS;
