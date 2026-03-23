@@ -241,9 +241,10 @@ bool IsEnemyAllowedToSpawn(int16_t sceneNum, int8_t roomNum, EnemyEntry enemy) {
     // Wallmaster - Not easily visible, often makes players think they're softlocked and that there's no enemies left.
     // Club Moblin - Many issues with them falling or placing out of bounds. Maybe fixable in the future?
     bool enemiesToExcludeClearRooms =
-        enemy.id() == ACTOR_EN_FZ || enemy.id() == ACTOR_EN_VM || enemy.id() == ACTOR_EN_SB || enemy.id() == ACTOR_EN_NY ||
-        enemy.id() == ACTOR_EN_CLEAR_TAG || enemy.id() == ACTOR_EN_WALLMAS || enemy.id() == ACTOR_EN_TORCH2 ||
-        (enemy.id() == ACTOR_EN_MB && enemy.params() == 0) || enemy.id() == ACTOR_EN_FD || enemy.id() == ACTOR_EN_ANUBICE_TAG;
+        enemy.id() == ACTOR_EN_FZ || enemy.id() == ACTOR_EN_VM || enemy.id() == ACTOR_EN_SB ||
+        enemy.id() == ACTOR_EN_NY || enemy.id() == ACTOR_EN_CLEAR_TAG || enemy.id() == ACTOR_EN_WALLMAS ||
+        enemy.id() == ACTOR_EN_TORCH2 || (enemy.id() == ACTOR_EN_MB && enemy.params() == 0) ||
+        enemy.id() == ACTOR_EN_FD || enemy.id() == ACTOR_EN_ANUBICE_TAG;
 
     // Bari - Spawns 3 more enemies, potentially extremely difficult in timed rooms.
     bool enemiesToExcludeTimedRooms = enemiesToExcludeClearRooms || enemy.id() == ACTOR_EN_VALI;
@@ -323,7 +324,8 @@ bool IsEnemyAllowedToSpawn(int16_t sceneNum, int8_t roomNum, EnemyEntry enemy) {
                       (enemy.id() == ACTOR_EN_ZF && enemy.params() == -1)));
         // Ganon's Tower Escape.
         case SCENE_GANONS_TOWER_COLLAPSE_INTERIOR:
-            return (!((enemiesToExcludeTimedRooms || (enemy.id() == ACTOR_EN_ZF && enemy.params() == -1)) && roomNum == 1));
+            return (
+                !((enemiesToExcludeTimedRooms || (enemy.id() == ACTOR_EN_ZF && enemy.params() == -1)) && roomNum == 1));
         // Don't allow big Stalchildren, big Peahats and the large Bari (jellyfish) during the Gohma fight because they
         // can clip into Gohma and it crashes the game. Likely because Gohma on the ceiling can't handle collision with
         // other enemies.
@@ -352,22 +354,27 @@ void GetSelectedEnemies() {
 
     for (int i = 0; i < ARRAY_COUNT(ootRandomizedEnemySpawnTable); i++) {
         if (CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemyList.All"), 0)) {
-            selectedEnemyList.push_back(EnemyEntry { .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[i] }});
+            selectedEnemyList.push_back(
+                EnemyEntry{ .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[i] } });
         } else if (CVarGetInteger(ootRandomizedEnemySpawnTable[i].cvar, 1)) {
-            selectedEnemyList.push_back(EnemyEntry { .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[i] }});
+            selectedEnemyList.push_back(
+                EnemyEntry{ .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[i] } });
         }
     }
 
     for (int i = 0; i < ARRAY_COUNT(mmRandomizedEnemySpawnTable); i++) {
         if (CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemyList.MM.All"), 0)) {
-            selectedEnemyList.push_back(EnemyEntry { .type = ENEMY_ENTRY_TYPE_MM, .inner = { .mm = mmRandomizedEnemySpawnTable[i] }});
+            selectedEnemyList.push_back(
+                EnemyEntry{ .type = ENEMY_ENTRY_TYPE_MM, .inner = { .mm = mmRandomizedEnemySpawnTable[i] } });
         } else if (CVarGetInteger(mmRandomizedEnemySpawnTable[i].cvar, 1)) {
-            selectedEnemyList.push_back(EnemyEntry { .type = ENEMY_ENTRY_TYPE_MM, .inner = { .mm = mmRandomizedEnemySpawnTable[i] }});
+            selectedEnemyList.push_back(
+                EnemyEntry{ .type = ENEMY_ENTRY_TYPE_MM, .inner = { .mm = mmRandomizedEnemySpawnTable[i] } });
         }
     }
 
     if (selectedEnemyList.size() == 0) {
-        selectedEnemyList.push_back(EnemyEntry { .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[0] }});
+        selectedEnemyList.push_back(
+            EnemyEntry{ .type = ENEMY_ENTRY_TYPE_OOT, .inner = { .oot = ootRandomizedEnemySpawnTable[0] } });
     }
 }
 
@@ -1060,14 +1067,11 @@ void RegisterEnemyRandomizerWidgets() {
 
     SohGui::mSohMenu->AddWidget(path, "EXPERIMENTAL", WIDGET_SEPARATOR_TEXT)
         .Options(UIWidgets::TextOptions().Color(UIWidgets::Colors::Orange))
-        .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0);
-        });
+        .PreFunc([](WidgetInfo& info) { info.isHidden = !CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0); });
 
-    SohGui::mSohMenu->AddWidget(path, "MM Enemies", WIDGET_TEXT)
-        .PreFunc([](WidgetInfo& info) {
-            info.isHidden = !CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0);
-        });
+    SohGui::mSohMenu->AddWidget(path, "MM Enemies", WIDGET_TEXT).PreFunc([](WidgetInfo& info) {
+        info.isHidden = !CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0);
+    });
 
     // TODO:
     /*
@@ -1087,7 +1091,8 @@ void RegisterEnemyRandomizerWidgets() {
                 extracting = true;
                 extractionTask = threadPool->submit_task([&]() -> void {
                     Extractor extract = Extractor();
-                    extract.CallZapd(Ship::Context::GetAppBundlePath(), Ship::Context::GetAppDirectoryPath(appShortName), &extractCount, &totalExtract, "mm_enemies.o2r");
+                    extract.CallZapd(Ship::Context::GetAppBundlePath(),
+    Ship::Context::GetAppDirectoryPath(appShortName), &extractCount, &totalExtract, "mm_enemies.o2r");
 
                     extracting = false;
 
@@ -1114,7 +1119,8 @@ void RegisterEnemyRandomizerWidgets() {
             .PreFunc([](WidgetInfo& info) {
                 info.isHidden = !CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemies"), 0);
                 info.options->disabled = CVarGetInteger(CVAR_ENHANCEMENT("RandomizedEnemyList.MM.All"), 0);
-                info.options->disabledTooltip = "These options are disabled because \"Select All MM Enemies\" is enabled.";
+                info.options->disabledTooltip =
+                    "These options are disabled because \"Select All MM Enemies\" is enabled.";
             })
             .Callback([](WidgetInfo& info) { GetSelectedEnemies(); });
     }
