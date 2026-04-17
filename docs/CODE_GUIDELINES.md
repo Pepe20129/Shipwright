@@ -1,0 +1,79 @@
+# Code Guidelines for Ship of Harkinian
+
+> [!IMPORTANT]
+> These guidelines do not apply to the files under the `src/` directory
+
+> [!NOTE]
+> Keep in mind that these guidelines have not always been here so some code has not been updated to follow these guidelines yet. Contributions to bring those cases inline with these guidelines are welcome.
+
+## General
+Code should be C++, not C.
+
+Do not use:
+- [`goto`](https://en.cppreference.com/cpp/language/goto).
+- Octal [integer literals](https://en.cppreference.com/cpp/language/integer_literal).
+- Octal [character escape sequences](https://en.cppreference.com/cpp/language/escape).
+- [`const_cast`](https://en.cppreference.com/cpp/language/const_cast) to cast away constness or volatility.
+- [`new`](https://en.cppreference.com/cpp/language/new) & [`delete`](https://en.cppreference.com/cpp/language/delete) expressions.
+- [Alternative operator representations](https://en.cppreference.com/cpp/language/operator_alternative)
+
+Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
+
+Prefer:
+- [Post-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Postfix_operators) over [pre-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Prefix_operators).
+- Explicit conversions over implicit conversions.
+- The `at` method over the `[]` operator for types such as [`std::array`](https://en.cppreference.com/cpp/container/array) & [`std::vector`](https://en.cppreference.com/cpp/container/vector).
+- C++ style casts over C style casts.
+
+[Clang Format](https://clang.llvm.org/docs/ClangFormat.html) is used to maintain code formatting, it may be disabled for a region of code with `// clang-format off` & `// clang-format on`. This should only be used for things such as tables which are clearer with whitespace alignment.
+
+TODO comments are generally used with one of these prefixes:
+- `TODO`: General TODO comments
+- `Upstream TODO`: TODOs relating to syncing code with decomp
+- `RANDOTODO`: TODOs relating to randomizer (there are some that have the `RANDTODO` prefix)
+
+Files and folder names should be in UpperCamelCase.
+
+ShipInit declarations must be at the bottom of the file.
+
+Files must:
+- Have a trailing newline.
+- Be encoded in [UTF-8](https://en.wikipedia.org/wiki/UTF-8).
+- Use 4 spaces for indentation.
+
+Instead of using regular `assert`s which can't prevent issues in releases, use an if statement with:
+- A log message.
+- `assert(false);`.
+- An early return from the function when appropriate.
+
+## Types
+Use the libultra types when possible (`u64` instead of `uint64_t`, `f32` instead of `float`, etc.).
+
+Use `bool`, `true` & `false` when appropriate instead of an integer type, `1` & `0`.
+
+Do not use `inptr_t` & `uintptr_t` as they can cause issues with pointer provenance, use `void*` (or a concrete pointer) instead if possible.
+
+Use [`std::optional`](https://en.cppreference.com/cpp/utility/optional), [`std::variant`](https://en.cppreference.com/cpp/utility/variant) or [`std::expected`](https://en.cppreference.com/cpp/utility/expected) instead of sentinel values.
+
+Use references instead of pointers (with [`std::optional`](https://en.cppreference.com/cpp/utility/optional) for nullable references) if possible.
+
+Prefer error values over exceptions.
+
+Prefer factory functions over public constructors and execute as much of the initialization logic as possible in the factory function. This avoid issues such as accidental default initialization and referencing class members before they are valid.
+
+If possible, make invalid states unrepresentable.
+
+## Headers
+Include the least amount of other headers needed, as an example, if possible, use extern declarations for types (such as `Rando::Context`) instead of including the corresponding header if that is the only reason for its inclusion.
+
+Headers must not silently depend on other headers to compile.
+
+Use the `#pragma once` pre-processor directive instead of an inclusion macro.
+
+Do not expose function implementations in headers.
+
+## Original Source
+We want to keep the files from the original source (`src/`) as similar to the [original decomp](https://github.com/zeldaret/oot) ones as possible, as such, the only changes that should be done (aside from removing differences previously introduced) are the addition of `GameInteractor_Should` calls and its associated header.
+
+> [!NOTE]
+> We're not fully up to date with decomp so there might be some differences, contributions to bring our files closer to decomp's are welcome.
