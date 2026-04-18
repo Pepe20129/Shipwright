@@ -286,7 +286,7 @@ void RegionTable_Init_ShadowTemple() {
     }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_MAZE,            true),
-        ENTRANCE(RR_SHADOW_TEMPLE_CHASM_SCARECROW, logic->ReachDistantScarecrow()),
+        ENTRANCE(RR_SHADOW_TEMPLE_CHASM_SCARECROW, logic->ReachDistantScarecrow(false, false)),
         // a precise recoil hover back flip can get across too, but isn't a simple hover boost
         ENTRANCE(RR_SHADOW_TEMPLE_ACROSS_CHASM,    logic->Get(LOGIC_SHADOW_BRIDGE_BEYOND_BOAT_LOWERED)),
     });
@@ -322,7 +322,7 @@ void RegionTable_Init_ShadowTemple() {
     }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_ACROSS_CHASM,    true),
-        ENTRANCE(RR_SHADOW_TEMPLE_CHASM_SCARECROW, logic->IsAdult ? logic->ReachScarecrow() : logic->ReachDistantScarecrow()),
+        ENTRANCE(RR_SHADOW_TEMPLE_CHASM_SCARECROW, logic->IsAdult ? logic->ReachScarecrow(false, true) : logic->ReachDistantScarecrow(false, true)),
     });
 
     areaTable[RR_SHADOW_TEMPLE_MAZE] = Region("Shadow Temple Maze", SCENE_SHADOW_TEMPLE, {}, {}, {
