@@ -1251,12 +1251,12 @@ bool Logic::CanDoISG(bool blockingTextboxAvaliable, bool grabableActorAvaliable)
 }
 
 /// @brief Checks if you can hover
-/// @param againstWall Whether the hover must done against a wall or not
-/// @param persistentDamageSource Whether a persistent damage source to shield exists (e.g. a biri in biri hover)
 /// @param blockingTextboxAvaliable Whether there's a blocking textbox avaliable or not (sign / npc / navi enemy check /
 /// random navi talk outside of dungeons) to interrupt the crouchstab
 /// @param grabableActorAvaliable Whether there's a grabable actor avaliable or not (rock / bush / small crate / cucoo /
 /// silver gauntelts rock) to interrupt the crouchstab
+/// @param againstWall Whether the hover must done against a wall or not
+/// @param persistentDamageSource Whether a persistent damage source to shield exists (e.g. a biri in biri hover)
 /// @return Whether you can hover or not
 /// @note Does not account for the static explosion radius enhancement
 bool Logic::CanHover(bool blockingTextboxAvaliable, bool grabableActorAvaliable, bool againstWall,
