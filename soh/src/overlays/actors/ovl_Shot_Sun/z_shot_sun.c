@@ -62,7 +62,7 @@ void ShotSun_Init(Actor* thisx, PlayState* play) {
     osSyncPrintf("%d ---- オカリナの秘密発生!!!!!!!!!!!!!\n", this->actor.params);
     params = this->actor.params & 0xFF;
     if (params == 0x40 || params == 0x41) {
-        this->unk_1A4 = 0;
+        this->fairySpawnerState = 0;
         this->actor.flags |= ACTOR_FLAG_UPDATE_CULLING_DISABLED;
         this->actor.flags |= ACTOR_FLAG_UPDATE_DURING_OCARINA;
         this->actionFunc = func_80BADF0C;
@@ -103,7 +103,7 @@ void ShotSun_SpawnFairy(ShotSun* this, PlayState* play) {
         //! @bug fairyType may be uninitialized
         if (GameInteractor_Should(VB_SPAWN_SONG_FAIRY, true, this)) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_EN_ELF, this->actor.home.pos.x, this->actor.home.pos.y,
-                        this->actor.home.pos.z, 0, 0, 0, fairyType, true);
+                        this->actor.home.pos.z, 0, 0, 0, fairyType);
         }
 
         Actor_Kill(&this->actor);
@@ -116,7 +116,7 @@ void ShotSun_TriggerFairy(ShotSun* this, PlayState* play) {
         this->timer = 50;
 
         Actor_Spawn(&play->actorCtx, play, ACTOR_DEMO_KANKYO, this->actor.home.pos.x, this->actor.home.pos.y,
-                    this->actor.home.pos.z, 0, 0, 0, 0x11, true);
+                    this->actor.home.pos.z, 0, 0, 0, 0x11);
 
         Sfx_PlaySfxAtPos(&this->actor.projectedPos, NA_SE_EV_TRE_BOX_APPEAR);
     }
@@ -128,29 +128,29 @@ void func_80BADF0C(ShotSun* this, PlayState* play) {
     s32 params = this->actor.params & 0xFF;
 
     if (Math3D_Vec3fDistSq(&this->actor.world.pos, &player->actor.world.pos) > 22500.0f) {
-        this->unk_1A4 = 0;
+        this->fairySpawnerState = 0;
     } else {
-        if (this->unk_1A4 == 0) {
+        if (this->fairySpawnerState == 0) {
             if (!(player->stateFlags2 & PLAYER_STATE2_ATTEMPT_PLAY_FOR_ACTOR)) {
                 player->stateFlags2 |= PLAYER_STATE2_NEAR_OCARINA_ACTOR;
                 return;
             } else {
-                this->unk_1A4 = 1;
+                this->fairySpawnerState = 1;
             }
         }
-        if (this->unk_1A4 == 1) {
+        if (this->fairySpawnerState == 1) {
             func_8010BD58(play, OCARINA_ACTION_FREE_PLAY);
-            this->unk_1A4 = 2;
-        } else if (this->unk_1A4 == 2 && play->msgCtx.ocarinaMode == OCARINA_MODE_04) {
+            this->fairySpawnerState = 2;
+        } else if (this->fairySpawnerState == 2 && play->msgCtx.ocarinaMode == OCARINA_MODE_04) {
             if ((params == 0x40 && play->msgCtx.lastPlayedSong == OCARINA_SONG_SUNS) ||
                 (params == 0x41 && play->msgCtx.lastPlayedSong == OCARINA_SONG_STORMS)) {
                 this->actionFunc = ShotSun_TriggerFairy;
                 OnePointCutscene_Attention(play, &this->actor);
                 this->timer = 0;
             } else {
-                this->unk_1A4 = 0;
+                this->fairySpawnerState = 0;
             }
-            this->unk_1A4 = 0;
+            this->fairySpawnerState = 0;
         }
     }
 }
@@ -166,7 +166,7 @@ void ShotSun_UpdateHyliaSun(ShotSun* this, PlayState* play) {
         Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
         osSyncPrintf(VT_FGCOL(CYAN) "SHOT_SUN HIT!!!!!!!\n" VT_RST);
         if (GameInteractor_Should(VB_SPAWN_FIRE_ARROW, INV_CONTENT(ITEM_ARROW_FIRE) == ITEM_NONE)) {
-            Actor_Spawn(&play->actorCtx, play, ACTOR_ITEM_ETCETERA, 700.0f, -800.0f, 7261.0f, 0, 0, 0, 7, true);
+            Actor_Spawn(&play->actorCtx, play, ACTOR_ITEM_ETCETERA, 700.0f, -800.0f, 7261.0f, 0, 0, 0, 7);
             if (GameInteractor_Should(VB_PLAY_FIRE_ARROW_CS, true)) {
                 play->csCtx.segment = SEGMENTED_TO_VIRTUAL(gLakeHyliaFireArrowsCS);
                 gSaveContext.cutsceneTrigger = 1;

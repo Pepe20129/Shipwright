@@ -6,7 +6,6 @@
 
 #include "z_en_ma1.h"
 #include "objects/object_ma1/object_ma1.h"
-#include "soh/OTRGlobals.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
 #define FLAGS                                                                                  \
@@ -260,13 +259,13 @@ void func_80AA0AF4(EnMa1* this, PlayState* play) {
 void func_80AA0B74(EnMa1* this) {
     if (this->skelAnime.animation == &gMalonChildSingAnim) {
         if (this->interactInfo.talkState == NPC_TALK_STATE_IDLE) {
-            if (this->unk_1E0 != 0) {
-                this->unk_1E0 = 0;
+            if (this->singingDisabled != 0) {
+                this->singingDisabled = 0;
                 func_800F6584(0);
             }
         } else {
-            if (this->unk_1E0 == 0) {
-                this->unk_1E0 = 1;
+            if (this->singingDisabled == 0) {
+                this->singingDisabled = 1;
                 func_800F6584(1);
             }
         }
@@ -330,7 +329,9 @@ void func_80AA0D88(EnMa1* this, PlayState* play) {
     }
 
     if ((play->sceneNum == SCENE_HYRULE_CASTLE) && malonReturnedFromCastle) {
-        Actor_Kill(&this->actor);
+        if (GameInteractor_Should(VB_SEND_MALON_HOME, true)) {
+            Actor_Kill(&this->actor);
+        }
     } else if (!malonReturnedFromCastle || malonTaughtEponasSong) {
         if (this->interactInfo.talkState == NPC_TALK_STATE_ACTION) {
             this->actionFunc = func_80AA0EA0;
