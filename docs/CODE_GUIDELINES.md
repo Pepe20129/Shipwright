@@ -19,6 +19,10 @@ Do not use:
 
 Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
 
+Always use braces (`{}`) for `if` statements, `for` statements, `while` statements and `case` statements.
+
+Make things `const`/`constexpr`/`consteval` when possible.
+
 Prefer:
 - [Post-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Postfix_operators) over [pre-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Prefix_operators).
 - Explicit conversions over implicit conversions.
