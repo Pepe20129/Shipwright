@@ -382,12 +382,56 @@ void HandleRBASceneFlags(uint8_t itemToPutInBottle) {
 
 // padding bytes
 void HandleBAPaddingBytes() {
-    // Reading from padding bytes is not implemented
-    gSaveContext.equips.buttonItems[0] = 0;
+    u8 itemOnCRight = gSaveContext.equips.buttonItems[3];
+    u8 index;
+    switch (itemOnCRight) {
+        case ITEM_MASK_GERUDO:
+            index = 0;
+            break;
+        case ITEM_MASK_TRUTH:
+            index = 1;
+            break;
+        case ITEM_SONG_NOCTURNE:
+            index = 2;
+            break;
+        case ITEM_SONG_PRELUDE:
+            index = 3;
+            break;
+        default:
+            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemOnCRight (%d)", itemOnCRight);
+            assert(false);
+            return;
+    }
+
+    assert(index >= 0 && index <= 3);
+
+    gSaveContext.equips.buttonItems[0] = gSaveContext.ship.rbaPaddingBytes[index];
 }
 
-void HandleRBAPaddingBytes() {
-    // Writing to padding bytes is not implemented
+void HandleRBAPaddingBytes(uint8_t itemToPutInBottle) {
+    u8 index;
+    switch (itemToPutInBottle) {
+        case ITEM_MASK_GERUDO:
+            index = 0;
+            break;
+        case ITEM_MASK_TRUTH:
+            index = 1;
+            break;
+        case ITEM_SONG_NOCTURNE:
+            index = 2;
+            break;
+        case ITEM_SONG_PRELUDE:
+            index = 3;
+            break;
+        default:
+            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemToPutInBottle (%d)", itemToPutInBottle);
+            assert(false);
+            return;
+    }
+
+    assert(index >= 0 && index <= 3);
+
+    gSaveContext.ship.rbaPaddingBytes[index] = itemToPutInBottle;
 }
 
 // Bottle Adventure
@@ -432,7 +476,7 @@ void DoRBA(uint8_t itemToPutInBottle) {
     } else if (itemOnCRight == ITEM_MASK_GORON || itemOnCRight == ITEM_MASK_ZORA) {
         HandleRBAInventoryEquipment(itemToPutInBottle);
     } else if (itemOnCRight == ITEM_MASK_GERUDO || itemOnCRight == ITEM_MASK_TRUTH) {
-        HandleRBAPaddingBytes();
+        HandleRBAPaddingBytes(itemToPutInBottle);
     } else if (itemOnCRight >= ITEM_SOLD_OUT && itemOnCRight <= ITEM_COJIRO) {
         HandleRBAInventoryUpgrades(itemToPutInBottle);
     } else if (itemOnCRight >= ITEM_ODD_MUSHROOM && itemOnCRight <= ITEM_SWORD_BROKEN) {
@@ -446,7 +490,7 @@ void DoRBA(uint8_t itemToPutInBottle) {
     } else if (itemOnCRight == ITEM_SONG_SERENADE || itemOnCRight == ITEM_SONG_REQUIEM) {
         HandleRBAInventoryGSTokens(itemToPutInBottle);
     } else if (itemOnCRight == ITEM_SONG_NOCTURNE || itemOnCRight == ITEM_SONG_PRELUDE) {
-        HandleRBAPaddingBytes();
+        HandleRBAPaddingBytes(itemToPutInBottle);
     } else if (itemOnCRight >= ITEM_SONG_LULLABY) {
         HandleRBASceneFlags(itemToPutInBottle);
     }
