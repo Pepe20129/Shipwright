@@ -2,6 +2,7 @@
 #include "soh/ShipInit.hpp"
 
 extern "C" {
+#include "macros.h"
 #include "variables.h"
 }
 
@@ -545,6 +546,27 @@ void RegisterBottleAdventure() {
 
         auto itemToPutInBottle = static_cast<uint8_t>(va_arg(args, int32_t));
         DoRBA(itemToPutInBottle);
+    });
+
+    static Color_RGB8 sGauntletColors[] = {
+        // values matching OOB reads on N64
+        { 0, 0, 6 },
+        { 2, 89, 24 },
+        { 6, 2, 90 },
+        { 96, 6, 2 },
+    };
+
+    REGISTER_VB_SHOULD(VB_SET_GAUNTLET_COLOR, {
+        Color_RGB8* color = va_arg(args, Color_RGB8*);
+        s32 strengthUpgrade = CUR_UPG_VALUE(UPG_STRENGTH);
+
+        if (strengthUpgrade <= 3) {
+            return;
+        }
+
+        color = &sGauntletColors[strengthUpgrade - 4];
+
+        *should = false;
     });
 }
 
