@@ -398,7 +398,7 @@ void HandleBAPaddingBytes() {
             index = 3;
             break;
         default:
-            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemOnCRight (%d)", itemOnCRight);
+            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemOnCRight ({})", itemOnCRight);
             assert(false);
             return;
     }
@@ -424,7 +424,7 @@ void HandleRBAPaddingBytes(uint8_t itemToPutInBottle) {
             index = 3;
             break;
         default:
-            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemToPutInBottle (%d)", itemToPutInBottle);
+            SPDLOG_WARN("[HandleRBAPaddingBytes] Invalid itemToPutInBottle ({})", itemToPutInBottle);
             assert(false);
             return;
     }
@@ -462,6 +462,9 @@ void DoBA() {
         HandleBAPaddingBytes();
     } else if (itemOnCRight >= ITEM_SONG_LULLABY) {
         HandleBASceneFlags();
+    } else {
+        SPDLOG_WARN("[DoBA] Invalid itemOnCRight ({})", itemOnCRight);
+        assert(false);
     }
 }
 
@@ -470,29 +473,52 @@ void DoRBA(uint8_t itemToPutInBottle) {
     auto itemOnCRight = gSaveContext.equips.buttonItems[3];
 
     if (itemOnCRight >= ITEM_STICK && itemOnCRight <= ITEM_POTION_BLUE) {
-        HandleRBAInventoryItems(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryItems(itemToPutInBottle);
+        }
     } else if (itemOnCRight >= ITEM_FAIRY && itemOnCRight <= ITEM_MASK_BUNNY) {
-        HandleRBAInventoryAmmo(itemToPutInBottle);
+        if (!IS_RANDO || itemOnCRight != ITEM_BEAN) {
+            HandleRBAInventoryAmmo(itemToPutInBottle);
+        }
     } else if (itemOnCRight == ITEM_MASK_GORON || itemOnCRight == ITEM_MASK_ZORA) {
-        HandleRBAInventoryEquipment(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryEquipment(itemToPutInBottle);
+        }
     } else if (itemOnCRight == ITEM_MASK_GERUDO || itemOnCRight == ITEM_MASK_TRUTH) {
         HandleRBAPaddingBytes(itemToPutInBottle);
     } else if (itemOnCRight >= ITEM_SOLD_OUT && itemOnCRight <= ITEM_COJIRO) {
-        HandleRBAInventoryUpgrades(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryUpgrades(itemToPutInBottle);
+        }
     } else if (itemOnCRight >= ITEM_ODD_MUSHROOM && itemOnCRight <= ITEM_SWORD_BROKEN) {
-        HandleRBAInventoryQuestItems(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryQuestItems(itemToPutInBottle);
+        }
     } else if (itemOnCRight >= ITEM_PRESCRIPTION && itemOnCRight <= ITEM_BULLET_BAG_30) {
-        HandleRBAInventoryDungeonItems(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryDungeonItems(itemToPutInBottle);
+        }
     } else if (itemOnCRight >= ITEM_BULLET_BAG_40 && itemOnCRight <= ITEM_SWORD_KNIFE) {
-        HandleRBAInventoryDungeonKeys(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryDungeonKeys(itemToPutInBottle);
+        }
     } else if (itemOnCRight == ITEM_SONG_BOLERO) {
-        HandleRBAInventoryDefenseHearts(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryDefenseHearts(itemToPutInBottle);
+        }
     } else if (itemOnCRight == ITEM_SONG_SERENADE || itemOnCRight == ITEM_SONG_REQUIEM) {
-        HandleRBAInventoryGSTokens(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBAInventoryGSTokens(itemToPutInBottle);
+        }
     } else if (itemOnCRight == ITEM_SONG_NOCTURNE || itemOnCRight == ITEM_SONG_PRELUDE) {
         HandleRBAPaddingBytes(itemToPutInBottle);
     } else if (itemOnCRight >= ITEM_SONG_LULLABY) {
-        HandleRBASceneFlags(itemToPutInBottle);
+        if (!IS_RANDO) {
+            HandleRBASceneFlags(itemToPutInBottle);
+        }
+    } else {
+        SPDLOG_WARN("[DoRBA] Invalid itemOnCRight ({})", itemOnCRight);
+        assert(false);
     }
 }
 
