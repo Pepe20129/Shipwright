@@ -14,6 +14,7 @@
 #include "soh/ShipInit.hpp"
 #include "soh/ObjectExtension/ObjectExtension.h"
 #include "item_category_adj.h"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "macros.h"
@@ -92,11 +93,11 @@ bool LocMatchesQuest(Rando::Location loc) {
 RandomizerCheck GetRandomizerCheckFromFlag(int16_t flagType, int16_t flag) {
     for (auto& loc : Rando::StaticData::GetLocationTable()) {
         if ((loc.GetCollectionCheck().flag == flag &&
-                 ((flagType == FLAG_INF_TABLE && loc.GetCollectionCheck().type == SPOILER_CHK_INF_TABLE) ||
-                  (flagType == FLAG_EVENT_CHECK_INF && loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
-                  (flagType == FLAG_ITEM_GET_INF && loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
-                  (flagType == FLAG_RANDOMIZER_INF && loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
-             (loc.GetActorParams() == flag && flagType == FLAG_GS_TOKEN &&
+                 ((flagType == FLAG_TYPE_INF_TABLE && loc.GetCollectionCheck().type == SPOILER_CHK_INF_TABLE) ||
+                  (flagType == FLAG_TYPE_EVENT_CHECK_INF && loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
+                  (flagType == FLAG_TYPE_ITEM_GET_INF && loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
+                  (flagType == FLAG_TYPE_RANDOMIZER_INF && loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
+             (loc.GetActorParams() == flag && flagType == FLAG_TYPE_GS_TOKEN &&
               loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
             LocMatchesQuest(loc)) {
             return loc.GetRandomizerCheck();
@@ -109,9 +110,9 @@ RandomizerCheck GetRandomizerCheckFromFlag(int16_t flagType, int16_t flag) {
 RandomizerCheck GetRandomizerCheckFromSceneFlag(int16_t sceneNum, int16_t flagType, int16_t flag) {
     for (auto& loc : Rando::StaticData::GetLocationTable()) {
         if (loc.GetCollectionCheck().scene == sceneNum && loc.GetCollectionCheck().flag == flag &&
-            ((flagType == FLAG_SCENE_TREASURE && loc.GetCollectionCheck().type == SPOILER_CHK_CHEST) ||
-             (flagType == FLAG_SCENE_COLLECTIBLE && loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
-             (flagType == FLAG_GS_TOKEN && loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
+            ((flagType == FLAG_TYPE_SCENE_TREASURE && loc.GetCollectionCheck().type == SPOILER_CHK_CHEST) ||
+             (flagType == FLAG_TYPE_SCENE_COLLECTIBLE && loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
+             (flagType == FLAG_TYPE_GS_TOKEN && loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
             LocMatchesQuest(loc)) {
             return loc.GetRandomizerCheck();
         }
@@ -231,7 +232,7 @@ static GetItemEntry randomizerQueuedItemEntry = GET_ITEM_NONE;
 
 void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
     // Consume adult trade items
-    if (RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && flagType == FLAG_RANDOMIZER_INF) {
+    if (RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && flagType == FLAG_TYPE_RANDOMIZER_INF) {
         switch (flag) {
             case RAND_INF_ADULT_TRADES_DMT_TRADE_BROKEN_SWORD:
                 Flags_UnsetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_SWORD_BROKEN);
@@ -244,16 +245,16 @@ void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
         }
     }
 
-    if (flagType == FLAG_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_WOKEN_IN_CASTLE) {
+    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_WOKEN_IN_CASTLE) {
         // remove chicken as this is the only use for it
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_CHICKEN);
     }
 
-    if (flagType == FLAG_EVENT_CHECK_INF && flag == EVENTCHKINF_OBTAINED_ZELDAS_LETTER) {
+    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_OBTAINED_ZELDAS_LETTER) {
         Flags_SetRandomizerInf(RAND_INF_ZELDAS_LETTER);
     }
 
-    if (flagType == FLAG_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_RETURNED_FROM_CASTLE) {
+    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_RETURNED_FROM_CASTLE) {
         if (Flags_GetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG)) {
             Flags_SetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
         }
@@ -263,7 +264,7 @@ void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
     if (rc == RC_UNKNOWN_CHECK)
         return;
 
-    if (flagType == FLAG_GS_TOKEN &&
+    if (flagType == FLAG_TYPE_GS_TOKEN &&
         Rando::Context::GetInstance()->GetOption(RSK_SHUFFLE_TOKENS).Is(RO_TOKENSANITY_OFF)) {
         Rando::Context::GetInstance()->GetItemLocation(rc)->SetCheckStatus(RCSHOW_COLLECTED);
         return;
@@ -279,7 +280,7 @@ void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
 }
 
 void RandomizerOnSceneFlagSetHandler(int16_t sceneNum, int16_t flagType, int16_t flag) {
-    if (flagType == FLAG_SCENE_SWITCH) {
+    if (flagType == FLAG_TYPE_SCENE_SWITCH) {
         auto dungeonInfo = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(sceneNum);
         bool isVanilla = dungeonInfo == nullptr || dungeonInfo->IsVanilla();
 

@@ -644,29 +644,6 @@ typedef struct WeaponInfo {
     /* 0x10 */ Vec3f base;
 } WeaponInfo; // size = 0x1C
 
-// #region SOH [General]
-// Supporting pendingFlag
-// Upstream TODO: Rename these to be more obviously SoH specific
-typedef enum FlagType {
-    FLAG_NONE,
-    FLAG_SCENE_SWITCH,
-    FLAG_SCENE_TREASURE,
-    FLAG_SCENE_CLEAR,
-    FLAG_SCENE_COLLECTIBLE,
-    FLAG_EVENT_CHECK_INF,
-    FLAG_ITEM_GET_INF,
-    FLAG_INF_TABLE,
-    FLAG_EVENT_INF,
-    FLAG_RANDOMIZER_INF,
-    FLAG_GS_TOKEN,
-} FlagType;
-
-typedef struct PendingFlag {
-    /* 0x00 */ s32 flagID;     // which flag to set when Player_SetPendingFlag is called
-    /* 0x04 */ FlagType flagType;  // type of flag to set when Player_SetPendingFlag is called
-} PendingFlag; // size = 0x06
-// #endregion
-
 #define PLAYER_STATE1_LOADING (1 << 0) //Transitioning to a new scene
 #define PLAYER_STATE1_SWINGING_BOTTLE (1 << 1) // Bottle is swung; Bottle is active and can catch things
 #define PLAYER_STATE1_HOOKSHOT_FALLING (1 << 2)
@@ -944,8 +921,7 @@ typedef struct Player {
     /* 0x0A87 */ u8 unk_A87;
     /* 0x0A88 */ Vec3f unk_A88; // previous body part 0 position
     // #region SOH [General]
-    // Upstream TODO: Rename these to be more obviously SoH specific
-    /*        */ PendingFlag pendingFlag;
+    // Upstream TODO: Rename this to be more obviously SoH specific
     /*        */ GetItemEntry getItemEntry;
     // #endregion
     // #region SOH [Enhancements]

@@ -25,6 +25,7 @@
 #include "item_location.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "z64item.h"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "variables.h"
@@ -741,11 +742,11 @@ void CheckTrackerSceneFlagSet(int16_t sceneNum, int16_t flagType, int32_t flag) 
         return;
     }
 
-    if (flagType != FLAG_SCENE_TREASURE && flagType != FLAG_SCENE_COLLECTIBLE) {
+    if (flagType != FLAG_TYPE_SCENE_TREASURE && flagType != FLAG_TYPE_SCENE_COLLECTIBLE) {
         return;
     }
     if (sceneNum == SCENE_GRAVEYARD && flag == 0x19 &&
-        flagType == FLAG_SCENE_COLLECTIBLE) { // Gravedigging tour special case
+        flagType == FLAG_TYPE_SCENE_COLLECTIBLE) { // Gravedigging tour special case
         SetCheckCollected(RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR);
         return;
     }
@@ -753,7 +754,7 @@ void CheckTrackerSceneFlagSet(int16_t sceneNum, int16_t flagType, int32_t flag) 
         if (!IsVisibleInCheckTracker(loc.GetRandomizerCheck())) {
             continue;
         }
-        SpoilerCollectionCheckType checkMatchType = flagType == FLAG_SCENE_TREASURE
+        SpoilerCollectionCheckType checkMatchType = flagType == FLAG_TYPE_SCENE_TREASURE
                                                         ? SpoilerCollectionCheckType::SPOILER_CHK_CHEST
                                                         : SpoilerCollectionCheckType::SPOILER_CHK_COLLECTABLE;
         Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
@@ -771,10 +772,10 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
 
     SpoilerCollectionCheckType checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_NONE;
     switch (flagType) {
-        case FLAG_GS_TOKEN:
+        case FLAG_TYPE_GS_TOKEN:
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_GOLD_SKULLTULA;
             break;
-        case FLAG_EVENT_CHECK_INF:
+        case FLAG_TYPE_EVENT_CHECK_INF:
             if ((flag == EVENTCHKINF_CARPENTERS_FREE(0) || flag == EVENTCHKINF_CARPENTERS_FREE(1) ||
                  flag == EVENTCHKINF_CARPENTERS_FREE(2) || flag == EVENTCHKINF_CARPENTERS_FREE(3)) &&
                 GET_EVENTCHKINF_CARPENTERS_FREE_ALL()) {
@@ -783,7 +784,7 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             }
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_EVENT_CHK_INF;
             break;
-        case FLAG_INF_TABLE:
+        case FLAG_TYPE_INF_TABLE:
             if (flag == INFTABLE_190) {
                 SetCheckCollected(RC_GF_HBA_1000_POINTS);
                 return;
@@ -810,7 +811,7 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
                 }
             }
             break;
-        case FLAG_ITEM_GET_INF:
+        case FLAG_TYPE_ITEM_GET_INF:
             if (!IS_RANDO) {
                 if (flag == ITEMGETINF_OBTAINED_STICK_UPGRADE_FROM_STAGE) {
                     SetCheckCollected(RC_DEKU_THEATER_SKULL_MASK);
@@ -825,7 +826,7 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             }
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_ITEM_GET_INF;
             break;
-        case FLAG_RANDOMIZER_INF:
+        case FLAG_TYPE_RANDOMIZER_INF:
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF;
             break;
     }

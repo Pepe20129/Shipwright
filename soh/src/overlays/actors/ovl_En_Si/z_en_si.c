@@ -7,6 +7,7 @@
 #include "z_en_si.h"
 #include "soh/Enhancements/custom-message/CustomMessageTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Flags.h"
 
 #define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_HOOKSHOT_PULLS_ACTOR)
 
@@ -141,7 +142,7 @@ void func_80AFB950(EnSi* this, PlayState* play) {
         player->actor.freezeTimer = 10;
     } else {
         SET_GS_FLAGS((this->actor.params & 0x1F00) >> 8, this->actor.params & 0xFF);
-        GameInteractor_ExecuteOnFlagSet(FLAG_GS_TOKEN, this->actor.params);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_GS_TOKEN, this->actor.params);
         Actor_Kill(&this->actor);
     }
 }

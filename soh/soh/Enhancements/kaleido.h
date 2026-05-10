@@ -1,6 +1,7 @@
 #ifndef KALEIDO_H
 #define KALEIDO_H
 #include <z64.h>
+#include "soh/Flags.h"
 
 #ifdef __cplusplus
 #include <vector>
@@ -90,7 +91,7 @@ class KaleidoEntryIconFlag final : public KaleidoEntryIcon {
      * @param iconWidth pixel width of the source icon image
      * @param iconHeight pixel height of the source icon image
      * @param iconColor Color to shade the icon with. This may be ignored for certain icon formats
-     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_RANDOMIZER_INF
+     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_TYPE_RANDOMIZER_INF
      * @param flag flag to check for. An integer can be provided but enum values should be preferred
      * @param x x coordinate of the location to draw this relative to the parent matrix's origin.
      * @param y y coordinate of the location to draw this relative to the parent matrix's origin.
@@ -119,7 +120,7 @@ class KaleidoEntryIconCountRequired final : public KaleidoEntryIcon {
      * @param iconWidth pixel width of the source icon image
      * @param iconHeight pixel height of the source icon image
      * @param iconColor Color to shade the icon with. This may be ignored for certain icon formats
-     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_RANDOMIZER_INF
+     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_TYPE_RANDOMIZER_INF
      * @param flag flag to check for. An integer can be provided but enum values should be preferred
      * @param x x coordinate of the location to draw this relative to the parent matrix's origin.
      * @param y y coordinate of the location to draw this relative to the parent matrix's origin.

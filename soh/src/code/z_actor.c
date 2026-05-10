@@ -17,6 +17,7 @@
 
 #include "soh/ActorDB.h"
 #include "soh/OTRGlobals.h"
+#include "soh/Flags.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -681,7 +682,7 @@ void Flags_SetSwitch(PlayState* play, s32 flag) {
     }
     if (previouslyOff) {
         LUSLOG_INFO("Switch Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_SCENE_SWITCH, flag);
+        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_TYPE_SCENE_SWITCH, flag);
     }
 }
 
@@ -697,7 +698,7 @@ void Flags_UnsetSwitch(PlayState* play, s32 flag) {
     }
     if (previouslyOn) {
         LUSLOG_INFO("Switch Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagUnset(play->sceneNum, FLAG_SCENE_SWITCH, flag);
+        GameInteractor_ExecuteOnSceneFlagUnset(play->sceneNum, FLAG_TYPE_SCENE_SWITCH, flag);
     }
 }
 
@@ -749,7 +750,7 @@ void Flags_SetTreasure(PlayState* play, s32 flag) {
     play->actorCtx.flags.chest |= (1 << flag);
     if (previouslyOff) {
         LUSLOG_INFO("Treasure Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_SCENE_TREASURE, flag);
+        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_TYPE_SCENE_TREASURE, flag);
     }
 }
 
@@ -768,7 +769,7 @@ void Flags_SetClear(PlayState* play, s32 flag) {
     play->actorCtx.flags.clear |= (1 << flag);
     if (previouslyOff) {
         LUSLOG_INFO("Clear Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_SCENE_CLEAR, flag);
+        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_TYPE_SCENE_CLEAR, flag);
     }
 }
 
@@ -780,7 +781,7 @@ void Flags_UnsetClear(PlayState* play, s32 flag) {
     play->actorCtx.flags.clear &= ~(1 << flag);
     if (previouslyOn) {
         LUSLOG_INFO("Clear Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagUnset(play->sceneNum, FLAG_SCENE_CLEAR, flag);
+        GameInteractor_ExecuteOnSceneFlagUnset(play->sceneNum, FLAG_TYPE_SCENE_CLEAR, flag);
     }
 }
 
@@ -830,7 +831,7 @@ void Flags_SetCollectible(PlayState* play, s32 flag) {
     }
     if (previouslyOff) {
         LUSLOG_INFO("Collectible Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_SCENE_COLLECTIBLE, flag);
+        GameInteractor_ExecuteOnSceneFlagSet(play->sceneNum, FLAG_TYPE_SCENE_COLLECTIBLE, flag);
     }
 }
 
@@ -4931,7 +4932,7 @@ void Flags_SetEventChkInf(s32 flag) {
     gSaveContext.eventChkInf[flag >> 4] |= (1 << (flag & 0xF));
     if (previouslyOff) {
         LUSLOG_INFO("EventChkInf Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnFlagSet(FLAG_EVENT_CHECK_INF, flag);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_EVENT_CHECK_INF, flag);
     }
 }
 
@@ -4943,7 +4944,7 @@ void Flags_UnsetEventChkInf(s32 flag) {
     gSaveContext.eventChkInf[flag >> 4] &= ~(1 << (flag & 0xF));
     if (previouslyOn) {
         LUSLOG_INFO("EventChkInf Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnFlagUnset(FLAG_EVENT_CHECK_INF, flag);
+        GameInteractor_ExecuteOnFlagUnset(FLAG_TYPE_EVENT_CHECK_INF, flag);
     }
 }
 
@@ -4962,7 +4963,7 @@ void Flags_SetItemGetInf(s32 flag) {
     gSaveContext.itemGetInf[flag >> 4] |= (1 << (flag & 0xF));
     if (previouslyOff) {
         LUSLOG_INFO("ItemGetInf Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnFlagSet(FLAG_ITEM_GET_INF, flag);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_ITEM_GET_INF, flag);
     }
 }
 
@@ -4974,7 +4975,7 @@ void Flags_UnsetItemGetInf(s32 flag) {
     gSaveContext.itemGetInf[flag >> 4] &= ~(1 << (flag & 0xF));
     if (previouslyOn) {
         LUSLOG_INFO("ItemGetInf Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnFlagUnset(FLAG_ITEM_GET_INF, flag);
+        GameInteractor_ExecuteOnFlagUnset(FLAG_TYPE_ITEM_GET_INF, flag);
     }
 }
 
@@ -4993,7 +4994,7 @@ void Flags_SetInfTable(s32 flag) {
     gSaveContext.infTable[flag >> 4] |= (1 << (flag & 0xF));
     if (previouslyOff) {
         LUSLOG_INFO("InfTable Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnFlagSet(FLAG_INF_TABLE, flag);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_INF_TABLE, flag);
     }
 }
 
@@ -5005,7 +5006,7 @@ void Flags_UnsetInfTable(s32 flag) {
     gSaveContext.infTable[flag >> 4] &= ~(1 << (flag & 0xF));
     if (previouslyOn) {
         LUSLOG_INFO("InfTable Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnFlagUnset(FLAG_INF_TABLE, flag);
+        GameInteractor_ExecuteOnFlagUnset(FLAG_TYPE_INF_TABLE, flag);
     }
 }
 
@@ -5024,7 +5025,7 @@ void Flags_SetEventInf(s32 flag) {
     gSaveContext.eventInf[flag >> 4] |= (1 << (flag & 0xF));
     if (previouslyOff) {
         LUSLOG_INFO("EventInf Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnFlagSet(FLAG_EVENT_INF, flag);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_EVENT_INF, flag);
     }
 }
 
@@ -5036,7 +5037,7 @@ void Flags_UnsetEventInf(s32 flag) {
     gSaveContext.eventInf[flag >> 4] &= ~(1 << (flag & 0xF));
     if (previouslyOn) {
         LUSLOG_INFO("EventInf Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnFlagUnset(FLAG_EVENT_INF, flag);
+        GameInteractor_ExecuteOnFlagUnset(FLAG_TYPE_EVENT_INF, flag);
     }
 }
 
@@ -5073,7 +5074,7 @@ void Flags_SetRandomizerInf(RandomizerInf flag) {
     if (previouslyOff) {
         gSaveContext.ship.randomizerInf[flag >> 4] |= (1 << (flag & 0xF));
         LUSLOG_INFO("RandomizerInf Flag Set - %#x", flag);
-        GameInteractor_ExecuteOnFlagSet(FLAG_RANDOMIZER_INF, flag);
+        GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_RANDOMIZER_INF, flag);
     }
 }
 
@@ -5094,7 +5095,7 @@ void Flags_UnsetRandomizerInf(RandomizerInf flag) {
     if (previouslyOn) {
         gSaveContext.ship.randomizerInf[flag >> 4] &= ~(1 << (flag & 0xF));
         LUSLOG_INFO("RandomizerInf Flag Unset - %#x", flag);
-        GameInteractor_ExecuteOnFlagUnset(FLAG_RANDOMIZER_INF, flag);
+        GameInteractor_ExecuteOnFlagUnset(FLAG_TYPE_RANDOMIZER_INF, flag);
     }
 }
 

@@ -308,13 +308,13 @@ typedef union {
 #define DEFINE_SCENE(_0, _1, enum, _3, _4, _5) enum,
 
 #ifdef __cplusplus
-enum SceneID : int {
+typedef enum SceneID : int {
 #else
-enum SceneID {
+typedef enum SceneID {
 #endif
     #include "tables/scene_table.h"
     /* 0x6E */ SCENE_ID_MAX
-};
+} SceneID;
 
 // this define exists to preserve shiftability for an unused scene that is
 // listed in the entrance table

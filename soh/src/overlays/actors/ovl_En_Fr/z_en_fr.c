@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ResourceManagerHelpers.h"
+#include "soh/Flags.h"
 
 #define FLAGS                                                                                  \
     (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED | \
@@ -975,7 +976,7 @@ void EnFr_SetReward(EnFr* this, PlayState* play) {
     if ((songIndex >= FROG_ZL) && (songIndex <= FROG_SOT)) {
         if (!(gSaveContext.eventChkInf[13] & sSongIndex[songIndex])) {
             gSaveContext.eventChkInf[13] |= sSongIndex[songIndex];
-            GameInteractor_ExecuteOnFlagSet(FLAG_EVENT_CHECK_INF,
+            GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_EVENT_CHECK_INF,
                                             (EVENTCHKINF_SONGS_FOR_FROGS_INDEX << 4) + sSongIndexShift[songIndex]);
             this->reward = GI_RUPEE_PURPLE;
         } else {
@@ -984,7 +985,7 @@ void EnFr_SetReward(EnFr* this, PlayState* play) {
     } else if (songIndex == FROG_STORMS) {
         if (!(gSaveContext.eventChkInf[13] & sSongIndex[songIndex])) {
             gSaveContext.eventChkInf[13] |= sSongIndex[songIndex];
-            GameInteractor_ExecuteOnFlagSet(FLAG_EVENT_CHECK_INF,
+            GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_EVENT_CHECK_INF,
                                             (EVENTCHKINF_SONGS_FOR_FROGS_INDEX << 4) + sSongIndexShift[songIndex]);
             this->reward = GI_HEART_PIECE;
         } else {
@@ -993,7 +994,7 @@ void EnFr_SetReward(EnFr* this, PlayState* play) {
     } else if (songIndex == FROG_CHOIR_SONG) {
         if (!(gSaveContext.eventChkInf[13] & sSongIndex[songIndex])) {
             gSaveContext.eventChkInf[13] |= sSongIndex[songIndex];
-            GameInteractor_ExecuteOnFlagSet(FLAG_EVENT_CHECK_INF,
+            GameInteractor_ExecuteOnFlagSet(FLAG_TYPE_EVENT_CHECK_INF,
                                             (EVENTCHKINF_SONGS_FOR_FROGS_INDEX << 4) + sSongIndexShift[songIndex]);
             this->reward = GI_HEART_PIECE;
         } else {

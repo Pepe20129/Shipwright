@@ -3,6 +3,7 @@
 #include <libultraship/libultraship.h>
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/OTRGlobals.h"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "functions.h"
@@ -48,7 +49,7 @@ void Anchor::HandlePacket_UnsetFlag(nlohmann::json payload) {
         effect->Apply();
 
         // Special case: If an adult trade item flag is unset, replace the item if the player has it equipped
-        if (flagType == FLAG_RANDOMIZER_INF &&
+        if (flagType == FLAG_TYPE_RANDOMIZER_INF &&
             (flag >= RAND_INF_ADULT_TRADES_HAS_POCKET_EGG && flag <= RAND_INF_ADULT_TRADES_HAS_CLAIM_CHECK)) {
             u16 itemToReplace = ITEM_POCKET_EGG;
             switch (flag) {
@@ -90,13 +91,13 @@ void Anchor::HandlePacket_UnsetFlag(nlohmann::json payload) {
         }
     } else {
         // Special case: Ignore water temple water level flags, stored at 0x1C, 0x1D, 0x1E.
-        if (sceneNum == SCENE_WATER_TEMPLE && flagType == FLAG_SCENE_SWITCH &&
+        if (sceneNum == SCENE_WATER_TEMPLE && flagType == FLAG_TYPE_SCENE_SWITCH &&
             (flag == 0x1C || flag == 0x1D || flag == 0x1E)) {
             return;
         }
 
         // Special case: Ignore forest temple elevator flag, stored at 0x1B.
-        if (sceneNum == SCENE_FOREST_TEMPLE && flagType == FLAG_SCENE_SWITCH && flag == 0x1B) {
+        if (sceneNum == SCENE_FOREST_TEMPLE && flagType == FLAG_TYPE_SCENE_SWITCH && flag == 0x1B) {
             return;
         }
 
