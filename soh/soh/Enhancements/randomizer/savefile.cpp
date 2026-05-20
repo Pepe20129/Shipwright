@@ -3,6 +3,7 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/randomizer/logic.h"
+#include "soh/Flags.h"
 
 extern "C" {
 #include <z64.h>
@@ -252,16 +253,16 @@ extern "C" void Randomizer_InitSaveFile() {
     SetStartingItems();
 
     // Set Cutscene flags and texts to skip them.
-    Flags_SetEventChkInf(EVENTCHKINF_FIRST_SPOKE_TO_MIDO);
-    Flags_SetInfTable(INFTABLE_SPOKE_TO_KAEPORA_IN_LAKE_HYLIA);
-    Flags_SetEventChkInf(EVENTCHKINF_SHEIK_SPAWNED_AT_MASTER_SWORD_PEDESTAL);
-    Flags_SetEventChkInf(EVENTCHKINF_RENTED_HORSE_FROM_INGO);
-    Flags_SetInfTable(INFTABLE_SPOKE_TO_POE_COLLECTOR_IN_RUINED_MARKET);
-    Flags_SetEventChkInf(EVENTCHKINF_WATCHED_GANONS_CASTLE_COLLAPSE_CAUGHT_BY_GERUDO);
+    Flags::EventCheckInf::FIRST_SPOKE_TO_MIDO.Set();
+    Flags::InfTable::SPOKE_TO_KAEPORA_IN_LAKE_HYLIA.Set();
+    Flags::EventCheckInf::SHEIK_SPAWNED_AT_MASTER_SWORD_PEDESTAL.Set();
+    Flags::EventCheckInf::RENTED_HORSE_FROM_INGO.Set();
+    Flags::InfTable::SPOKE_TO_POE_COLLECTOR_IN_RUINED_MARKET.Set();
+    Flags::EventCheckInf::WATCHED_GANONS_CASTLE_COLLAPSE_CAUGHT_BY_GERUDO.Set();
 
     if (Randomizer_GetSettingValue(RSK_FOREST) == RO_CLOSED_FOREST_OFF) {
-        Flags_SetEventChkInf(EVENTCHKINF_SHOWED_MIDO_SWORD_SHIELD);
-        Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_MIDO_AFTER_DEKU_TREES_DEATH);
+        Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD.Set();
+        Flags::EventCheckInf::SPOKE_TO_MIDO_AFTER_DEKU_TREES_DEATH.Set();
     }
 
     // Go away Ruto (Water Temple first cutscene).
@@ -327,7 +328,7 @@ extern "C" void Randomizer_InitSaveFile() {
     }
 
     if (Randomizer_GetSettingValue(RSK_SHUFFLE_SPEAK) == RO_GENERIC_OFF) {
-        Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_NABOORU_IN_SPIRIT_TEMPLE);
+        Flags::EventCheckInf::SPOKE_TO_NABOORU_IN_SPIRIT_TEMPLE.Set();
         Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU);
         Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO);
         Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_GORON);
@@ -353,9 +354,9 @@ extern "C" void Randomizer_InitSaveFile() {
 
     // Remove One Time Scrubs with Scrubsanity off
     if (Randomizer_GetSettingValue(RSK_SHUFFLE_SCRUBS) == RO_SCRUBS_OFF) {
-        Flags_SetItemGetInf(ITEMGETINF_DEKU_SCRUB_HEART_PIECE);
-        Flags_SetInfTable(INFTABLE_BOUGHT_STICK_UPGRADE);
-        Flags_SetInfTable(INFTABLE_BOUGHT_NUT_UPGRADE);
+        Flags::ItemGetInf::DEKU_SCRUB_HEART_PIECE.Set();
+        Flags::InfTable::BOUGHT_STICK_UPGRADE.Set();
+        Flags::InfTable::BOUGHT_NUT_UPGRADE.Set();
     }
 
     int startingAge = OTRGlobals::Instance->gRandoContext->GetOption(RSK_SELECTED_STARTING_AGE).Get();
@@ -396,18 +397,18 @@ extern "C" void Randomizer_InitSaveFile() {
         StartingItemGive(getItemEntry, RC_HC_MALON_EGG);
 
         // Malon/Talon back at ranch.
-        Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_POCKET_EGG);
+        Flags::EventCheckInf::OBTAINED_POCKET_EGG.Set();
         Flags_SetRandomizerInf(RAND_INF_WEIRD_EGG);
-        Flags_SetEventChkInf(EVENTCHKINF_TALON_WOKEN_IN_CASTLE);
-        Flags_SetEventChkInf(EVENTCHKINF_TALON_RETURNED_FROM_CASTLE);
+        Flags::EventCheckInf::TALON_WOKEN_IN_CASTLE.Set();
+        Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE.Set();
 
         // Set "Got Zelda's Letter" flag. Also ensures Saria is back at SFM.
-        Flags_SetEventChkInf(EVENTCHKINF_OBTAINED_ZELDAS_LETTER);
+        Flags::EventCheckInf::OBTAINED_ZELDAS_LETTER.Set();
         Flags_SetRandomizerInf(RAND_INF_ZELDAS_LETTER);
         Flags_SetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_LETTER_ZELDA);
 
         // Got item from Impa.
-        Flags_SetEventChkInf(EVENTCHKINF_LEARNED_ZELDAS_LULLABY);
+        Flags::EventCheckInf::LEARNED_ZELDAS_LULLABY.Set();
 
         gSaveContext.sceneFlags[SCENE_HYRULE_CASTLE].swch |= (1 << 0x4); // Move milk crates in Hyrule Castle to moat.
 
@@ -425,7 +426,7 @@ extern "C" void Randomizer_InitSaveFile() {
     HIGH_SCORE(HS_POE_POINTS) = 1000 - (100 * Randomizer_GetSettingValue(RSK_BIG_POE_COUNT));
 
     if (Randomizer_GetSettingValue(RSK_SKIP_EPONA_RACE)) {
-        Flags_SetEventChkInf(EVENTCHKINF_EPONA_OBTAINED);
+        Flags::EventCheckInf::EPONA_OBTAINED.Set();
     }
 
     // Open lowest Vanilla Fire Temple locked door (to prevent key logic lockouts).
@@ -447,20 +448,20 @@ extern "C" void Randomizer_InitSaveFile() {
     int doorOfTime = Randomizer_GetSettingValue(RSK_DOOR_OF_TIME);
     switch (doorOfTime) {
         case RO_DOOROFTIME_OPEN:
-            Flags_SetEventChkInf(EVENTCHKINF_OPENED_THE_DOOR_OF_TIME);
+            Flags::EventCheckInf::OPENED_THE_DOOR_OF_TIME.Set();
             break;
     }
 
     if (Randomizer_GetSettingValue(RSK_KAK_GATE) == RO_KAK_GATE_OPEN) {
-        Flags_SetInfTable(INFTABLE_SHOWED_ZELDAS_LETTER_TO_GATE_GUARD);
+        Flags::InfTable::SHOWED_ZELDAS_LETTER_TO_GATE_GUARD.Set();
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_LETTER_ZELDA);
     }
 
     if (Randomizer_GetSettingValue(RSK_GERUDO_FORTRESS) == RO_GF_CARPENTERS_FAST ||
         Randomizer_GetSettingValue(RSK_GERUDO_FORTRESS) == RO_GF_CARPENTERS_FREE) {
-        Flags_SetEventChkInf(EVENTCHKINF_CARPENTERS_FREE(1));
-        Flags_SetEventChkInf(EVENTCHKINF_CARPENTERS_FREE(2));
-        Flags_SetEventChkInf(EVENTCHKINF_CARPENTERS_FREE(3));
+        Flags::EventCheckInf::CARPENTER_FREE_1.Set();
+        Flags::EventCheckInf::CARPENTER_FREE_2.Set();
+        Flags::EventCheckInf::CARPENTER_FREE_3.Set();
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x02); // heard yells and unlocked doors
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x03);
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x04);
@@ -476,7 +477,7 @@ extern "C" void Randomizer_InitSaveFile() {
     }
 
     if (Randomizer_GetSettingValue(RSK_GERUDO_FORTRESS) == RO_GF_CARPENTERS_FREE) {
-        Flags_SetEventChkInf(EVENTCHKINF_CARPENTERS_FREE(0));
+        Flags::EventCheckInf::CARPENTER_FREE_0.Set();
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x01); // heard yell and unlocked door
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x05);
         gSaveContext.sceneFlags[SCENE_THIEVES_HIDEOUT].swch |= (1 << 0x11);
@@ -489,8 +490,8 @@ extern "C" void Randomizer_InitSaveFile() {
 
     // complete mask quest
     if (Randomizer_GetSettingValue(RSK_MASK_QUEST) == RO_MASK_QUEST_COMPLETED) {
-        Flags_SetInfTable(INFTABLE_GATE_GUARD_PUT_ON_KEATON_MASK);
-        Flags_SetEventChkInf(EVENTCHKINF_PAID_BACK_BUNNY_HOOD_FEE);
+        Flags::InfTable::GATE_GUARD_PUT_ON_KEATON_MASK.Set();
+        Flags::EventCheckInf::PAID_BACK_BUNNY_HOOD_FEE.Set();
 
         Flags_SetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_MASK_KEATON);
         Flags_SetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);

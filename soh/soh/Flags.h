@@ -33,21 +33,34 @@ typedef struct Flag {
     SceneID scene;
 
 #ifdef __cplusplus
-    static Flag FromEventCheckInf(s32 eventCheckInf);
-    static Flag FromItemGetInf(s32 itemGetInf);
-    static Flag FromInfTable(s32 infTable);
-    static Flag FromEventInf(s32 eventInf);
-    static Flag FromRandomizerInf(RandomizerInf randInf);
-    static Flag FromGSToken(s32 gsToken);
-    static Flag FromRawParts(FlagType flagType, s32 flagID, SceneID scene);
+    const static Flag FromEventCheckInf(s32 eventCheckInf);
+    const static Flag FromItemGetInf(s32 itemGetInf);
+    const static Flag FromInfTable(s32 infTable);
+    const static Flag FromEventInf(s32 eventInf);
+    const static Flag FromRandomizerInf(RandomizerInf randInf);
+    const static Flag FromGSToken(s32 gsToken);
+    const static Flag FromRawParts(FlagType flagType, s32 flagID, SceneID scene);
 
-    bool Get();
-    void Set();
-    void Unset();
+    bool Get() const;
+    void Set() const;
+    void Unset() const;
+
+    explicit operator bool() const {
+        return Get();
+    }
+
+    bool operator!() const {
+        return !static_cast<bool>(*this);
+    }
 #endif
 } Flag;
 
-#ifndef __cplusplus
+#ifdef __cplusplus
+#include "soh/Flags/EventCheckInf.h"
+#include "soh/Flags/EventInf.h"
+#include "soh/Flags/InfTable.h"
+#include "soh/Flags/ItemGetInf.h"
+#else
 Flag Flag_None();
 Flag Flag_FromEventCheckInf(s32 eventCheckInf);
 Flag Flag_FromItemGetInf(s32 itemGetInf);

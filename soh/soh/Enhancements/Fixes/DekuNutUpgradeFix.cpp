@@ -1,5 +1,6 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "functions.h"
@@ -20,12 +21,12 @@ static void DekuNutUpgradeFixAtForestStage(bool* should) {
     }
 
     s32 expectedNutUpgrades = (INV_CONTENT(ITEM_NUT) == ITEM_NUT ? 1 : 0) +
-                              (Flags_GetInfTable(INFTABLE_BOUGHT_NUT_UPGRADE) ? 1 : 0) +
-                              (Flags_GetItemGetInf(ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE) ? 1 : 0);
+                              (Flags::InfTable::BOUGHT_NUT_UPGRADE ? 1 : 0) +
+                              (Flags::ItemGetInf::OBTAINED_NUT_UPGRADE_FROM_STAGE ? 1 : 0);
     s32 actualNutUpgrades = CUR_UPG_VALUE(UPG_NUTS);
 
     if (expectedNutUpgrades != actualNutUpgrades) {
-        Flags_UnsetItemGetInf(ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE);
+        Flags::ItemGetInf::OBTAINED_NUT_UPGRADE_FROM_STAGE.Unset();
         *should = true;
     }
 }

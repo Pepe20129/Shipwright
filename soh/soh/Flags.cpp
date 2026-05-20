@@ -12,27 +12,27 @@ extern PlayState* gPlayState;
 
 #pragma region Factory Functions
 
-Flag Flag::FromEventCheckInf(s32 eventCheckInf) {
+const Flag Flag::FromEventCheckInf(s32 eventCheckInf) {
     return Flag::FromRawParts(FLAG_TYPE_EVENT_CHECK_INF, eventCheckInf, SCENE_ID_MAX);
 }
 
-Flag Flag::FromItemGetInf(s32 itemGetInf) {
+const Flag Flag::FromItemGetInf(s32 itemGetInf) {
     return Flag::FromRawParts(FLAG_TYPE_ITEM_GET_INF, itemGetInf, SCENE_ID_MAX);
 }
 
-Flag Flag::FromInfTable(s32 infTable) {
+const Flag Flag::FromInfTable(s32 infTable) {
     return Flag::FromRawParts(FLAG_TYPE_INF_TABLE, infTable, SCENE_ID_MAX);
 }
 
-Flag Flag::FromEventInf(s32 eventInf) {
+const Flag Flag::FromEventInf(s32 eventInf) {
     return Flag::FromRawParts(FLAG_TYPE_EVENT_INF, eventInf, SCENE_ID_MAX);
 }
 
-Flag Flag::FromRandomizerInf(RandomizerInf randInf) {
+const Flag Flag::FromRandomizerInf(RandomizerInf randInf) {
     return Flag::FromRawParts(FLAG_TYPE_RANDOMIZER_INF, static_cast<s32>(randInf), SCENE_ID_MAX);
 }
 
-Flag Flag::FromGSToken(s32 gsToken) {
+const Flag Flag::FromGSToken(s32 gsToken) {
     return Flag::FromRawParts(FLAG_TYPE_GS_TOKEN, gsToken, SCENE_ID_MAX);
 }
 
@@ -41,7 +41,12 @@ Flag Flag::FromGSToken(s32 gsToken) {
 /// @param id The ID of the flag
 /// @param scene The scene of the flag
 /// @return The created Flag
-Flag Flag::FromRawParts(FlagType type, s32 id, SceneID scene) {
+const Flag Flag::FromRawParts(FlagType type, s32 id, SceneID scene) {
+    if (type >= FLAG_TYPE_MAX) {
+        SPDLOG_ERROR("[Flag::FromRawParts] Invalid type ({})", static_cast<s32>(type));
+        assert(false);
+    }
+
     return Flag { .type = type, .id = id, .scene = scene };
 }
 
@@ -49,7 +54,7 @@ Flag Flag::FromRawParts(FlagType type, s32 id, SceneID scene) {
 
 /// @brief Gets the current value of this Flag
 /// @return The current value of this Flag
-bool Flag::Get() {
+bool Flag::Get() const {
     switch (this->type) {
         case FLAG_TYPE_NONE:
             return false;
@@ -96,7 +101,7 @@ bool Flag::Get() {
 /// @brief Sets this Flag to `true`
 /// If this Flag is a scene specific flag and its scene is the current scene,
 /// the actor context will also be updated
-void Flag::Set() {
+void Flag::Set() const {
     switch (this->type) {
         case FLAG_TYPE_NONE:
             return;
@@ -119,7 +124,7 @@ void Flag::Set() {
             if (!IS_RANDO) {
                 SPDLOG_ERROR("[Flag::Set] Tried to set randomizerInf flag ({}) outside of rando", this->id);
                 assert(false);
-                return false;
+                return;
             }
             */
             Flags_SetRandomizerInf(static_cast<RandomizerInf>(this->id));
@@ -183,7 +188,7 @@ void Flag::Set() {
 /// @brief Sets this Flag to `false`
 /// If this Flag is a scene specific flag and its scene is the current scene,
 /// the actor context will also be updated
-void Flag::Unset() {
+void Flag::Unset() const {
     switch (this->type) {
         case FLAG_TYPE_NONE:
             return;
@@ -206,7 +211,7 @@ void Flag::Unset() {
             if (!IS_RANDO) {
                 SPDLOG_ERROR("[Flag::Unset] Tried to unset randomizerInf flag ({}) outside of rando", this->id);
                 assert(false);
-                return false;
+                return;
             }
             */
             Flags_UnsetRandomizerInf(static_cast<RandomizerInf>(this->id));

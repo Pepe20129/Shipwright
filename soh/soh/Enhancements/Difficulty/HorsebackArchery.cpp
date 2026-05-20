@@ -1,5 +1,6 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "functions.h"
@@ -17,7 +18,7 @@ static void RegisterHorsebackArcheryEnhancements() {
                        EnGe1* enGe1 = va_arg(args, EnGe1*);
                        PlayState* play = va_arg(args, PlayState*);
                        Rupees_ChangeBy(-20);
-                       Flags_SetEventChkInf(EVENTCHKINF_PLAYED_HORSEBACK_ARCHERY);
+                       Flags::EventCheckInf::PLAYED_HORSEBACK_ARCHERY.Set();
                        gSaveContext.minigameScore = 1500;
                        Message_CloseTextbox(play);
                        enGe1->actionFunc = EnGe1_TalkAfterGame_Archery;

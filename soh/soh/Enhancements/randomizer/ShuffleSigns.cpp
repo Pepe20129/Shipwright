@@ -2,6 +2,7 @@
 #include "soh/ObjectExtension/ObjectExtension.h"
 #include "item_category_adj.h"
 #include "particle_cmc.h"
+#include "soh/Flags.h"
 extern "C" {
 extern PlayState* gPlayState;
 #include "overlays/actors/ovl_En_Kanban/z_en_kanban.h"
@@ -82,7 +83,7 @@ void Sign_RandomizerSpawnCollectible(Actor* actor) {
 
 void Sign_RoyalTombSpawnCollectible(int16_t flagType, int16_t flag) {
     if (!Flags_GetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE) &&
-        Flags_GetEventChkInf(EVENTCHKINF_DESTROYED_ROYAL_FAMILY_TOMB)) {
+        Flags::EventCheckInf::DESTROYED_ROYAL_FAMILY_TOMB) {
         Flags_SetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE);
     }
 }

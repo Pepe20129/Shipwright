@@ -6,6 +6,7 @@
 #include "Enhancements/randomizer/dungeon.h"
 #include "Enhancements/randomizer/trial.h"
 #include "soh/util.h"
+#include "soh/Flags.h"
 #include "Enhancements/randomizer/hint.h"
 #include "Enhancements/randomizer/item.h"
 #include "ResourceManagerHelpers.h"
@@ -1046,41 +1047,41 @@ void SaveManager::InitFileMaxed() {
     for (int i = 0; i < 0xF; i += 1) {
         Flags_SetInfTable(0x1A0 + i);
     }
-    Flags_SetInfTable(INFTABLE_ENTERED_HYRULE_CASTLE);
+    Flags::InfTable::ENTERED_HYRULE_CASTLE.Set();
 
-    Flags_SetEventChkInf(EVENTCHKINF_OPENED_THE_DOOR_OF_TIME);
-    Flags_SetEventChkInf(EVENTCHKINF_EPONA_OBTAINED);
-    Flags_SetEventChkInf(EVENTCHKINF_KING_ZORA_MOVED);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_NABOORU_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_GOHMA_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_KING_DODONGO_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_PHANTOM_GANON_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_VOLVAGIA_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_MORPHA_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_TWINROVA_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_BARINA_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_BONGO_BONGO_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_BEGAN_GANONDORF_BATTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_MASTER_SWORD_CHAMBER);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_HYRULE_FIELD);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DEATH_MOUNTAIN_TRAIL);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_KAKARIKO_VILLAGE);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_ZORAS_DOMAIN);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_HYRULE_CASTLE);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GORON_CITY);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_TEMPLE_OF_TIME);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DEKU_TREE);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DODONGOS_CAVERN);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_LAKE_HYLIA);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GERUDO_VALLEY);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GERUDOS_FORTRESS);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_LON_LON_RANCH);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_JABU_JABUS_BELLY);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GRAVEYARD);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_ZORAS_FOUNTAIN);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DESERT_COLOSSUS);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_DEATH_MOUNTAIN_CRATER);
-    Flags_SetEventChkInf(EVENTCHKINF_ENTERED_GANONS_CASTLE_EXTERIOR);
+    Flags::EventCheckInf::OPENED_THE_DOOR_OF_TIME.Set();
+    Flags::EventCheckInf::EPONA_OBTAINED.Set();
+    Flags::EventCheckInf::KING_ZORA_MOVED.Set();
+    Flags::EventCheckInf::BEGAN_NABOORU_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_GOHMA_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_KING_DODONGO_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_PHANTOM_GANON_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_VOLVAGIA_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_MORPHA_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_TWINROVA_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_BARINA_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_BONGO_BONGO_BATTLE.Set();
+    Flags::EventCheckInf::BEGAN_GANONDORF_BATTLE.Set();
+    Flags::EventCheckInf::ENTERED_MASTER_SWORD_CHAMBER.Set();
+    Flags::EventCheckInf::ENTERED_HYRULE_FIELD.Set();
+    Flags::EventCheckInf::ENTERED_DEATH_MOUNTAIN_TRAIL.Set();
+    Flags::EventCheckInf::ENTERED_KAKARIKO_VILLAGE.Set();
+    Flags::EventCheckInf::ENTERED_ZORAS_DOMAIN.Set();
+    Flags::EventCheckInf::ENTERED_HYRULE_CASTLE.Set();
+    Flags::EventCheckInf::ENTERED_GORON_CITY.Set();
+    Flags::EventCheckInf::ENTERED_TEMPLE_OF_TIME.Set();
+    Flags::EventCheckInf::ENTERED_DEKU_TREE.Set();
+    Flags::EventCheckInf::ENTERED_DODONGOS_CAVERN.Set();
+    Flags::EventCheckInf::ENTERED_LAKE_HYLIA.Set();
+    Flags::EventCheckInf::ENTERED_GERUDO_VALLEY.Set();
+    Flags::EventCheckInf::ENTERED_GERUDOS_FORTRESS.Set();
+    Flags::EventCheckInf::ENTERED_LON_LON_RANCH.Set();
+    Flags::EventCheckInf::ENTERED_JABU_JABUS_BELLY.Set();
+    Flags::EventCheckInf::ENTERED_GRAVEYARD.Set();
+    Flags::EventCheckInf::ENTERED_ZORAS_FOUNTAIN.Set();
+    Flags::EventCheckInf::ENTERED_DESERT_COLOSSUS.Set();
+    Flags::EventCheckInf::ENTERED_DEATH_MOUNTAIN_CRATER.Set();
+    Flags::EventCheckInf::ENTERED_GANONS_CASTLE_EXTERIOR.Set();
 
     if (LINK_AGE_IN_YEARS == YEARS_CHILD) {
         gSaveContext.equips.buttonItems[0] = ITEM_SWORD_KOKIRI;
