@@ -91,19 +91,17 @@ class KaleidoEntryIconFlag final : public KaleidoEntryIcon {
      * @param iconWidth pixel width of the source icon image
      * @param iconHeight pixel height of the source icon image
      * @param iconColor Color to shade the icon with. This may be ignored for certain icon formats
-     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_TYPE_RANDOMIZER_INF
-     * @param flag flag to check for. An integer can be provided but enum values should be preferred
+     * @param flag flag to check for.
      * @param x x coordinate of the location to draw this relative to the parent matrix's origin.
      * @param y y coordinate of the location to draw this relative to the parent matrix's origin.
      * @param mName name to draw to the right of the icon. Leave blank to omit.
      */
     KaleidoEntryIconFlag(const char* iconResourceName, int iconFormat, int iconSize, int iconWidth, int iconHeight,
-                         Color_RGBA8 iconColor, FlagType flagType, int flag, std::string name = "");
+                         Color_RGBA8 iconColor, Flag flag, std::string name = "");
     void Update(PlayState* play) override;
 
   private:
-    FlagType mFlagType;
-    int mFlag;
+    Flag mFlag;
 };
 
 /**
@@ -120,10 +118,6 @@ class KaleidoEntryIconCountRequired final : public KaleidoEntryIcon {
      * @param iconWidth pixel width of the source icon image
      * @param iconHeight pixel height of the source icon image
      * @param iconColor Color to shade the icon with. This may be ignored for certain icon formats
-     * @param flagType FlagType of the flag to check for (i.e. FlagType::FLAG_TYPE_RANDOMIZER_INF
-     * @param flag flag to check for. An integer can be provided but enum values should be preferred
-     * @param x x coordinate of the location to draw this relative to the parent matrix's origin.
-     * @param y y coordinate of the location to draw this relative to the parent matrix's origin.
      * @param watch a pointer to an integer value to watch. Update will check this value to update
      * a local count variable.
      * @param required The amount of this collectible required to beat the seed. Set to 0 to not render.
