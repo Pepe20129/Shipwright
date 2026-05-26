@@ -272,6 +272,10 @@ void Flag::Unset() const {
     }
 }
 
+bool Flag::IsSceneFlag() const {
+    return this->type == FLAG_TYPE_SCENE_SWITCH || this->type == FLAG_TYPE_SCENE_TREASURE || this->type == FLAG_TYPE_SCENE_CLEAR || this->type == FLAG_TYPE_SCENE_COLLECTIBLE;
+}
+
 #pragma region C Compat
 
 /// @brief Creates an empty Flag. For use in C code, do not use this from C++ code (instead use `std::optional`)

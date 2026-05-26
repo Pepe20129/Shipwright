@@ -45,6 +45,8 @@ typedef struct Flag {
     void Set() const;
     void Unset() const;
 
+    bool IsSceneFlag() const;
+
     explicit operator bool() const {
         return Get();
     }
@@ -56,6 +58,14 @@ typedef struct Flag {
 } Flag;
 
 #ifdef __cplusplus
+constexpr bool operator==(const Flag& lhs, const Flag& rhs) {
+    return lhs.type == rhs.type && lhs.id == rhs.id && lhs.scene == rhs.scene;
+}
+
+constexpr bool operator!=(const Flag& lhs, const Flag& rhs) {
+    return !(lhs == rhs);
+}
+
 #include "soh/Flags/EventCheckInf.h"
 #include "soh/Flags/EventInf.h"
 #include "soh/Flags/InfTable.h"
