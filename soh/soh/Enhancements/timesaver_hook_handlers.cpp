@@ -1231,16 +1231,16 @@ extern void TimeSaverQueueItem(RandomizerGet randoGet) {
     vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(randoGet).GetGIEntry_Copy();
 }
 
-void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
+void TimeSaverOnFlagSetHandler(Flag flag) {
     // Do nothing when in a boss rush
     if (IS_BOSS_RUSH) {
         return;
     }
 
     if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), 0)) {
-        switch (flagType) {
+        switch (flag.type) {
             case FLAG_TYPE_EVENT_CHECK_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case EVENTCHKINF_SPOKE_TO_SARIA_ON_BRIDGE:
                         vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(RG_FAIRY_OCARINA).GetGIEntry_Copy();
                         break;
@@ -1271,7 +1271,7 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
                 }
                 break;
             case FLAG_TYPE_RANDOMIZER_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case RAND_INF_DUNGEONS_DONE_SHADOW_TEMPLE:
                         vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(RG_SHADOW_MEDALLION).GetGIEntry_Copy();
                         break;
@@ -1284,9 +1284,9 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
     }
 
     if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), 0)) {
-        switch (flagType) {
+        switch (flag.type) {
             case FLAG_TYPE_RANDOMIZER_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case RAND_INF_ZF_GREAT_FAIRY_REWARD:
                         vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(RG_FARORES_WIND).GetGIEntry_Copy();
                         break;
@@ -1308,7 +1308,7 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
                 }
                 break;
             case FLAG_TYPE_ITEM_GET_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case ITEMGETINF_OBTAINED_STICK_UPGRADE_FROM_STAGE: {
                         TimeSaverQueueItem(CUR_UPG_VALUE(UPG_STICKS) == 2 ? RG_DEKU_STICK_CAPACITY_30
                                                                           : RG_DEKU_STICK_CAPACITY_20);
@@ -1325,9 +1325,9 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
     }
 
     if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.LearnSong"), 0)) {
-        switch (flagType) {
+        switch (flag.type) {
             case FLAG_TYPE_EVENT_CHECK_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case EVENTCHKINF_LEARNED_ZELDAS_LULLABY:
                         vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(RG_ZELDAS_LULLABY).GetGIEntry_Copy();
                         break;
@@ -1367,7 +1367,7 @@ void TimeSaverOnFlagSetHandler(int16_t flagType, int16_t flag) {
                 }
                 break;
             case FLAG_TYPE_RANDOMIZER_INF:
-                switch (flag) {
+                switch (flag.id) {
                     case RAND_INF_LEARNED_EPONA_SONG:
                         vanillaQueuedItemEntry = Rando::StaticData::RetrieveItem(RG_EPONAS_SONG).GetGIEntry_Copy();
                         break;

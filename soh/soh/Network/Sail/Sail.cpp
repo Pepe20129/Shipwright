@@ -3,6 +3,7 @@
 #include <libultraship/libultraship.h>
 #include <nlohmann/json.hpp>
 #include "soh/OTRGlobals.h"
+#include "soh/Flags.h"
 #include "soh/util.h"
 
 template <class DstType, class SrcType> bool IsType(const SrcType* src) {
@@ -416,56 +417,38 @@ void Sail::RegisterHooks() {
         SendJsonToRemote(payload);
     });
 
-    COND_HOOK(OnFlagSet, isConnected, [&](int16_t flagType, int16_t flag) {
+    COND_HOOK(OnFlagSet, isConnected, [&](Flag flag) {
         if (!isConnected || !GameInteractor::IsSaveLoaded())
             return;
         nlohmann::json payload;
         payload["id"] = std::rand();
         payload["type"] = "hook";
-        payload["hook"]["type"] = "OnFlagSet";
-        payload["hook"]["flagType"] = flagType;
-        payload["hook"]["flag"] = flag;
+        if (flag.IsSceneFlag()) {
+            payload["hook"]["type"] = "OnSceneFlagSet";
+            payload["hook"]["sceneNum"] = flag.scene;
+        } else {
+            payload["hook"]["type"] = "OnFlagSet";
+        }
+        payload["hook"]["flagType"] = flag.type;
+        payload["hook"]["flag"] = flag.id;
 
         SendJsonToRemote(payload);
     });
 
-    COND_HOOK(OnFlagUnset, isConnected, [&](int16_t flagType, int16_t flag) {
+    COND_HOOK(OnFlagUnset, isConnected, [&](Flag flag) {
         if (!isConnected || !GameInteractor::IsSaveLoaded())
             return;
         nlohmann::json payload;
         payload["id"] = std::rand();
         payload["type"] = "hook";
-        payload["hook"]["type"] = "OnFlagUnset";
-        payload["hook"]["flagType"] = flagType;
-        payload["hook"]["flag"] = flag;
-
-        SendJsonToRemote(payload);
-    });
-
-    COND_HOOK(OnSceneFlagSet, isConnected, [&](int16_t sceneNum, int16_t flagType, int16_t flag) {
-        if (!isConnected || !GameInteractor::IsSaveLoaded())
-            return;
-        nlohmann::json payload;
-        payload["id"] = std::rand();
-        payload["type"] = "hook";
-        payload["hook"]["type"] = "OnSceneFlagSet";
-        payload["hook"]["flagType"] = flagType;
-        payload["hook"]["flag"] = flag;
-        payload["hook"]["sceneNum"] = sceneNum;
-
-        SendJsonToRemote(payload);
-    });
-
-    COND_HOOK(OnSceneFlagUnset, isConnected, [&](int16_t sceneNum, int16_t flagType, int16_t flag) {
-        if (!isConnected || !GameInteractor::IsSaveLoaded())
-            return;
-        nlohmann::json payload;
-        payload["id"] = std::rand();
-        payload["type"] = "hook";
-        payload["hook"]["type"] = "OnSceneFlagUnset";
-        payload["hook"]["flagType"] = flagType;
-        payload["hook"]["flag"] = flag;
-        payload["hook"]["sceneNum"] = sceneNum;
+        if (flag.IsSceneFlag()) {
+            payload["hook"]["type"] = "OnSceneFlagUnset";
+            payload["hook"]["sceneNum"] = flag.scene;
+        } else {
+            payload["hook"]["type"] = "OnFlagUnset";
+        }
+        payload["hook"]["flagType"] = flag.type;
+        payload["hook"]["flag"] = flag.id;
 
         SendJsonToRemote(payload);
     });

@@ -737,47 +737,25 @@ void CheckTrackerItemReceive(GetItemEntry giEntry) {
     }
 }
 
-void CheckTrackerSceneFlagSet(int16_t sceneNum, int16_t flagType, int32_t flag) {
+void CheckTrackerFlagSet(Flag flag) {
     if (IS_RANDO) {
         return;
     }
 
-    if (flagType != FLAG_TYPE_SCENE_TREASURE && flagType != FLAG_TYPE_SCENE_COLLECTIBLE) {
-        return;
-    }
-    if (sceneNum == SCENE_GRAVEYARD && flag == 0x19 &&
-        flagType == FLAG_TYPE_SCENE_COLLECTIBLE) { // Gravedigging tour special case
+    if (flag.scene == SCENE_GRAVEYARD && flag.id == 0x19 &&
+        flag.type == FLAG_TYPE_SCENE_COLLECTIBLE) { // Gravedigging tour special case
         SetCheckCollected(RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR);
-        return;
-    }
-    for (auto& loc : Rando::StaticData::GetLocationTable()) {
-        if (!IsVisibleInCheckTracker(loc.GetRandomizerCheck())) {
-            continue;
-        }
-        SpoilerCollectionCheckType checkMatchType = flagType == FLAG_TYPE_SCENE_TREASURE
-                                                        ? SpoilerCollectionCheckType::SPOILER_CHK_CHEST
-                                                        : SpoilerCollectionCheckType::SPOILER_CHK_COLLECTABLE;
-        Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
-        if (scCheck.scene == sceneNum && scCheck.flag == flag && scCheck.type == checkMatchType) {
-            SetCheckCollected(loc.GetRandomizerCheck());
-            return;
-        }
-    }
-}
-
-void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
-    if (IS_RANDO) {
         return;
     }
 
     SpoilerCollectionCheckType checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_NONE;
-    switch (flagType) {
+    switch (flag.type) {
         case FLAG_TYPE_GS_TOKEN:
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_GOLD_SKULLTULA;
             break;
         case FLAG_TYPE_EVENT_CHECK_INF:
-            if ((flag == EVENTCHKINF_CARPENTERS_FREE(0) || flag == EVENTCHKINF_CARPENTERS_FREE(1) ||
-                 flag == EVENTCHKINF_CARPENTERS_FREE(2) || flag == EVENTCHKINF_CARPENTERS_FREE(3)) &&
+            if ((flag.id == EVENTCHKINF_CARPENTERS_FREE(0) || flag.id == EVENTCHKINF_CARPENTERS_FREE(1) ||
+                 flag.id == EVENTCHKINF_CARPENTERS_FREE(2) || flag.id == EVENTCHKINF_CARPENTERS_FREE(3)) &&
                 GET_EVENTCHKINF_CARPENTERS_FREE_ALL()) {
                 SetCheckCollected(RC_TH_FREED_CARPENTERS);
                 return;
@@ -785,27 +763,27 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_EVENT_CHK_INF;
             break;
         case FLAG_TYPE_INF_TABLE:
-            if (flag == INFTABLE_190) {
+            if (flag.id == INFTABLE_190) {
                 SetCheckCollected(RC_GF_HBA_1000_POINTS);
                 return;
-            } else if (flag == INFTABLE_11E) {
+            } else if (flag.id == INFTABLE_11E) {
                 SetCheckCollected(RC_GC_ROLLING_GORON_AS_CHILD);
                 return;
-            } else if (flag == INFTABLE_GORON_CITY_DOORS_UNLOCKED) {
+            } else if (flag.id == INFTABLE_GORON_CITY_DOORS_UNLOCKED) {
                 SetCheckCollected(RC_GC_ROLLING_GORON_AS_ADULT);
                 return;
-            } else if (flag == INFTABLE_139) {
+            } else if (flag.id == INFTABLE_139) {
                 SetCheckCollected(RC_ZD_KING_ZORA_THAWED);
                 return;
-            } else if (flag == INFTABLE_191) {
+            } else if (flag.id == INFTABLE_191) {
                 SetCheckCollected(RC_MARKET_LOST_DOG);
                 return;
             }
             if (!IS_RANDO) {
-                if (flag == INFTABLE_BOUGHT_STICK_UPGRADE) {
+                if (flag.id == INFTABLE_BOUGHT_STICK_UPGRADE) {
                     SetCheckCollected(RC_LW_DEKU_SCRUB_NEAR_BRIDGE);
                     return;
-                } else if (flag == INFTABLE_BOUGHT_NUT_UPGRADE) {
+                } else if (flag.id == INFTABLE_BOUGHT_NUT_UPGRADE) {
                     SetCheckCollected(RC_LW_DEKU_SCRUB_GROTTO_FRONT);
                     return;
                 }
@@ -813,13 +791,13 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             break;
         case FLAG_TYPE_ITEM_GET_INF:
             if (!IS_RANDO) {
-                if (flag == ITEMGETINF_OBTAINED_STICK_UPGRADE_FROM_STAGE) {
+                if (flag.id == ITEMGETINF_OBTAINED_STICK_UPGRADE_FROM_STAGE) {
                     SetCheckCollected(RC_DEKU_THEATER_SKULL_MASK);
                     return;
-                } else if (flag == ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE) {
+                } else if (flag.id == ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE) {
                     SetCheckCollected(RC_DEKU_THEATER_MASK_OF_TRUTH);
                     return;
-                } else if (flag == ITEMGETINF_DEKU_SCRUB_HEART_PIECE) {
+                } else if (flag.id == ITEMGETINF_DEKU_SCRUB_HEART_PIECE) {
                     SetCheckCollected(RC_HF_DEKU_SCRUB_GROTTO);
                     return;
                 }
@@ -830,35 +808,51 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
             checkMatchType = SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF;
             break;
     }
-    if (checkMatchType == SpoilerCollectionCheckType::SPOILER_CHK_NONE) {
-        return;
-    }
-    for (auto& loc : Rando::StaticData::GetLocationTable()) {
-        if ((!IS_RANDO && ((loc.GetQuest() == RCQUEST_MQ && !IS_MASTER_QUEST) ||
-                           (loc.GetQuest() == RCQUEST_VANILLA && IS_MASTER_QUEST))) ||
-            (IS_RANDO &&
-             !(OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene()) == nullptr) &&
-             ((OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsMQ() &&
-               loc.GetQuest() == RCQUEST_VANILLA) ||
-              OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsVanilla() &&
-                  loc.GetQuest() == RCQUEST_MQ))) {
-            continue;
-        }
-        Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
-        SpoilerCollectionCheckType scCheckType = scCheck.type;
-        if (checkMatchType == SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF &&
-            scCheckType == SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF) {
-            if (flag == OTRGlobals::Instance->gRandomizer->GetRandomizerInfFromCheck(loc.GetRandomizerCheck())) {
+    if (checkMatchType != SpoilerCollectionCheckType::SPOILER_CHK_NONE && !flag.IsSceneFlag()) {
+        for (auto& loc : Rando::StaticData::GetLocationTable()) {
+            if ((!IS_RANDO && ((loc.GetQuest() == RCQUEST_MQ && !IS_MASTER_QUEST) ||
+                               (loc.GetQuest() == RCQUEST_VANILLA && IS_MASTER_QUEST))) ||
+                (IS_RANDO &&
+                 !(OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene()) == nullptr) &&
+                 ((OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsMQ() &&
+                   loc.GetQuest() == RCQUEST_VANILLA) ||
+                  OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsVanilla() &&
+                      loc.GetQuest() == RCQUEST_MQ))) {
+                continue;
+            }
+            Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
+            SpoilerCollectionCheckType scCheckType = scCheck.type;
+            if (checkMatchType == SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF &&
+                scCheckType == SpoilerCollectionCheckType::SPOILER_CHK_RANDOMIZER_INF) {
+                if (flag.id == OTRGlobals::Instance->gRandomizer->GetRandomizerInfFromCheck(loc.GetRandomizerCheck())) {
+                    SetCheckCollected(loc.GetRandomizerCheck());
+                    return;
+                }
+                continue;
+            }
+            int16_t checkFlag = scCheck.flag;
+            if (checkMatchType == SpoilerCollectionCheckType::SPOILER_CHK_GOLD_SKULLTULA) {
+                checkFlag = loc.GetActorParams();
+            }
+            if (checkFlag == flag.id && scCheck.type == checkMatchType) {
                 SetCheckCollected(loc.GetRandomizerCheck());
                 return;
             }
+        }
+    }
+
+    if (flag.type != FLAG_TYPE_SCENE_TREASURE && flag.type != FLAG_TYPE_SCENE_COLLECTIBLE) {
+        return;
+    }
+    for (auto& loc : Rando::StaticData::GetLocationTable()) {
+        if (!IsVisibleInCheckTracker(loc.GetRandomizerCheck())) {
             continue;
         }
-        int16_t checkFlag = scCheck.flag;
-        if (checkMatchType == SpoilerCollectionCheckType::SPOILER_CHK_GOLD_SKULLTULA) {
-            checkFlag = loc.GetActorParams();
-        }
-        if (checkFlag == flag && scCheck.type == checkMatchType) {
+        SpoilerCollectionCheckType checkMatchType = flag.type == FLAG_TYPE_SCENE_TREASURE
+                                                        ? SpoilerCollectionCheckType::SPOILER_CHK_CHEST
+                                                        : SpoilerCollectionCheckType::SPOILER_CHK_COLLECTABLE;
+        Rando::SpoilerCollectionCheck scCheck = loc.GetCollectionCheck();
+        if (scCheck.scene == flag.scene && scCheck.flag == flag.id && scCheck.type == checkMatchType) {
             SetCheckCollected(loc.GetRandomizerCheck());
             return;
         }
@@ -2359,7 +2353,6 @@ void CheckTrackerWindow::InitElement() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnItemReceive>(CheckTrackerItemReceive);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnTransitionEnd>(CheckTrackerTransition);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnShopSlotChange>(CheckTrackerShopSlotChange);
-    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(CheckTrackerSceneFlagSet);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnFlagSet>(CheckTrackerFlagSet);
 }
 

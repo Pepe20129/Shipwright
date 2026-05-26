@@ -81,7 +81,7 @@ void Sign_RandomizerSpawnCollectible(Actor* actor) {
     Flags_SetRandomizerInf(signIdentity->randomizerInf);
 }
 
-void Sign_RoyalTombSpawnCollectible(int16_t flagType, int16_t flag) {
+void Sign_RoyalTombSpawnCollectible(Flag flag) {
     if (!Flags_GetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE) &&
         Flags::EventCheckInf::DESTROYED_ROYAL_FAMILY_TOMB) {
         Flags_SetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE);

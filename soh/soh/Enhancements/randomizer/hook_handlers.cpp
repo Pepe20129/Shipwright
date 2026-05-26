@@ -90,31 +90,29 @@ bool LocMatchesQuest(Rando::Location loc) {
     }
 }
 
-RandomizerCheck GetRandomizerCheckFromFlag(int16_t flagType, int16_t flag) {
-    for (auto& loc : Rando::StaticData::GetLocationTable()) {
-        if ((loc.GetCollectionCheck().flag == flag &&
-                 ((flagType == FLAG_TYPE_INF_TABLE && loc.GetCollectionCheck().type == SPOILER_CHK_INF_TABLE) ||
-                  (flagType == FLAG_TYPE_EVENT_CHECK_INF && loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
-                  (flagType == FLAG_TYPE_ITEM_GET_INF && loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
-                  (flagType == FLAG_TYPE_RANDOMIZER_INF && loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
-             (loc.GetActorParams() == flag && flagType == FLAG_TYPE_GS_TOKEN &&
-              loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
-            LocMatchesQuest(loc)) {
-            return loc.GetRandomizerCheck();
+RandomizerCheck GetRandomizerCheckFromFlag(Flag flag) {
+    if (flag.IsSceneFlag()) {
+        for (auto& loc : Rando::StaticData::GetLocationTable()) {
+            if (loc.GetCollectionCheck().scene == flag.scene && loc.GetCollectionCheck().flag == flag.id &&
+                ((flag.type == FLAG_TYPE_SCENE_TREASURE && loc.GetCollectionCheck().type == SPOILER_CHK_CHEST) ||
+                 (flag.type == FLAG_TYPE_SCENE_COLLECTIBLE && loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
+                 (flag.type == FLAG_TYPE_GS_TOKEN && loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
+                LocMatchesQuest(loc)) {
+                return loc.GetRandomizerCheck();
+            }
         }
-    }
-
-    return RC_UNKNOWN_CHECK;
-}
-
-RandomizerCheck GetRandomizerCheckFromSceneFlag(int16_t sceneNum, int16_t flagType, int16_t flag) {
-    for (auto& loc : Rando::StaticData::GetLocationTable()) {
-        if (loc.GetCollectionCheck().scene == sceneNum && loc.GetCollectionCheck().flag == flag &&
-            ((flagType == FLAG_TYPE_SCENE_TREASURE && loc.GetCollectionCheck().type == SPOILER_CHK_CHEST) ||
-             (flagType == FLAG_TYPE_SCENE_COLLECTIBLE && loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
-             (flagType == FLAG_TYPE_GS_TOKEN && loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
-            LocMatchesQuest(loc)) {
-            return loc.GetRandomizerCheck();
+    } else {
+        for (auto& loc : Rando::StaticData::GetLocationTable()) {
+            if ((loc.GetCollectionCheck().flag == flag.id &&
+                     ((flag.type == FLAG_TYPE_INF_TABLE && loc.GetCollectionCheck().type == SPOILER_CHK_INF_TABLE) ||
+                      (flag.type == FLAG_TYPE_EVENT_CHECK_INF && loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
+                      (flag.type == FLAG_TYPE_ITEM_GET_INF && loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
+                      (flag.type == FLAG_TYPE_RANDOMIZER_INF && loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
+                 (loc.GetActorParams() == flag.id && flag.type == FLAG_TYPE_GS_TOKEN &&
+                  loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
+                LocMatchesQuest(loc)) {
+                return loc.GetRandomizerCheck();
+            }
         }
     }
 
@@ -230,10 +228,10 @@ static std::queue<RandomizerCheck> randomizerQueuedChecks;
 static RandomizerCheck randomizerQueuedCheck = RC_UNKNOWN_CHECK;
 static GetItemEntry randomizerQueuedItemEntry = GET_ITEM_NONE;
 
-void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
+void RandomizerOnFlagSetHandler(Flag flag) {
     // Consume adult trade items
-    if (RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && flagType == FLAG_TYPE_RANDOMIZER_INF) {
-        switch (flag) {
+    if (RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && flag.type == FLAG_TYPE_RANDOMIZER_INF) {
+        switch (flag.id) {
             case RAND_INF_ADULT_TRADES_DMT_TRADE_BROKEN_SWORD:
                 Flags_UnsetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_SWORD_BROKEN);
                 Inventory_ReplaceItem(gPlayState, ITEM_SWORD_BROKEN, Randomizer_GetNextAdultTradeItem());
@@ -245,104 +243,96 @@ void RandomizerOnFlagSetHandler(int16_t flagType, int16_t flag) {
         }
     }
 
-    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_WOKEN_IN_CASTLE) {
+    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_TALON_WOKEN_IN_CASTLE) {
         // remove chicken as this is the only use for it
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_CHICKEN);
     }
 
-    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_OBTAINED_ZELDAS_LETTER) {
+    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_OBTAINED_ZELDAS_LETTER) {
         Flags_SetRandomizerInf(RAND_INF_ZELDAS_LETTER);
     }
 
-    if (flagType == FLAG_TYPE_EVENT_CHECK_INF && flag == EVENTCHKINF_TALON_RETURNED_FROM_CASTLE) {
+    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_TALON_RETURNED_FROM_CASTLE) {
         if (Flags::EventCheckInf::OBTAINED_POCKET_EGG) {
             Flags_SetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
         }
     }
 
-    RandomizerCheck rc = GetRandomizerCheckFromFlag(flagType, flag);
-    if (rc == RC_UNKNOWN_CHECK)
-        return;
-
-    if (flagType == FLAG_TYPE_GS_TOKEN &&
-        Rando::Context::GetInstance()->GetOption(RSK_SHUFFLE_TOKENS).Is(RO_TOKENSANITY_OFF)) {
-        Rando::Context::GetInstance()->GetItemLocation(rc)->SetCheckStatus(RCSHOW_COLLECTED);
-        return;
-    }
-    auto loc = Rando::Context::GetInstance()->GetItemLocation(rc);
-    if (loc == nullptr || loc->HasObtained() || loc->GetPlacedRandomizerGet() == RG_NONE) {
-        Rando::Context::GetInstance()->GetItemLocation(rc)->SetCheckStatus(RCSHOW_COLLECTED);
-        return;
-    }
-
-    SPDLOG_INFO("Queuing RC: {}", static_cast<uint32_t>(rc));
-    randomizerQueuedChecks.push(rc);
-}
-
-void RandomizerOnSceneFlagSetHandler(int16_t sceneNum, int16_t flagType, int16_t flag) {
-    if (flagType == FLAG_TYPE_SCENE_SWITCH) {
-        auto dungeonInfo = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(sceneNum);
+    if (flag.type == FLAG_TYPE_SCENE_SWITCH) {
+        auto dungeonInfo = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(flag.scene);
         bool isVanilla = dungeonInfo == nullptr || dungeonInfo->IsVanilla();
 
-        switch (sceneNum) {
+        switch (flag.scene) {
             case SCENE_GERUDOS_FORTRESS:
                 if (RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) &&
-                    flag == 0x3A) {
+                    flag.id == 0x3A) {
                     Flags_SetRandomizerInf(RAND_INF_GF_GTG_GATE_PERMANENTLY_OPEN);
                 }
                 break;
             case SCENE_DEKU_TREE:
-                if (!isVanilla && flag == 0x27) {
+                if (!isVanilla && flag.id == 0x27) {
                     Flags_SetRandomizerInf(RAND_INF_DEKU_TREE_MQ_TORCH_SWITCH);
                 }
                 break;
             case SCENE_DODONGOS_CAVERN:
-                if (!isVanilla && flag == 0x25) {
+                if (!isVanilla && flag.id == 0x25) {
                     Flags_SetRandomizerInf(RAND_INF_DODONGOS_CAVERN_MQ_SILVER_RUPEES);
                 }
                 break;
             case SCENE_JABU_JABU:
-                if (isVanilla && flag == 0x3b) {
+                if (isVanilla && flag.id == 0x3b) {
                     Flags_SetRandomizerInf(RAND_INF_JABU_JABUS_BELLY_FIRST_SWITCH);
                 }
                 break;
             case SCENE_FOREST_TEMPLE:
-                if (flag == 0x26) {
+                if (flag.id == 0x26) {
                     Flags_SetRandomizerInf(RAND_INF_FOREST_DRAINED_WELL);
-                } else if (flag == 0x25) {
+                } else if (flag.id == 0x25) {
                     Flags_SetRandomizerInf(RAND_INF_FOREST_LOBBY_EYES);
                     if (!isVanilla) {
                         Flags_SetSwitch(gPlayState, 0x2a);
                     }
-                } else if (!isVanilla && flag == 0x2a) {
+                } else if (!isVanilla && flag.id == 0x2a) {
                     Flags_SetRandomizerInf(RAND_INF_FOREST_LOBBY_EYES);
                     Flags_SetSwitch(gPlayState, 0x25);
-                } else if (!isVanilla && flag == 0x21) {
+                } else if (!isVanilla && flag.id == 0x21) {
                     Flags_SetRandomizerInf(RAND_INF_FOREST_MQ_COURTYARD_WEB_BURNT);
                 }
                 break;
             case SCENE_FIRE_TEMPLE:
-                if (!isVanilla && flag == 0x28) {
+                if (!isVanilla && flag.id == 0x28) {
                     Flags_SetRandomizerInf(RAND_INF_FIRE_MQ_LOBBY_TORCHES);
                 }
                 break;
             case SCENE_SPIRIT_TEMPLE:
-                if (isVanilla && flag == 0x23) {
+                if (isVanilla && flag.id == 0x23) {
                     Flags_SetRandomizerInf(RAND_INF_SPIRIT_SUN_ON_FLOOR_ON);
-                } else if (!isVanilla && flag == 0x37) {
+                } else if (!isVanilla && flag.id == 0x37) {
                     Flags_SetRandomizerInf(RAND_INF_SPIRIT_MQ_LOBBY_SILVER_RUPEES);
                 }
                 break;
         }
     }
 
-    RandomizerCheck rc = GetRandomizerCheckFromSceneFlag(sceneNum, flagType, flag);
-    if (rc == RC_UNKNOWN_CHECK)
+    RandomizerCheck rc = GetRandomizerCheckFromFlag(flag);
+    if (rc == RC_UNKNOWN_CHECK) {
         return;
+    }
 
     auto loc = Rando::Context::GetInstance()->GetItemLocation(rc);
-    if (loc == nullptr || loc->HasObtained() || loc->GetPlacedRandomizerGet() == RG_NONE)
+
+    if (flag.type == FLAG_TYPE_GS_TOKEN &&
+        Rando::Context::GetInstance()->GetOption(RSK_SHUFFLE_TOKENS).Is(RO_TOKENSANITY_OFF)) {
+        loc->SetCheckStatus(RCSHOW_COLLECTED);
         return;
+    }
+
+    if (loc == nullptr || loc->HasObtained() || loc->GetPlacedRandomizerGet() == RG_NONE) {
+        if (!flag.IsSceneFlag()) {
+            loc->SetCheckStatus(RCSHOW_COLLECTED);
+        }
+        return;
+    }
 
     SPDLOG_INFO("Queuing RC: {}", static_cast<uint32_t>(rc));
     randomizerQueuedChecks.push(rc);
@@ -2712,7 +2702,6 @@ void RandomizerOnCuccoOrChickenHatch() {
 
 static void RandomizerRegisterHooks() {
     static uint32_t onFlagSetHook = 0;
-    static uint32_t onSceneFlagSetHook = 0;
     static uint32_t onPlayerUpdateForRCQueueHook = 0;
     static uint32_t onPlayerUpdateForItemQueueHook = 0;
     static uint32_t onItemReceiveHook = 0;
@@ -2745,7 +2734,6 @@ static void RandomizerRegisterHooks() {
         randomizerQueuedItemEntry = GET_ITEM_NONE;
 
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnFlagSet>(onFlagSetHook);
-        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneFlagSet>(onSceneFlagSetHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPlayerUpdate>(onPlayerUpdateForRCQueueHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPlayerUpdate>(onPlayerUpdateForItemQueueHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnItemReceive>(onItemReceiveHook);
@@ -2764,7 +2752,6 @@ static void RandomizerRegisterHooks() {
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnCuccoOrChickenHatch>(onCuccoOrChickenHatchHook);
 
         onFlagSetHook = 0;
-        onSceneFlagSetHook = 0;
         onPlayerUpdateForRCQueueHook = 0;
         onPlayerUpdateForItemQueueHook = 0;
         onItemReceiveHook = 0;
@@ -2796,8 +2783,6 @@ static void RandomizerRegisterHooks() {
 
         onFlagSetHook =
             GameInteractor::Instance->RegisterGameHook<GameInteractor::OnFlagSet>(RandomizerOnFlagSetHandler);
-        onSceneFlagSetHook =
-            GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(RandomizerOnSceneFlagSetHandler);
         onPlayerUpdateForRCQueueHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>(
             RandomizerOnPlayerUpdateForRCQueueHandler);
         onPlayerUpdateForItemQueueHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>(

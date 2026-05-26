@@ -4,6 +4,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/frame_interpolation.h"
 #include "soh/OTRGlobals.h"
+#include "soh/Flags.h"
 
 extern "C" {
 #include "variables.h"
@@ -117,16 +118,10 @@ void Anchor::RegisterHooks() {
     });
 
     COND_HOOK(OnFlagSet, isConnected,
-              [&](s16 flagType, s16 flag) { SendPacket_SetFlag(SCENE_ID_MAX, flagType, flag); });
+              [&](Flag flag) { SendPacket_SetFlag(flag.scene, flag.type, flag.id); });
 
     COND_HOOK(OnFlagUnset, isConnected,
-              [&](s16 flagType, s16 flag) { SendPacket_UnsetFlag(SCENE_ID_MAX, flagType, flag); });
-
-    COND_HOOK(OnSceneFlagSet, isConnected,
-              [&](s16 sceneNum, s16 flagType, s16 flag) { SendPacket_SetFlag(sceneNum, flagType, flag); });
-
-    COND_HOOK(OnSceneFlagUnset, isConnected,
-              [&](s16 sceneNum, s16 flagType, s16 flag) { SendPacket_UnsetFlag(sceneNum, flagType, flag); });
+              [&](Flag flag) { SendPacket_UnsetFlag(flag.scene, flag.type, flag.id); });
 
     COND_HOOK(OnRandoSetCheckStatus, isConnected, [&](RandomizerCheck rc, RandomizerCheckStatus status) {
         if (!isHandlingUpdateTeamState) {

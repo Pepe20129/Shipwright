@@ -1,4 +1,5 @@
 #include "GameInteractor_Hooks.h"
+#include "soh/Flags.h"
 
 // MARK: - Gameplay
 
@@ -67,23 +68,23 @@ void GameInteractor_ExecuteAfterSceneCommands(int16_t sceneNum) {
 }
 
 void GameInteractor_ExecuteOnSceneFlagSet(int16_t sceneNum, int16_t flagType, int16_t flag) {
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSceneFlagSet>(sceneNum, flagType, flag);
-    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnSceneFlagSet>(sceneNum, flagType, flag);
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagSet>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)));
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagSet>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)));
 }
 
 void GameInteractor_ExecuteOnSceneFlagUnset(int16_t sceneNum, int16_t flagType, int16_t flag) {
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSceneFlagUnset>(sceneNum, flagType, flag);
-    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnSceneFlagUnset>(sceneNum, flagType, flag);
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagUnset>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)));
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagUnset>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)));
 }
 
 void GameInteractor_ExecuteOnFlagSet(int16_t flagType, int16_t flag) {
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagSet>(flagType, flag);
-    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagSet>(flagType, flag);
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagSet>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, SCENE_ID_MAX));
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagSet>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, SCENE_ID_MAX));
 }
 
 void GameInteractor_ExecuteOnFlagUnset(int16_t flagType, int16_t flag) {
-    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagUnset>(flagType, flag);
-    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagUnset>(flagType, flag);
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::OnFlagUnset>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, SCENE_ID_MAX));
+    GameInteractor::Instance->ExecuteHooksForFilter<GameInteractor::OnFlagUnset>(Flag::FromRawParts(static_cast<FlagType>(flagType), flag, SCENE_ID_MAX));
 }
 
 void GameInteractor_ExecuteOnSceneSpawnActors() {

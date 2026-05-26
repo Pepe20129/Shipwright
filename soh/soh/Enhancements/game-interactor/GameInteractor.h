@@ -87,6 +87,7 @@ void GameInteractor_SetTriforceHuntCreditsWarpActive(uint8_t state);
 #include <vector>
 #include <functional>
 #include <cstring>
+#include "soh/Flags.h"
 
 #include <version>
 #ifdef __cpp_lib_source_location
