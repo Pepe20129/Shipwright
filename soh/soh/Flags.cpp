@@ -272,6 +272,8 @@ void Flag::Unset() const {
     }
 }
 
+/// @brief Checks whether this Flag is a scene-dependant flag or not
+/// @return Whether this Flag is a scene-dependant flag or not
 bool Flag::IsSceneFlag() const {
     return this->type == FLAG_TYPE_SCENE_SWITCH || this->type == FLAG_TYPE_SCENE_TREASURE || this->type == FLAG_TYPE_SCENE_CLEAR || this->type == FLAG_TYPE_SCENE_COLLECTIBLE;
 }
