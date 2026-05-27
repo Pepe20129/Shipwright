@@ -244,19 +244,17 @@ void RandomizerOnFlagSetHandler(Flag flag) {
         }
     }
 
-    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_TALON_WOKEN_IN_CASTLE) {
+    if (flag == Flags::EventCheckInf::TALON_WOKEN_IN_CASTLE) {
         // remove chicken as this is the only use for it
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_CHICKEN);
     }
 
-    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_OBTAINED_ZELDAS_LETTER) {
+    if (flag == Flags::EventCheckInf::OBTAINED_ZELDAS_LETTER) {
         Flags_SetRandomizerInf(RAND_INF_ZELDAS_LETTER);
     }
 
-    if (flag.type == FLAG_TYPE_EVENT_CHECK_INF && flag.id == EVENTCHKINF_TALON_RETURNED_FROM_CASTLE) {
-        if (Flags::EventCheckInf::OBTAINED_POCKET_EGG) {
-            Flags_SetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
-        }
+    if (flag == Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE && Flags::EventCheckInf::OBTAINED_POCKET_EGG) {
+        Flags_SetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
     }
 
     if (flag.type == FLAG_TYPE_SCENE_SWITCH) {
