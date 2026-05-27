@@ -136,9 +136,9 @@ void KaleidoEntryIcon::Draw(PlayState* play, std::vector<Gfx>* mEntryDl) {
 Kaleido::Kaleido() {
     const auto ctx = Rando::Context::GetInstance();
     int yOffset = 0;
-    mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
-        gRupeeCounterIconTex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 16, Color_RGBA8{ 0xC8, 0xFF, 0x64, 255 },
-        Flag::FromRandomizerInf(RAND_INF_GREG_FOUND), "Greg"));
+    mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gRupeeCounterIconTex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 16,
+                                                              Color_RGBA8{ 0xC8, 0xFF, 0x64, 255 },
+                                                              Flag::FromRandomizerInf(RAND_INF_GREG_FOUND), "Greg"));
     if (ctx->GetOption(RSK_SHUFFLE_FISHING_POLE)) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
             gItemIconFishingPoleTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
@@ -188,25 +188,28 @@ Kaleido::Kaleido() {
     // TODO: find a way to update this so we can match Cosmetics Editor color, or just replace these icons
     Color_RGBA8 aButtonColor = { 90, 90, 255, 255 };
     if (ctx->GetOption(RSK_SHUFFLE_CRAWL)) {
-        mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gButtonBackgroundTex, G_IM_FMT_IA, G_IM_SIZ_8b, 32,
-                                                                  32, aButtonColor, Flag::FromRandomizerInf(RAND_INF_CAN_CRAWL), "Crawl"));
+        mEntries.push_back(
+            std::make_shared<KaleidoEntryIconFlag>(gButtonBackgroundTex, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, aButtonColor,
+                                                   Flag::FromRandomizerInf(RAND_INF_CAN_CRAWL), "Crawl"));
     }
     if (ctx->GetOption(RSK_SHUFFLE_CLIMB)) {
-        mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gButtonBackgroundTex, G_IM_FMT_IA, G_IM_SIZ_8b, 32,
-                                                                  32, aButtonColor, Flag::FromRandomizerInf(RAND_INF_CAN_CLIMB), "Climb"));
+        mEntries.push_back(
+            std::make_shared<KaleidoEntryIconFlag>(gButtonBackgroundTex, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, aButtonColor,
+                                                   Flag::FromRandomizerInf(RAND_INF_CAN_CLIMB), "Climb"));
     }
     if (ctx->GetOption(RSK_SHUFFLE_GRAB)) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gButtonBackgroundTex, G_IM_FMT_IA, G_IM_SIZ_8b, 32,
-                                                                  32, aButtonColor, Flag::FromRandomizerInf(RAND_INF_CAN_GRAB), "Grab"));
+                                                                  32, aButtonColor,
+                                                                  Flag::FromRandomizerInf(RAND_INF_CAN_GRAB), "Grab"));
     }
     if (ctx->GetOption(RSK_SHUFFLE_SPEAK)) {
         int rg = RG_SPEAK_DEKU;
         for (int i = RAND_INF_CAN_SPEAK_DEKU; i <= RAND_INF_CAN_SPEAK_ZORA; i++, rg++) {
             std::string speakName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(rg)).GetName().english;
             StringHelper::ReplaceOriginal(speakName, " Jabber Nut", "");
-            mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gItemIconDekuNutTex, G_IM_FMT_RGBA, G_IM_SIZ_32b,
-                                                                      32, 32, Color_RGBA8{ 255, 255, 255, 255 },
-                                                                      Flag::FromRandomizerInf(static_cast<RandomizerInf>(i)), speakName));
+            mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
+                gItemIconDekuNutTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
+                Flag::FromRandomizerInf(static_cast<RandomizerInf>(i)), speakName));
         }
     }
     if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST)) {
@@ -215,9 +218,9 @@ Kaleido::Kaleido() {
             Flag::FromRandomizerInf(RAND_INF_CAN_OPEN_CHEST), "Open Chests"));
     }
     if (ctx->GetOption(RSK_SHUFFLE_SWIM)) {
-        mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
-            gItemIconScaleSilverTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
-            Flag::FromRandomizerInf(RAND_INF_CAN_SWIM), "Swim"));
+        mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gItemIconScaleSilverTex, G_IM_FMT_RGBA, G_IM_SIZ_32b,
+                                                                  32, 32, Color_RGBA8{ 255, 255, 255, 255 },
+                                                                  Flag::FromRandomizerInf(RAND_INF_CAN_SWIM), "Swim"));
     }
     if (ctx->GetOption(RSK_SHUFFLE_BEAN_SOULS)) {
         int rg = RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL;
@@ -372,8 +375,7 @@ extern "C" void RandoKaleido_UpdateMiscCollectibles(int16_t inDungeonScene) {
 }
 
 KaleidoEntryIconFlag::KaleidoEntryIconFlag(const char* iconResourceName, int iconFormat, int iconSize, int iconWidth,
-                                           int iconHeight, Color_RGBA8 iconColor, Flag flag,
-                                           std::string name)
+                                           int iconHeight, Color_RGBA8 iconColor, Flag flag, std::string name)
     : KaleidoEntryIcon(iconResourceName, iconFormat, iconSize, iconWidth, iconHeight, iconColor, std::move(name)),
       mFlag(flag) {
     BuildVertices();
@@ -520,9 +522,12 @@ void KaleidoEntryOcarinaButtons::CalculateColors() {
 void KaleidoEntryOcarinaButtons::Update(PlayState* play) {
     mButtonCollected[0] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_A) > 0;
     mButtonCollected[1] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_UP) > 0;
-    mButtonCollected[2] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_DOWN) > 0;
-    mButtonCollected[3] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_LEFT) > 0;
-    mButtonCollected[4] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_RIGHT) > 0;
+    mButtonCollected[2] =
+        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_DOWN) > 0;
+    mButtonCollected[3] =
+        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_LEFT) > 0;
+    mButtonCollected[4] =
+        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_RIGHT) > 0;
     CalculateColors();
     mAchieved = false;
     for (size_t i = 0; i < mButtonCollected.size(); i++) {

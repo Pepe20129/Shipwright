@@ -228,8 +228,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                         if (Flags::EventCheckInf::COMPLETED_FOREST_TRIAL &&
                             Flags::EventCheckInf::COMPLETED_WATER_TRIAL &&
                             Flags::EventCheckInf::COMPLETED_SHADOW_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_FIRE_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
+                            Flags::EventCheckInf::COMPLETED_FIRE_TRIAL && Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
                             Flags::EventCheckInf::COMPLETED_SPIRIT_TRIAL) {
                             Flags::EventCheckInf::DISPELLED_GANONS_TOWER_BARRIER.Set();
                         }
@@ -650,8 +649,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             break;
         }
         case VB_DESPAWN_HORSE_RACE_COW: {
-            if (Flags::EventCheckInf::WON_COW_IN_MALONS_RACE &&
-                CVarGetInteger(CVAR_ENHANCEMENT("CowOfTime"), 0)) {
+            if (Flags::EventCheckInf::WON_COW_IN_MALONS_RACE && CVarGetInteger(CVAR_ENHANCEMENT("CowOfTime"), 0)) {
                 *should = false;
             }
             break;

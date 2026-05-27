@@ -117,11 +117,9 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    COND_HOOK(OnFlagSet, isConnected,
-              [&](Flag flag) { SendPacket_SetFlag(flag.scene, flag.type, flag.id); });
+    COND_HOOK(OnFlagSet, isConnected, [&](Flag flag) { SendPacket_SetFlag(flag.scene, flag.type, flag.id); });
 
-    COND_HOOK(OnFlagUnset, isConnected,
-              [&](Flag flag) { SendPacket_UnsetFlag(flag.scene, flag.type, flag.id); });
+    COND_HOOK(OnFlagUnset, isConnected, [&](Flag flag) { SendPacket_UnsetFlag(flag.scene, flag.type, flag.id); });
 
     COND_HOOK(OnRandoSetCheckStatus, isConnected, [&](RandomizerCheck rc, RandomizerCheckStatus status) {
         if (!isHandlingUpdateTeamState) {

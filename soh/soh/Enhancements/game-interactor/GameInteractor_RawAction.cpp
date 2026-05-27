@@ -134,7 +134,7 @@ void GameInteractor::RawAction::SetSceneFlag(int16_t sceneNum, int16_t flagType,
 };
 
 void GameInteractor::RawAction::UnsetSceneFlag(int16_t sceneNum, int16_t flagType, int16_t flag) {
-   Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)).Unset();
+    Flag::FromRawParts(static_cast<FlagType>(flagType), flag, static_cast<SceneID>(sceneNum)).Unset();
 };
 
 bool GameInteractor::RawAction::CheckFlag(int16_t flagType, int16_t flag) {
