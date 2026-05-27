@@ -95,7 +95,8 @@ RandomizerCheck GetRandomizerCheckFromFlag(Flag flag) {
         for (auto& loc : Rando::StaticData::GetLocationTable()) {
             if (loc.GetCollectionCheck().scene == flag.scene && loc.GetCollectionCheck().flag == flag.id &&
                 ((flag.type == FLAG_TYPE_SCENE_TREASURE && loc.GetCollectionCheck().type == SPOILER_CHK_CHEST) ||
-                 (flag.type == FLAG_TYPE_SCENE_COLLECTIBLE && loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
+                 (flag.type == FLAG_TYPE_SCENE_COLLECTIBLE &&
+                  loc.GetCollectionCheck().type == SPOILER_CHK_COLLECTABLE) ||
                  (flag.type == FLAG_TYPE_GS_TOKEN && loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
                 LocMatchesQuest(loc)) {
                 return loc.GetRandomizerCheck();
@@ -105,9 +106,12 @@ RandomizerCheck GetRandomizerCheckFromFlag(Flag flag) {
         for (auto& loc : Rando::StaticData::GetLocationTable()) {
             if ((loc.GetCollectionCheck().flag == flag.id &&
                      ((flag.type == FLAG_TYPE_INF_TABLE && loc.GetCollectionCheck().type == SPOILER_CHK_INF_TABLE) ||
-                      (flag.type == FLAG_TYPE_EVENT_CHECK_INF && loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
-                      (flag.type == FLAG_TYPE_ITEM_GET_INF && loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
-                      (flag.type == FLAG_TYPE_RANDOMIZER_INF && loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
+                      (flag.type == FLAG_TYPE_EVENT_CHECK_INF &&
+                       loc.GetCollectionCheck().type == SPOILER_CHK_EVENT_CHK_INF) ||
+                      (flag.type == FLAG_TYPE_ITEM_GET_INF &&
+                       loc.GetCollectionCheck().type == SPOILER_CHK_ITEM_GET_INF) ||
+                      (flag.type == FLAG_TYPE_RANDOMIZER_INF &&
+                       loc.GetCollectionCheck().type == SPOILER_CHK_RANDOMIZER_INF)) ||
                  (loc.GetActorParams() == flag.id && flag.type == FLAG_TYPE_GS_TOKEN &&
                   loc.GetCollectionCheck().type == SPOILER_CHK_GOLD_SKULLTULA)) &&
                 LocMatchesQuest(loc)) {
@@ -158,12 +162,9 @@ bool MeetsLACSRequirements() {
 }
 
 bool CompletedAllTrials() {
-    return Flags::EventCheckInf::COMPLETED_WATER_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_FIRE_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_SHADOW_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_SPIRIT_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_FOREST_TRIAL;
+    return Flags::EventCheckInf::COMPLETED_WATER_TRIAL && Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
+           Flags::EventCheckInf::COMPLETED_FIRE_TRIAL && Flags::EventCheckInf::COMPLETED_SHADOW_TRIAL &&
+           Flags::EventCheckInf::COMPLETED_SPIRIT_TRIAL && Flags::EventCheckInf::COMPLETED_FOREST_TRIAL;
 }
 
 bool MeetsRainbowBridgeRequirements() {
@@ -950,17 +951,14 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             *should = false;
             break;
         case VB_SHIEK_PREPARE_TO_GIVE_SERENADE_OF_WATER: {
-            *should =
-                !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && !Flags_GetTreasure(gPlayState, 0x2);
+            *should = !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && !Flags_GetTreasure(gPlayState, 0x2);
             break;
         }
         case VB_BE_ELIGIBLE_FOR_SERENADE_OF_WATER:
-            *should =
-                !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && Flags_GetTreasure(gPlayState, 0x2);
+            *should = !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && Flags_GetTreasure(gPlayState, 0x2);
             break;
         case VB_BE_ELIGIBLE_FOR_PRELUDE_OF_LIGHT:
-            *should =
-                !Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT && CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST);
+            *should = !Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT && CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST);
             break;
         case VB_MIDO_SPAWN:
             if (RAND_GET_OPTION(RSK_FOREST).IsNot(RO_CLOSED_FOREST_OFF) &&
@@ -974,8 +972,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             }
             break;
         case VB_MALON_RETURN_FROM_CASTLE:
-            *should = Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE &&
-                      Flags::EventCheckInf::OBTAINED_POCKET_EGG;
+            *should = Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE && Flags::EventCheckInf::OBTAINED_POCKET_EGG;
             break;
         case VB_SEND_MALON_HOME:
             *should = Flags_GetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
@@ -995,8 +992,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         case VB_BE_ELIGIBLE_FOR_LIGHT_ARROWS:
             *should = LINK_IS_ADULT && (gEntranceTable[gSaveContext.entranceIndex].scene == SCENE_TEMPLE_OF_TIME) &&
-                      !Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS &&
-                      MeetsLACSRequirements();
+                      !Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS && MeetsLACSRequirements();
             break;
         case VB_BE_ELIGIBLE_FOR_NOCTURNE_OF_SHADOW:
             *should = !Flags::EventCheckInf::BONGO_BONGO_ESCAPED_FROM_WELL && LINK_IS_ADULT &&
@@ -2009,9 +2005,8 @@ void RandomizerOnSceneInitHandler(int16_t sceneNum) {
 
     // If we're not in the Temple of Time or we've already learned the Prelude of Light and received LACs, we don't need
     // to do anything
-    if (sceneNum != SCENE_TEMPLE_OF_TIME ||
-        (Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT &&
-         Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS))
+    if (sceneNum != SCENE_TEMPLE_OF_TIME || (Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT &&
+                                             Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS))
         return;
 
     updateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>([]() {
@@ -2286,8 +2281,7 @@ void RandomizerOnActorInitHandler(void* actorRef) {
 
     if (actor->id == ACTOR_BG_TREEMOUTH && LINK_IS_ADULT &&
         RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) &&
-        (RAND_GET_OPTION(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) ||
-         Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD)) {
+        (RAND_GET_OPTION(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD)) {
         BgTreemouth* bgTreemouth = static_cast<BgTreemouth*>(actorRef);
         bgTreemouth->unk_168 = 1.0f;
     }
