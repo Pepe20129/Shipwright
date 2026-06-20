@@ -26,6 +26,7 @@
 #include "soh/Enhancements/TimeDisplay/TimeDisplay.h"
 #include "soh/Enhancements/mod_menu.h"
 #include "soh/Network/Anchor/Anchor.h"
+#include "soh/Enhancements/randomizer/randomizer_entrance_tracker_graph.h"
 
 namespace SohGui {
 
@@ -83,6 +84,7 @@ std::shared_ptr<CheckTracker::CheckTrackerSettingsWindow> mCheckTrackerSettingsW
 std::shared_ptr<CheckTracker::CheckTrackerWindow> mCheckTrackerWindow;
 std::shared_ptr<EntranceTracker::EntranceTrackerSettingsWindow> mEntranceTrackerSettingsWindow;
 std::shared_ptr<EntranceTracker::EntranceTrackerWindow> mEntranceTrackerWindow;
+std::shared_ptr<EntranceTrackerGraphWindow> mEntranceTrackerGraphWindow;
 std::shared_ptr<ItemTrackerSettingsWindow> mItemTrackerSettingsWindow;
 std::shared_ptr<ItemTrackerWindow> mItemTrackerWindow;
 std::shared_ptr<TimeSplitWindow> mTimeSplitWindow;
@@ -176,6 +178,9 @@ void SetupGuiElements() {
     mEntranceTrackerWindow = std::make_shared<EntranceTracker::EntranceTrackerWindow>(
         CVAR_WINDOW("EntranceTracker"), "Entrance Tracker", ImVec2(500, 750));
     gui->AddGuiWindow(mEntranceTrackerWindow);
+    mEntranceTrackerGraphWindow = std::make_shared<EntranceTrackerGraphWindow>(
+        CVAR_WINDOW("EntranceTrackerGraph"), "Entrance Tracker Graph", ImVec2(500, 750));
+    gui->AddGuiWindow(mEntranceTrackerGraphWindow);
     mEntranceTrackerSettingsWindow = std::make_shared<EntranceTracker::EntranceTrackerSettingsWindow>(
         CVAR_WINDOW("EntranceTrackerSettings"), "Entrance Tracker Settings", ImVec2(600, 375));
     gui->AddGuiWindow(mEntranceTrackerSettingsWindow);
@@ -208,6 +213,7 @@ void Destroy() {
     mItemTrackerWindow = nullptr;
     mItemTrackerSettingsWindow = nullptr;
     mEntranceTrackerWindow = nullptr;
+    mEntranceTrackerGraphWindow = nullptr;
     mEntranceTrackerSettingsWindow = nullptr;
     mCheckTrackerWindow = nullptr;
     mCheckTrackerSettingsWindow = nullptr;
