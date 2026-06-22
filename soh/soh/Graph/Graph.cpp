@@ -200,8 +200,9 @@ Graph::Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _o
 
 #ifdef _MSC_VER
 #pragma optimize("t", on)
-#endif
+#else // msvc complains about unknown attributes
 [[gnu::hot, gnu::optimize(3)]]
+#endif
 float Graph::StabilizeStep(float width, float height, float temperature) noexcept {
     const float area = width * height;
     const float k = std::sqrt(area / nodes.size());
