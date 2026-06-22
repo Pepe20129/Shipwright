@@ -198,41 +198,37 @@ Graph Graph::New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions 
 
 Graph::Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _options) : nodes(_nodes), edges(_edges), options(_options) {}
 
-[[gnu::hot]]
+#ifdef _MSC_VER
+#pragma optimize("t", on)
+#endif
+[[gnu::hot, gnu::optimize(3)]]
 float Graph::StabilizeStep(float width, float height, float temperature) noexcept {
-    float area = width * height;
-    float k = std::sqrt(area / nodes.size());
+    const float area = width * height;
+    const float k = std::sqrt(area / nodes.size());
 
-    auto repulsion_force = [&](float d) {
-        return this->options.forceMultipliers.repulsion * (k * k) / d;
-    };
-
-    auto attraction_force = [&](float d) {
-        return this->options.forceMultipliers.attraction * (d * d) / k;
-    };
+    const float repulsionK = options.forceMultipliers.repulsion * k * k;
+    const float attractionK = options.forceMultipliers.attraction / k;
 
     // reset displacement
     for (auto& n : this->nodes) {
         n.displacement = {0, 0};
     }
 
-    // repulsive forces
+    // repulsive forces O(n^2)
     for (size_t i = 0; i < this->nodes.size(); i += 1) {
         for (size_t j = i + 1; j < this->nodes.size(); j += 1) {
             ImVec2 delta = this->nodes[i].position - this->nodes[j].position;
 
-            float dist = std::max(std::sqrt(delta.x * delta.x + delta.y * delta.y), 0.01f);
+            float distSquared = std::max(delta.x * delta.x + delta.y * delta.y, 0.01f);
 
-            float force = repulsion_force(dist);
+            ImVec2 displacement = delta * repulsionK / distSquared;
 
-            ImVec2 dir = delta / dist;
-
-            this->nodes[i].displacement += dir * force;
-            this->nodes[j].displacement -= dir * force;
+            this->nodes[i].displacement += displacement;
+            this->nodes[j].displacement -= displacement;
         }
     }
 
-    // attractive forces
+    // attractive forces O(n)
     for (const auto& e : this->edges) {
         auto& u = this->nodes[e.src];
         auto& v = this->nodes[e.dst];
@@ -241,12 +237,10 @@ float Graph::StabilizeStep(float width, float height, float temperature) noexcep
 
         float dist = std::max(std::sqrt(delta.x * delta.x + delta.y * delta.y), 0.01f);
 
-        float force = attraction_force(dist);
+        ImVec2 displacement = delta * attractionK * dist;
 
-        ImVec2 dir = delta / dist;
-
-        u.displacement -= dir * force;
-        v.displacement += dir * force;
+        u.displacement -= displacement;
+        v.displacement += displacement;
     }
 
     float totalDisplacement = 0;
@@ -269,6 +263,9 @@ float Graph::StabilizeStep(float width, float height, float temperature) noexcep
     //return totalDisplacement;
     return maxDisplacement;
 }
+#ifdef _MSC_VER
+#pragma optimize("", on)
+#endif
 
 void Graph::Stabilize(float width, float height) noexcept {
     for (float temperature = this->options.temperature.starting; temperature > this->options.temperature.ending; temperature -= this->options.temperature.decreasePerIteration) {

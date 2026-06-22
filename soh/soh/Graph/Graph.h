@@ -89,7 +89,9 @@ class Graph final {
         GraphOptions& GetOptions() noexcept;
         void ResetView() noexcept;
         [[nodiscard("There's no point in calling the function without using the graph returned")]]
+#ifndef _MSC_VER // msvc complains about an unknown attribute
         [[gnu::pure]]
+#endif
         static Graph New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options) noexcept;
 
     private:
