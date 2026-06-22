@@ -32,8 +32,8 @@ const GraphOptions defaultOptions = {
     },
     {
         80.0f,
-        5.0f,
-        30.0f,
+        10.0f,
+        40.0f,
     },
     {
         20.0f,
@@ -76,9 +76,7 @@ void EntranceTrackerGraphWindow::DrawElement() {
             displacement += this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
             displacement += this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
 
-            LUSLOG_INFO("[EntranceTrackerGraphWindow::DrawElement] Displacement = %f", displacement);
-
-            if (displacement < 28000) {
+            if (displacement < 29000) {
                 this->sufficientlyStabilized = true;
             }
         }
@@ -91,50 +89,127 @@ void EntranceTrackerGraphWindow::DrawElement() {
 
         ImGui::SetNextItemAllowOverlap();
 
-        ImGui::BeginGroup();
-
         if (menuOpen) {
-            if (ImGui::Button(ICON_FA_COG)) {
-                menuOpen = false;
+            ImVec2 panelSize = { 325, 400 };
+
+            ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 12.0f);
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(40, 40, 40, 255));
+
+            if (ImGui::BeginChild("ControlsPanel", panelSize, ImGuiChildFlags_Borders, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+                if (UIWidgets::Button(ICON_FA_COG, UIWidgets::ButtonOptions().Color(THEME_COLOR).Size({ 40.0f, 40.0f }))) {
+                    menuOpen = false;
+                }
+
+                if (UIWidgets::Button("Reset View", UIWidgets::ButtonOptions().Color(THEME_COLOR))) {
+                    this->graph.value().ResetView();
+                }
+
+                if (UIWidgets::Button("Stabilize Step", UIWidgets::ButtonOptions().Color(THEME_COLOR))) {
+                    this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
+                    this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
+                }
+
+                #define CONFIG_INPUT_BOOL(option_path, text)          \
+                if (                                                  \
+                    CVarCheckbox(                                     \
+                        text,                                         \
+                        CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
+                        UIWidgets::CheckboxOptions()                  \
+                            .DefaultValue(defaultOptions.option_path) \
+                            .Color(THEME_COLOR)                       \
+                    )                                                 \
+                ) {                                                   \
+                    this->UpdateGraphOptions();                       \
+                }
+
+                #define CONFIG_INPUT_INT(option_path, text, min, max) \
+                if (                                                  \
+                    CVarSliderInt(                                    \
+                        text,                                         \
+                        CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
+                        UIWidgets::IntegerSliderOptions()             \
+                            .Min(min)                                 \
+                            .Max(max)                                 \
+                            .DefaultValue(defaultOptions.option_path) \
+                            .Format("%.1f")                           \
+                            .Size({ 300.0f, 0.0f })                   \
+                            .Color(THEME_COLOR)                       \
+                    )                                                 \
+                ) {                                                   \
+                    this->UpdateGraphOptions();                       \
+                }
+
+                #define CONFIG_INPUT_FLOAT(option_path, text, min, max, step, format) \
+                if (                                                                  \
+                    CVarSliderFloat(                                                  \
+                        text,                                                         \
+                        CVAR_TRACKER_ENTRANCE("Graph." #option_path),                 \
+                        UIWidgets::FloatSliderOptions()                               \
+                            .Min(min)                                                 \
+                            .Max(max)                                                 \
+                            .DefaultValue(defaultOptions.option_path)                 \
+                            .Format(format)                                           \
+                            .Size({ 300.0f, 0.0f })                                   \
+                            .Step(step)                                               \
+                            .Color(THEME_COLOR)                                       \
+                    )                                                                 \
+                ) {                                                                   \
+                    this->UpdateGraphOptions();                                       \
+                }
+
+                UIWidgets::Separator();
+
+                CONFIG_INPUT_FLOAT(zoom.min, "Minimum Zoom", 0.01f, 10.0f, 0.01f, "%.2f");
+                CONFIG_INPUT_FLOAT(zoom.max, "Maximum Zoom", 0.01f, 10.0f, 0.1f, "%.1f");
+
+                UIWidgets::Separator();
+
+                CONFIG_INPUT_FLOAT(forceMultipliers.repulsion, "Repulsion Force", 1.0f, 50.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(forceMultipliers.attraction, "Attraction Force", 1.0f, 50.0f, 0.1f, "%.1f");
+
+                UIWidgets::Separator();
+
+                CONFIG_INPUT_FLOAT(temperature.starting, "Initial Starting Temperature", 10.0f, 1000.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(temperature.decreasePerIteration, "Initial Temperature Decrease Per Iteration", 0.01f, 10.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(temperature.ending, "Initial Ending Temperature", 0.0f, 1000.0f, 0.1f, "%.1f");
+
+                UIWidgets::Separator();
+
+                CONFIG_INPUT_BOOL(zoom.nodesScaleWithZoom, "Nodes Scale With Zoom");
+                CONFIG_INPUT_FLOAT(nodes.baseSize, "Node Base Size", 1.0f, 10.0f, 0.1f, "%.1f");
+                //CONFIG_INPUT_IMVEC2(nodes.label.padding, "Node Label Padding", 0.0f, 20.0f);
+                CONFIG_INPUT_FLOAT(nodes.label.rounding, "Node Label Rounding", 1.0f, 10.0f, 0.1f, "%.1f");
+                //CONFIG_INPUT_COLOR(nodes.label.backgroundColor, "Node Label Rounding");
+                CONFIG_INPUT_BOOL(nodes.label.fadeout, "Node Label Fades out");
+                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffLower, "Node Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffUpper, "Node Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f, "%.1f");
+
+                UIWidgets::Separator();
+
+                CONFIG_INPUT_BOOL(zoom.edgesScaleWithZoom, "Edges Scale With Zoom");
+                CONFIG_INPUT_FLOAT(edges.thickness, "Edge Thickness", 1.0f, 10.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(edges.label.separation, "Edge Label Separation", 0.0f, 20.0f, 0.1f, "%.1f");
+                //CONFIG_INPUT_IMVEC2(edges.label.padding, "Edge Label Padding", 0.0f, 20.0f);
+                CONFIG_INPUT_FLOAT(edges.label.rounding, "Edge Label Rounding", 1.0f, 10.0f, 0.1f, "%.1f");
+                //CONFIG_INPUT_COLOR(edges.label.backgroundColor, "Edge Label Rounding");
+                CONFIG_INPUT_BOOL(edges.label.fadeout, "Edge Label Fades out");
+                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffLower, "Edge Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffUpper, "Edge Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f, "%.1f");
+
+                #undef CONFIG_INPUT_BOOL
+                #undef CONFIG_INPUT_INT
+                #undef CONFIG_INPUT_FLOAT
             }
 
-            if (ImGui::Button("Reset View")) {
-                this->graph.value().ResetView();
-            }
+            ImGui::PopStyleColor();
+            ImGui::PopStyleVar();
 
-            #define TEST_FLOAT(option_path, text, min, max)                                                                   \
-            if (                                                                                                              \
-                CVarSliderFloat(                                                                                              \
-                    text,                                                                                                     \
-                    CVAR_TRACKER_ENTRANCE("Graph." #option_path),                                                             \
-                    UIWidgets::FloatSliderOptions()                                                                           \
-                        .Min(min)                                                                                             \
-                        .Max(max)                                                                                             \
-                        .DefaultValue(CVarGetFloat(CVAR_TRACKER_ENTRANCE("Graph." #option_path), defaultOptions.option_path)) \
-                        .Format("%.1f")                                                                                       \
-                        .Size({ 300.0f, 0.0f })                                                                               \
-                        .Step(0.1f)                                                                                           \
-                        .Color(THEME_COLOR)                                                                                   \
-                )                                                                                                             \
-            ) {                                                                                                               \
-                this->UpdateGraphOptions();                                                                                   \
-            }
-
-            TEST_FLOAT(forceMultipliers.repulsion, "Repulsion Force", 1.0f, 50.0f);
-            TEST_FLOAT(forceMultipliers.attraction, "Attraction Force", 1.0f, 50.0f);
-
-            TEST_FLOAT(temperature.starting, "Starting Temperature", 10.0f, 1000.0f);
-            TEST_FLOAT(temperature.decreasePerIteration, "Temperature Decrease Per Iteration", 0.01f, 10.0f);
-
-            TEST_FLOAT(edges.thickness, "Edge Thickness", 1.0f, 10.0f);
-
+            ImGui::EndChild();
         } else {
-            if (ImGui::Button(ICON_FA_COG)) {
+            if (UIWidgets::Button(ICON_FA_COG, UIWidgets::ButtonOptions().Color(THEME_COLOR).Size({ 40.0f, 40.0f }))) {
                 menuOpen = true;
             }
         }
-
-        ImGui::EndGroup();
     }
     Trackers::EndFloatWindows();
 }
