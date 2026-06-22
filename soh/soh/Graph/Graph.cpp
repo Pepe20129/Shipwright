@@ -19,13 +19,12 @@ Rect GetVisibleWorldRect(ImVec2 canvasSize, ImVec2 canvasPos, ImVec2 cameraOffse
     return r;
 }
 
-static bool IsNodeVisible(const Node& node, const Rect& view, float zoom, GraphNodeOptions options, bool scaleWithZoom) noexcept {
+static bool IsNodeVisible(const Node& node, const Rect& view, float zoom, GraphNodeOptions options,
+                          bool scaleWithZoom) noexcept {
     float radius = options.baseSize * (scaleWithZoom ? zoom : 1);
 
-    return !(node.position.x + radius < view.min.x ||
-             node.position.x - radius > view.max.x ||
-             node.position.y + radius < view.min.y ||
-             node.position.y - radius > view.max.y);
+    return !(node.position.x + radius < view.min.x || node.position.x - radius > view.max.x ||
+             node.position.y + radius < view.min.y || node.position.y - radius > view.max.y);
 }
 
 static bool IsEdgeVisible(ImVec2 a, ImVec2 b, const Rect& view) noexcept {
@@ -35,10 +34,7 @@ static bool IsEdgeVisible(ImVec2 a, ImVec2 b, const Rect& view) noexcept {
     float minY = std::min(a.y, b.y);
     float maxY = std::max(a.y, b.y);
 
-    return !(maxX < view.min.x ||
-             minX > view.max.x ||
-             maxY < view.min.y ||
-             minY > view.max.y);
+    return !(maxX < view.min.x || minX > view.max.x || maxY < view.min.y || minY > view.max.y);
 }
 
 ImVec2 WorldSpaceToScreenSpace(ImVec2 vec, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom) noexcept {
@@ -49,22 +45,15 @@ Node Node::New(ImVec2 position, std::string label, ImU32 color, ImU32 labelColor
     return { position, { 0, 0 }, label, { -1, -1 }, color, labelColor };
 }
 
-void Node::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options, bool scaleWithZoom) noexcept {
-    ImVec2 screenPos = WorldSpaceToScreenSpace(
-        this->position,
-        canvasPos,
-        cameraOffset,
-        zoom
-    );
+void Node::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options,
+                bool scaleWithZoom) noexcept {
+    ImVec2 screenPos = WorldSpaceToScreenSpace(this->position, canvasPos, cameraOffset, zoom);
 
-    draw->AddCircleFilled(
-        screenPos,
-        options.baseSize * (scaleWithZoom ? zoom : 1),
-        this->color
-    );
+    draw->AddCircleFilled(screenPos, options.baseSize * (scaleWithZoom ? zoom : 1), this->color);
 }
 
-void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options) noexcept {
+void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom,
+                     GraphNodeOptions options) noexcept {
     if (this->labelSize.x == -1) {
         this->labelSize = ImGui::CalcTextSize(label.c_str());
     }
@@ -72,12 +61,16 @@ void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
     ImU32 labelBackgroundColor = options.label.backgroundColor;
 
     if (options.label.fadeout) {
-        float alpha = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) - options.label.fadeoutCutoffLower) / (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 255;
+        float alpha = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) -
+                       options.label.fadeoutCutoffLower) /
+                      (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 255;
         ImU32 byteAlpha = static_cast<ImU32>(alpha);
         this->labelColor &= ~IM_COL32_A_MASK;
         this->labelColor |= byteAlpha << IM_COL32_A_SHIFT;
 
-        float alphaBackground = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) - options.label.fadeoutCutoffLower) / (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 220;
+        float alphaBackground = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) -
+                                 options.label.fadeoutCutoffLower) /
+                                (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 220;
         if (alpha == 0 && alphaBackground == 0) {
             return;
         }
@@ -86,40 +79,29 @@ void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
         labelBackgroundColor |= byteAlphaBackground << IM_COL32_A_SHIFT;
     }
 
-    ImVec2 screenPos = WorldSpaceToScreenSpace(
-        this->position,
-        canvasPos,
-        cameraOffset,
-        zoom
-    );
+    ImVec2 screenPos = WorldSpaceToScreenSpace(this->position, canvasPos, cameraOffset, zoom);
 
     ImVec2 min = screenPos - this->labelSize * 0.5f - options.label.padding;
 
     ImVec2 max = screenPos + this->labelSize * 0.5f + options.label.padding;
 
-    draw->AddRectFilled(
-        min,
-        max,
-        labelBackgroundColor,
-        options.label.rounding
-    );
+    draw->AddRectFilled(min, max, labelBackgroundColor, options.label.rounding);
 
-    draw->AddText(
-        screenPos - this->labelSize * 0.5f,
-        this->labelColor,
-        this->label.c_str()
-    );
+    draw->AddText(screenPos - this->labelSize * 0.5f, this->labelColor, this->label.c_str());
 }
 
 Edge Edge::New(int src, int dst, std::string label, ImU32 color, ImU32 labelColor) noexcept {
     return { src, dst, label, { -1, -1 }, color, labelColor };
 }
 
-void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, bool scaleWithZoom, const std::vector<Node>& nodes) noexcept {
-    //LUSLOG_INFO("[Edge::Draw] Drawing edge: src = %d | dst = %d | label = \"%s\"", this->src, this->dst, this->label.c_str());
+void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options,
+                bool scaleWithZoom, const std::vector<Node>& nodes) noexcept {
+    // LUSLOG_INFO("[Edge::Draw] Drawing edge: src = %d | dst = %d | label = \"%s\"", this->src, this->dst,
+    // this->label.c_str());
 
     if (this->src >= nodes.size() || this->dst >= nodes.size()) {
-        LUSLOG_ERROR("[Edge::Draw] Invalid src (%d) or dst (%d) for node list of size (%d)", this->src, this->dst, nodes.size());
+        LUSLOG_ERROR("[Edge::Draw] Invalid src (%d) or dst (%d) for node list of size (%d)", this->src, this->dst,
+                     nodes.size());
         assert(false);
         return;
     }
@@ -127,15 +109,13 @@ void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float z
     ImVec2 a = nodes[this->src].position;
     ImVec2 b = nodes[this->dst].position;
 
-    draw->AddLine(
-        WorldSpaceToScreenSpace(a, canvasPos, cameraOffset, zoom),
-        WorldSpaceToScreenSpace(b, canvasPos, cameraOffset, zoom),
-        this->color,
-        options.thickness * (scaleWithZoom ? zoom : 1)
-    );
+    draw->AddLine(WorldSpaceToScreenSpace(a, canvasPos, cameraOffset, zoom),
+                  WorldSpaceToScreenSpace(b, canvasPos, cameraOffset, zoom), this->color,
+                  options.thickness * (scaleWithZoom ? zoom : 1));
 }
 
-void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, ImVec2 a, ImVec2 b) noexcept {
+void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options,
+                     ImVec2 a, ImVec2 b) noexcept {
     ImVec2 delta = b - a;
 
     float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
@@ -144,10 +124,7 @@ void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
         return;
     }
 
-    ImVec2 normal = {
-        -delta.y / len,
-        delta.x / len
-    };
+    ImVec2 normal = { -delta.y / len, delta.x / len };
 
     ImVec2 labelPosWorld = a * 0.6f + b * 0.4f + normal * options.label.separation;
 
@@ -160,12 +137,16 @@ void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
     ImU32 labelBackgroundColor = options.label.backgroundColor;
 
     if (options.label.fadeout) {
-        float alpha = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) - options.label.fadeoutCutoffLower) / (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 255;
+        float alpha = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) -
+                       options.label.fadeoutCutoffLower) /
+                      (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 255;
         ImU32 byteAlpha = static_cast<ImU32>(alpha);
         this->labelColor &= ~IM_COL32_A_MASK;
         this->labelColor |= byteAlpha << IM_COL32_A_SHIFT;
 
-        float alphaBackground = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) - options.label.fadeoutCutoffLower) / (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 220;
+        float alphaBackground = (std::clamp(zoom, options.label.fadeoutCutoffLower, options.label.fadeoutCutoffUpper) -
+                                 options.label.fadeoutCutoffLower) /
+                                (options.label.fadeoutCutoffUpper - options.label.fadeoutCutoffLower) * 220;
         if (alpha == 0 && alphaBackground == 0) {
             return;
         }
@@ -178,25 +159,18 @@ void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
 
     ImVec2 max = labelPosScreen + this->labelSize * 0.5f + options.label.padding;
 
-    draw->AddRectFilled(
-        min,
-        max,
-        labelBackgroundColor,
-        options.label.rounding
-    );
+    draw->AddRectFilled(min, max, labelBackgroundColor, options.label.rounding);
 
-    draw->AddText(
-        labelPosScreen - this->labelSize * 0.5f,
-        this->labelColor,
-        this->label.c_str()
-    );
+    draw->AddText(labelPosScreen - this->labelSize * 0.5f, this->labelColor, this->label.c_str());
 }
 
 Graph Graph::New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options) noexcept {
     return Graph(nodes, edges, options);
 }
 
-Graph::Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _options) : nodes(_nodes), edges(_edges), options(_options) {}
+Graph::Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _options)
+    : nodes(_nodes), edges(_edges), options(_options) {
+}
 
 #ifdef _MSC_VER
 #pragma optimize("t", on)
@@ -212,7 +186,7 @@ float Graph::StabilizeStep(float width, float height, float temperature) noexcep
 
     // reset displacement
     for (auto& n : this->nodes) {
-        n.displacement = {0, 0};
+        n.displacement = { 0, 0 };
     }
 
     // repulsive forces O(n^2)
@@ -261,7 +235,7 @@ float Graph::StabilizeStep(float width, float height, float temperature) noexcep
         totalDisplacement += len;
     }
 
-    //return totalDisplacement;
+    // return totalDisplacement;
     return maxDisplacement;
 }
 #ifdef _MSC_VER
@@ -269,7 +243,8 @@ float Graph::StabilizeStep(float width, float height, float temperature) noexcep
 #endif
 
 void Graph::Stabilize(float width, float height) noexcept {
-    for (float temperature = this->options.temperature.starting; temperature > this->options.temperature.ending; temperature -= this->options.temperature.decreasePerIteration) {
+    for (float temperature = this->options.temperature.starting; temperature > this->options.temperature.ending;
+         temperature -= this->options.temperature.decreasePerIteration) {
         this->StabilizeStep(width, height, temperature);
     }
 }
@@ -317,11 +292,7 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
     ImDrawList* draw = ImGui::GetWindowDrawList();
 
     ImGui::SetCursorScreenPos(canvasPos);
-    ImGui::InvisibleButton(
-        "graph_canvas",
-        canvasSize,
-        ImGuiButtonFlags_MouseButtonLeft
-    );
+    ImGui::InvisibleButton("graph_canvas", canvasSize, ImGuiButtonFlags_MouseButtonLeft);
 
     this->HandleMouse(canvasPos);
 
@@ -335,7 +306,8 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
             continue;
         }
 
-        e.Draw(draw, canvasPos, this->cameraOffset, this->zoom, this->options.edges, this->options.zoom.edgesScaleWithZoom, this->nodes);
+        e.Draw(draw, canvasPos, this->cameraOffset, this->zoom, this->options.edges,
+               this->options.zoom.edgesScaleWithZoom, this->nodes);
     }
 
     for (auto& n : this->nodes) {
@@ -343,7 +315,8 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
             continue;
         }
 
-        n.Draw(draw, canvasPos, this->cameraOffset, this->zoom, this->options.nodes, this->options.zoom.nodesScaleWithZoom);
+        n.Draw(draw, canvasPos, this->cameraOffset, this->zoom, this->options.nodes,
+               this->options.zoom.nodesScaleWithZoom);
     }
 
     for (auto& e : this->edges) {
@@ -371,7 +344,7 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
 
     ImGui::EndGroup();
 
-    //LUSLOG_INFO("[Graph::Draw] End\n");
+    // LUSLOG_INFO("[Graph::Draw] End\n");
 }
 
 GraphOptions& Graph::GetOptions() noexcept {

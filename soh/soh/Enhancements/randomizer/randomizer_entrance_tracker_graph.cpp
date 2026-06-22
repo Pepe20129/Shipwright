@@ -67,7 +67,8 @@ void EntranceTrackerGraphWindow::DrawElement() {
     }
 
     Color_RGBA8 bgColor = { 0, 0, 0, 255 };
-    if (Trackers::BeginFloatWindows("Entrance Tracker Graph", mIsVisible, bgColor, TRACKER_WINDOW_WINDOW, true, ImGuiWindowFlags_NoScrollbar)) {
+    if (Trackers::BeginFloatWindows("Entrance Tracker Graph", mIsVisible, bgColor, TRACKER_WINDOW_WINDOW, true,
+                                    ImGuiWindowFlags_NoScrollbar)) {
         ImVec2 canvasPos = ImGui::GetCursorScreenPos();
         ImVec2 canvasSize = ImGui::GetContentRegionAvail();
 
@@ -95,8 +96,10 @@ void EntranceTrackerGraphWindow::DrawElement() {
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 12.0f);
             ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(40, 40, 40, 255));
 
-            if (ImGui::BeginChild("ControlsPanel", panelSize, ImGuiChildFlags_Borders, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
-                if (UIWidgets::Button(ICON_FA_COG, UIWidgets::ButtonOptions().Color(THEME_COLOR).Size({ 40.0f, 40.0f }))) {
+            if (ImGui::BeginChild("ControlsPanel", panelSize, ImGuiChildFlags_Borders,
+                                  ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+                if (UIWidgets::Button(ICON_FA_COG,
+                                      UIWidgets::ButtonOptions().Color(THEME_COLOR).Size({ 40.0f, 40.0f }))) {
                     menuOpen = false;
                 }
 
@@ -105,67 +108,54 @@ void EntranceTrackerGraphWindow::DrawElement() {
                 }
 
                 if (this->sufficientlyStabilized) {
-                    if (UIWidgets::Button("Continue Stabilization", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green))) {
+                    if (UIWidgets::Button("Continue Stabilization",
+                                          UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green))) {
                         this->sufficientlyStabilized = false;
                     }
                 } else {
-                    if (UIWidgets::Button("Stop Stabilization", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+                    if (UIWidgets::Button("Stop Stabilization",
+                                          UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
                         this->sufficientlyStabilized = true;
                     }
                 }
 
-                if (UIWidgets::Button("Stabilize Step", UIWidgets::ButtonOptions().Color(THEME_COLOR).Disabled(!sufficientlyStabilized))) {
+                if (UIWidgets::Button(
+                        "Stabilize Step",
+                        UIWidgets::ButtonOptions().Color(THEME_COLOR).Disabled(!sufficientlyStabilized))) {
                     this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
                     this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
                 }
 
-                #define CONFIG_INPUT_BOOL(option_path, text)          \
-                if (                                                  \
-                    CVarCheckbox(                                     \
-                        text,                                         \
-                        CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
-                        UIWidgets::CheckboxOptions()                  \
-                            .DefaultValue(defaultOptions.option_path) \
-                            .Color(THEME_COLOR)                       \
-                    )                                                 \
-                ) {                                                   \
-                    this->UpdateGraphOptions();                       \
-                }
+#define CONFIG_INPUT_BOOL(option_path, text)                                                                      \
+    if (CVarCheckbox(text, CVAR_TRACKER_ENTRANCE("Graph." #option_path),                                          \
+                     UIWidgets::CheckboxOptions().DefaultValue(defaultOptions.option_path).Color(THEME_COLOR))) { \
+        this->UpdateGraphOptions();                                                                               \
+    }
 
-                #define CONFIG_INPUT_INT(option_path, text, min, max) \
-                if (                                                  \
-                    CVarSliderInt(                                    \
-                        text,                                         \
-                        CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
-                        UIWidgets::IntegerSliderOptions()             \
-                            .Min(min)                                 \
-                            .Max(max)                                 \
-                            .DefaultValue(defaultOptions.option_path) \
-                            .Format("%.1f")                           \
-                            .Size({ 300.0f, 0.0f })                   \
-                            .Color(THEME_COLOR)                       \
-                    )                                                 \
-                ) {                                                   \
-                    this->UpdateGraphOptions();                       \
-                }
+#define CONFIG_INPUT_INT(option_path, text, min, max)                     \
+    if (CVarSliderInt(text, CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
+                      UIWidgets::IntegerSliderOptions()                   \
+                          .Min(min)                                       \
+                          .Max(max)                                       \
+                          .DefaultValue(defaultOptions.option_path)       \
+                          .Format("%.1f")                                 \
+                          .Size({ 300.0f, 0.0f })                         \
+                          .Color(THEME_COLOR))) {                         \
+        this->UpdateGraphOptions();                                       \
+    }
 
-                #define CONFIG_INPUT_FLOAT(option_path, text, min, max, step, format) \
-                if (                                                                  \
-                    CVarSliderFloat(                                                  \
-                        text,                                                         \
-                        CVAR_TRACKER_ENTRANCE("Graph." #option_path),                 \
-                        UIWidgets::FloatSliderOptions()                               \
-                            .Min(min)                                                 \
-                            .Max(max)                                                 \
-                            .DefaultValue(defaultOptions.option_path)                 \
-                            .Format(format)                                           \
-                            .Size({ 300.0f, 0.0f })                                   \
-                            .Step(step)                                               \
-                            .Color(THEME_COLOR)                                       \
-                    )                                                                 \
-                ) {                                                                   \
-                    this->UpdateGraphOptions();                                       \
-                }
+#define CONFIG_INPUT_FLOAT(option_path, text, min, max, step, format)       \
+    if (CVarSliderFloat(text, CVAR_TRACKER_ENTRANCE("Graph." #option_path), \
+                        UIWidgets::FloatSliderOptions()                     \
+                            .Min(min)                                       \
+                            .Max(max)                                       \
+                            .DefaultValue(defaultOptions.option_path)       \
+                            .Format(format)                                 \
+                            .Size({ 300.0f, 0.0f })                         \
+                            .Step(step)                                     \
+                            .Color(THEME_COLOR))) {                         \
+        this->UpdateGraphOptions();                                         \
+    }
 
                 UIWidgets::Separator();
 
@@ -180,35 +170,40 @@ void EntranceTrackerGraphWindow::DrawElement() {
                 UIWidgets::Separator();
 
                 CONFIG_INPUT_FLOAT(temperature.starting, "Initial Starting Temperature", 10.0f, 1000.0f, 0.1f, "%.1f");
-                CONFIG_INPUT_FLOAT(temperature.decreasePerIteration, "Initial Temperature Decrease Per Iteration", 0.01f, 10.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(temperature.decreasePerIteration, "Initial Temperature Decrease Per Iteration",
+                                   0.01f, 10.0f, 0.1f, "%.1f");
                 CONFIG_INPUT_FLOAT(temperature.ending, "Initial Ending Temperature", 0.0f, 1000.0f, 0.1f, "%.1f");
 
                 UIWidgets::Separator();
 
                 CONFIG_INPUT_BOOL(zoom.nodesScaleWithZoom, "Nodes Scale With Zoom");
                 CONFIG_INPUT_FLOAT(nodes.baseSize, "Node Base Size", 1.0f, 10.0f, 0.1f, "%.1f");
-                //CONFIG_INPUT_IMVEC2(nodes.label.padding, "Node Label Padding", 0.0f, 20.0f);
+                // CONFIG_INPUT_IMVEC2(nodes.label.padding, "Node Label Padding", 0.0f, 20.0f);
                 CONFIG_INPUT_FLOAT(nodes.label.rounding, "Node Label Rounding", 1.0f, 10.0f, 0.1f, "%.1f");
-                //CONFIG_INPUT_COLOR(nodes.label.backgroundColor, "Node Label Rounding");
+                // CONFIG_INPUT_COLOR(nodes.label.backgroundColor, "Node Label Rounding");
                 CONFIG_INPUT_BOOL(nodes.label.fadeout, "Node Label Fades out");
-                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffLower, "Node Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f, "%.1f");
-                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffUpper, "Node Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffLower, "Node Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f,
+                                   "%.1f");
+                CONFIG_INPUT_FLOAT(nodes.label.fadeoutCutoffUpper, "Node Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f,
+                                   "%.1f");
 
                 UIWidgets::Separator();
 
                 CONFIG_INPUT_BOOL(zoom.edgesScaleWithZoom, "Edges Scale With Zoom");
                 CONFIG_INPUT_FLOAT(edges.thickness, "Edge Thickness", 1.0f, 10.0f, 0.1f, "%.1f");
                 CONFIG_INPUT_FLOAT(edges.label.separation, "Edge Label Separation", 0.0f, 20.0f, 0.1f, "%.1f");
-                //CONFIG_INPUT_IMVEC2(edges.label.padding, "Edge Label Padding", 0.0f, 20.0f);
+                // CONFIG_INPUT_IMVEC2(edges.label.padding, "Edge Label Padding", 0.0f, 20.0f);
                 CONFIG_INPUT_FLOAT(edges.label.rounding, "Edge Label Rounding", 1.0f, 10.0f, 0.1f, "%.1f");
-                //CONFIG_INPUT_COLOR(edges.label.backgroundColor, "Edge Label Rounding");
+                // CONFIG_INPUT_COLOR(edges.label.backgroundColor, "Edge Label Rounding");
                 CONFIG_INPUT_BOOL(edges.label.fadeout, "Edge Label Fades out");
-                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffLower, "Edge Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f, "%.1f");
-                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffUpper, "Edge Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f, "%.1f");
+                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffLower, "Edge Label Fadeout Cutoff Lower", 0.1f, 5.0f, 0.1f,
+                                   "%.1f");
+                CONFIG_INPUT_FLOAT(edges.label.fadeoutCutoffUpper, "Edge Label Fadeout Cutoff Upper", 0.1f, 5.0f, 0.1f,
+                                   "%.1f");
 
-                #undef CONFIG_INPUT_BOOL
-                #undef CONFIG_INPUT_INT
-                #undef CONFIG_INPUT_FLOAT
+#undef CONFIG_INPUT_BOOL
+#undef CONFIG_INPUT_INT
+#undef CONFIG_INPUT_FLOAT
             }
 
             ImGui::PopStyleColor();
@@ -231,13 +226,13 @@ ImU32 GetColorForArea(RandomizerArea area) {
             return IM_COL32(0xD8, 0xD2, 0xE8, 0xFF);
         case RA_KOKIRI_FOREST:
             return IM_COL32(0xB8, 0xE3, 0xC2, 0xFF);
-        case RA_THE_LOST_WOODS :
+        case RA_THE_LOST_WOODS:
             return IM_COL32(0xAF, 0xCF, 0xA8, 0xFF);
         case RA_SACRED_FOREST_MEADOW:
             return IM_COL32(0xCB, 0xE8, 0xB5, 0xFF);
         case RA_HYRULE_FIELD:
             return IM_COL32(0xDD, 0xE8, 0xA8, 0xFF);
-        case RA_LAKE_HYLIA :
+        case RA_LAKE_HYLIA:
             return IM_COL32(0xA9, 0xDC, 0xE3, 0xFF);
         case RA_GERUDO_VALLEY:
             return IM_COL32(0xF2, 0xC6, 0xA0, 0xFF);
@@ -247,15 +242,15 @@ ImU32 GetColorForArea(RandomizerArea area) {
             return IM_COL32(0xC9, 0xB2, 0xC8, 0xFF);
         case RA_DESERT_COLOSSUS:
             return IM_COL32(0xEB, 0xCB, 0x8B, 0xFF);
-        case RA_THE_MARKET :
+        case RA_THE_MARKET:
             return IM_COL32(0xF4, 0xB7, 0xC5, 0xFF);
-        case RA_TEMPLE_OF_TIME :
+        case RA_TEMPLE_OF_TIME:
             return IM_COL32(0xED, 0xE2, 0xC6, 0xFF);
         case RA_HYRULE_CASTLE:
             return IM_COL32(0xB9, 0xC1, 0xE8, 0xFF);
         case RA_OUTSIDE_GANONS_CASTLE:
             return IM_COL32(0xA8, 0x9B, 0xBE, 0xFF);
-        case RA_CASTLE_GROUNDS :
+        case RA_CASTLE_GROUNDS:
             return IM_COL32(0xB8, 0xCB, 0xE8, 0xFF);
         case RA_KAKARIKO_VILLAGE:
             return IM_COL32(0xE7, 0xB2, 0x8D, 0xFF);
@@ -346,13 +341,17 @@ void EntranceTrackerGraphWindow::InitGraph(bool initialStabilization) {
         }
 
         // random starting positions to allow the forces to move them
-        nodes.push_back(Node::New({ static_cast<float>(ShipUtils::next32(&randoState)) / INT32_MAX * initialSize - initialSize / 2, static_cast<float>(ShipUtils::next32(&randoState)) / INT32_MAX * initialSize - initialSize / 2 }, std::string(regionString.value()), GetColorForAreas(region.areas), labelColor));
+        nodes.push_back(Node::New(
+            { static_cast<float>(ShipUtils::next32(&randoState)) / INT32_MAX * initialSize - initialSize / 2,
+              static_cast<float>(ShipUtils::next32(&randoState)) / INT32_MAX * initialSize - initialSize / 2 },
+            std::string(regionString.value()), GetColorForAreas(region.areas), labelColor));
     }
 
     for (const auto& region : areaTable) {
         for (const auto& exit : region.exits) {
             // -1 due to skipping RR_NONE
-            edges.push_back(Edge::New(exit.GetParentRegionKey() - 1, exit.GetConnectedRegionKey() - 1, exit.GetConditionStr(), edgeColor, labelColor));
+            edges.push_back(Edge::New(exit.GetParentRegionKey() - 1, exit.GetConnectedRegionKey() - 1,
+                                      exit.GetConditionStr(), edgeColor, labelColor));
         }
     }
 
@@ -374,14 +373,19 @@ void EntranceTrackerGraphWindow::UpdateGraphOptions() {
 
     GraphOptions& currentGraphOptions = this->graph.value().GetOptions();
 
-    #define UPDATE_OPTION_PATH_SIMPLE(option_path, type) currentGraphOptions.option_path = CVarGet ## type (CVAR_TRACKER_ENTRANCE("Graph." #option_path), defaultOptions.option_path)
-    #define UPDATE_OPTION_PATH_INT(option_path) UPDATE_OPTION_PATH_SIMPLE(option_path, Integer)
-    #define UPDATE_OPTION_PATH_FLOAT(option_path) UPDATE_OPTION_PATH_SIMPLE(option_path, Float)
-    #define UPDATE_OPTION_PATH_IMVEC2(option_path) currentGraphOptions.option_path = {                 \
+#define UPDATE_OPTION_PATH_SIMPLE(option_path, type) \
+    currentGraphOptions.option_path =                \
+        CVarGet##type(CVAR_TRACKER_ENTRANCE("Graph." #option_path), defaultOptions.option_path)
+#define UPDATE_OPTION_PATH_INT(option_path) UPDATE_OPTION_PATH_SIMPLE(option_path, Integer)
+#define UPDATE_OPTION_PATH_FLOAT(option_path) UPDATE_OPTION_PATH_SIMPLE(option_path, Float)
+#define UPDATE_OPTION_PATH_IMVEC2(option_path)                                                         \
+    currentGraphOptions.option_path = {                                                                \
         CVarGetFloat(CVAR_TRACKER_ENTRANCE("Graph." #option_path ".x"), defaultOptions.option_path.x), \
         CVarGetFloat(CVAR_TRACKER_ENTRANCE("Graph." #option_path ".y"), defaultOptions.option_path.y), \
     }
-    #define UPDATE_OPTION_PATH_IMU32(option_path) currentGraphOptions.option_path = static_cast<ImU32>(CVarGetInteger(CVAR_TRACKER_ENTRANCE("Graph." #option_path), defaultOptions.option_path))
+#define UPDATE_OPTION_PATH_IMU32(option_path) \
+    currentGraphOptions.option_path =         \
+        static_cast<ImU32>(CVarGetInteger(CVAR_TRACKER_ENTRANCE("Graph." #option_path), defaultOptions.option_path))
 
     UPDATE_OPTION_PATH_FLOAT(zoom.min);
     UPDATE_OPTION_PATH_FLOAT(zoom.max);
@@ -412,11 +416,11 @@ void EntranceTrackerGraphWindow::UpdateGraphOptions() {
     UPDATE_OPTION_PATH_FLOAT(edges.label.fadeoutCutoffLower);
     UPDATE_OPTION_PATH_FLOAT(edges.label.fadeoutCutoffUpper);
 
-    #undef UPDATE_OPTION_PATH_SIMPLE
-    #undef UPDATE_OPTION_PATH_INT
-    #undef UPDATE_OPTION_PATH_FLOAT
-    #undef UPDATE_OPTION_PATH_IMVEC2
-    #undef UPDATE_OPTION_PATH_IMU32
+#undef UPDATE_OPTION_PATH_SIMPLE
+#undef UPDATE_OPTION_PATH_INT
+#undef UPDATE_OPTION_PATH_FLOAT
+#undef UPDATE_OPTION_PATH_IMVEC2
+#undef UPDATE_OPTION_PATH_IMU32
 
     this->sufficientlyStabilized = false;
 }
@@ -431,7 +435,8 @@ void EntranceTrackerGraphWindow::UpdateEdges() {
     for (const auto& region : areaTable) {
         for (const auto& exit : region.exits) {
             // -1 due to skipping RR_NONE
-            edges.push_back(Edge::New(exit.GetParentRegionKey() - 1, exit.GetConnectedRegionKey() - 1, exit.GetConditionStr(), edgeColor, labelColor));
+            edges.push_back(Edge::New(exit.GetParentRegionKey() - 1, exit.GetConnectedRegionKey() - 1,
+                                      exit.GetConditionStr(), edgeColor, labelColor));
         }
     }
 
@@ -441,7 +446,9 @@ void EntranceTrackerGraphWindow::UpdateEdges() {
 }
 
 void ReInitGraph() {
-    std::dynamic_pointer_cast<EntranceTrackerGraphWindow>(Ship::Context::GetRawInstance()->GetWindow()->GetGui()->GetGuiWindow("Entrance Tracker Graph"))->UpdateEdges();
+    std::dynamic_pointer_cast<EntranceTrackerGraphWindow>(
+        Ship::Context::GetRawInstance()->GetWindow()->GetGui()->GetGuiWindow("Entrance Tracker Graph"))
+        ->UpdateEdges();
 }
 
 static RegisterShipInitFunc initFunc(ReInitGraph, { "IS_RANDO" });
