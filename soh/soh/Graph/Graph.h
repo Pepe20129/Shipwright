@@ -88,6 +88,7 @@ class Graph final {
         [[nodiscard("There's no point in calling the function without using the options returned")]]
         GraphOptions& GetOptions() noexcept;
         void ResetView() noexcept;
+        void ReplaceEdges(std::vector<Edge> edges) noexcept;
         [[nodiscard("There's no point in calling the function without using the graph returned")]]
 #ifndef _MSC_VER // msvc complains about an unknown attribute
         [[gnu::pure]]

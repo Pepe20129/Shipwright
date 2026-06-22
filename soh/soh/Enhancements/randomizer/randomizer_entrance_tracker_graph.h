@@ -12,7 +12,9 @@ class EntranceTrackerGraphWindow final : public Ship::GuiWindow {
         void InitElement() override;
         void DrawElement() override;
         void UpdateElement() override{};
+        void InitGraph(bool initialStabilization);
         void UpdateGraphOptions();
+        void UpdateEdges();
 
     private:
         std::optional<Graph> graph = std::nullopt;

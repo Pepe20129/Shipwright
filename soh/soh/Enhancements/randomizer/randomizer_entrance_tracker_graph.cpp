@@ -104,7 +104,17 @@ void EntranceTrackerGraphWindow::DrawElement() {
                     this->graph.value().ResetView();
                 }
 
-                if (UIWidgets::Button("Stabilize Step", UIWidgets::ButtonOptions().Color(THEME_COLOR))) {
+                if (this->sufficientlyStabilized) {
+                    if (UIWidgets::Button("Continue Stabilization", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Green))) {
+                        this->sufficientlyStabilized = false;
+                    }
+                } else {
+                    if (UIWidgets::Button("Stop Stabilization", UIWidgets::ButtonOptions().Color(UIWidgets::Colors::Red))) {
+                        this->sufficientlyStabilized = true;
+                    }
+                }
+
+                if (UIWidgets::Button("Stabilize Step", UIWidgets::ButtonOptions().Color(THEME_COLOR).Disabled(!sufficientlyStabilized))) {
                     this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
                     this->graph.value().StabilizeStep(initialSize * 2.0f, initialSize * 2.0f, 10.0f);
                 }
@@ -311,13 +321,18 @@ ImU32 GetColorForAreas(std::set<RandomizerArea> areas) {
 uint64_t randoState = 0;
 
 void EntranceTrackerGraphWindow::InitElement() {
-    ImU32 labelColor = IM_COL32_WHITE;
-    ImU32 edgeColor = IM_COL32_WHITE;
+    RegionTable_Init();
+
+    this->InitGraph(true);
+}
+
+const ImU32 labelColor = IM_COL32_WHITE;
+const ImU32 edgeColor = IM_COL32_WHITE;
+
+void EntranceTrackerGraphWindow::InitGraph(bool initialStabilization) {
     std::vector<Node> nodes = {};
 
     std::vector<Edge> edges = {};
-
-    RegionTable_Init();
 
     for (const auto& region : areaTable) {
         if (region.randomizerRegionKey == RR_NONE) {
@@ -345,7 +360,11 @@ void EntranceTrackerGraphWindow::InitElement() {
 
     this->UpdateGraphOptions();
 
-    this->graph.value().Stabilize(initialSize * 2.0f, initialSize * 2.0f);
+    if (initialStabilization) {
+        this->graph.value().Stabilize(initialSize * 2.0f, initialSize * 2.0f);
+    }
+
+    this->sufficientlyStabilized = false;
 }
 
 void EntranceTrackerGraphWindow::UpdateGraphOptions() {
@@ -401,3 +420,28 @@ void EntranceTrackerGraphWindow::UpdateGraphOptions() {
 
     this->sufficientlyStabilized = false;
 }
+
+void EntranceTrackerGraphWindow::UpdateEdges() {
+    if (!this->graph.has_value()) {
+        return;
+    }
+
+    std::vector<Edge> edges = {};
+
+    for (const auto& region : areaTable) {
+        for (const auto& exit : region.exits) {
+            // -1 due to skipping RR_NONE
+            edges.push_back(Edge::New(exit.GetParentRegionKey() - 1, exit.GetConnectedRegionKey() - 1, exit.GetConditionStr(), edgeColor, labelColor));
+        }
+    }
+
+    this->graph.value().ReplaceEdges(edges);
+
+    this->UpdateGraphOptions();
+}
+
+void ReInitGraph() {
+    std::dynamic_pointer_cast<EntranceTrackerGraphWindow>(Ship::Context::GetRawInstance()->GetWindow()->GetGui()->GetGuiWindow("Entrance Tracker Graph"))->UpdateEdges();
+}
+
+static RegisterShipInitFunc initFunc(ReInitGraph, { "IS_RANDO" });

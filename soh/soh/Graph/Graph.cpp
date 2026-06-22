@@ -382,3 +382,7 @@ void Graph::ResetView() noexcept {
     this->cameraOffset = { 0, 0 };
     this->zoom = 1.0f;
 }
+
+void Graph::ReplaceEdges(std::vector<Edge> edges) noexcept {
+    this->edges = edges;
+}
