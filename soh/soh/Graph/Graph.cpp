@@ -10,7 +10,7 @@ typedef struct Rect {
     ImVec2 max;
 } Rect;
 
-Rect GetVisibleWorldRect(ImVec2 canvasSize, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom) {
+Rect GetVisibleWorldRect(ImVec2 canvasSize, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom) noexcept {
     Rect r;
 
     r.min = (-cameraOffset) / zoom;
@@ -19,7 +19,7 @@ Rect GetVisibleWorldRect(ImVec2 canvasSize, ImVec2 canvasPos, ImVec2 cameraOffse
     return r;
 }
 
-static bool IsNodeVisible(const Node& node, const Rect& view, float zoom, GraphNodeOptions options, bool scaleWithZoom) {
+static bool IsNodeVisible(const Node& node, const Rect& view, float zoom, GraphNodeOptions options, bool scaleWithZoom) noexcept {
     float radius = options.baseSize * (scaleWithZoom ? zoom : 1);
 
     return !(node.position.x + radius < view.min.x ||
@@ -28,7 +28,7 @@ static bool IsNodeVisible(const Node& node, const Rect& view, float zoom, GraphN
              node.position.y - radius > view.max.y);
 }
 
-static bool IsEdgeVisible(ImVec2 a, ImVec2 b, const Rect& view) {
+static bool IsEdgeVisible(ImVec2 a, ImVec2 b, const Rect& view) noexcept {
     float minX = std::min(a.x, b.x);
     float maxX = std::max(a.x, b.x);
 
@@ -41,15 +41,15 @@ static bool IsEdgeVisible(ImVec2 a, ImVec2 b, const Rect& view) {
              minY > view.max.y);
 }
 
-ImVec2 WorldSpaceToScreenSpace(ImVec2 vec, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom) {
+ImVec2 WorldSpaceToScreenSpace(ImVec2 vec, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom) noexcept {
     return canvasPos + cameraOffset + vec * zoom;
 }
 
-Node Node::New(ImVec2 position, std::string label, ImU32 color, ImU32 labelColor) {
+Node Node::New(ImVec2 position, std::string label, ImU32 color, ImU32 labelColor) noexcept {
     return { position, { 0, 0 }, label, { -1, -1 }, color, labelColor };
 }
 
-void Node::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options, bool scaleWithZoom) {
+void Node::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options, bool scaleWithZoom) noexcept {
     ImVec2 screenPos = WorldSpaceToScreenSpace(
         this->position,
         canvasPos,
@@ -64,7 +64,7 @@ void Node::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float z
     );
 }
 
-void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options) {
+void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options) noexcept {
     if (this->labelSize.x == -1) {
         this->labelSize = ImGui::CalcTextSize(label.c_str());
     }
@@ -111,11 +111,11 @@ void Node::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
     );
 }
 
-Edge Edge::New(int src, int dst, std::string label, ImU32 color, ImU32 labelColor) {
+Edge Edge::New(int src, int dst, std::string label, ImU32 color, ImU32 labelColor) noexcept {
     return { src, dst, label, { -1, -1 }, color, labelColor };
 }
 
-void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, bool scaleWithZoom, const std::vector<Node>& nodes) {
+void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, bool scaleWithZoom, const std::vector<Node>& nodes) noexcept {
     //LUSLOG_INFO("[Edge::Draw] Drawing edge: src = %d | dst = %d | label = \"%s\"", this->src, this->dst, this->label.c_str());
 
     if (this->src >= nodes.size() || this->dst >= nodes.size()) {
@@ -135,7 +135,7 @@ void Edge::Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float z
     );
 }
 
-void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, ImVec2 a, ImVec2 b) {
+void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, ImVec2 a, ImVec2 b) noexcept {
     ImVec2 delta = b - a;
 
     float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
@@ -192,13 +192,14 @@ void Edge::DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, fl
     );
 }
 
-Graph Graph::New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options) {
+Graph Graph::New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options) noexcept {
     return Graph(nodes, edges, options);
 }
 
 Graph::Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _options) : nodes(_nodes), edges(_edges), options(_options) {}
 
-float Graph::StabilizeStep(float width, float height, float temperature) {
+[[gnu::hot]]
+float Graph::StabilizeStep(float width, float height, float temperature) noexcept {
     float area = width * height;
     float k = std::sqrt(area / nodes.size());
 
@@ -269,13 +270,13 @@ float Graph::StabilizeStep(float width, float height, float temperature) {
     return maxDisplacement;
 }
 
-void Graph::Stabilize(float width, float height) {
+void Graph::Stabilize(float width, float height) noexcept {
     for (float temperature = this->options.temperature.starting; temperature > this->options.temperature.ending; temperature -= this->options.temperature.decreasePerIteration) {
         this->StabilizeStep(width, height, temperature);
     }
 }
 
-void Graph::HandleMouse(ImVec2 canvasPos) {
+void Graph::HandleMouse(ImVec2 canvasPos) noexcept {
     if (ImGui::IsItemActive() && ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
         this->cameraOffset += ImGui::GetIO().MouseDelta;
     } else if (ImGui::IsItemHovered()) {
@@ -297,7 +298,7 @@ void Graph::HandleMouse(ImVec2 canvasPos) {
     }
 }
 
-void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) {
+void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
     if (canvasSize.x < 0 || canvasSize.y < 0) {
         LUSLOG_ERROR("[Graph::Draw] Invalid canvasSize = (%f, %f)", canvasSize.x, canvasSize.y);
         assert(false);
@@ -375,11 +376,11 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) {
     //LUSLOG_INFO("[Graph::Draw] End\n");
 }
 
-GraphOptions& Graph::GetOptions() {
+GraphOptions& Graph::GetOptions() noexcept {
     return this->options;
 }
 
-void Graph::ResetView() {
+void Graph::ResetView() noexcept {
     this->cameraOffset = { 0, 0 };
     this->zoom = 1.0f;
 }

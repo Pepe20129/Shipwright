@@ -5,7 +5,7 @@
 
 #include <imgui.h>
 
-typedef struct GraphNodeOptions {
+typedef struct GraphNodeOptions final {
     float baseSize;
     struct {
         ImVec2 padding;
@@ -17,7 +17,7 @@ typedef struct GraphNodeOptions {
     } label;
 } GraphNodeOptions;
 
-typedef struct GraphEdgeOptions {
+typedef struct GraphEdgeOptions final {
     float thickness;
     struct {
         float separation;
@@ -30,7 +30,7 @@ typedef struct GraphEdgeOptions {
     } label;
 } GraphEdgeOptions;
 
-typedef struct Node {
+typedef struct Node final {
     ImVec2 position;
     ImVec2 displacement;
     std::string label;
@@ -39,12 +39,12 @@ typedef struct Node {
     ImU32 color;
     ImU32 labelColor;
 
-    static Node New(ImVec2 position, std::string label, ImU32 color, ImU32 labelColor);
-    void Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options, bool scaleWithZoom);
-    void DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options);
+    static Node New(ImVec2 position, std::string label, ImU32 color, ImU32 labelColor) noexcept;
+    void Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options, bool scaleWithZoom) noexcept;
+    void DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphNodeOptions options) noexcept;
 } Node;
 
-typedef struct Edge {
+typedef struct Edge final {
     // index of the source node in the nodes vector
     int src;
     // index of the destination node in the nodes vector
@@ -55,12 +55,12 @@ typedef struct Edge {
     ImU32 color;
     ImU32 labelColor;
 
-    static Edge New(int src, int dst, std::string label, ImU32 color, ImU32 labelColor);
-    void Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, bool scaleWithZoom, const std::vector<Node>& nodes);
-    void DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, ImVec2 a, ImVec2 b);
+    static Edge New(int src, int dst, std::string label, ImU32 color, ImU32 labelColor) noexcept;
+    void Draw(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, bool scaleWithZoom, const std::vector<Node>& nodes) noexcept;
+    void DrawLabel(ImDrawList* draw, ImVec2 canvasPos, ImVec2 cameraOffset, float zoom, GraphEdgeOptions options, ImVec2 a, ImVec2 b) noexcept;
 } Edge;
 
-typedef struct GraphOptions {
+typedef struct GraphOptions final {
     struct {
         float min;
         float max;
@@ -80,19 +80,22 @@ typedef struct GraphOptions {
     GraphEdgeOptions edges;
 } GraphOptions;
 
-class Graph {
+class Graph final {
     public:
-        void Stabilize(float width, float height);
-        float StabilizeStep(float width, float height, float temperature);
-        void Draw(ImVec2 canvasSize, ImVec2 canvasPos);
-        GraphOptions& GetOptions();
-        void ResetView();
-        static Graph New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options);
+        void Stabilize(float width, float height) noexcept;
+        float StabilizeStep(float width, float height, float temperature) noexcept;
+        void Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept;
+        [[nodiscard("There's no point in calling the function without using the options returned")]]
+        GraphOptions& GetOptions() noexcept;
+        void ResetView() noexcept;
+        [[nodiscard("There's no point in calling the function without using the graph returned")]]
+        [[gnu::pure]]
+        static Graph New(std::vector<Node> nodes, std::vector<Edge> edges, GraphOptions options) noexcept;
 
     private:
         Graph() = delete;
         Graph(std::vector<Node> _nodes, std::vector<Edge> _edges, GraphOptions _options);
-        void HandleMouse(ImVec2 canvasPos);
+        void HandleMouse(ImVec2 canvasPos) noexcept;
         std::vector<Node> nodes;
         std::vector<Edge> edges;
         ImVec2 cameraOffset = { 0, 0 };
