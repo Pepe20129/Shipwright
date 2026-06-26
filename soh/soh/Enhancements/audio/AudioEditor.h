@@ -1,9 +1,11 @@
 #pragma once
-#include "stdint.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 
-#include <libultraship/libultraship.h>
+#include <libultraship/libultra/types.h>
+#include <ship/window/gui/GuiWindow.h>
+
 #include <imgui.h>
 #include "AudioCollection.h"
 

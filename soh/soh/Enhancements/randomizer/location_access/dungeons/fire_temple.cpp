@@ -356,7 +356,7 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_FIRE_MAZE_SWITCH] = Region("Fire Temple Fire Maze Switch", SCENE_FIRE_TEMPLE, {}, {}, {
         //Exits
         ENTRANCE(RR_FIRE_TEMPLE_FIRE_MAZE_MAIN,      (ctx->GetTrickOption(RT_FIRE_SKIP_FLAME_WALLS) && logic->TakeDamage()) ||
-                                                     (logic->IsAdult && logic->CanStandingShield() && logic->CanUse(RG_BOMB_BAG) && ctx->GetTrickOption(RT_GROUND_JUMP_HARD) 
+                                                     (logic->IsAdult && logic->CanStandingShield() && logic->CanUse(RG_BOMB_BAG) && ctx->GetTrickOption(RT_GROUND_JUMP_HARD)
                                                       && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS)))),
         ENTRANCE(RR_FIRE_TEMPLE_SOT_CAGE_LOWER,      true),
         ENTRANCE(RR_FIRE_TEMPLE_FIRE_MAZE_PAST_WALL, true),
@@ -749,7 +749,7 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_MQ_UPPER_LIZALFOS_MAZE] = Region("Fire Temple MQ Upper Lizalfos Maze", SCENE_FIRE_TEMPLE, {}, {}, {
         //Exits
         ENTRANCE(RR_FIRE_TEMPLE_MQ_LOWER_LIZALFOS_MAZE, true),
-        ENTRANCE(RR_FIRE_TEMPLE_MQ_MAZE_BOX_CAGE,       AnyAgeTime([]{return logic->CanJumpslash() || logic->HasExplosives() || 
+        ENTRANCE(RR_FIRE_TEMPLE_MQ_MAZE_BOX_CAGE,       AnyAgeTime([]{return logic->CanJumpslash() || logic->HasExplosives() ||
                                                                              (ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG)));})),
         ENTRANCE(RR_FIRE_TEMPLE_MQ_SHORTCUT_CLIMB,      logic->HasExplosives()),
         //Implies RR_FIRE_TEMPLE_MQ_LOWER_LIZALFOS_MAZE access
@@ -1077,7 +1077,10 @@ void RegionTable_Init_FireTemple() {
 #pragma endregion
 
     // Boss Room
-    areaTable[RR_FIRE_TEMPLE_BOSS_ENTRYWAY] = Region("Fire Temple Boss Entryway", SCENE_FIRE_TEMPLE, {}, {}, {
+    areaTable[RR_FIRE_TEMPLE_BOSS_ENTRYWAY] = Region("Fire Temple Boss Entryway", SCENE_FIRE_TEMPLE, {}, {
+        // Locations
+        LOCATION(RC_FIRE_BOSS_KEY_HINT, true),
+    }, {
         // Exits
         ENTRANCE(RR_FIRE_TEMPLE_NEAR_BOSS_ROOM,    ctx->GetDungeon(FIRE_TEMPLE)->IsVanilla() && false),
         ENTRANCE(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM, ctx->GetDungeon(FIRE_TEMPLE)->IsMQ() && false),

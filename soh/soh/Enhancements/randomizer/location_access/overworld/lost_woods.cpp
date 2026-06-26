@@ -49,6 +49,7 @@ void RegionTable_Init_LostWoods() {
         LOCATION(RC_LW_GRASS_1,                         logic->CanCutShrubs()),
         LOCATION(RC_LW_GRASS_2,                         logic->CanCutShrubs()),
         LOCATION(RC_LW_GRASS_3,                         logic->CanCutShrubs()),
+        LOCATION(RC_LW_BOULDER_BY_GORON_CITY,           logic->BlastOrSmash()),
         LOCATION(RC_LW_WONDER_BACK_SKULL_KIDS_GRASS_1,  logic->IsChild),
         LOCATION(RC_LW_WONDER_BACK_SKULL_KIDS_GRASS_2,  logic->IsChild),
         LOCATION(RC_LW_WONDER_FRONT_SKULL_KIDS_GRASS,   logic->IsChild),
@@ -61,8 +62,8 @@ void RegionTable_Init_LostWoods() {
         ENTRANCE(RR_ZR_FROM_SHORTCUT,         logic->HasItem(RG_SILVER_SCALE) || logic->CanUse(RG_IRON_BOOTS) || (ctx->GetTrickOption(RT_LOST_WOOD_NAVI_DIVE) && logic->IsChild && logic->HasItem(RG_BRONZE_SCALE) && logic->CanJumpslash())),
         ENTRANCE(RR_LW_BEYOND_MIDO,           logic->IsChild || logic->CanUse(RG_SARIAS_SONG) || ctx->GetTrickOption(RT_LW_MIDO_BACKFLIP)),
         ENTRANCE(RR_LW_NEAR_SHORTCUTS_GROTTO, AnyAgeTime([]{return logic->BlastOrSmash();})),
-    });   
-    
+    });
+
     areaTable[RR_LW_UNDER_BRIDGE] = Region("Lost Woods Under the Bridge", SCENE_LOST_WOODS, {
         //Events
         EVENT_ACCESS(LOGIC_FAIRY_ACCESS,       logic->CallGossipFairyExceptSuns()),
@@ -97,6 +98,8 @@ void RegionTable_Init_LostWoods() {
         LOCATION(RC_LW_GRASS_7,                            logic->CanCutShrubs()),
         LOCATION(RC_LW_GRASS_8,                            logic->CanCutShrubs()),
         LOCATION(RC_LW_GRASS_9,                            logic->CanCutShrubs()),
+        LOCATION(RC_LW_BOULDER_BY_SACRED_FOREST_MEADOW,    logic->BlastOrSmash()),
+        LOCATION(RC_LW_RUPEE_BOULDER,                      logic->BlastOrSmash()),
         LOCATION(RC_LW_MEADOW_BUTTERFLY_FAIRY,             logic->IsChild && logic->CanUse(RG_STICKS)),
     }, {
         //Exits
@@ -120,6 +123,7 @@ void RegionTable_Init_LostWoods() {
         LOCATION(RC_LW_NEAR_SHORTCUTS_GROTTO_GRASS_2,                logic->CanCutShrubs()),
         LOCATION(RC_LW_NEAR_SHORTCUTS_GROTTO_GRASS_3,                logic->CanCutShrubs()),
         LOCATION(RC_LW_NEAR_SHORTCUTS_GROTTO_GRASS_4,                logic->CanCutShrubs()),
+        LOCATION(RC_LW_TUNNEL_GROTTO_BUTTERFLY_FAIRY,                logic->CanUse(RG_STICKS)),
     }, {
         //Exits
         ENTRANCE(RR_THE_LOST_WOODS, true),

@@ -130,8 +130,8 @@ void RegionTable_Init_GanonsCastle() {
         //Exits
         ENTRANCE(RR_GANONS_CASTLE_FIRE_TRIAL_OPEN_DOOR,   logic->CanUse(RG_LONGSHOT) && logic->FireTimer() >= 24),
         ENTRANCE(RR_GANONS_CASTLE_FIRE_TRIAL_BARRED_DOOR, true),
-    });    
-    
+    });
+
     areaTable[RR_GANONS_CASTLE_FIRE_TRIAL_BARRED_DOOR] = Region("Ganon's Castle Fire Trial Barred Door", SCENE_INSIDE_GANONS_CASTLE, {}, {}, {
         //Exits
         ENTRANCE(RR_GANONS_CASTLE_FIRE_TRIAL_FINAL_ROOM, logic->Get(LOGIC_FIRE_TRIAL_SILVER_RUPEES)),
@@ -505,7 +505,7 @@ void RegionTable_Init_GanonsCastle() {
     }, {}, {
         //Exits
         ENTRANCE(RR_GANONS_CASTLE_MQ_FIRE_TRIAL_OPEN_DOOR,   true),
-        ENTRANCE(RR_GANONS_CASTLE_MQ_FIRE_TRIAL_BARRED_DOOR, logic->FireTimer() >= 32 && (logic->CanUse(RG_LONGSHOT) || 
+        ENTRANCE(RR_GANONS_CASTLE_MQ_FIRE_TRIAL_BARRED_DOOR, logic->FireTimer() >= 32 && (logic->CanUse(RG_LONGSHOT) ||
                                                                                           (logic->CanUse(RG_GOLDEN_GAUNTLETS) && (logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_GANON_MQ_FIRE_TRIAL) && logic->IsAdult && logic->CanUse(RG_HOOKSHOT)))))),
     });
 
@@ -827,11 +827,11 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_TOWER_STAIRS_4] = Region("Ganon's Tower Stairs 4", SCENE_GANONS_TOWER, {}, {}, {
         //Exits
-        ENTRANCE(RR_GANONS_TOWER_FLOOR_3,               true),
-        ENTRANCE(RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR, true),
+        ENTRANCE(RR_GANONS_TOWER_FLOOR_3,  true),
+        ENTRANCE(RR_GANONS_TOWER_POT_ROOM, true),
     });
 
-    areaTable[RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR] = Region("Ganon's Tower Before Ganondorf's Lair", SCENE_GANONS_TOWER, {}, {
+    areaTable[RR_GANONS_TOWER_POT_ROOM] = Region("Ganon's Tower Pot Room", SCENE_GANONS_TOWER, {}, {
         // Locations
         LOCATION(RC_GANONS_CASTLE_GANONS_TOWER_POT_1,  logic->CanBreakPots()),
         LOCATION(RC_GANONS_CASTLE_GANONS_TOWER_POT_2,  logic->CanBreakPots()),
@@ -853,16 +853,25 @@ void RegionTable_Init_GanonsCastle() {
         LOCATION(RC_GANONS_CASTLE_GANONS_TOWER_POT_18, logic->CanBreakPots()),
     }, {
         //Exits
-        ENTRANCE(RR_GANONS_TOWER_FLOOR_3,        AnyAgeTime([]{return true;})),
+        ENTRANCE(RR_GANONS_TOWER_STAIRS_4,              true;),
+        ENTRANCE(RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR, true;),
+    });
+
+    areaTable[RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR] = Region("Ganon's Tower Before Ganondorf's Lair", SCENE_GANONS_TOWER, {}, {
+        //Locations
+        LOCATION(RC_GANONS_BOSS_KEY_HINT, true),
+    }, {
+        //Exits
+        ENTRANCE(RR_GANONS_TOWER_POT_ROOM,       false;),
         ENTRANCE(RR_GANONS_TOWER_GANONDORF_LAIR, AnyAgeTime([]{return logic->HasItem(RG_GANONS_CASTLE_BOSS_KEY);})),
     });
 
     areaTable[RR_GANONS_TOWER_GANONDORF_LAIR] = Region("Ganondorf's Lair", SCENE_GANONDORF_BOSS, {}, {
         //Locations
-        LOCATION(RC_GANONDORF_HINT, logic->HasBossSoul(RG_GANON_SOUL)),
+        LOCATION(RC_GANONDORF_HINT, logic->HasItem(RG_GANON_SOUL)),
     }, {
         //Exits
-        ENTRANCE(RR_GANONS_CASTLE_ESCAPE,               logic->CanKillEnemy(RE_GANONDORF)),
+        ENTRANCE(RR_GANONS_CASTLE_ESCAPE, logic->CanKillEnemy(RE_GANONDORF)),
     });
 
     areaTable[RR_GANONS_CASTLE_ESCAPE] = Region("Ganon's Castle Escape", SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR, {}, {

@@ -1,5 +1,4 @@
 #include "Anchor.h"
-#include <libultraship/libultraship.h>
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/frame_interpolation.h"
@@ -38,7 +37,7 @@ extern MapData* gMapData;
 
 void func_8086ED70(BgBombwall* bgBombwall, PlayState* play);
 void BgBreakwall_Wait(BgBreakwall* bgBreakwall, PlayState* play);
-void func_80883000(BgHakaZou* bgHakaZou, PlayState* play);
+void BgHakaZou_WaitForHit(BgHakaZou* bgHakaZou, PlayState* play);
 void func_808887C4(BgHidanHamstep* bgHidanHamstep, PlayState* play);
 void func_808896B8(BgHidanHrock* bgHidanHrock, PlayState* play);
 void BgIceShelter_Idle(BgIceShelter* bgIceShelter, PlayState* play);
@@ -217,7 +216,7 @@ void Anchor::RegisterHooks() {
     COND_ID_HOOK(ShouldActorUpdate, ACTOR_BG_HAKA_ZOU, isConnected, [&](void* refActor, bool* should) {
         BgHakaZou* actor = static_cast<BgHakaZou*>(refActor);
 
-        if (actor->actionFunc == func_80883000 && Flags_GetSwitch(gPlayState, actor->switchFlag)) {
+        if (actor->actionFunc == BgHakaZou_WaitForHit && Flags_GetSwitch(gPlayState, actor->switchFlag)) {
             actor->collider.base.acFlags |= AC_HIT;
         }
     });

@@ -300,7 +300,7 @@ void RegionTable_Init_ShadowTemple() {
         ENTRANCE(RR_SHADOW_TEMPLE_ACROSS_CHASM,  true),
         ENTRANCE(RR_SHADOW_TEMPLE_BROKEN_PILLAR, logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->IsAdult && logic->CanJumpslash())),
     });
-    
+
     areaTable[RR_SHADOW_TEMPLE_ACROSS_CHASM] = Region("Shadow Temple Across Chasm", SCENE_SHADOW_TEMPLE, {
         //Events
         EVENT_ACCESS(LOGIC_SHADOW_BRIDGE_BEYOND_BOAT_LOWERED, logic->CanDetonateUprightBombFlower()),
@@ -315,7 +315,7 @@ void RegionTable_Init_ShadowTemple() {
         ENTRANCE(RR_SHADOW_TEMPLE_BROKEN_PILLAR, logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME)),
         ENTRANCE(RR_SHADOW_TEMPLE_PRE_BOSS_ROOM, logic->SmallKeys(SCENE_SHADOW_TEMPLE, 5)),
     });
-    
+
     areaTable[RR_SHADOW_TEMPLE_BROKEN_PILLAR] = Region("Shadow Temple Broken Pillar", SCENE_SHADOW_TEMPLE, {}, {
         //Locations
         LOCATION(RC_SHADOW_TEMPLE_AFTER_SHIP_LOWER_HEART, true),
@@ -368,7 +368,10 @@ void RegionTable_Init_ShadowTemple() {
         ENTRANCE(RR_SHADOW_TEMPLE_BOSS_DOOR,    (ctx->GetTrickOption(RT_LENS_SHADOW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOVER_BOOTS)),
     });
 
-    areaTable[RR_SHADOW_TEMPLE_BOSS_DOOR] = Region("Shadow Temple Boss Door", SCENE_SHADOW_TEMPLE, {}, {}, {
+    areaTable[RR_SHADOW_TEMPLE_BOSS_DOOR] = Region("Shadow Temple Boss Door", SCENE_SHADOW_TEMPLE, {}, {
+        //Locations
+        LOCATION(RC_SHADOW_BOSS_KEY_HINT, true),
+    }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_PRE_BOSS_ROOM, (ctx->GetTrickOption(RT_LENS_SHADOW) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOVER_BOOTS)),
         ENTRANCE(RR_SHADOW_TEMPLE_BOSS_ENTRYWAY, true),
@@ -715,8 +718,8 @@ void RegionTable_Init_ShadowTemple() {
 
     areaTable[RR_SHADOW_TEMPLE_MQ_BOSS_DOOR] = Region("Shadow Temple MQ Boss Door", SCENE_SHADOW_TEMPLE, {}, {
         //Locations
-        //you can drop onto this and the respawn is reasonable
-        LOCATION(RC_SHADOW_TEMPLE_MQ_GS_NEAR_BOSS,  (logic->HookshotOrBoomerang() || ((logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) || logic->CanUse(RG_MEGATON_HAMMER)) && ctx->GetTrickOption(RT_VOIDOUT_COLLECTION))) && (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->CanUse(RG_LENS_OF_TRUTH))),
+        LOCATION(RC_SHADOW_BOSS_KEY_HINT,          true),
+        LOCATION(RC_SHADOW_TEMPLE_MQ_GS_NEAR_BOSS, (logic->HookshotOrBoomerang() || ((logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) || logic->CanUse(RG_MEGATON_HAMMER)) && ctx->GetTrickOption(RT_VOIDOUT_COLLECTION))) && (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->CanUse(RG_LENS_OF_TRUTH))),
     }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_PRE_BOSS_ROOM, logic->CanUse(RG_HOVER_BOOTS) && (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->CanUse(RG_LENS_OF_TRUTH))),

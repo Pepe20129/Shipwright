@@ -269,6 +269,15 @@ typedef enum {
     VB_BOTTLE_ACTOR,
 
     // #### `result`
+    // Actor is ACTOR_OBJ_BOMBIWA, or ACTOR_OBJ_HAMISHI
+    // ```c
+    // Flags_GetSwitch(play, this->actor.params & 0x3F)
+    // ```
+    // #### `args`
+    // - `*Actor` (interactRangeActor)
+    VB_BOULDER_BREAK_FLAG,
+
+    // #### `result`
     // ```c
     // true
     // ```
@@ -564,11 +573,21 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // (this->heldItemAction == PLAYER_IA_HOOKSHOT) ||
+    // (this->heldItemAction == PLAYER_IA_LONGSHOT)
+    // ```
+    // #### `args`
+    // - '*Player'
+    VB_DRAW_ADDITIONAL_RETICLES,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`
-    // - None
-    VB_DRAW_ADDITIONAL_RETICLES,
+    // - `PlayerMask currentMask`
+    // - `*PlayState play`
+    VB_DRAW_PLAYER_MASK,
 
     // #### `result`
     // In `Interface_DrawAmmoCount`:
@@ -593,6 +612,12 @@ typedef enum {
     // - `*int16_t` (item id)
     VB_DRAW_AMMO_COUNT,
 
+    // #### `args`
+    // - `Player*` player
+    // - `PlayState*` play
+    VB_DRAW_HOOKSHOT_CHAIN,
+    VB_DRAW_HOOKSHOT_TIP,
+
     // #### `result`
     // ```c
     // true
@@ -600,6 +625,16 @@ typedef enum {
     // #### `args`
     // - Player*
     VB_EMPTYING_BOTTLE,
+
+    // #### `result`
+    // ```c
+    // (gSaveContext.inventory.items[gSaveContext.equips.cButtonSlots[button - 1]] == ITEM_MILK_BOTTLE) &&
+    //     (item == ITEM_BOTTLE)
+    // ```
+    // #### `args`
+    // - `int32_t` (button - promoted from `u8`)
+    // - `int32_t` (item - promoted from `u8`)
+    VB_EMPTY_BOTTLE_TO_HALF_MILK,
 
     // #### `result`
     // ```c
@@ -915,6 +950,14 @@ typedef enum {
     // - `*EnGe1`
     // - `*PlayState`
     VB_PLAY_HORSEBACK_ARCHERY,
+
+    // #### `result`
+    // ```c
+    // play->sceneNum == SCENE_KOKIRI_FOREST
+    // ```
+    // #### `args`
+    // - `*EnSa`
+    VB_SARIA_GESTURE,
 
     // #### `result`
     // ```c
@@ -1355,6 +1398,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_JABU_WOBBLE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_HOT_ROOM_DISTORTION,
 
     // #### `result`
     // ```c
@@ -1952,6 +2003,31 @@ typedef enum {
     // - `*int32_t` (arrowType)
     VB_PLAYER_ARROW_MAGIC_CONSUMPTION,
 
+    // #### `args`
+    // - `void*` player (Player*)
+    // - `PlayState*` play
+    VB_PLAYER_DRAW_BOTTLE,
+
+    // #### `args`
+    // - `s32` limbIndex
+    // - `Gfx**` dList (write to *dList to replace the resolved display list)
+    // - `void*` player (Player*)
+    // - `PlayState*` play
+    VB_PLAYER_OVERRIDE_LIMB_DRAW,
+
+    // Fired from Player_OverrideLimbDrawPause (pause/equipment screen character only).
+    // #### `args`
+    // - `s32` limbIndex
+    // - `Gfx**` dList (write to *dList to replace the resolved display list)
+    // - `void*` player (Player*)
+    // - `PlayState*` play
+    VB_PLAYER_OVERRIDE_LIMB_DRAW_PAUSE,
+
+    // #### `args`
+    // - `*Player`
+    // - `*PlayState`
+    VB_PLAYER_UPDATE_BOTTLE_HELD,
+
     // #### `result`
     // ```c
     // item == ITEM_SAW
@@ -2017,6 +2093,13 @@ typedef enum {
     VB_RED_ICE_MELTED_FLAG,
 
     // #### `result`
+    // ```c
+    // camera->xzSpeed > 0.001f || <any release button pressed> || params->interfaceFlags & 0x8
+    // ```
+    // #### `args`
+    // - `Camera*` (`camera`)
+    VB_RELEASE_DOORC_CAMERA,
+
     // #### `result`
     // ```c
     // true
@@ -2048,6 +2131,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_REVERT_SPOILING_ITEMS,
+
+    // #### `result`
+    // ```c
+    // varies
+    // ```
+    // #### `args`
+    // - `*EnIshi`, `*ObjBombiwa`, or `*ObjHamishi`
+    VB_ROCK_DROP_ITEM,
 
     // #### `result`
     // ```c
@@ -2163,6 +2254,14 @@ typedef enum {
     // #### `args`
     // - `*VBFishingData`
     VB_SHOULD_GIVE_VANILLA_FISHING_PRIZE,
+
+    // #### `result`
+    // ```c
+    // CHECK_BTN_ALL(input->press.button, BTN_B)
+    // ```
+    // #### `args`
+    // - `*Input`
+    VB_SHOULD_OSSAN_CANCEL,
 
     // #### `result`
     // ```c
@@ -2684,6 +2783,15 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // false
+    // ```
+    // #### `args`
+    // - *EnGirlACanBuyResult
+    // - `RAND_INF`
+    VB_CAN_BUY_SHOP_SHIELD_OR_TUNIC,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`
@@ -2948,7 +3056,89 @@ typedef enum {
     // ```
     // #### `args`
     // - `*int32_t (camId)`
-    VB_SHOULD_LOAD_BG_IMAGE
+    VB_SHOULD_LOAD_BG_IMAGE,
+
+    // #### `result`
+    // ```c
+    // this->actor.floorHeight <= -10000.0f
+    // ```
+    // #### `args`
+    // - `*EnItem00`
+    VB_ITEM00_KILL,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - none
+    VB_ITEMSHIELD_DRAW,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_INIT_HOOKSHOT_IA,
+
+    // #### `result`
+    // ```c
+    // !(this->stateFlags1 & PLAYER_STATE1_ON_HORSE) && Player_HoldsHookshot(this)
+    // ```
+    // #### `args`
+    // - `s16* (&this->actor.parent->id)`
+    VB_PREVENT_HOOKSHOT_PARENT_SOFTLOCK,
+
+    // true
+    // ```
+    // #### `args`
+    // - `*EnPeehat`
+    // - `*PlayState`
+    VB_PEEHAT_SPAWN_LARVAS,
+
+    // #### `result`
+    // ```c
+    // gSaveContext.equips.buttonItems[0] != ITEM_NONE
+    // ```
+    // Whether the B button slot should be treated as holding an item when entering the
+    // horseback/minigame "temporary B" force path. Rando returns `true` for a swordless
+    // player so the swordless-on-Epona item glitch can be blocked.
+    // #### `args`
+    // - `*PlayState`
+    VB_TEMP_B_TREAT_AS_OCCUPIED,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // Side-effect hook (return value ignored): fired right after the vanilla
+    // `buttonStatus[0] = buttonItems[0]` stash so rando can relocate it to its swordless
+    // sentinel for later restoration.
+    // #### `args`
+    // - `*PlayState`
+    VB_TEMP_B_STASH_SWORDLESS,
+
+    // #### `result`
+    // ```c
+    // (gSaveContext.equips.buttonItems[0] != ITEM_NONE) || (gSaveContext.infTable[29] == 0)
+    // ```
+    // Whether the "temporary B" item should be restored to the B button. Rando also returns
+    // `true` when it had stashed a swordless sentinel.
+    // #### `args`
+    // - None
+    VB_TEMP_B_SHOULD_RESTORE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // Side-effect hook (return value ignored): fired right after the vanilla
+    // `buttonItems[0] = buttonStatus[0]` restore so rando can convert its swordless sentinel
+    // back into an empty (swordless) B button.
+    // #### `args`
+    // - None
+    VB_TEMP_B_RESTORE_SWORDLESS,
 } GIVanillaBehavior;
 
 #endif

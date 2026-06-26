@@ -1,7 +1,6 @@
 #ifndef SOHMENU_H
 #define SOHMENU_H
 
-#include <libultraship/libultraship.h>
 #include "Menu.h"
 #include <fast/backends/gfx_rendering_api.h>
 #include "soh/cvar_prefixes.h"
@@ -28,6 +27,7 @@ static std::map<int32_t, const char*> languages = {
 };
 void UpdateMenuTricks();
 void UpdateMenuLocations();
+void MarkRandomizerMenusDirty();
 
 class SohMenu : public Ship::Menu {
   public:
