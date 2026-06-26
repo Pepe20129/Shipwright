@@ -88,7 +88,7 @@ void RegionTable_Init_LakeHylia() {
         ENTRANCE(RR_HF_TO_LAKE_HYLIA,     true),
         ENTRANCE(RR_LH_FROM_SHORTCUT,     true),
         ENTRANCE(RR_LH_OWL_FLIGHT,        logic->IsChild && (logic->HasItem(RG_SPEAK_DEKU) || logic->HasItem(RG_SPEAK_GERUDO) || logic->HasItem(RG_SPEAK_GORON) || logic->HasItem(RG_SPEAK_KOKIRI) || logic->HasItem(RG_SPEAK_HYLIAN) || logic->HasItem(RG_SPEAK_ZORA))),
-        ENTRANCE(RR_LH_FISHING_ISLAND,    logic->CanHover(true, true) || ((logic->IsChild || logic->Get(LOGIC_WATER_TEMPLE_CLEAR)) && logic->HasItem(RG_BRONZE_SCALE)) || (logic->IsAdult && (logic->ReachScarecrow() || CanPlantBean(RR_LAKE_HYLIA, RG_LAKE_HYLIA_BEAN_SOUL)))),
+        ENTRANCE(RR_LH_FISHING_ISLAND,    logic->CanHover(true, true) || ((logic->IsChild || logic->Get(LOGIC_WATER_TEMPLE_CLEAR)) && logic->HasItem(RG_BRONZE_SCALE)) || (logic->IsAdult && (logic->ReachScarecrow(true, true) || CanPlantBean(RR_LAKE_HYLIA, RG_LAKE_HYLIA_BEAN_SOUL)))),
         ENTRANCE(RR_LH_LAB,               logic->HasItem(RG_HYLIA_LAB_KEY)),
         ENTRANCE(RR_LH_FROM_WATER_TEMPLE, true),
         ENTRANCE(RR_LH_GROTTO,            logic->HasItem(RG_POWER_BRACELET) && (logic->IsAdult || logic->HasItem(RG_SPEAK_DEKU) || logic->HasItem(RG_SPEAK_GERUDO) || logic->HasItem(RG_SPEAK_GORON) || logic->HasItem(RG_SPEAK_KOKIRI) || logic->HasItem(RG_SPEAK_HYLIAN) || logic->HasItem(RG_SPEAK_ZORA))),
