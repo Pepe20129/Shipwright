@@ -272,7 +272,7 @@ void Graph::HandleMouse(ImVec2 canvasPos) noexcept {
 }
 
 void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
-    if (canvasSize.x < 0 || canvasSize.y < 0) {
+    if (canvasSize.x <= 0 || canvasSize.y <= 0) {
         LUSLOG_ERROR("[Graph::Draw] Invalid canvasSize = (%f, %f)", canvasSize.x, canvasSize.y);
         assert(false);
         return;

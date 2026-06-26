@@ -84,7 +84,9 @@ void EntranceTrackerGraphWindow::DrawElement() {
 
         ImGui::SetNextItemAllowOverlap();
 
-        this->graph.value().Draw(canvasSize, canvasPos);
+        if (canvasSize.x != 0.0f && canvasSize.y != 0.0f) {
+            this->graph.value().Draw(canvasSize, canvasPos);
+        }
 
         ImGui::SetCursorScreenPos(canvasPos);
 
