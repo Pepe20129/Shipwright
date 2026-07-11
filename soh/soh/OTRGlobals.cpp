@@ -11,6 +11,9 @@
 
 #include "ResourceManagerHelpers.h"
 #include <fast/Fast3dWindow.h>
+#include <libultraship/bridge/audiobridge.h>
+#include <libultraship/bridge/gfxdebuggerbridge.h>
+#include <libultraship/bridge/windowbridge.h>
 #include <ship/Context.h>
 #include <ship/resource/File.h>
 #include <ship/window/Window.h>
@@ -35,7 +38,6 @@
 #include "Enhancements/randomizer/randomizer_check_tracker.h"
 #include "Enhancements/randomizer/static_data.h"
 #include "soh/Enhancements/randomizer/settings.h"
-#include "Enhancements/gameplaystats.h"
 #include "soh/Enhancements/savestates.h"
 #include "frame_interpolation.h"
 #include "SohGui/SohMenu.h"
@@ -75,7 +77,6 @@
 #include <functions.h>
 #include "Enhancements/item-tables/ItemTableManager.h"
 #include "Enhancements/Lang/Lang.h"
-#include "soh/SohGui/SohGui.hpp"
 #include "soh/SohGui/ImGuiUtils.h"
 #include "ActorDB.h"
 #include "SaveManager.h"
@@ -88,25 +89,10 @@
 #include <fast/resource/ResourceType.h>
 
 // Resource Types/Factories
-#include "soh/resource/type/Array.h"
-#include <ship/resource/type/Blob.h>
-#include <fast/resource/type/DisplayList.h>
 #include <fast/resource/type/Matrix.h>
-#include <fast/resource/type/Texture.h>
-#include <fast/resource/type/Vertex.h>
 #include "soh/resource/type/SohResourceType.h"
 #include "soh/resource/type/Animation.h"
-#include "soh/resource/type/AudioSample.h"
-#include "soh/resource/type/AudioSequence.h"
-#include "soh/resource/type/AudioSoundFont.h"
-#include "soh/resource/type/CollisionHeader.h"
-#include "soh/resource/type/Cutscene.h"
-#include "soh/resource/type/Path.h"
-#include "soh/resource/type/PlayerAnimation.h"
-#include "soh/resource/type/Scene.h"
 #include "soh/resource/type/Skeleton.h"
-#include "soh/resource/type/SkeletonLimb.h"
-#include "soh/resource/type/Text.h"
 #include <ship/resource/factory/BlobFactory.h>
 #include <fast/resource/factory/DisplayListFactory.h>
 #include <fast/resource/factory/MatrixFactory.h>
@@ -825,7 +811,7 @@ void OTRGlobals::Initialize() {
     auto logLevel =
         static_cast<spdlog::level::level_enum>(CVarGetInteger(CVAR_DEVELOPER_TOOLS("LogLevel"), defaultLogLevel));
     context->InitLogging(logLevel, logLevel);
-    Ship::Context::GetRawInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%l] %v");
+    Ship::Context::GetRawInstance()->GetLogger()->set_pattern("[%H:%M:%S.%e] [%s:%#] [%^%l%$] %v");
 
     InitGfxDebugger();
     context->InitFileDropMgr();
@@ -1034,13 +1020,24 @@ std::unordered_map<std::string, ExtensionEntry> ExtensionCache;
 
 void OTRAudio_Thread() {
 #define SAMPLES_HIGH 560
+#define SAMPLES_MID 544
 #define SAMPLES_LOW 528
 #define AUDIO_FRAMES_PER_UPDATE (R_UPDATE_RATE > 0 ? R_UPDATE_RATE : 1)
 #define NUM_AUDIO_CHANNELS 2
 
-    // Single producer routine used by both the wake-driven and pre-buffer
-    // loops. Captures the per-iteration sample count from the caller.
-    auto produce_and_play = [&](u32 num_audio_samples) {
+    // The sequencer advances a fixed slice of musical time per engine update
+    // (tempoInternalToExternal in audio_heap.c assumes 60 updates/sec), so with
+    // production paced by backend buffer fill the sample count must average
+    // exactly 32000/60 = 533.33 per update or tempo drifts.
+    // Two thirds 528 one third 544 gives 533.33.
+    int32_t sample_debt_thirds = 0;
+
+    // Single producer routine used by both wake-driven and pre-buffer loops.
+    // Picks per-iteration sample count itself, then produces and plays it.
+    auto produce_next_batch = [&]() {
+        u32 num_audio_samples = sample_debt_thirds > 0 ? SAMPLES_MID : SAMPLES_LOW;
+        sample_debt_thirds += (1600 - 3 * (int32_t)num_audio_samples) * AUDIO_FRAMES_PER_UPDATE;
+
         const u32 total_frames = num_audio_samples * AUDIO_FRAMES_PER_UPDATE;
         const u32 total_samples = total_frames * NUM_AUDIO_CHANNELS;
 
@@ -1091,18 +1088,16 @@ void OTRAudio_Thread() {
 
         {
             std::unique_lock<std::mutex> Lock(audio.mutex);
-            int samples_left = AudioPlayer_Buffered();
-            u32 num_audio_samples = samples_left < AudioPlayer_GetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
 
             // Producer guard (banteg/Shipwright#6594): skip advancing the audio
-            // engine if the backend ring cannot accept the smallest next burst.
+            // engine if the backend ring cannot accept the largest next burst.
             // Generating PCM that DoPlay() would refuse creates a discontinuity
             // audible as a click. The pre-buffer loop below will catch up once
             // the backend drains enough.
-            if (AudioPlayer_Buffered() + SAMPLES_LOW * AUDIO_FRAMES_PER_UPDATE > AudioPlayer_GetDesiredBuffered()) {
+            if (AudioPlayer_Buffered() + SAMPLES_MID * AUDIO_FRAMES_PER_UPDATE > AudioPlayer_GetDesiredBuffered()) {
                 audio.processing = false;
             } else {
-                produce_and_play(num_audio_samples);
+                produce_next_batch();
                 audio.processing = false;
             }
         }
@@ -1113,12 +1108,10 @@ void OTRAudio_Thread() {
         // The producer guard (same as above) prevents advancing the audio engine
         // when the backend ring is already at capacity.
         while (audio.running && AudioPlayer_Buffered() < AudioPlayer_GetDesiredBuffered()) {
-            if (AudioPlayer_Buffered() + SAMPLES_LOW * AUDIO_FRAMES_PER_UPDATE > AudioPlayer_GetDesiredBuffered()) {
+            if (AudioPlayer_Buffered() + SAMPLES_MID * AUDIO_FRAMES_PER_UPDATE > AudioPlayer_GetDesiredBuffered()) {
                 break;
             }
-            int samples_left = AudioPlayer_Buffered();
-            u32 num_audio_samples = samples_left < AudioPlayer_GetDesiredBuffered() ? SAMPLES_HIGH : SAMPLES_LOW;
-            produce_and_play(num_audio_samples);
+            produce_next_batch();
         }
     }
 }
@@ -1547,6 +1540,7 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     conf->RegisterVersionUpdater(std::make_shared<SOH::ConfigVersion4Updater>());
     conf->RegisterVersionUpdater(std::make_shared<SOH::ConfigVersion5Updater>());
     conf->RegisterVersionUpdater(std::make_shared<SOH::ConfigVersion6Updater>());
+    conf->RegisterVersionUpdater(std::make_shared<SOH::ConfigVersion7Updater>());
     conf->RunVersionUpdates();
 
     SohGui::SetupGuiElements();
@@ -1575,7 +1569,6 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     VanillaItemTable_Init();
     DebugConsole_Init();
 
-    ActorDB::AddBuiltInCustomActors();
     // #region SOH [Randomizer] TODO: Remove these and refactor spoiler file handling for randomizer
     CVarClear(CVAR_GENERAL("RandomizerNewFileDropped"));
     CVarClear(CVAR_GENERAL("RandomizerDroppedFile"));

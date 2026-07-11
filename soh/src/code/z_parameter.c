@@ -3205,7 +3205,7 @@ void Interface_UpdateMagicBar(PlayState* play) {
         case MAGIC_STATE_FILL:
             gSaveContext.magic += 4;
 
-            if (gSaveContext.gameMode == GAMEMODE_NORMAL && gSaveContext.sceneSetupIndex < 4) {
+            if (gSaveContext.gameMode == GAMEMODE_NORMAL && gSaveContext.sceneLayer < 4) {
                 Audio_PlaySoundGeneral(NA_SE_SY_GAUGE_UP - SFX_FLAG, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                        &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
             }
@@ -3633,7 +3633,7 @@ void Interface_DrawEnemyHealthBar(TargetContext* targetCtx, PlayState* play) {
 
         if (anchorType == ENEMYHEALTH_ANCHOR_ACTOR) {
             // Get actor projected position
-            func_8002BE04(play, &targetCtx->targetCenterPos, &projTargetCenter, &projTargetCappedInvW);
+            Actor_ProjectPos(play, &targetCtx->targetCenterPos, &projTargetCenter, &projTargetCappedInvW);
 
             projTargetCenter.x = (SCREEN_WIDTH / 2) * (projTargetCenter.x * projTargetCappedInvW);
             projTargetCenter.x = projTargetCenter.x * (CVarGetInteger(CVAR_ENHANCEMENT("MirroredWorld"), 0) ? -1 : 1);
@@ -5395,7 +5395,7 @@ void Interface_Draw(PlayState* play) {
                 gSPMatrix(OVERLAY_DISP++, interfaceCtx->view.projectionFlippedPtr,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
             }
-            func_8002C124(&play->actorCtx.targetCtx, play); // Draw Z-Target
+            Attention_Draw(&play->actorCtx.targetCtx, play); // Draw Z-Target
             if (CVarGetInteger(CVAR_ENHANCEMENT("MirroredWorld"), 0)) {
                 gSPMatrix(OVERLAY_DISP++, interfaceCtx->view.projectionPtr,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
@@ -5776,7 +5776,7 @@ void Interface_Draw(PlayState* play) {
         if ((play->pauseCtx.state == 0) && (play->pauseCtx.debugState == 0)) {
             if (gSaveContext.minigameState != 1) {
                 // Carrots rendering if the action corresponds to riding a horse
-                if (interfaceCtx->unk_1EE == 8 && !CVarGetInteger(CVAR_CHEAT("InfiniteEponaBoost"), 0)) {
+                if (interfaceCtx->unk_1EE == 8 && GameInteractor_Should(VB_DRAW_EPONA_BOOST_CARROTS, true)) {
                     // Load Carrot Icon
                     gDPLoadTextureBlock(OVERLAY_DISP++, gCarrotIconTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 16, 16, 0,
                                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
@@ -6509,8 +6509,8 @@ void Interface_Update(PlayState* play) {
     }
 
     if ((play->pauseCtx.state == 0) && (play->pauseCtx.debugState == 0)) {
-        if ((gSaveContext.minigameState == 1) || (gSaveContext.sceneSetupIndex < 4) ||
-            ((play->sceneNum == SCENE_LON_LON_RANCH) && (gSaveContext.sceneSetupIndex == 4))) {
+        if ((gSaveContext.minigameState == 1) || (gSaveContext.sceneLayer < 4) ||
+            ((play->sceneNum == SCENE_LON_LON_RANCH) && (gSaveContext.sceneLayer == 4))) {
             if ((msgCtx->msgMode == MSGMODE_NONE) ||
                 ((msgCtx->msgMode != MSGMODE_NONE) && (play->sceneNum == SCENE_BOMBCHU_BOWLING_ALLEY))) {
                 if (play->gameOverCtx.state == GAMEOVER_INACTIVE) {
