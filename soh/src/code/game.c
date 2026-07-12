@@ -2,7 +2,7 @@
 #include "global.h"
 #include "padmgr.h"
 #include "vt.h"
-#include "libultraship/bridge.h"
+#include <libultraship/bridge/resourcebridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ResourceManagerHelpers.h"

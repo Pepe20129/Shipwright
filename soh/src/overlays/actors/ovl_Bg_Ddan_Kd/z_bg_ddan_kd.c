@@ -6,6 +6,7 @@
 
 #include "z_bg_ddan_kd.h"
 #include "objects/object_ddan_objects/object_ddan_objects.h"
+#include "soh/Enhancements/savestate_serialize.h"
 
 #define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
 
@@ -105,7 +106,7 @@ void BgDdanKd_CheckForExplosions(BgDdanKd* this, PlayState* play) {
     if ((explosive != NULL) && (this->prevExplosive != NULL) && (explosive != this->prevExplosive) &&
         (Math_Vec3f_DistXZ(&this->prevExplosivePos, &explosive->world.pos) > 80.0f)) {
         BgDdanKd_SetupAction(this, BgDdanKd_LowerStairs);
-        OnePointCutscene_Init(play, 3050, 999, &this->dyna.actor, MAIN_CAM);
+        OnePointCutscene_Init(play, 3050, 999, &this->dyna.actor, CAM_ID_MAIN);
     } else {
         if (this->timer != 0) {
             this->timer--;
@@ -121,8 +122,14 @@ void BgDdanKd_CheckForExplosions(BgDdanKd* this, PlayState* play) {
     }
 }
 
-Vec3f sBgDdanKdVelocity = { 0.0f, 5.0f, 0.0f };
-Vec3f sBgDdanKdAccel = { 0.0f, -0.45f, 0.0f };
+static Vec3f sBgDdanKdVelocity = { 0.0f, 5.0f, 0.0f };
+static Vec3f sBgDdanKdAccel = { 0.0f, -0.45f, 0.0f };
+
+#define BG_DDAN_KD_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBgDdanKdVelocity)                    \
+    F(sBgDdanKdAccel)
+
+SHIP_SAVESTATE_DEFINE(BgDdanKd, BG_DDAN_KD_SHIP_SAVESTATE_FIELDS)
 
 void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play) {
     Vec3f pos1;
@@ -130,7 +137,7 @@ void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play) {
     f32 effectStrength;
 
     Math_SmoothStepToF(&this->dyna.actor.speedXZ, 4.0f, 0.5f, 0.025f, 0.0f);
-    func_800AA000(500.0f, 0x78, 0x14, 0xA);
+    Rumble_Request(500.0f, 0x78, 0x14, 0xA);
 
     if (Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y - 200.0f - 20.0f, 0.075f,
                            this->dyna.actor.speedXZ, 0.0075f) == 0.0f) {

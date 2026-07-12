@@ -8,6 +8,7 @@
 #include "objects/object_po_sisters/object_po_sisters.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/savestate_serialize.h"
 
 #define FLAGS 0
 
@@ -82,11 +83,11 @@ static ColliderTrisInit sTrisInit = {
     sTrisElementsInit,
 };
 
-u8 sBgPoEventBlocksAtRest = 0;
+static u8 sBgPoEventBlocksAtRest = 0;
 
 static Vec3f sZeroVec = { 0.0f, 0.0f, 0.0f };
 
-u8 sBgPoEventPuzzleState;
+static u8 sBgPoEventPuzzleState;
 
 void BgPoEvent_InitPaintings(BgPoEvent* this, PlayState* play) {
     static s16 paintingPosX[] = { -1302, -866, 1421, 985 };
@@ -239,7 +240,7 @@ void BgPoEvent_BlockWait(BgPoEvent* this, PlayState* play) {
     this->dyna.actor.world.pos.y = 833.0f;
     if (sBgPoEventPuzzleState == 0x3F) {
         if (this->type == 1) {
-            OnePointCutscene_Init(play, 3150, 65, NULL, MAIN_CAM);
+            OnePointCutscene_Init(play, 3150, 65, NULL, CAM_ID_MAIN);
         }
         this->timer = 45;
         this->actionFunc = BgPoEvent_BlockShake;
@@ -318,7 +319,7 @@ void BgPoEvent_BlockFall(BgPoEvent* this, PlayState* play) {
             BgPoEvent_CheckBlock(this);
         } else {
             Audio_PlayActorSound2(&this->dyna.actor, NA_SE_EV_STONE_BOUND);
-            func_80033E88(&this->dyna.actor, play, 5, 5);
+            Actor_RequestQuakeAndRumble(&this->dyna.actor, play, 5, 5);
             Interface_SetTimer(this->timer);
             if (firstFall == 0) {
                 firstFall = 1;
@@ -342,7 +343,7 @@ void BgPoEvent_BlockIdle(BgPoEvent* this, PlayState* play) {
                               this->dyna.actor.world.pos.y - 30.0f, this->dyna.actor.world.pos.z + 30.0f, 0,
                               this->dyna.actor.shape.rot.y, 0, this->dyna.actor.params + 0x300);
             if (amy != NULL) {
-                OnePointCutscene_Init(play, 3170, 30, amy, MAIN_CAM);
+                OnePointCutscene_Init(play, 3170, 30, amy, CAM_ID_MAIN);
             }
             Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
             gSaveContext.timerState = TIMER_STATE_STOP;
@@ -382,7 +383,15 @@ void BgPoEvent_BlockIdle(BgPoEvent* this, PlayState* play) {
     }
 }
 
-f32 sBgPoEventblockPushDist = 0.0f;
+static f32 sBgPoEventblockPushDist = 0.0f;
+
+#define BG_PO_EVENT_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBgPoEventBlocksAtRest)                \
+    F(sBgPoEventPuzzleState)                 \
+    F(sBgPoEventblockPushDist)
+
+SHIP_SAVESTATE_DEFINE(BgPoEvent, BG_PO_EVENT_SHIP_SAVESTATE_FIELDS)
+
 void BgPoEvent_BlockPush(BgPoEvent* this, PlayState* play) {
     f32 displacement;
     s32 blockStop;
@@ -415,7 +424,7 @@ void BgPoEvent_BlockPush(BgPoEvent* this, PlayState* play) {
         BgPoEvent_CheckBlock(this);
         BgPoEvent_CheckBlock((BgPoEvent*)this->dyna.actor.parent);
     }
-    func_8002F974(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_ROCK_SLIDE - SFX_FLAG);
 }
 
 void BgPoEvent_BlockReset(BgPoEvent* this, PlayState* play) {
@@ -539,12 +548,12 @@ void BgPoEvent_PaintingPresent(BgPoEvent* this, PlayState* play) {
         if (!BgPoEvent_NextPainting(this)) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_EN_PO_SISTERS, thisx->world.pos.x, thisx->world.pos.y - 40.0f,
                         thisx->world.pos.z, 0, thisx->shape.rot.y, 0, thisx->params + ((this->type - 1) << 8));
-            OnePointCutscene_Init(play, 3160, 80, thisx, MAIN_CAM);
+            OnePointCutscene_Init(play, 3160, 80, thisx, CAM_ID_MAIN);
             Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
 
         } else {
             Audio_PlayActorSound2(thisx, NA_SE_EN_PO_LAUGH2);
-            OnePointCutscene_Init(play, 3160, 35, thisx, MAIN_CAM);
+            OnePointCutscene_Init(play, 3160, 35, thisx, CAM_ID_MAIN);
         }
         if (thisx->parent != NULL) {
             thisx->parent->child = NULL;

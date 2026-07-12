@@ -35,7 +35,7 @@ static const std::unordered_map<std::string, ItemID> altarIcons = {
     { "l", ITEM_ARROW_LIGHT },     { "b", ITEM_KEY_BOSS },         { "o", ITEM_SWORD_MASTER },
     { "c", ITEM_OCARINA_FAIRY },   { "i", ITEM_OCARINA_TIME },     { "L", ITEM_BOW_ARROW_LIGHT },
     { "k", ITEM_TUNIC_KOKIRI },    { "m", ITEM_DUNGEON_MAP },      { "C", ITEM_COMPASS },
-    { "s", ITEM_SKULL_TOKEN },     { "g", ITEM_MASK_GORON },
+    { "s", ITEM_SKULL_TOKEN },     { "g", ITEM_MASK_GORON },       { "w", ITEM_CUSTOM },
 };
 
 static std::map<std::string, int> pixelWidthTable = {
@@ -274,16 +274,16 @@ void CustomMessage::LoadIntoFont() {
     switch (gSaveContext.language) {
         case LANGUAGE_FRA:
             msgCtx->msgLength = font->msgLength =
-                SohUtils::CopyStringToCharBuffer(buffer, GetFrench(MF_RAW), maxBufferSize);
+                static_cast<u32>(SohUtils::CopyStringToCharBuffer(buffer, GetFrench(MF_RAW), maxBufferSize));
             break;
         case LANGUAGE_GER:
             msgCtx->msgLength = font->msgLength =
-                SohUtils::CopyStringToCharBuffer(buffer, GetGerman(MF_RAW), maxBufferSize);
+                static_cast<u32>(SohUtils::CopyStringToCharBuffer(buffer, GetGerman(MF_RAW), maxBufferSize));
             break;
         case LANGUAGE_ENG:
         default:
             msgCtx->msgLength = font->msgLength =
-                SohUtils::CopyStringToCharBuffer(buffer, GetEnglish(MF_RAW), maxBufferSize);
+                static_cast<u32>(SohUtils::CopyStringToCharBuffer(buffer, GetEnglish(MF_RAW), maxBufferSize));
             break;
     }
 }
@@ -506,7 +506,10 @@ size_t CustomMessage::FindNEWLINE(std::string& str, size_t lastNewline) const {
 
 bool CustomMessage::AddBreakString(std::string& str, size_t pos, std::string breakString) const {
     if (str[pos] == ' ' || str[pos] == '&') {
-        str.replace(pos, 1, breakString);
+        // don't add a break next to an existing newline
+        if (str[pos] != ' ' || (str[pos + 1] != '&' && str[pos + 1] != NEWLINE()[0])) {
+            str.replace(pos, 1, breakString);
+        }
         return false;
     } else {
         if (pos <= str.size() - 1) {
@@ -515,7 +518,10 @@ bool CustomMessage::AddBreakString(std::string& str, size_t pos, std::string bre
                 return false;
                 // otherwise, if it is a line break or space, replace it
             } else if (str[pos + 1] == ' ' || str[pos + 1] == '&') {
-                str.replace(pos + 1, 1, breakString);
+                // don't add a break next to an existing newline
+                if (str[pos + 1] != ' ' || (str[pos + 2] != '&' && str[pos + 2] != NEWLINE()[0])) {
+                    str.replace(pos + 1, 1, breakString);
+                }
                 return false;
             }
         }

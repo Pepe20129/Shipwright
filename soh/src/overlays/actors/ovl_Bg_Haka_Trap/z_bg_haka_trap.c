@@ -6,6 +6,7 @@
 
 #include "z_bg_haka_trap.h"
 #include "objects/object_haka_objects/object_haka_objects.h"
+#include "soh/Enhancements/savestate_serialize.h"
 
 #define FLAGS 0
 
@@ -28,7 +29,7 @@ void BgHakaTrap_FireBarrier_Idle(BgHakaTrap* this, PlayState* play);
 void BgHakaTrap_FireBarrier_UpdateLayout(BgHakaTrap* this, PlayState* play);
 void BgHakaTrap_GetSwitchFlag(BgHakaTrap* this);
 
-UNK_TYPE D_80880F30 = 0;
+static UNK_TYPE D_80880F30 = 0;
 
 const ActorInit Bg_Haka_Trap_InitVars = {
     ACTOR_BG_HAKA_TRAP,
@@ -107,7 +108,14 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 100, ICHAIN_STOP),
 };
 
-UNK_TYPE D_80881014 = 0;
+static UNK_TYPE D_80881014 = 0;
+
+#define BG_HAKA_TRAP_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80880F30)                             \
+    F(D_80881014)
+
+SHIP_SAVESTATE_DEFINE(BgHakaTrap, BG_HAKA_TRAP_SHIP_SAVESTATE_FIELDS)
+
 void BgHakaTrap_Init(Actor* thisx, PlayState* play) {
     BgHakaTrap* this = (BgHakaTrap*)thisx;
     s32 pad;
@@ -234,7 +242,7 @@ void BgHakaTrap_SpikedWall_CloseIn(BgHakaTrap* this, PlayState* play) {
 
     if ((D_80880F30 == 0) && (!Player_InCsMode(play))) {
         if (!Math_StepToF(&this->dyna.actor.world.pos.x, this->dyna.actor.home.pos.x, 0.5f)) {
-            func_8002F974(&this->dyna.actor, NA_SE_EV_TRAP_OBJ_SLIDE - SFX_FLAG);
+            Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_TRAP_OBJ_SLIDE - SFX_FLAG);
         } else if (this->dyna.actor.params == HAKA_TRAP_SPIKED_WALL) {
             D_80881018 |= 1;
         } else if (this->dyna.actor.params == HAKA_TRAP_SPIKED_WALL_2) {
@@ -264,7 +272,7 @@ void BgHakaTrap_SpikedWall_Burn(BgHakaTrap* this, PlayState* play) {
         this->timer--;
     }
 
-    func_8002F974(&this->dyna.actor, NA_SE_EV_BURN_OUT - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_BURN_OUT - SFX_FLAG);
 
     for (i = 0; i < 2; i++) {
         f32 rand = Rand_ZeroOne();
@@ -387,7 +395,7 @@ void BgHakaTrap_SpikedCrusher_Fall(BgHakaTrap* this, PlayState* play) {
     }
 
     if (this->dyna.actor.velocity.y >= 0.01f) {
-        func_8002F974(&this->dyna.actor, NA_SE_EV_CHINETRAP_DOWN - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_CHINETRAP_DOWN - SFX_FLAG);
     }
 
     if (this->timer == 0) {
@@ -458,7 +466,7 @@ void BgHakaTrap_FireBarrier_Idle(BgHakaTrap* this, PlayState* play) {
 
     this->dyna.actor.shape.rot.z += this->dyna.actor.world.rot.z;
     if (this->dyna.actor.world.rot.z >= 0x1801) {
-        func_8002F974(&this->dyna.actor, NA_SE_EV_WIND_TRAP - SFX_FLAG);
+        Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_WIND_TRAP - SFX_FLAG);
     }
 
     BgHakaTrap_FanBlade_UpdateFanRotation(this, play, this->dyna.actor.world.rot.z);
@@ -469,7 +477,7 @@ void BgHakaTrap_FireBarrier_UpdateLayout(BgHakaTrap* this, PlayState* play) {
         this->timer--;
     }
 
-    func_8002F974(&this->dyna.actor, NA_SE_EV_WIND_TRAP - SFX_FLAG);
+    Actor_PlaySfx_Flagged(&this->dyna.actor, NA_SE_EV_WIND_TRAP - SFX_FLAG);
 
     if (this->timer == 0) {
         this->timer = 1;
