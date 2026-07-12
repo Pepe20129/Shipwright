@@ -1,5 +1,6 @@
 #include <string.h>
 #include "global.h"
+#include "padmgr.h"
 #include "vt.h"
 #include "libultraship/bridge.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"

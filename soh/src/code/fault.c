@@ -1,4 +1,5 @@
 #include "global.h"
+#include "padmgr.h"
 #include "vt.h"
 #include <stdio.h>
 
