@@ -437,9 +437,11 @@ struct FloatSliderOptions : WidgetOptions {
 
     FloatSliderOptions& IsPercentage(bool isPercentage_ = true) {
         isPercentage = isPercentage_;
-        format = "%.0f%%";
-        min = 0.0f;
-        max = 1.0f;
+        if (isPercentage) {
+            format = "%.0f%%";
+            min = 0.0f;
+            max = 1.0f;
+        }
         return *this;
     }
 
