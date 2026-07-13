@@ -3,6 +3,7 @@
 
 #include <libultraship/libultra.h>
 #include "irqmgr.h"
+#include "unk.h"
 
 #include "extern_c_helper.h"
 
