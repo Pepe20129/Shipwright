@@ -299,8 +299,8 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
     Rect visibleRect = GetVisibleWorldRect(canvasSize, canvasPos, this->cameraOffset, this->zoom);
 
     for (auto& e : this->edges) {
-        const ImVec2& a = nodes[e.src].position;
-        const ImVec2& b = nodes[e.dst].position;
+        const ImVec2& a = this->nodes[e.src].position;
+        const ImVec2& b = this->nodes[e.dst].position;
 
         if (!IsEdgeVisible(a, b, visibleRect)) {
             continue;
@@ -320,8 +320,8 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
     }
 
     for (auto& e : this->edges) {
-        const ImVec2& a = nodes[e.src].position;
-        const ImVec2& b = nodes[e.dst].position;
+        const ImVec2& a = this->nodes[e.src].position;
+        const ImVec2& b = this->nodes[e.dst].position;
 
         if (!IsEdgeVisible(a, b, visibleRect)) {
             continue;
@@ -338,7 +338,7 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
         }
 
         if (n.label != "") {
-            n.DrawLabel(draw, canvasPos, cameraOffset, zoom, this->options.nodes);
+            n.DrawLabel(draw, canvasPos, cameraOffset, this->zoom, this->options.nodes);
         }
     }
 
