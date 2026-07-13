@@ -89,6 +89,9 @@ class Graph final {
     void Stabilize(float width, float height) noexcept;
     float StabilizeStep(float width, float height, float temperature) noexcept;
     void Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept;
+    void Focus(ImVec2 pos);
+    void FocusOnNode(size_t index);
+    void FocusOnEdge(size_t index);
     [[nodiscard("There's no point in calling the function without using the options returned")]]
     // comment so clang format doesn't mess this up too much
     GraphOptions&

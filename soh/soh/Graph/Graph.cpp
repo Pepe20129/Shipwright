@@ -347,6 +347,34 @@ void Graph::Draw(ImVec2 canvasSize, ImVec2 canvasPos) noexcept {
     // LUSLOG_INFO("[Graph::Draw] End\n");
 }
 
+void Graph::Focus(ImVec2 pos) {
+    this->cameraOffset = pos;
+    if (this->zoom < 1.0f) {
+        this->zoom = 1.0f;
+    }
+}
+
+void Graph::FocusOnNode(size_t index) {
+    if (index >= this->nodes.size()) {
+        LUSLOG_ERROR("[Graph::FocusOnNode] Invalid index = %d", index);
+        assert(false);
+        return;
+    }
+
+    this->Focus(this->nodes[index].position);
+}
+
+void Graph::FocusOnEdge(size_t index) {
+    if (index >= this->edges.size()) {
+        LUSLOG_ERROR("[Graph::FocusOnEdge] Invalid index = %d", index);
+        assert(false);
+        return;
+    }
+
+    Edge edge = this->edges[index];
+    this->Focus((this->nodes[edge.src].position + this->nodes[edge.dst].position) / 2);
+}
+
 GraphOptions& Graph::GetOptions() noexcept {
     return this->options;
 }
