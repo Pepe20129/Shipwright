@@ -182,7 +182,7 @@ EXTERN_C struct_8011FC1C D_8011FC1C[][9];
 EXTERN_C u8 gWeatherMode;
 EXTERN_C u8 D_8011FB34;
 EXTERN_C u8 D_8011FB38;
-EXTERN_C u16 gTimeIncrement;
+EXTERN_C u16 gTimeSpeed;
 
 EXTERN_C LightningStrike gLightningStrike;
 
