@@ -3,6 +3,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "ship/utils/StringHelper.h"
 #include "soh/Enhancements/randomizer/randomizerTypes.h"
+#include "soh/Enhancements/randomizer/SeedContext.h"
 #include "soh/ShipInit.hpp"
 #include "soh/ShipUtils.h"
 
@@ -11,7 +12,6 @@ extern "C" {
 #include "functions.h"
 #include "macros.h"
 #include "variables.h"
-#include <textures/message_static/message_static.h>
 #include <textures/parameter_static/parameter_static.h>
 extern PlayState* gPlayState;
 }
@@ -144,12 +144,11 @@ Kaleido::Kaleido() {
             gItemIconFishingPoleTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
             Flag::FromRandomizerInf(RAND_INF_FISHING_POLE_FOUND), "Fishing Pole"));
     }
-    if (ctx->GetOption(RSK_TRIFORCE_HUNT).IsNot(RO_TRIFORCE_HUNT_OFF)) {
+    if (ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get() > 0) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconCountRequired>(
             gTriforcePieceTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
             reinterpret_cast<int*>(&gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected),
-            ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_REQUIRED).Get() + 1,
-            ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get() + 1));
+            ctx->GetOption(RSK_WINCON_TRIFORCE_COUNT).Get(), ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get()));
     }
     if (ctx->GetOption(RSK_SKELETON_KEY)) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
@@ -170,7 +169,7 @@ Kaleido::Kaleido() {
                 Flag::FromRandomizerInf(static_cast<RandomizerInf>(i)), bossSoulNames[i - RAND_INF_GOHMA_SOUL]));
         }
     }
-    if (ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS).Is(RO_BOSS_SOULS_ON_PLUS_GANON)) {
+    if (ctx->GetOption(RSK_GANONS_SOUL).IsNot(RO_GANONS_SOUL_STARTWITH)) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
             gBossSoulTex, G_IM_FMT_RGBA, G_IM_SIZ_32b, 32, 32, Color_RGBA8{ 255, 255, 255, 255 },
             Flag::FromRandomizerInf(RAND_INF_GANON_SOUL), "Ganon's Soul"));
@@ -216,6 +215,11 @@ Kaleido::Kaleido() {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
             gMapChestIconTex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 8, Color_RGBA8{ 255, 255, 255, 255 },
             Flag::FromRandomizerInf(RAND_INF_CAN_OPEN_CHEST), "Open Chests"));
+        if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(RO_OPEN_CHEST_PROGRESSIVE)) {
+            mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(
+                gMapChestIconTex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 8, Color_RGBA8{ 255, 255, 255, 255 },
+                Flag::FromRandomizerInf(RAND_INF_CAN_OPEN_LARGE_CHEST), "Open Large Chests"));
+        }
     }
     if (ctx->GetOption(RSK_SHUFFLE_SWIM)) {
         mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gItemIconScaleSilverTex, G_IM_FMT_RGBA, G_IM_SIZ_32b,
@@ -306,7 +310,7 @@ void Kaleido::Draw(PlayState* play) {
                     if (mCursorPos < static_cast<int>(mEntries.size() - 1)) {
                         mCursorPos += mNumVisible;
                         if (mCursorPos > static_cast<int>(mEntries.size() - 1)) {
-                            mCursorPos = mEntries.size() - 1;
+                            mCursorPos = static_cast<int>(mEntries.size() - 1);
                         }
                         Audio_PlaySoundGeneral(NA_SE_SY_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                                                &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
@@ -520,14 +524,11 @@ void KaleidoEntryOcarinaButtons::CalculateColors() {
 }
 
 void KaleidoEntryOcarinaButtons::Update(PlayState* play) {
-    mButtonCollected[0] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_A) > 0;
-    mButtonCollected[1] = GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_UP) > 0;
-    mButtonCollected[2] =
-        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_DOWN) > 0;
-    mButtonCollected[3] =
-        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_LEFT) > 0;
-    mButtonCollected[4] =
-        GameInteractor::RawAction::CheckFlag(FLAG_TYPE_RANDOMIZER_INF, RAND_INF_HAS_OCARINA_C_RIGHT) > 0;
+    mButtonCollected[0] = Flag::FromRandomizerInf(RAND_INF_HAS_OCARINA_A).Get();
+    mButtonCollected[1] = Flag::FromRandomizerInf(RAND_INF_HAS_OCARINA_C_UP).Get();
+    mButtonCollected[2] = Flag::FromRandomizerInf(RAND_INF_HAS_OCARINA_C_DOWN).Get();
+    mButtonCollected[3] = Flag::FromRandomizerInf(RAND_INF_HAS_OCARINA_C_LEFT).Get();
+    mButtonCollected[4] = Flag::FromRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT).Get();
     CalculateColors();
     mAchieved = false;
     for (size_t i = 0; i < mButtonCollected.size(); i++) {

@@ -1,5 +1,4 @@
 #include "Anchor.h"
-#include <libultraship/libultraship.h>
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/frame_interpolation.h"
@@ -117,7 +116,26 @@ void Anchor::RegisterHooks() {
         }
     });
 
-    COND_HOOK(OnFlagSet, isConnected, [&](Flag flag) { SendPacket_SetFlag(flag.scene, flag.type, flag.id); });
+    COND_HOOK(OnFlagSet, isConnected, [&](Flag flag) {
+        SendPacket_SetFlag(flag.scene, flag.type, flag.id);
+
+        // If we're not in rando, we have to sync some of the great fairy rewards manually
+        if (!IS_RANDO) {
+            if (flag.type == FLAG_TYPE_RANDOMIZER_INF) {
+                switch (flag.id) {
+                    case RAND_INF_DMT_GREAT_FAIRY_REWARD:
+                        SendPacket_GiveItem(1, RG_MAGIC_SINGLE);
+                        break;
+                    case RAND_INF_DMC_GREAT_FAIRY_REWARD:
+                        SendPacket_GiveItem(1, RG_MAGIC_DOUBLE);
+                        break;
+                    case RAND_INF_OGC_GREAT_FAIRY_REWARD:
+                        SendPacket_GiveItem(1, RG_DOUBLE_DEFENSE);
+                        break;
+                }
+            }
+        }
+    });
 
     COND_HOOK(OnFlagUnset, isConnected, [&](Flag flag) { SendPacket_UnsetFlag(flag.scene, flag.type, flag.id); });
 
