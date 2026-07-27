@@ -21,12 +21,12 @@ static void DekuNutUpgradeFixAtForestStage(bool* should) {
     }
 
     s32 expectedNutUpgrades = (INV_CONTENT(ITEM_NUT) == ITEM_NUT ? 1 : 0) +
-                              (Flags::InfTable::BOUGHT_NUT_UPGRADE ? 1 : 0) +
-                              (Flags::ItemGetInf::OBTAINED_NUT_UPGRADE_FROM_STAGE ? 1 : 0);
+                              (Flags::BOUGHT_NUT_UPGRADE ? 1 : 0) +
+                              (Flags::OBTAINED_NUT_UPGRADE_FROM_STAGE ? 1 : 0);
     s32 actualNutUpgrades = CUR_UPG_VALUE(UPG_NUTS);
 
     if (expectedNutUpgrades != actualNutUpgrades) {
-        Flags::ItemGetInf::OBTAINED_NUT_UPGRADE_FROM_STAGE.Unset();
+        Flags::OBTAINED_NUT_UPGRADE_FROM_STAGE.Unset();
         *should = true;
     }
 }

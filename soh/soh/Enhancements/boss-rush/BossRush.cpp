@@ -369,15 +369,15 @@ void BossRush_SpawnBlueWarps(PlayState* play) {
     // Spawn blue warps in Chamber of Sages based on what bosses have been defeated.
     if (gSaveContext.linkAge == LINK_AGE_CHILD) {
         // Forest Medallion (Gohma)
-        if (!Flags::EventCheckInf::USED_DEKU_TREE_BLUE_WARP) {
+        if (!Flags::USED_DEKU_TREE_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, -100, 6, -170, 0, 0, 0, -1);
         }
         // Fire Medallion (King Dodongo)
-        if (!Flags::EventCheckInf::USED_DODONGOS_CAVERN_BLUE_WARP) {
+        if (!Flags::USED_DODONGOS_CAVERN_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, 100, 6, -170, 0, 0, 0, -1);
         }
         // Water Medallion (Barinade)
-        if (!Flags::EventCheckInf::USED_JABU_JABUS_BELLY_BLUE_WARP) {
+        if (!Flags::USED_JABU_JABUS_BELLY_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, 199, 6, 0, 0, 0, 0, -1);
         }
     } else {
@@ -386,15 +386,15 @@ void BossRush_SpawnBlueWarps(PlayState* play) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, -199, 6, 0, 0, 0, 0, -1);
         }
         // Forest Medallion (Phantom Ganondorf)
-        if (!Flags::EventCheckInf::USED_FOREST_TEMPLE_BLUE_WARP) {
+        if (!Flags::USED_FOREST_TEMPLE_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, -100, 6, -170, 0, 0, 0, -1);
         }
         // Fire Medallion (Volvagia)
-        if (!Flags::EventCheckInf::USED_FIRE_TEMPLE_BLUE_WARP) {
+        if (!Flags::USED_FIRE_TEMPLE_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, 100, 6, -170, 0, 0, 0, -1);
         }
         // Water Medallion (Morpha)
-        if (!Flags::EventCheckInf::USED_WATER_TEMPLE_BLUE_WARP) {
+        if (!Flags::USED_WATER_TEMPLE_BLUE_WARP) {
             Actor_Spawn(&play->actorCtx, play, ACTOR_DOOR_WARP1, 199, 6, 0, 0, 0, 0, -1);
         }
         // Spirit Medallion (Twinrova)
@@ -523,22 +523,22 @@ void BossRush_HandleCompleteBoss(PlayState* play) {
     gSaveContext.ship.quest.data.bossRush.isPaused = true;
     switch (play->sceneNum) {
         case SCENE_DEKU_TREE_BOSS:
-            Flags::EventCheckInf::USED_DEKU_TREE_BLUE_WARP.Set();
+            Flags::USED_DEKU_TREE_BLUE_WARP.Set();
             break;
         case SCENE_DODONGOS_CAVERN_BOSS:
-            Flags::EventCheckInf::USED_DODONGOS_CAVERN_BLUE_WARP.Set();
+            Flags::USED_DODONGOS_CAVERN_BLUE_WARP.Set();
             break;
         case SCENE_JABU_JABU_BOSS:
-            Flags::EventCheckInf::USED_JABU_JABUS_BELLY_BLUE_WARP.Set();
+            Flags::USED_JABU_JABUS_BELLY_BLUE_WARP.Set();
             break;
         case SCENE_FOREST_TEMPLE_BOSS:
-            Flags::EventCheckInf::USED_FOREST_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_FOREST_TEMPLE_BLUE_WARP.Set();
             break;
         case SCENE_FIRE_TEMPLE_BOSS:
-            Flags::EventCheckInf::USED_FIRE_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_FIRE_TEMPLE_BLUE_WARP.Set();
             break;
         case SCENE_WATER_TEMPLE_BOSS:
-            Flags::EventCheckInf::USED_WATER_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_WATER_TEMPLE_BLUE_WARP.Set();
             break;
         case SCENE_SPIRIT_TEMPLE_BOSS:
             Flags_SetRandomizerInf(RAND_INF_DUNGEONS_DONE_SPIRIT_TEMPLE);
@@ -716,13 +716,13 @@ extern "C" void BossRush_InitSave() {
     // Set flags and Link's age based on chosen settings.
     if (gSaveContext.ship.quest.data.bossRush.options[BR_OPTIONS_BOSSES] == BR_CHOICE_BOSSES_ADULT ||
         gSaveContext.ship.quest.data.bossRush.options[BR_OPTIONS_BOSSES] == BR_CHOICE_BOSSES_GANONDORF_GANON) {
-        Flags::EventCheckInf::USED_DEKU_TREE_BLUE_WARP.Set();
-        Flags::EventCheckInf::USED_DODONGOS_CAVERN_BLUE_WARP.Set();
-        Flags::EventCheckInf::USED_JABU_JABUS_BELLY_BLUE_WARP.Set();
+        Flags::USED_DEKU_TREE_BLUE_WARP.Set();
+        Flags::USED_DODONGOS_CAVERN_BLUE_WARP.Set();
+        Flags::USED_JABU_JABUS_BELLY_BLUE_WARP.Set();
         if (gSaveContext.ship.quest.data.bossRush.options[BR_OPTIONS_BOSSES] == BR_CHOICE_BOSSES_GANONDORF_GANON) {
-            Flags::EventCheckInf::USED_FOREST_TEMPLE_BLUE_WARP.Set();
-            Flags::EventCheckInf::USED_FIRE_TEMPLE_BLUE_WARP.Set();
-            Flags::EventCheckInf::USED_WATER_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_FOREST_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_FIRE_TEMPLE_BLUE_WARP.Set();
+            Flags::USED_WATER_TEMPLE_BLUE_WARP.Set();
             Flags_SetRandomizerInf(RAND_INF_DUNGEONS_DONE_SPIRIT_TEMPLE);
             Flags_SetRandomizerInf(RAND_INF_DUNGEONS_DONE_SHADOW_TEMPLE);
         }

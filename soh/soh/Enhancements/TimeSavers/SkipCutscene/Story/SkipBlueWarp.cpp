@@ -58,7 +58,7 @@ void RegisterSkipBlueWarp() {
                    CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO), {
                        if (gSaveContext.entranceIndex == ENTR_KOKIRI_FOREST_DEKU_TREE_BLUE_WARP &&
                            gSaveContext.cutsceneIndex == 0xFFF1) {
-                           *should = Flags::EventCheckInf::USED_FOREST_TEMPLE_BLUE_WARP.Get();
+                           *should = Flags::USED_FOREST_TEMPLE_BLUE_WARP.Get();
                        }
                    });
 
@@ -119,7 +119,7 @@ void RegisterShouldPlayBlueWarp() {
             } else if (gSaveContext.entranceIndex == ENTR_CHAMBER_OF_THE_SAGES_0 && gSaveContext.cutsceneIndex == 0x0 &&
                        gSaveContext.chamberCutsceneNum == CHAMBER_CS_FOREST) {
                 // Normally set in the blue warp cutscene
-                Flags::EventCheckInf::SPOKE_TO_DEKU_TREE_SPROUT.Set();
+                Flags::SPOKE_TO_DEKU_TREE_SPROUT.Set();
 
                 if (IS_RANDO) {
                     gSaveContext.entranceIndex = ENTR_SACRED_FOREST_MEADOW_FOREST_TEMPLE_BLUE_WARP;
@@ -132,7 +132,7 @@ void RegisterShouldPlayBlueWarp() {
             } else if (gSaveContext.entranceIndex == ENTR_KAKARIKO_VILLAGE_FRONT_GATE &&
                        gSaveContext.cutsceneIndex == 0xFFF3) {
                 // Normally set in the blue warp cutscene
-                Flags::EventCheckInf::DEATH_MOUNTAIN_ERUPTED.Set();
+                Flags::DEATH_MOUNTAIN_ERUPTED.Set();
 
                 gSaveContext.entranceIndex = ENTR_DEATH_MOUNTAIN_CRATER_FIRE_TEMPLE_BLUE_WARP;
                 isBlueWarpCutscene = true;
@@ -142,7 +142,7 @@ void RegisterShouldPlayBlueWarp() {
                 // Normally set in the blue warp cutscene
                 gSaveContext.dayTime = gSaveContext.skyboxTime = 0x4800;
                 gSaveContext.nightFlag = 0;
-                Flags::EventCheckInf::RAISED_LAKE_HYLIA_WATER.Set();
+                Flags::RAISED_LAKE_HYLIA_WATER.Set();
 
                 gSaveContext.entranceIndex = ENTR_LAKE_HYLIA_WATER_TEMPLE_BLUE_WARP;
                 isBlueWarpCutscene = true;

@@ -32,9 +32,9 @@ void RegisterSkipChildRutoInteractions() {
         VB_PLAY_CHILD_RUTO_INTRO, CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO), {
             EnRu1* enRu1 = va_arg(args, EnRu1*);
 
-            Flags::InfTable::RUTO_IN_JJ_MEET_RUTO.Set();
-            Flags::InfTable::RUTO_IN_JJ_TALK_FIRST_TIME.Set();
-            Flags::InfTable::UNKNOWN_143.Set();
+            Flags::RUTO_IN_JJ_MEET_RUTO.Set();
+            Flags::RUTO_IN_JJ_TALK_FIRST_TIME.Set();
+            Flags::INFTABLE_UNKNOWN_143.Set();
             enRu1->drawConfig = 1;
             enRu1->actor.world.pos.x = 127.0f;
             enRu1->actor.world.pos.y = -340.0f;
@@ -54,7 +54,7 @@ void RegisterSkipChildRutoInteractions() {
     COND_VB_SHOULD(VB_RUTO_WANT_TO_BE_TOSSED_TO_SAPPHIRE,
                    CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO), {
                        if (*should) {
-                           Flags::InfTable::RUTO_IN_JJ_WANTS_TO_BE_TOSSED_TO_SAPPHIRE.Set();
+                           Flags::RUTO_IN_JJ_WANTS_TO_BE_TOSSED_TO_SAPPHIRE.Set();
                            *should = false;
                        }
                    });
@@ -68,7 +68,7 @@ void RegisterSkipChildRutoInteractions() {
 
                        if (*should) {
                            enRu1->unk_28C = (BgBdanObjects*)dynaPolyActor;
-                           Flags::InfTable::UNKNOWN_145.Set();
+                           Flags::INFTABLE_UNKNOWN_145.Set();
                            Flags_SetSwitch(gPlayState, 0x02);
                            Flags_SetSwitch(gPlayState, 0x1F);
                            enRu1->action = 42;

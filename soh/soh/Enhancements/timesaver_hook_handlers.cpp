@@ -74,8 +74,8 @@ void EnFu_EndTeachSong(EnFu* enFu, PlayState* play) {
         enFu->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
 
         play->msgCtx.ocarinaMode = OCARINA_MODE_04;
-        Flags::EventCheckInf::PLAYED_SONG_OF_STORMS_IN_WINDMILL.Set();
-        Flags::EventCheckInf::LEARNED_SONG_OF_STORMS.Set();
+        Flags::PLAYED_SONG_OF_STORMS_IN_WINDMILL.Set();
+        Flags::LEARNED_SONG_OF_STORMS.Set();
         return;
     }
 }
@@ -96,12 +96,12 @@ void EnDntDemo_JudgeSkipToReward(EnDntDemo* enDntDemo, PlayState* play) {
 
     switch (Player_GetMask(play)) {
         case PLAYER_MASK_SKULL: {
-            Flags::ItemGetInf::OBTAINED_STICK_UPGRADE_FROM_STAGE.Set();
+            Flags::OBTAINED_STICK_UPGRADE_FROM_STAGE.Set();
             return;
         }
         case PLAYER_MASK_TRUTH: {
             if (GameInteractor_Should(VB_DEKU_SCRUBS_REACT_TO_MASK_OF_TRUTH, true)) {
-                Flags::ItemGetInf::OBTAINED_NUT_UPGRADE_FROM_STAGE.Set();
+                Flags::OBTAINED_NUT_UPGRADE_FROM_STAGE.Set();
             }
             return;
         }
@@ -147,8 +147,8 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
 
                 // Requiem of Spirit
                 if ((gSaveContext.entranceIndex == ENTR_DESERT_COLOSSUS_OUTSIDE_TEMPLE) &&
-                    !Flags::EventCheckInf::LEARNED_REQUIEM_OF_SPIRIT) {
-                    Flags::EventCheckInf::LEARNED_REQUIEM_OF_SPIRIT.Set();
+                    !Flags::LEARNED_REQUIEM_OF_SPIRIT) {
+                    Flags::LEARNED_REQUIEM_OF_SPIRIT.Set();
                     // Normally happens in the cutscene
                     gSaveContext.dayTime = gSaveContext.skyboxTime = 0xAC60;
                     if (GameInteractor_Should(VB_GIVE_ITEM_SONG, true, ITEM_SONG_REQUIEM)) {
@@ -159,14 +159,14 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
 
                 u8 meetsBurningKakRequirements = LINK_IS_ADULT && gSaveContext.cutsceneIndex < 0xFFF0 &&
                                                  gSaveContext.entranceIndex == ENTR_KAKARIKO_VILLAGE_FRONT_GATE &&
-                                                 Flags::EventCheckInf::USED_FOREST_TEMPLE_BLUE_WARP &&
-                                                 Flags::EventCheckInf::USED_FIRE_TEMPLE_BLUE_WARP &&
-                                                 Flags::EventCheckInf::USED_WATER_TEMPLE_BLUE_WARP &&
-                                                 !Flags::EventCheckInf::BONGO_BONGO_ESCAPED_FROM_WELL;
+                                                 Flags::USED_FOREST_TEMPLE_BLUE_WARP &&
+                                                 Flags::USED_FIRE_TEMPLE_BLUE_WARP &&
+                                                 Flags::USED_WATER_TEMPLE_BLUE_WARP &&
+                                                 !Flags::BONGO_BONGO_ESCAPED_FROM_WELL;
                 if (GameInteractor_Should(VB_BE_ELIGIBLE_FOR_NOCTURNE_OF_SHADOW, meetsBurningKakRequirements)) {
-                    Flags::EventCheckInf::BONGO_BONGO_ESCAPED_FROM_WELL.Set();
+                    Flags::BONGO_BONGO_ESCAPED_FROM_WELL.Set();
                     // Normally happens in the cutscene
-                    Flags::EventCheckInf::LEARNED_NOCTURNE_OF_SHADOW.Set();
+                    Flags::LEARNED_NOCTURNE_OF_SHADOW.Set();
                     if (GameInteractor_Should(VB_GIVE_ITEM_SONG, true, ITEM_SONG_NOCTURNE)) {
                         Item_Give(gPlayState, ITEM_SONG_NOCTURNE);
                     }
@@ -180,9 +180,9 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                     LINK_IS_ADULT &&
                     (gEntranceTable[((void)0, gSaveContext.entranceIndex)].scene == SCENE_TEMPLE_OF_TIME) &&
                     CHECK_QUEST_ITEM(QUEST_MEDALLION_SPIRIT) && CHECK_QUEST_ITEM(QUEST_MEDALLION_SHADOW) &&
-                    !Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS;
+                    !Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS;
                 if (GameInteractor_Should(VB_BE_ELIGIBLE_FOR_LIGHT_ARROWS, meetsLACSRequirements)) {
-                    Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS.Set();
+                    Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS.Set();
                     if (GameInteractor_Should(VB_GIVE_ITEM_LIGHT_ARROW, true)) {
                         Item_Give(gPlayState, ITEM_ARROW_LIGHT);
                     }
@@ -192,7 +192,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
 
             if (gSaveContext.entranceIndex == ENTR_GANONS_TOWER_COLLAPSE_EXTERIOR_0) {
                 if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipTowerEscape"), false) || IS_BOSS_RUSH) {
-                    Flags::EventCheckInf::WATCHED_GANONS_CASTLE_COLLAPSE_CAUGHT_BY_GERUDO.Set();
+                    Flags::WATCHED_GANONS_CASTLE_COLLAPSE_CAUGHT_BY_GERUDO.Set();
                     gSaveContext.entranceIndex = ENTR_GANON_BOSS_0;
                     *should = false;
                 }
@@ -225,12 +225,12 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                     case ENTR_INSIDE_GANONS_CASTLE_5:
                     case ENTR_INSIDE_GANONS_CASTLE_6:
                     case ENTR_INSIDE_GANONS_CASTLE_7:
-                        if (Flags::EventCheckInf::COMPLETED_FOREST_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_WATER_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_SHADOW_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_FIRE_TRIAL && Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
-                            Flags::EventCheckInf::COMPLETED_SPIRIT_TRIAL) {
-                            Flags::EventCheckInf::DISPELLED_GANONS_TOWER_BARRIER.Set();
+                        if (Flags::COMPLETED_FOREST_TRIAL &&
+                            Flags::COMPLETED_WATER_TRIAL &&
+                            Flags::COMPLETED_SHADOW_TRIAL &&
+                            Flags::COMPLETED_FIRE_TRIAL && Flags::COMPLETED_LIGHT_TRIAL &&
+                            Flags::COMPLETED_SPIRIT_TRIAL) {
+                            Flags::DISPELLED_GANONS_TOWER_BARRIER.Set();
                         }
                         break;
                 }
@@ -480,15 +480,15 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                 goronLink->unk_211 = false;
                 goronLink->isAwake = false;
                 goronLink->actionFunc = EnGo2_CurledUp;
-                Flags::InfTable::STOPPED_GORON_LINKS_ROLLING.Set();
+                Flags::STOPPED_GORON_LINKS_ROLLING.Set();
                 *should = false;
             }
             break;
         }
         case VB_NOT_BE_GREETED_BY_SARIA:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Entrances"), IS_RANDO) &&
-                !Flags::InfTable::GREETED_BY_SARIA) {
-                Flags::InfTable::GREETED_BY_SARIA.Set();
+                !Flags::GREETED_BY_SARIA) {
+                Flags::GREETED_BY_SARIA.Set();
                 *should = true;
             }
             break;
@@ -500,18 +500,18 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             break;
         case VB_PLAY_NABOORU_CAPTURED_CS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO)) {
-                Flags::EventCheckInf::NABOORU_CAPTURED_BY_TWINROVA.Set();
+                Flags::NABOORU_CAPTURED_BY_TWINROVA.Set();
                 *should = false;
             }
             break;
         case VB_PLAY_PULL_MASTER_SWORD_CS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::PULLED_MASTER_SWORD_FROM_PEDESTAL) {
+                if (!Flags::PULLED_MASTER_SWORD_FROM_PEDESTAL) {
                     // Normally, these would be done in the cutscene, but we're skipping it
-                    Flags::EventCheckInf::PULLED_MASTER_SWORD_FROM_PEDESTAL.Set();
-                    Flags::EventCheckInf::ENTERED_MASTER_SWORD_CHAMBER.Set();
-                    Flags::EventCheckInf::SHEIK_SPAWNED_AT_MASTER_SWORD_PEDESTAL.Set();
-                    Flags::EventCheckInf::TIME_TRAVELED_TO_ADULT.Set();
+                    Flags::PULLED_MASTER_SWORD_FROM_PEDESTAL.Set();
+                    Flags::ENTERED_MASTER_SWORD_CHAMBER.Set();
+                    Flags::SHEIK_SPAWNED_AT_MASTER_SWORD_PEDESTAL.Set();
+                    Flags::TIME_TRAVELED_TO_ADULT.Set();
                     if (GameInteractor_Should(VB_GIVE_ITEM_LIGHT_MEDALLION, true)) {
                         Item_Give(gPlayState, ITEM_MEDALLION_LIGHT);
                     }
@@ -545,7 +545,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                 s32 owlType = (enOwl->actor.params & 0xFC0) >> 6;
 
                 if (((enOwl->actor.params & 0xFC0) >> 6) == 1) {
-                    Flags::EventCheckInf::SPOKE_TO_KAEPORA_BY_LOST_WOODS.Set();
+                    Flags::SPOKE_TO_KAEPORA_BY_LOST_WOODS.Set();
                 }
 
                 func_80ACA62C(enOwl, gPlayState);
@@ -557,7 +557,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO)) {
                 u16* textId = va_arg(args, u16*);
                 // If the doors are not open yet, prioritize opening them
-                if (!Flags::InfTable::GORON_CITY_DOORS_UNLOCKED) {
+                if (!Flags::GORON_CITY_DOORS_UNLOCKED) {
                     *textId = 0x3036;
                     *should = true;
                 }
@@ -568,7 +568,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), 0)) {
                 *should = false;
                 Inventory_ReplaceItem(gPlayState, ITEM_LETTER_RUTO, ITEM_BOTTLE);
-                Flags::EventCheckInf::KING_ZORA_MOVED.Set();
+                Flags::KING_ZORA_MOVED.Set();
             }
             break;
         }
@@ -649,7 +649,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             break;
         }
         case VB_DESPAWN_HORSE_RACE_COW: {
-            if (Flags::EventCheckInf::WON_COW_IN_MALONS_RACE && CVarGetInteger(CVAR_ENHANCEMENT("CowOfTime"), 0)) {
+            if (Flags::WON_COW_IN_MALONS_RACE && CVarGetInteger(CVAR_ENHANCEMENT("CowOfTime"), 0)) {
                 *should = false;
             }
             break;
@@ -658,15 +658,15 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO)) {
                 *should = false;
                 Flags_SetSwitch(gPlayState, 0x2);
-                Flags::EventCheckInf::PLAYED_SONG_OF_STORMS_IN_WINDMILL.Set();
-                Flags::EventCheckInf::DRAINED_WELL_IN_KAKARIKO.Set();
+                Flags::PLAYED_SONG_OF_STORMS_IN_WINDMILL.Set();
+                Flags::DRAINED_WELL_IN_KAKARIKO.Set();
             }
             break;
         }
         case VB_PLAY_SUNS_SONG_CS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.LearnSong"), IS_RANDO) || IS_RANDO) {
                 *should = false;
-                Flags::EventCheckInf::LEARNED_SUNS_SONG.Set();
+                Flags::LEARNED_SUNS_SONG.Set();
                 // SoH [Randomizer] TODO: Increment time X amount (find out X)
                 // When time is 0, it's changed to 0x46A7
                 // When it's 0x8000, it's changed to 0xC090
@@ -680,7 +680,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
         }
         case VB_PLAY_ROYAL_FAMILY_TOMB_EXPLODE: {
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO)) {
-                *should = Flags::EventCheckInf::DESTROYED_ROYAL_FAMILY_TOMB.Get();
+                *should = Flags::DESTROYED_ROYAL_FAMILY_TOMB.Get();
             }
             break;
         }
@@ -704,7 +704,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
         case VB_PLAY_DOOR_OF_TIME_CS: {
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO)) {
                 *should = false;
-                Flags::EventCheckInf::OPENED_THE_DOOR_OF_TIME.Set();
+                Flags::OPENED_THE_DOOR_OF_TIME.Set();
                 Flags_SetEnv(gPlayState, 2);
                 Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
             }
@@ -818,10 +818,10 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
         case VB_PLAY_RAINBOW_BRIDGE_CS: {
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO)) {
                 *should = false;
-                if (!Flags::EventCheckInf::RAINBOW_BRIDGE_BUILT) {
+                if (!Flags::RAINBOW_BRIDGE_BUILT) {
                     func_800F595C(NA_BGM_BRIDGE_TO_GANONS);
                     // This would have been set 2 frames later, but we're skipping now so the sound doesn't play twice
-                    Flags::EventCheckInf::RAINBOW_BRIDGE_BUILT.Set();
+                    Flags::RAINBOW_BRIDGE_BUILT.Set();
                 }
             }
             break;
@@ -970,7 +970,7 @@ void TimeSaverOnActorInitHandler(void* actorRef) {
             GameInteractor::Instance->RegisterGameHook<GameInteractor::OnActorUpdate>([](void* innerActorRef) mutable {
                 Actor* innerActor = static_cast<Actor*>(innerActorRef);
 
-                if (innerActor->id != ACTOR_EN_JJ || Flags::EventCheckInf::OFFERED_FISH_TO_JABU_JABU) {
+                if (innerActor->id != ACTOR_EN_JJ || Flags::OFFERED_FISH_TO_JABU_JABU) {
                     return;
                 }
 
@@ -1043,7 +1043,7 @@ void TimeSaverOnActorInitHandler(void* actorRef) {
                     shouldKeepOpen =
                         (enhancement == 2 &&
                          ((CHECK_QUEST_ITEM(QUEST_SONG_LULLABY) && (INV_CONTENT(ITEM_OCARINA_TIME) != ITEM_NONE)))) ||
-                        (enhancement == 1 && Flags::EventCheckInf::OPENED_ZORAS_DOMAIN);
+                        (enhancement == 1 && Flags::OPENED_ZORAS_DOMAIN);
                 }
 
                 if (!shouldKeepOpen) {
@@ -1119,7 +1119,7 @@ void TimeSaverOnActorInitHandler(void* actorRef) {
     if (actor->id == ACTOR_EN_DU && gPlayState->sceneNum == SCENE_FIRE_TEMPLE) {
         if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO) &&
             !CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.GlitchAiding"), 0)) {
-            Flags::InfTable::SPOKE_TO_DARUNIA_IN_FIRE_TEMPLE.Set();
+            Flags::SPOKE_TO_DARUNIA_IN_FIRE_TEMPLE.Set();
             Actor_Kill(actor);
         }
     }
@@ -1138,85 +1138,85 @@ void TimeSaverOnSceneInitHandler(int16_t sceneNum) {
     switch (sceneNum) {
         case SCENE_HYRULE_CASTLE:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) &&
-                !Flags::InfTable::ENTERED_HYRULE_CASTLE) {
-                Flags::InfTable::ENTERED_HYRULE_CASTLE.Set();
-                Flags::InfTable::MET_CHILD_MALON_AT_CASTLE_OR_MARKET.Set();
-                Flags::EventCheckInf::SPOKE_TO_CHILD_MALON_AT_CASTLE_OR_MARKET.Set();
+                !Flags::ENTERED_HYRULE_CASTLE) {
+                Flags::ENTERED_HYRULE_CASTLE.Set();
+                Flags::MET_CHILD_MALON_AT_CASTLE_OR_MARKET.Set();
+                Flags::SPOKE_TO_CHILD_MALON_AT_CASTLE_OR_MARKET.Set();
             }
             break;
         case SCENE_LON_LON_RANCH:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) &&
                 GameInteractor_Should(VB_MALON_RETURN_FROM_CASTLE,
-                                      Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE.Get()) &&
+                                      Flags::TALON_RETURNED_FROM_CASTLE.Get()) &&
                 (!IS_RANDO || !RAND_GET_OPTION(RSK_SHUFFLE_SPEAK) ||
                  Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN))) {
-                Flags::EventCheckInf::SPOKE_TO_CHILD_MALON_AT_RANCH.Set();
-                Flags::InfTable::CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU.Set();
-                Flags::EventCheckInf::INVITED_TO_SING_WITH_CHILD_MALON.Set();
+                Flags::SPOKE_TO_CHILD_MALON_AT_RANCH.Set();
+                Flags::CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU.Set();
+                Flags::INVITED_TO_SING_WITH_CHILD_MALON.Set();
             }
             break;
         case SCENE_DEKU_TREE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_GOHMA_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_GOHMA_BATTLE.Set();
+                if (!Flags::BEGAN_GOHMA_BATTLE) {
+                    Flags::BEGAN_GOHMA_BATTLE.Set();
                 }
             }
             break;
         case SCENE_DODONGOS_CAVERN_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_KING_DODONGO_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_KING_DODONGO_BATTLE.Set();
+                if (!Flags::BEGAN_KING_DODONGO_BATTLE) {
+                    Flags::BEGAN_KING_DODONGO_BATTLE.Set();
                 }
             }
             break;
         case SCENE_JABU_JABU_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_BARINA_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_BARINA_BATTLE.Set();
+                if (!Flags::BEGAN_BARINA_BATTLE) {
+                    Flags::BEGAN_BARINA_BATTLE.Set();
                 }
             }
             break;
         case SCENE_FOREST_TEMPLE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_PHANTOM_GANON_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_PHANTOM_GANON_BATTLE.Set();
+                if (!Flags::BEGAN_PHANTOM_GANON_BATTLE) {
+                    Flags::BEGAN_PHANTOM_GANON_BATTLE.Set();
                 }
             }
             break;
         case SCENE_FIRE_TEMPLE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_VOLVAGIA_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_VOLVAGIA_BATTLE.Set();
+                if (!Flags::BEGAN_VOLVAGIA_BATTLE) {
+                    Flags::BEGAN_VOLVAGIA_BATTLE.Set();
                 }
             }
             break;
         case SCENE_WATER_TEMPLE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_MORPHA_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_MORPHA_BATTLE.Set();
+                if (!Flags::BEGAN_MORPHA_BATTLE) {
+                    Flags::BEGAN_MORPHA_BATTLE.Set();
                 }
             }
             break;
         case SCENE_SPIRIT_TEMPLE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_TWINROVA_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_TWINROVA_BATTLE.Set();
-                    Flags::EventCheckInf::BEGAN_NABOORU_BATTLE.Set();
-                    Flags::EventCheckInf::NABOORU_ORDERED_TO_FIGHT_BY_TWINROVA.Set();
+                if (!Flags::BEGAN_TWINROVA_BATTLE) {
+                    Flags::BEGAN_TWINROVA_BATTLE.Set();
+                    Flags::BEGAN_NABOORU_BATTLE.Set();
+                    Flags::NABOORU_ORDERED_TO_FIGHT_BY_TWINROVA.Set();
                 }
             }
             break;
         case SCENE_SHADOW_TEMPLE_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_BONGO_BONGO_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_BONGO_BONGO_BATTLE.Set();
+                if (!Flags::BEGAN_BONGO_BONGO_BATTLE) {
+                    Flags::BEGAN_BONGO_BONGO_BATTLE.Set();
                 }
             }
             break;
         case SCENE_GANONDORF_BOSS:
             if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.BossIntro"), IS_RANDO)) {
-                if (!Flags::EventCheckInf::BEGAN_GANONDORF_BATTLE) {
-                    Flags::EventCheckInf::BEGAN_GANONDORF_BATTLE.Set();
+                if (!Flags::BEGAN_GANONDORF_BATTLE) {
+                    Flags::BEGAN_GANONDORF_BATTLE.Set();
                 }
             }
             break;

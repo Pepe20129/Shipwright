@@ -17,8 +17,8 @@ void RegisterSkipLostWoodsBridge() {
      */
     COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), IS_RANDO), {
         if ((gSaveContext.entranceIndex == ENTR_LOST_WOODS_BRIDGE_EAST_EXIT) &&
-            !Flags::EventCheckInf::SPOKE_TO_SARIA_ON_BRIDGE) {
-            Flags::EventCheckInf::SPOKE_TO_SARIA_ON_BRIDGE.Set();
+            !Flags::SPOKE_TO_SARIA_ON_BRIDGE) {
+            Flags::SPOKE_TO_SARIA_ON_BRIDGE.Set();
             if (GameInteractor_Should(VB_GIVE_ITEM_FAIRY_OCARINA, true)) {
                 Item_Give(gPlayState, ITEM_OCARINA_FAIRY);
             }

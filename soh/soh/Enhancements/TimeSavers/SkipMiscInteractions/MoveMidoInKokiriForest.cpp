@@ -19,12 +19,12 @@ extern SaveContext gSaveContext;
 void RegisterMoveMidoInKokiriForest() {
     COND_VB_SHOULD(
         VB_MOVE_MIDO_IN_KOKIRI_FOREST, CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO), {
-            if (!Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD &&
+            if (!Flags::SHOWED_MIDO_SWORD_SHIELD &&
                 (CUR_EQUIP_VALUE(EQUIP_TYPE_SHIELD) == EQUIP_VALUE_SHIELD_DEKU) &&
                 (CUR_EQUIP_VALUE(EQUIP_TYPE_SWORD) == EQUIP_VALUE_SWORD_KOKIRI) && gSaveContext.cutsceneIndex == 0 &&
                 !(IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_SPEAK) &&
                   !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI))) {
-                Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD.Set();
+                Flags::SHOWED_MIDO_SWORD_SHIELD.Set();
                 *should = true;
             }
         });

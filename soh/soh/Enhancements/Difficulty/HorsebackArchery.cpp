@@ -18,7 +18,7 @@ static void RegisterHorsebackArcheryEnhancements() {
                        EnGe1* enGe1 = va_arg(args, EnGe1*);
                        PlayState* play = va_arg(args, PlayState*);
                        Rupees_ChangeBy(-20);
-                       Flags::EventCheckInf::PLAYED_HORSEBACK_ARCHERY.Set();
+                       Flags::PLAYED_HORSEBACK_ARCHERY.Set();
                        gSaveContext.minigameScore = 1500;
                        Message_CloseTextbox(play);
                        enGe1->actionFunc = EnGe1_TalkAfterGame_Archery;

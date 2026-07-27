@@ -75,7 +75,7 @@ void BuildSheikMessage(uint16_t* textId, bool* loadFromMessageTable) {
                     "@, tu n'es toujours pas prêt à affronter %rGanondorf%w.^"
                     "Cherche l'%cÉpée de Légende%w, %rquelque chose pour ranger tes flèches%w et de la %gmagie%w pour "
                     "invoquer la %ylumière%w.");
-            } else if (!Flags::EventCheckInf::DISPELLED_GANONS_TOWER_BARRIER && RAND_GET_OPTION(RSK_TRIAL_COUNT)) {
+            } else if (!Flags::DISPELLED_GANONS_TOWER_BARRIER && RAND_GET_OPTION(RSK_TRIAL_COUNT)) {
                 msg = CustomMessage(
                     "You may have what you need to defeat %rthe Evil King%w, but the %cbarrier%w still "
                     "stands.^Complete the remaining %gtrials%w to destroy it.",

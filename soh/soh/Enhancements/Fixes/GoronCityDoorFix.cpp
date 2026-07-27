@@ -17,8 +17,8 @@ static void OnInitGCDoor(void* refActor) {
     // In the off chance that Fire Temple is completed before stopping Goron Link and getting
     // Goron Tunic / opening the city doors, open them the next time Link goes to Goron City.
     if (GameInteractor_Should(VB_GORONS_CONSIDER_FIRE_TEMPLE_FINISHED, CHECK_QUEST_ITEM(QUEST_MEDALLION_FIRE)) &&
-        !Flags::InfTable::GORON_CITY_DOORS_UNLOCKED) {
-        Flags::InfTable::GORON_CITY_DOORS_UNLOCKED.Set();
+        !Flags::GORON_CITY_DOORS_UNLOCKED) {
+        Flags::GORON_CITY_DOORS_UNLOCKED.Set();
     }
 }
 

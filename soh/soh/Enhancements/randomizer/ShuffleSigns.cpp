@@ -82,7 +82,7 @@ void Sign_RandomizerSpawnCollectible(Actor* actor) {
 }
 
 void Sign_RoyalTombSpawnCollectible(Flag flag) {
-    if (!Flags_GetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE) && Flags::EventCheckInf::DESTROYED_ROYAL_FAMILY_TOMB) {
+    if (!Flags_GetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE) && Flags::DESTROYED_ROYAL_FAMILY_TOMB) {
         Flags_SetRandomizerInf(RAND_INF_GY_ROYAL_TOMB_GRAVE);
     }
 }

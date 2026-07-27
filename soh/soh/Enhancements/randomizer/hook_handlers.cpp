@@ -162,9 +162,9 @@ bool MeetsLACSRequirements() {
 }
 
 bool CompletedAllTrials() {
-    return Flags::EventCheckInf::COMPLETED_WATER_TRIAL && Flags::EventCheckInf::COMPLETED_LIGHT_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_FIRE_TRIAL && Flags::EventCheckInf::COMPLETED_SHADOW_TRIAL &&
-           Flags::EventCheckInf::COMPLETED_SPIRIT_TRIAL && Flags::EventCheckInf::COMPLETED_FOREST_TRIAL;
+    return Flags::COMPLETED_WATER_TRIAL && Flags::COMPLETED_LIGHT_TRIAL &&
+           Flags::COMPLETED_FIRE_TRIAL && Flags::COMPLETED_SHADOW_TRIAL &&
+           Flags::COMPLETED_SPIRIT_TRIAL && Flags::COMPLETED_FOREST_TRIAL;
 }
 
 bool MeetsRainbowBridgeRequirements() {
@@ -244,16 +244,16 @@ void RandomizerOnFlagSetHandler(Flag flag) {
         }
     }
 
-    if (flag == Flags::EventCheckInf::TALON_WOKEN_IN_CASTLE) {
+    if (flag == Flags::TALON_WOKEN_IN_CASTLE) {
         // remove chicken as this is the only use for it
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_CHICKEN);
     }
 
-    if (flag == Flags::EventCheckInf::OBTAINED_ZELDAS_LETTER) {
+    if (flag == Flags::OBTAINED_ZELDAS_LETTER) {
         Flags_SetRandomizerInf(RAND_INF_ZELDAS_LETTER);
     }
 
-    if (flag == Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE && Flags::EventCheckInf::OBTAINED_POCKET_EGG) {
+    if (flag == Flags::TALON_RETURNED_FROM_CASTLE && Flags::OBTAINED_POCKET_EGG) {
         Flags_SetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
     }
 
@@ -599,7 +599,7 @@ void ItemEtcetera_DrawRandomizedItemThroughLens(ItemEtcetera* itemEtcetera, Play
 void ItemEtcetera_func_80B858B4_Randomized(ItemEtcetera* itemEtcetera, PlayState* play) {
     if (itemEtcetera->actor.xzDistToPlayer < 30.0f && fabsf(itemEtcetera->actor.yDistToPlayer) < 50.0f) {
         if ((itemEtcetera->actor.params & 0xFF) == 1) {
-            Flags::EventCheckInf::OBTAINED_RUTOS_LETTER.Set();
+            Flags::OBTAINED_RUTOS_LETTER.Set();
             Flags_SetSwitch(play, 0xB);
         }
 
@@ -653,7 +653,7 @@ u8 EnDs_RandoCanGetGrannyItem() {
             RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL)) &&
            !Flags_GetRandomizerInf(RAND_INF_MERCHANTS_GRANNYS_SHOP) &&
            // Traded odd mushroom when adult trade is on
-           ((RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && Flags::ItemGetInf::UNKNOWN_30) ||
+           ((RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && Flags::ITEMGETINF_UNKNOWN_30) ||
             // Found claim check when adult trade is off
             (!RAND_GET_OPTION(RSK_SHUFFLE_ADULT_TRADE) && INV_CONTENT(ITEM_CLAIM_CHECK) == ITEM_CLAIM_CHECK));
 }
@@ -949,18 +949,18 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             *should = false;
             break;
         case VB_SHIEK_PREPARE_TO_GIVE_SERENADE_OF_WATER: {
-            *should = !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && !Flags_GetTreasure(gPlayState, 0x2);
+            *should = !Flags::LEARNED_SERENADE_OF_WATER && !Flags_GetTreasure(gPlayState, 0x2);
             break;
         }
         case VB_BE_ELIGIBLE_FOR_SERENADE_OF_WATER:
-            *should = !Flags::EventCheckInf::LEARNED_SERENADE_OF_WATER && Flags_GetTreasure(gPlayState, 0x2);
+            *should = !Flags::LEARNED_SERENADE_OF_WATER && Flags_GetTreasure(gPlayState, 0x2);
             break;
         case VB_BE_ELIGIBLE_FOR_PRELUDE_OF_LIGHT:
-            *should = !Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT && CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST);
+            *should = !Flags::LEARNED_PRELUDE_OF_LIGHT && CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST);
             break;
         case VB_MIDO_SPAWN:
             if (RAND_GET_OPTION(RSK_FOREST).IsNot(RO_CLOSED_FOREST_OFF) &&
-                !Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD) {
+                !Flags::SHOWED_MIDO_SWORD_SHIELD) {
                 *should = true;
             }
             break;
@@ -970,19 +970,19 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             }
             break;
         case VB_MALON_RETURN_FROM_CASTLE:
-            *should = Flags::EventCheckInf::TALON_RETURNED_FROM_CASTLE && Flags::EventCheckInf::OBTAINED_POCKET_EGG;
+            *should = Flags::TALON_RETURNED_FROM_CASTLE && Flags::OBTAINED_POCKET_EGG;
             break;
         case VB_SEND_MALON_HOME:
             *should = Flags_GetRandomizerInf(RAND_INF_TALON_SENT_MALON_HOME);
             break;
         case VB_MIDO_CONSIDER_DEKU_TREE_DEAD:
-            *should = Flags::EventCheckInf::OBTAINED_KOKIRI_EMERALD_DEKU_TREE_DEAD.Get();
+            *should = Flags::OBTAINED_KOKIRI_EMERALD_DEKU_TREE_DEAD.Get();
             break;
         case VB_OPEN_CHEST:
             *should = *should && Flags_GetRandomizerInf(RAND_INF_CAN_OPEN_CHEST);
             break;
         case VB_OPEN_KOKIRI_FOREST:
-            *should = Flags::EventCheckInf::OBTAINED_KOKIRI_EMERALD_DEKU_TREE_DEAD ||
+            *should = Flags::OBTAINED_KOKIRI_EMERALD_DEKU_TREE_DEAD ||
                       RAND_GET_OPTION(RSK_FOREST).IsNot(RO_CLOSED_FOREST_ON);
             break;
         case VB_BE_ELIGIBLE_FOR_DARUNIAS_JOY_REWARD:
@@ -990,10 +990,10 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         case VB_BE_ELIGIBLE_FOR_LIGHT_ARROWS:
             *should = LINK_IS_ADULT && (gEntranceTable[gSaveContext.entranceIndex].scene == SCENE_TEMPLE_OF_TIME) &&
-                      !Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS && MeetsLACSRequirements();
+                      !Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS && MeetsLACSRequirements();
             break;
         case VB_BE_ELIGIBLE_FOR_NOCTURNE_OF_SHADOW:
-            *should = !Flags::EventCheckInf::BONGO_BONGO_ESCAPED_FROM_WELL && LINK_IS_ADULT &&
+            *should = !Flags::BONGO_BONGO_ESCAPED_FROM_WELL && LINK_IS_ADULT &&
                       gEntranceTable[((void)0, gSaveContext.entranceIndex)].scene == SCENE_KAKARIKO_VILLAGE &&
                       CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST) && CHECK_QUEST_ITEM(QUEST_MEDALLION_FIRE) &&
                       CHECK_QUEST_ITEM(QUEST_MEDALLION_WATER) && gSaveContext.cutsceneIndex < 0xFFF0;
@@ -1080,10 +1080,10 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         }
         case VB_KING_ZORA_THANK_CHILD: {
             // Allow turning in Ruto's letter even if you have already rescued her
-            if (!Flags::EventCheckInf::KING_ZORA_MOVED) {
+            if (!Flags::KING_ZORA_MOVED) {
                 GET_PLAYER(gPlayState)->exchangeItemId = EXCH_ITEM_LETTER_RUTO;
             }
-            *should = Flags::EventCheckInf::USED_JABU_JABUS_BELLY_BLUE_WARP.Get();
+            *should = Flags::USED_JABU_JABUS_BELLY_BLUE_WARP.Get();
             break;
         }
         case VB_BE_ABLE_TO_EXCHANGE_RUTOS_LETTER: {
@@ -1094,14 +1094,14 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             *should = false;
             switch (RAND_GET_OPTION(RSK_ZORAS_FOUNTAIN).Get()) {
                 case RO_ZF_CLOSED:
-                    if (Flags::EventCheckInf::KING_ZORA_MOVED) {
+                    if (Flags::KING_ZORA_MOVED) {
                         *should = true;
                     }
                     break;
                 case RO_ZF_CLOSED_CHILD:
                     if (LINK_IS_ADULT) {
                         *should = true;
-                    } else if (Flags::EventCheckInf::KING_ZORA_MOVED) {
+                    } else if (Flags::KING_ZORA_MOVED) {
                         *should = true;
                     }
                     break;
@@ -1136,15 +1136,15 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_GORONS_CONSIDER_FIRE_TEMPLE_FINISHED: {
-            *should = Flags::EventCheckInf::USED_FIRE_TEMPLE_BLUE_WARP.Get();
+            *should = Flags::USED_FIRE_TEMPLE_BLUE_WARP.Get();
             break;
         }
         case VB_GORONS_CONSIDER_DODONGOS_CAVERN_FINISHED: {
-            *should = Flags::EventCheckInf::USED_DODONGOS_CAVERN_BLUE_WARP.Get();
+            *should = Flags::USED_DODONGOS_CAVERN_BLUE_WARP.Get();
             break;
         }
         case VB_GORONS_CONSIDER_TUNIC_COLLECTED: {
-            *should = Flags::InfTable::GORON_CITY_DOORS_UNLOCKED.Get();
+            *should = Flags::GORON_CITY_DOORS_UNLOCKED.Get();
             break;
         }
         case VB_GIVE_ITEM_FROM_ITEM_00: {
@@ -1242,7 +1242,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_BE_ELIGIBLE_FOR_SARIAS_SONG: {
-            *should = !Flags::EventCheckInf::LEARNED_SARIAS_SONG;
+            *should = !Flags::LEARNED_SARIAS_SONG;
             break;
         }
         case VB_GIVE_ITEM_FROM_DEKU_THEATER: {
@@ -1264,13 +1264,13 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_GIVE_ITEM_FROM_ANJU_AS_CHILD: {
-            Flags::ItemGetInf::UNKNOWN_0C.Set();
+            Flags::ITEMGETINF_UNKNOWN_0C.Set();
             *should = false;
             break;
         }
         case VB_GIVE_ITEM_FROM_ANJU_AS_ADULT: {
             EnNiwLady* enNiwLady = va_arg(args, EnNiwLady*);
-            Flags::ItemGetInf::UNKNOWN_2C.Set();
+            Flags::ITEMGETINF_UNKNOWN_2C.Set();
             enNiwLady->actionFunc = func_80ABA778;
             *should = false;
             break;
@@ -1316,7 +1316,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             if (EnGm_RandoCanGetMedigoronItem()) {
                 if (id == VB_GIVE_ITEM_FROM_MEDIGORON) {
                     EnGm* enGm = va_arg(args, EnGm*);
-                    Flags::InfTable::UNKNOWN_B1.Set();
+                    Flags::INFTABLE_UNKNOWN_B1.Set();
                     Flags_SetRandomizerInf(RAND_INF_MERCHANTS_MEDIGORON);
                     enGm->actor.parent = NULL;
                     enGm->actionFunc = (EnGmActionFunc)func_80A3DC44;
@@ -1383,7 +1383,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             Flags_UnsetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_POCKET_CUCCO);
             Inventory_ReplaceItem(gPlayState, ITEM_POCKET_CUCCO, Randomizer_GetNextAdultTradeItem());
             // Trigger the reward now
-            Flags::ItemGetInf::UNKNOWN_2E.Set();
+            Flags::ITEMGETINF_UNKNOWN_2E.Set();
             enNiwLady->actionFunc = func_80ABA778;
 
             *should = false;
@@ -1400,7 +1400,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             Flags_UnsetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_ODD_MUSHROOM);
             Inventory_ReplaceItem(gPlayState, ITEM_ODD_MUSHROOM, Randomizer_GetNextAdultTradeItem());
             // Trigger the reward now
-            Flags::ItemGetInf::UNKNOWN_30.Set();
+            Flags::ITEMGETINF_UNKNOWN_30.Set();
             granny->actor.textId = 0x504F;
             granny->actionFunc = (EnDsActionFunc)EnDs_TalkAfterGiveOddPotion;
             granny->actor.flags &= ~ACTOR_FLAG_TALK;
@@ -1412,7 +1412,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             Flags_UnsetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_ODD_POTION);
             Inventory_ReplaceItem(gPlayState, ITEM_ODD_POTION, Randomizer_GetNextAdultTradeItem());
             // Trigger the reward now
-            Flags::ItemGetInf::UNKNOWN_31.Set();
+            Flags::ITEMGETINF_UNKNOWN_31.Set();
             *should = false;
             break;
         }
@@ -1488,7 +1488,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             } else if (Flags_GetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_ODD_POTION)) {
                 *should = true;
             } else {
-                *should = Flags::ItemGetInf::UNKNOWN_30.Get(); // Traded odd mushroom
+                *should = Flags::ITEMGETINF_UNKNOWN_30.Get(); // Traded odd mushroom
             }
             break;
         }
@@ -1565,10 +1565,10 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             enSyatekiMan->getItemId = GI_RUPEE_PURPLE;
             if (LINK_IS_ADULT) {
                 // Give purple rupee if we've already obtained the reward OR we don't have a bow
-                *should = Flags::ItemGetInf::UNKNOWN_0E || CUR_UPG_VALUE(UPG_QUIVER) == 0;
+                *should = Flags::ITEMGETINF_UNKNOWN_0E || CUR_UPG_VALUE(UPG_QUIVER) == 0;
             } else {
                 // Give purple rupee if we've already obtained the reward
-                *should = Flags::ItemGetInf::UNKNOWN_0D.Get();
+                *should = Flags::ITEMGETINF_UNKNOWN_0D.Get();
             }
             break;
         }
@@ -1592,10 +1592,10 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             EnGe1* enGe1 = va_arg(args, EnGe1*);
             // give both rewards at the same time
             if (gSaveContext.minigameScore >= 1000) {
-                Flags::InfTable::UNKNOWN_190.Set();
+                Flags::INFTABLE_UNKNOWN_190.Set();
             }
             if (gSaveContext.minigameScore >= 1500) {
-                Flags::ItemGetInf::UNKNOWN_0F.Set();
+                Flags::ITEMGETINF_UNKNOWN_0F.Set();
             }
             // move gerudo actor onto her wait loop
             enGe1->actionFunc = EnGe1_Wait_Archery;
@@ -1633,14 +1633,14 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         }
         case VB_GIVE_ITEM_FROM_OCARINA_MEMORY_GAME: {
             EnSkj* enSkj = va_arg(args, EnSkj*);
-            Flags::ItemGetInf::UNKNOWN_17.Set();
+            Flags::ITEMGETINF_UNKNOWN_17.Set();
             enSkj->actionFunc = (EnSkjActionFunc)EnSkj_CleanupOcarinaGame;
             *should = false;
             break;
         }
         case VB_GIVE_ITEM_FROM_LOST_DOG: {
             EnHy* enHy = va_arg(args, EnHy*);
-            Flags::InfTable::UNKNOWN_191.Set();
+            Flags::INFTABLE_UNKNOWN_191.Set();
             gSaveContext.dogParams = 0;
             gSaveContext.dogIsLost = false;
             enHy->actionFunc = EnHy_Fidget;
@@ -1839,7 +1839,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         // We need to override the vanilla behavior here because the player might sequence break and get Ruto kidnapped
         // before accessing other checks that require Ruto. So if she's kidnapped we allow her to spawn again
         case VB_RUTO_BE_CONSIDERED_NOT_KIDNAPPED: {
-            *should = !Flags::InfTable::UNKNOWN_145 || Flags::InfTable::UNKNOWN_146;
+            *should = !Flags::INFTABLE_UNKNOWN_145 || Flags::INFTABLE_UNKNOWN_146;
             break;
         }
         case VB_SET_VOIDOUT_FROM_SURFACE: {
@@ -2003,25 +2003,25 @@ void RandomizerOnSceneInitHandler(int16_t sceneNum) {
 
     // If we're not in the Temple of Time or we've already learned the Prelude of Light and received LACs, we don't need
     // to do anything
-    if (sceneNum != SCENE_TEMPLE_OF_TIME || (Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT &&
-                                             Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS))
+    if (sceneNum != SCENE_TEMPLE_OF_TIME || (Flags::LEARNED_PRELUDE_OF_LIGHT &&
+                                             Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS))
         return;
 
     updateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>([]() {
-        if (!Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT && LINK_IS_ADULT &&
+        if (!Flags::LEARNED_PRELUDE_OF_LIGHT && LINK_IS_ADULT &&
             CHECK_QUEST_ITEM(QUEST_MEDALLION_FOREST) && gPlayState->roomCtx.curRoom.num == 0) {
-            Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT.Set();
+            Flags::LEARNED_PRELUDE_OF_LIGHT.Set();
         }
 
         // We're always in rando here, and rando always overrides this should so we can just pass false
         if (GameInteractor_Should(VB_BE_ELIGIBLE_FOR_LIGHT_ARROWS, false)) {
-            Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS.Set();
+            Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS.Set();
         }
 
         // If both awards have been given, we can unregister the hook, otherwise it will get unregistered when the
         // player leaves the area
-        if (Flags::EventCheckInf::LEARNED_PRELUDE_OF_LIGHT &&
-            Flags::EventCheckInf::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS) {
+        if (Flags::LEARNED_PRELUDE_OF_LIGHT &&
+            Flags::RETURNED_TO_TEMPLE_OF_TIME_WITH_ALL_MEDALLIONS) {
             GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPlayerUpdate>(updateHook);
             updateHook = 0;
         }
@@ -2279,7 +2279,7 @@ void RandomizerOnActorInitHandler(void* actorRef) {
 
     if (actor->id == ACTOR_BG_TREEMOUTH && LINK_IS_ADULT &&
         RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) &&
-        (RAND_GET_OPTION(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || Flags::EventCheckInf::SHOWED_MIDO_SWORD_SHIELD)) {
+        (RAND_GET_OPTION(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || Flags::SHOWED_MIDO_SWORD_SHIELD)) {
         BgTreemouth* bgTreemouth = static_cast<BgTreemouth*>(actorRef);
         bgTreemouth->unk_168 = 1.0f;
     }
