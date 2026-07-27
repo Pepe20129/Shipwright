@@ -38,7 +38,7 @@ namespace Flags {
     const Flag TALKED_TO_TALON_IN_RANCH_HOUSE = Flag::FromInfTable(0x7E);
     const Flag MET_CHILD_MALON_AT_CASTLE_OR_MARKET = Flag::FromInfTable(0x84);
     const Flag CHILD_MALON_SAID_EPONA_WAS_AFRAID_OF_YOU = Flag::FromInfTable(0x85);
-    const Flag ENTERED_HYRULE_CASTLE = Flag::FromInfTable(0x8B);
+    const Flag INF_ENTERED_HYRULE_CASTLE = Flag::FromInfTable(0x8B);
     const Flag INFTABLE_UNKNOWN_8C = Flag::FromInfTable(0x8C);
     const Flag INFTABLE_UNKNOWN_8D = Flag::FromInfTable(0x8D);
     const Flag INFTABLE_UNKNOWN_8E = Flag::FromInfTable(0x8E);

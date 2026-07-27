@@ -71,13 +71,13 @@ void Anchor::HandlePacket_SetFlag(nlohmann::json payload) {
         }
 
         // Special case: Ignore tower collapse timer start, stored 0x36.
-        if (sceneNum == SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR && flagType == FLAG_SCENE_SWITCH && flag == 0x36) {
+        if (sceneNum == SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR && flagType == FLAG_TYPE_SCENE_SWITCH && flag == 0x36) {
             return;
         }
 
         // Special case: Ignore Great Fairy cutscenes, stored 0x38.
         if ((sceneNum == SCENE_GREAT_FAIRYS_FOUNTAIN_MAGIC || sceneNum == SCENE_GREAT_FAIRYS_FOUNTAIN_SPELLS) &&
-            flagType == FLAG_SCENE_SWITCH && flag == 0x38) {
+            flagType == FLAG_TYPE_SCENE_SWITCH && flag == 0x38) {
             return;
         }
 
