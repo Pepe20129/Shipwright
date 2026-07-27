@@ -544,7 +544,7 @@ void RandomizerOnItemReceiveHandler(GetItemEntry receivedItemEntry) {
     }
 
     if (receivedItemEntry.modIndex == MOD_NONE && receivedItemEntry.itemId == ITEM_SONG_EPONA) {
-        Flags_SetEventChkInf(EVENTCHKINF_EPONA_OBTAINED);
+        Flags::EPONA_OBTAINED.Set();
     }
 
     if (receivedItemEntry.modIndex == MOD_NONE &&
@@ -579,7 +579,7 @@ void RandomizerOnItemReceiveHandler(GetItemEntry receivedItemEntry) {
                 GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPlayerUpdate>(updateHook);
             });
         } else {
-            Flags_SetEventChkInf(EVENTCHKINF_NABOORU_CAPTURED_BY_TWINROVA);
+            Flags::NABOORU_CAPTURED_BY_TWINROVA.Set();
         }
     }
 
@@ -1011,7 +1011,7 @@ static bool RandoCanTrackSwordless(PlayState* play) {
     Player* player = GET_PLAYER(play);
     // Child is always assumed swordless until the Kokiri Sword is found; adult only with MS shuffle.
     bool isSwordless = (LINK_IS_CHILD || RAND_GET_OPTION(RSK_SHUFFLE_MASTER_SWORD)) &&
-                       gSaveContext.equips.buttonItems[0] == ITEM_NONE && Flags_GetInfTable(INFTABLE_SWORDLESS);
+                       gSaveContext.equips.buttonItems[0] == ITEM_NONE && Flags::SWORDLESS;
     bool wasSwordlessBefore = gSaveContext.buttonStatus[0] == SWORDLESS_STATUS;
     return isSwordless && !wasSwordlessBefore && !RAND_GET_OPTION(RSK_SWORDLESS_EPONA_ITEMS);
 }
@@ -1479,7 +1479,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
                     *should = false;
                 } else {
                     // Resets "Talked to Medigoron" flag in infTable to restore initial conversation state
-                    Flags_UnsetInfTable(INFTABLE_B1);
+                    Flags::INFTABLE_UNKNOWN_B1.Unset();
                     *should = true;
                 }
             }
@@ -1862,7 +1862,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             // Caused by waterbox first frame y surface always being -1313.0f
             Player* player = va_arg(args, Player*);
             if (gPlayState->sceneNum == SCENE_LAKE_HYLIA && LINK_IS_ADULT &&
-                !Flags_GetEventChkInf(EVENTCHKINF_RAISED_LAKE_HYLIA_WATER) && player->actor.world.pos.y > -1550.0f &&
+                !Flags::RAISED_LAKE_HYLIA_WATER && player->actor.world.pos.y > -1550.0f &&
                 player->actor.world.pos.y < -1500.0f) {
                 *should = false;
             }

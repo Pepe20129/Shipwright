@@ -607,7 +607,7 @@ extern "C" void Randomizer_InitSaveFile() {
     // Starting with the letter opens the Kakariko gate, shuffled or not.
     // The letter then has no use, so drop it from the trade cycle.
     if (Randomizer_GetSettingValue(RSK_STARTING_ZELDAS_LETTER)) {
-        Flags_SetInfTable(INFTABLE_SHOWED_ZELDAS_LETTER_TO_GATE_GUARD);
+        Flags::SHOWED_ZELDAS_LETTER_TO_GATE_GUARD.Set();
         Flags_UnsetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_LETTER_ZELDA);
     }
 

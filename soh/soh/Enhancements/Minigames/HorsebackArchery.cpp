@@ -32,7 +32,7 @@ static void RegisterHorsebackArcheryInstantWin() {
         EnGe1* enGe1 = va_arg(args, EnGe1*);
         PlayState* play = va_arg(args, PlayState*);
         Rupees_ChangeBy(-20);
-        Flags_SetEventChkInf(EVENTCHKINF_PLAYED_HORSEBACK_ARCHERY);
+        Flags::PLAYED_HORSEBACK_ARCHERY.Set();
         gSaveContext.minigameScore = 1500;
         Message_CloseTextbox(play);
         gSaveContext.minigameState = 3;

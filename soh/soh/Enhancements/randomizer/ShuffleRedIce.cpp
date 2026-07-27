@@ -119,7 +119,7 @@ void BgIceShelter_RandomizerSpawnCollectible(Actor* actor) {
 }
 
 void BgIceShelter_KingZoraSpawnCollectible(void* actor) {
-    if (!Flags_GetRandomizerInf(RAND_INF_ZD_KING_ZORA_RED_ICE) && Flags_GetInfTable(INFTABLE_138)) {
+    if (!Flags_GetRandomizerInf(RAND_INF_ZD_KING_ZORA_RED_ICE) && Flags::INFTABLE_UNKNOWN_138) {
         Flags_SetRandomizerInf(RAND_INF_ZD_KING_ZORA_RED_ICE);
     }
 }

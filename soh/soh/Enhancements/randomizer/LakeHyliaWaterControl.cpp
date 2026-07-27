@@ -29,9 +29,9 @@ static void SpawnSwitches(PlayState* play) {
 
     // If Water Temple cleared, spawn normal switches and sync current water level with switch status.
     // Else, spawn frozen rusty switch that is glitched and can't be pressed + spawn Navi check spots
-    if (Flags_GetEventChkInf(EVENTCHKINF_USED_WATER_TEMPLE_BLUE_WARP)) {
+    if (Flags::USED_WATER_TEMPLE_BLUE_WARP) {
         // This eventchkinf flag is set and unset on switch press - the permanent flag of water level
-        if (!Flags_GetEventChkInf(EVENTCHKINF_RAISED_LAKE_HYLIA_WATER)) {
+        if (!Flags::RAISED_LAKE_HYLIA_WATER) {
             Flags_SetSwitch(play, 0x3E); // Temp switch flag set = lowered water level
         }
         switchParams = 0x3E10; // Toggle-able floor switch
@@ -101,12 +101,12 @@ void RegisterLakeHyliaWaterControl() {
             sPrevFlagState = flagState;
             if (flagState) {
                 waterPlane->actionFunc = BgSpot06Objects_WaterControl_Lower;
-                Flags_UnsetEventChkInf(EVENTCHKINF_RAISED_LAKE_HYLIA_WATER);
+                Flags::RAISED_LAKE_HYLIA_WATER.Unset();
                 gPlayState->interfaceCtx.mapSegment[0] = (char*)ResourceGetDataByName(gDrainedLakeHyliaMinimapTex);
                 gPlayState->interfaceCtx.mapSegmentName[0] = (char*)gDrainedLakeHyliaMinimapTex;
             } else {
                 waterPlane->actionFunc = BgSpot06Objects_WaterControl_Raise;
-                Flags_SetEventChkInf(EVENTCHKINF_RAISED_LAKE_HYLIA_WATER);
+                Flags::RAISED_LAKE_HYLIA_WATER.Set();
                 gPlayState->interfaceCtx.mapSegment[0] = (char*)ResourceGetDataByName(gLakeHyliaMinimapTex);
                 gPlayState->interfaceCtx.mapSegmentName[0] = (char*)gLakeHyliaMinimapTex;
             }
