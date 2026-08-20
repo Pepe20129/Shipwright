@@ -1,4 +1,6 @@
-#include "Resource.h"
+#pragma once
+
+#include <ship/resource/Resource.h>
 #include "soh/OTRGlobals.h"
 #include "soh/cvar_prefixes.h"
 

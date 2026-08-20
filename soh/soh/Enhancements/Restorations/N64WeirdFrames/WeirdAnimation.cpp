@@ -1,7 +1,7 @@
 #include "WeirdAnimation.h"
 
-#include "resource/ResourceManager.h"
-#include "Context.h"
+#include <ship/resource/ResourceManager.h>
+#include <ship/Context.h>
 
 #include <cassert>
 #include <cstring>
@@ -36,7 +36,7 @@ void WeirdAnimation::Build() {
     auto& animation = animationData.emplace();
 
     for (const auto& neighborName : neighborAnimations) {
-        const auto neighbor = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(neighborName);
+        const auto neighbor = Ship::Context::GetRawInstance()->GetResourceManager()->LoadResource(neighborName);
 
         const auto prevSize = animation.size();
         animation.resize(prevSize + neighbor->GetPointerSize());

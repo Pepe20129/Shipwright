@@ -1,10 +1,6 @@
-#include <libultraship/bridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
-
-extern "C" {
-#include "macros.h"
-}
+#include "soh/cvar_prefixes.h"
 
 static constexpr int32_t CVAR_NOKEESEGUAYTARGET_DEFAULT = 0;
 #define CVAR_NOKEESEGUAYTARGET_NAME CVAR_CHEAT("NoKeeseGuayTarget")
@@ -20,4 +16,4 @@ void RegisterNoKeeseGuayTarget() {
     COND_VB_SHOULD(VB_GUAY_FORCE_FLY_AWAY, CVAR_NOKEESEGUAYTARGET_VALUE, { *should = true; });
 }
 
-static RegisterShipInitFunc initFunc_NoKeeseGuayTarget(RegisterNoKeeseGuayTarget, { CVAR_NOKEESEGUAYTARGET_NAME });
+static RegisterShipInitFunc initFunc(RegisterNoKeeseGuayTarget, { CVAR_NOKEESEGUAYTARGET_NAME });

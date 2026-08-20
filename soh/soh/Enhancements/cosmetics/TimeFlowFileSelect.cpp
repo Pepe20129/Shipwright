@@ -1,4 +1,3 @@
-#include <libultraship/bridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
 #include "z64save.h"
@@ -17,4 +16,4 @@ void RegisterTimeFlowFileSelect() {
     COND_HOOK(OnFileChooseMain, CVAR_TIMEFLOWFILESELECT_VALUE, OnFileChooseMainTimeFlowFileSelect);
 }
 
-static RegisterShipInitFunc initFunc_TimeFlowFileSelect(RegisterTimeFlowFileSelect, { CVAR_TIMEFLOWFILESELECT_NAME });
+static RegisterShipInitFunc initFunc(RegisterTimeFlowFileSelect, { CVAR_TIMEFLOWFILESELECT_NAME });

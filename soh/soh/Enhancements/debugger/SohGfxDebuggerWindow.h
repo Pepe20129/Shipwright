@@ -1,8 +1,6 @@
-#ifndef SOH_GFX_DEBUGGER_H
-#define SOH_GFX_DEBUGGER_H
+#pragma once
 
-#include "window/gui/GuiWindow.h"
-#include "window/gui/GfxDebuggerWindow.h"
+#include <libultraship/window/gui/GfxDebuggerWindow.h>
 
 class SohGfxDebuggerWindow : public LUS::GfxDebuggerWindow {
   public:
@@ -13,5 +11,3 @@ class SohGfxDebuggerWindow : public LUS::GfxDebuggerWindow {
     void UpdateElement() override;
     void DrawElement() override;
 };
-
-#endif // SOH_GFX_DEBUGGER_H
