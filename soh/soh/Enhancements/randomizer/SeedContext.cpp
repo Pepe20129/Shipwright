@@ -18,6 +18,7 @@
 #include "soh/Enhancements/randomizer/randomizer.h"
 
 #include <vector>
+#include <cassert>
 
 #include <fstream>
 #include <spdlog/spdlog.h>
@@ -151,8 +152,7 @@ bool Context::IsQuestOfLocationActive(RandomizerCheck rc) {
         return false;
     }
 
-    return loc->GetQuest() == RCQUEST_BOTH ||
-           loc->GetQuest() == RCQUEST_MQ && dungeon.value()->IsMQ() ||
+    return loc->GetQuest() == RCQUEST_BOTH || loc->GetQuest() == RCQUEST_MQ && dungeon.value()->IsMQ() ||
            loc->GetQuest() == RCQUEST_VANILLA && dungeon.value()->IsVanilla();
 }
 
@@ -245,8 +245,8 @@ void Context::GenerateLocationPool() {
             AddLocation(location.GetRandomizerCheck(), &overworldLocations);
             AddLocation(location.GetRandomizerCheck());
         } else { // is a dungeon check
-            auto* dungeon = GetDungeon(location.GetArea() - RCAREA_DEKU_TREE);
-            if (location.GetQuest() == RCQUEST_BOTH || (location.GetQuest() == RCQUEST_MQ) == dungeon->IsMQ()) {
+            auto dungeon = GetDungeon(location.GetArea() - RCAREA_DEKU_TREE);
+            if (location.GetQuest() == RCQUEST_BOTH || (location.GetQuest() == RCQUEST_MQ) == dungeon.IsMQ()) {
                 if ((location.GetRCType() == RCTYPE_FREESTANDING &&
                      mOptions[RSK_SHUFFLE_FREESTANDING].Is(RO_SHUFFLE_FREESTANDING_OVERWORLD)) ||
                     (location.GetRCType() == RCTYPE_POT && mOptions[RSK_SHUFFLE_POTS].Is(RO_SHUFFLE_POTS_OVERWORLD)) ||
@@ -268,7 +268,7 @@ void Context::GenerateLocationPool() {
                     continue;
                 }
                 // also add to that dungeon's location list.
-                AddLocation(location.GetRandomizerCheck(), &dungeon->locations);
+                AddLocation(location.GetRandomizerCheck(), &dungeon.locations);
                 AddLocation(location.GetRandomizerCheck());
             }
         }
@@ -506,11 +506,12 @@ std::shared_ptr<Fishsanity> Context::GetFishsanity() {
     return mFishsanity;
 }
 
-DungeonInfo* Context::GetDungeon(size_t key) const {
+DungeonInfo& Context::GetDungeon(size_t key) const {
     return mDungeons->GetDungeon(static_cast<DungeonKey>(key));
 }
 
-DungeonInfo* Context::GetDungeonFromScene(SceneID scene) const {
+/// If you know the scene in advance, use `GetDungeon` as it's infallible
+std::optional<DungeonInfo*> Context::GetDungeonFromScene(SceneID scene) const {
     return mDungeons->GetDungeonFromScene(scene);
 }
 
@@ -589,7 +590,9 @@ void Context::SetHash(std::string hash) {
 }
 
 uint8_t Context::GetBombchuCapacity() {
-    switch (mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
+    assert(mLogic.has_value());
+
+    switch (mLogic.value()->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
         case 0:
             return 0;
         case 1:
@@ -618,11 +621,14 @@ void Context::HandleGetBombchuBag() {
         }
         return;
     }
-    switch (mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
+
+    assert(mLogic.has_value());
+
+    switch (mLogic.value()->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel) {
         case 0:
         case 1:
         case 2:
-            mLogic->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel++;
+            mLogic.value()->GetSaveContext()->ship.quest.data.randomizer.bombchuUpgradeLevel++;
             if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_NONE) {
                 INV_CONTENT(ITEM_BOMBCHU) = ITEM_BOMBCHU;
             } else if (GetOption(RSK_INFINITE_UPGRADES).Is(RO_INF_UPGRADES_CONDENSED_PROGRESSIVE)) {

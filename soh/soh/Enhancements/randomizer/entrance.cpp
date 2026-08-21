@@ -180,13 +180,8 @@ std::optional<Entrance*> Entrance::GetAssumed() const {
     return assumed;
 }
 
-void Entrance::SetReplacement(Entrance* newReplacement) {
-    // ensure that a nullptr never makes its way to the underlying std::optional
-    if (newReplacement == nullptr) {
-        replacement == std::nullopt;
-    } else {
-        replacement = newReplacement;
-    }
+void Entrance::SetReplacement(std::optional<Entrance*> newReplacement) {
+    replacement = newReplacement;
 }
 
 std::optional<Entrance*> Entrance::GetReplacement() const {
@@ -753,16 +748,15 @@ static void ChangeConnections(Entrance* entrance, Entrance* targetEntrance) {
     SPDLOG_DEBUG("Attempting to connect {} to {}", entrance->GetName(), targetEntrance->to_string());
     entrance->Connect(targetEntrance->Disconnect());
 
-    assert(targetEntrance->GetReplacement().has_value());
-
-    entrance->SetReplacement(targetEntrance->GetReplacement().value());
+    entrance->SetReplacement(targetEntrance->GetReplacement());
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
         assert(entrance->GetReverse().value()->GetAssumed().has_value());
 
         assert(entrance->GetReplacement().has_value());
 
-        targetEntrance->GetReplacement().value()->GetReverse().value()->Connect(entrance->GetReverse().value()->GetAssumed().value()->Disconnect());
-        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(entrance->GetReverse().value());
+        targetEntrance->GetReplacement().value()->GetReverse().value()->Connect(
+            entrance->GetReverse().value()->GetAssumed().value()->Disconnect());
+        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(entrance->GetReverse());
     }
 }
 
@@ -926,7 +920,7 @@ static bool ValidateWorld(Entrance* entrancePlaced) {
 // original connections to reset the entrance and target entrance.
 static void RestoreConnections(Entrance* entrance, Entrance* targetEntrance) {
     targetEntrance->Connect(entrance->Disconnect());
-    entrance->SetReplacement(nullptr);
+    entrance->SetReplacement(std::nullopt);
 
     assert(targetEntrance->GetReplacement().has_value());
 
@@ -935,8 +929,9 @@ static void RestoreConnections(Entrance* entrance, Entrance* targetEntrance) {
     if (entrance->GetReverse().has_value() && !entrance->IsDecoupled()) {
         assert(entrance->GetReverse().value()->GetAssumed().has_value());
 
-        entrance->GetReverse().value()->GetAssumed().value()->Connect(targetEntrance->GetReplacement().value()->GetReverse().value()->Disconnect());
-        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(nullptr);
+        entrance->GetReverse().value()->GetAssumed().value()->Connect(
+            targetEntrance->GetReplacement().value()->GetReverse().value()->Disconnect());
+        targetEntrance->GetReplacement().value()->GetReverse().value()->SetReplacement(std::nullopt);
     }
 }
 
@@ -1354,7 +1349,9 @@ int EntranceShuffler::ShuffleAllEntrances() {
 
         if (ctx->GetOption(RSK_DECOUPLED_ENTRANCES)) {
             for (Entrance* entrance : entrancePools[EntranceType::ThievesHideout]) {
-                entrancePools[EntranceType::ThievesHideoutReverse].push_back(entrance->GetReverse());
+                assert(entrance->GetReverse().has_value());
+
+                entrancePools[EntranceType::ThievesHideoutReverse].push_back(entrance->GetReverse().value());
             }
         }
     }

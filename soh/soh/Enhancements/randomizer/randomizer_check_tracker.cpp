@@ -408,43 +408,43 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         switch (itemLoc->GetPlacedRandomizerGet()) {
             case RG_FOREST_TEMPLE_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
                 }
                 break;
             case RG_FIRE_TEMPLE_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
                 }
                 break;
             case RG_WATER_TEMPLE_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 3) {
                     SetAreaSpoiled(RCAREA_WATER_TEMPLE);
                 }
                 break;
             case RG_SPIRIT_TEMPLE_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
                 }
                 break;
             case RG_SHADOW_TEMPLE_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
                 }
                 break;
             case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 3) {
                     SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
                 }
                 break;
             case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
                 if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
-                        ->GetTotalSmallKeys(&gSaveContext) >= 4) {
+                        .GetTotalSmallKeys(&gSaveContext) >= 4) {
                     SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                 }
                 break;
@@ -482,44 +482,44 @@ void SpoilAreaFromCantObtain(RandomizerGet rg) {
     // only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
     switch (rg) {
         case RG_FOREST_TEMPLE_SMALL_KEY:
-            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
-                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE).GetTotalSmallKeys(&gSaveContext) <
+                6) {
                 SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
             }
             break;
         case RG_FIRE_TEMPLE_SMALL_KEY:
-            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE).GetTotalSmallKeys(&gSaveContext) <
                 8) {
                 SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
             }
             break;
         case RG_WATER_TEMPLE_SMALL_KEY:
-            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE).GetTotalSmallKeys(&gSaveContext) <
                 6) {
                 SetAreaSpoiled(RCAREA_WATER_TEMPLE);
             }
             break;
         case RG_SPIRIT_TEMPLE_SMALL_KEY:
-            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
-                    ->GetTotalSmallKeys(&gSaveContext) < 7) {
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE).GetTotalSmallKeys(&gSaveContext) <
+                7) {
                 SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
             }
             break;
         case RG_SHADOW_TEMPLE_SMALL_KEY:
-            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
-                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE).GetTotalSmallKeys(&gSaveContext) <
+                6) {
                 SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
             }
             break;
         case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
             if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
-                    ->GetTotalSmallKeys(&gSaveContext) < 3) {
+                    .GetTotalSmallKeys(&gSaveContext) < 3) {
                 SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
             }
             break;
         case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
             if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
-                    ->GetTotalSmallKeys(&gSaveContext) < 9) {
+                    .GetTotalSmallKeys(&gSaveContext) < 9) {
                 SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
             }
             break;
@@ -1506,7 +1506,8 @@ void CheckTrackerWindow::DrawElement() {
                     areaTotalsTooltipSS << "Checked / Total";
 
                     if (showVOrMQ && RandomizerCheckObjects::AreaIsDungeon(rcArea)) {
-                        auto dungeon = OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea));
+                        auto dungeon =
+                            OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea));
                         if (!dungeon.has_value()) {
                             assert(false);
                         } else if (dungeon.value()->IsMQ()) {

@@ -52,7 +52,8 @@ class Context {
     std::vector<RandomizerCheck> overworldLocations;
     void AddLocation(RandomizerCheck loc, std::optional<std::vector<RandomizerCheck>*> destination = std::nullopt);
     template <typename Container>
-    void AddLocations(const Container& locations, std::optional<std::vector<RandomizerCheck>*> destination = std::nullopt);
+    void AddLocations(const Container& locations,
+                      std::optional<std::vector<RandomizerCheck>*> destination = std::nullopt);
     bool IsQuestOfLocationActive(RandomizerCheck rc);
     void GenerateLocationPool();
     static std::vector<RandomizerCheck> GetLocations(const std::vector<RandomizerCheck>& locationPool,
@@ -88,8 +89,9 @@ class Context {
     std::shared_ptr<EntranceShuffler> GetEntranceShuffler();
     std::shared_ptr<Dungeons> GetDungeons();
     std::shared_ptr<Fishsanity> GetFishsanity();
-    DungeonInfo* GetDungeon(size_t key) const;
-    DungeonInfo* GetDungeonFromScene(SceneID key) const;
+    DungeonInfo& GetDungeon(size_t key) const;
+    // TODO: Change to std::optional<DungeonInfo&> when we update to C++ 26
+    std::optional<DungeonInfo*> GetDungeonFromScene(SceneID key) const;
     std::shared_ptr<Logic> GetLogic();
     std::shared_ptr<Trials> GetTrials();
     std::shared_ptr<Kaleido> GetKaleido();

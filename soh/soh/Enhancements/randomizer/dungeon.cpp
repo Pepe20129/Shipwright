@@ -160,8 +160,8 @@ uint8_t GetSceneSmallKeyMax(const SceneID scene) {
         return 6;
     }
     // ask which layout actually loads rather than what the seed asked for, so an MQ-only rom still lines up
-    const DungeonInfo* dungeon = Context::GetInstance()->GetDungeons()->GetDungeonFromScene(scene);
-    return dungeon != nullptr ? dungeon->GetSmallKeyCountForQuest(ResourceMgr_IsSceneMasterQuest(scene)) : 0;
+    const auto dungeon = Context::GetInstance()->GetDungeons()->GetDungeonFromScene(scene);
+    return dungeon.has_value() ? dungeon.value()->GetSmallKeyCountForQuest(ResourceMgr_IsSceneMasterQuest(scene)) : 0;
 }
 
 int8_t GetSceneTotalSmallKeys(const SaveContext* saveContext, const SceneID scene) {
@@ -169,8 +169,10 @@ int8_t GetSceneTotalSmallKeys(const SaveContext* saveContext, const SceneID scen
         const std::vector<uint8_t> doorFlags = ThievesHideoutDoorFlags();
         return FindTotalSmallKeys(saveContext, scene, &doorFlags);
     }
-    if (const DungeonInfo* dungeon = Context::GetInstance()->GetDungeons()->GetDungeonFromScene(scene)) {
-        return FindTotalSmallKeys(saveContext, scene, dungeon->GetDoorFlags());
+    if (const auto dungeon = Context::GetInstance()->GetDungeons()->GetDungeonFromScene(scene)) {
+        assert(dungeon.has_value());
+
+        return FindTotalSmallKeys(saveContext, scene, dungeon.value()->GetDoorFlags());
     }
     // the chest game keeps no door flags, so what you hold is all you ever got
     return FindCurrentSmallKeys(saveContext, scene);
@@ -310,10 +312,11 @@ Dungeons::Dungeons() {
 
 Dungeons::~Dungeons() = default;
 
-DungeonInfo* Dungeons::GetDungeon(const DungeonKey key) {
-    return &dungeonList[key];
+DungeonInfo& Dungeons::GetDungeon(const DungeonKey key) {
+    return dungeonList[key];
 }
 
+/// If you know the scene in advance, use `GetDungeon` as it's infallible
 std::optional<DungeonInfo*> Dungeons::GetDungeonFromScene(const uint16_t scene) {
     switch (scene) {
         case SCENE_DEKU_TREE:

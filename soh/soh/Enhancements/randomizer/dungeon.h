@@ -103,7 +103,8 @@ class Dungeons {
   public:
     Dungeons();
     ~Dungeons();
-    DungeonInfo* GetDungeon(DungeonKey key);
+    DungeonInfo& GetDungeon(DungeonKey key);
+    // TODO: Change to std::optional<DungeonInfo&> when we update to C++ 26
     std::optional<DungeonInfo*> GetDungeonFromScene(uint16_t scene);
     size_t CountMQ();
     void ClearAllMQ();

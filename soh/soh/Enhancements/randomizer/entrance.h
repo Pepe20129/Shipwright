@@ -74,8 +74,9 @@ class Entrance {
     void SetDecoupled();
     int16_t GetIndex() const;
     void SetIndex(int16_t newIndex);
+    // TODO: Change to std::optional<Entrance&> when we update to C++ 26
     std::optional<Entrance*> GetAssumed() const;
-    void SetReplacement(Entrance* newReplacement);
+    void SetReplacement(std::optional<Entrance*> newReplacement);
     std::optional<Entrance*> GetReplacement() const;
     EntranceType GetType() const;
     void SetType(EntranceType newType);
@@ -95,6 +96,7 @@ class Entrance {
     ConditionFn condition_function;
 
     EntranceType type = EntranceType::None;
+    // TODO: Change to std::optional<Entrance&> when we update to C++ 26
     std::optional<Entrance*> reverse = std::nullopt;
     std::optional<Entrance*> assumed = std::nullopt;
     std::optional<Entrance*> replacement = std::nullopt;

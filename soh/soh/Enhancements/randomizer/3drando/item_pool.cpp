@@ -130,8 +130,8 @@ static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive =
                     SceneID itemScene = loc->GetScene();
                     auto dungeon = ctx->GetDungeonFromScene(itemScene);
 
-                    if (dungeon != nullptr) {
-                        bool isMQ = dungeon->IsMQ();
+                    if (dungeon.has_value()) {
+                        bool isMQ = dungeon.value()->IsMQ();
 
                         if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
                             AddFixedItemToPool(loc->GetVanillaItem(), 1, false);
@@ -200,7 +200,7 @@ void GenerateItemPool() {
     AddFixedItemToPool(RG_ARROWS_10, 3);
 
     if (isScrubs) {
-        AddFixedItemToPool(RG_DEKU_NUTS_5, ctx->GetDungeon(Rando::JABU_JABUS_BELLY)->IsVanilla() ? 5 : 6);
+        AddFixedItemToPool(RG_DEKU_NUTS_5, ctx->GetDungeon(Rando::JABU_JABUS_BELLY).IsVanilla() ? 5 : 6);
         // Scrubs which sell seeds or arrows sell it based on age, this randomly assigns them
         for (uint8_t i = 0; i < 7; i++) {
             if (Random(0, 2)) {
@@ -788,7 +788,7 @@ void GenerateItemPool() {
     PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive);
 
     // Dungeon pools
-    if (ctx->GetDungeon(Rando::DEKU_TREE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::DEKU_TREE).IsMQ()) {
         AddFixedItemToPool(RG_PURPLE_RUPEE);
         if (ctx->GetOption(RSK_SHUFFLE_SCRUBS).Is(RO_SCRUBS_ALL)) {
             AddFixedItemToPool(RG_DEKU_SHIELD, 3);
@@ -798,7 +798,7 @@ void GenerateItemPool() {
     } else {
         AddFixedItemToPool(RG_RECOVERY_HEART, 2);
     }
-    if (ctx->GetDungeon(Rando::DODONGOS_CAVERN)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::DODONGOS_CAVERN).IsMQ()) {
         AddFixedItemToPool(RG_HYLIAN_SHIELD);
         AddFixedItemToPool(RG_BLUE_RUPEE);
         if (ctx->GetOption(RSK_SHUFFLE_SCRUBS).Is(RO_SCRUBS_ALL)) {
@@ -810,26 +810,26 @@ void GenerateItemPool() {
             AddFixedItemToPool(RG_DEKU_NUTS_5);
         }
     }
-    if (ctx->GetDungeon(Rando::JABU_JABUS_BELLY)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::JABU_JABUS_BELLY).IsMQ()) {
         AddFixedItemToPool(RG_DEKU_NUTS_5, 4);
         AddFixedItemToPool(RG_RECOVERY_HEART);
         AddFixedItemToPool(RG_DEKU_STICK_1);
         AddFixedItemToPool(RG_DEKU_SHIELD);
     }
-    if (ctx->GetDungeon(Rando::FOREST_TEMPLE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::FOREST_TEMPLE).IsMQ()) {
         AddFixedItemToPool(RG_ARROWS_5);
     } else {
         AddFixedItemToPool(RG_RECOVERY_HEART);
         AddFixedItemToPool(RG_ARROWS_10);
         AddFixedItemToPool(RG_ARROWS_30);
     }
-    if (ctx->GetDungeon(Rando::FIRE_TEMPLE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::FIRE_TEMPLE).IsMQ()) {
         AddFixedItemToPool(RG_HYLIAN_SHIELD);
         AddFixedItemToPool(RG_BOMBS_20);
     } else {
         AddFixedItemToPool(RG_HUGE_RUPEE);
     }
-    if (ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::SPIRIT_TEMPLE).IsMQ()) {
         AddFixedItemToPool(RG_PURPLE_RUPEE, 2);
         AddFixedItemToPool(RG_ARROWS_30);
     } else {
@@ -837,13 +837,13 @@ void GenerateItemPool() {
         AddFixedItemToPool(RG_BOMBS_20);
         AddFixedItemToPool(RG_RECOVERY_HEART, 2);
     }
-    if (ctx->GetDungeon(Rando::SHADOW_TEMPLE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::SHADOW_TEMPLE).IsMQ()) {
         AddFixedItemToPool(RG_ARROWS_5, 2);
         AddFixedItemToPool(RG_RED_RUPEE);
     } else {
         AddFixedItemToPool(RG_ARROWS_30);
     }
-    if (ctx->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->IsVanilla()) {
+    if (ctx->GetDungeon(Rando::BOTTOM_OF_THE_WELL).IsVanilla()) {
         AddFixedItemToPool(RG_DEKU_NUTS_5);
         AddFixedItemToPool(RG_DEKU_NUTS_10);
         AddFixedItemToPool(RG_RECOVERY_HEART);
@@ -852,7 +852,7 @@ void GenerateItemPool() {
         AddFixedItemToPool(RG_HYLIAN_SHIELD);
         AddFixedItemToPool(RG_HUGE_RUPEE);
     }
-    if (ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND).IsMQ()) {
         AddFixedItemToPool(RG_TREASURE_GAME_GREEN_RUPEE, 2);
         AddFixedItemToPool(RG_ARROWS_10);
         AddFixedItemToPool(RG_GREEN_RUPEE);
@@ -861,7 +861,7 @@ void GenerateItemPool() {
         AddFixedItemToPool(RG_HUGE_RUPEE);
         AddFixedItemToPool(RG_ARROWS_30, 3);
     }
-    if (ctx->GetDungeon(Rando::GANONS_CASTLE)->IsMQ()) {
+    if (ctx->GetDungeon(Rando::GANONS_CASTLE).IsMQ()) {
         AddFixedItemToPool(RG_ARROWS_10, 2);
         AddFixedItemToPool(RG_BOMBS_5);
         AddFixedItemToPool(RG_RED_RUPEE);
@@ -939,18 +939,18 @@ void GenerateItemPool() {
             AddItemToPool(RG_GTG_SILVER_SLOPE, 6,5,5,5, false);
             AddItemToPool(RG_GANONS_CASTLE_SILVER_FIRE, 6,5,5,5, false);
 
-            if (dungeons->GetDungeonFromScene(SCENE_DODONGOS_CAVERN)->IsMQ()) {
+            if (dungeons->GetDungeon(Rando::DEKU_TREE).IsMQ()) {
                 AddItemToPool(RG_DODONGOS_CAVERN_MQ_SILVER, 6,5,5,5, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsMQ()) {
+            if (dungeons->GetDungeon(Rando::SHADOW_TEMPLE).IsMQ()) {
                 AddItemToPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, 11,10,10,10, false);
                 AddItemToPool(RG_SHADOW_SILVER_SPIKES, 11,10,10,10, false);
             } else {
                 AddItemToPool(RG_SHADOW_SILVER_SPIKES, 6,5,5,5, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::SPIRIT_TEMPLE).IsVanilla()) {
                 AddItemToPool(RG_SPIRIT_SILVER_CHILD, 6,5,5,5, false);
                 AddItemToPool(RG_SPIRIT_SILVER_SUN, 6,5,5,5, false);
                 AddItemToPool(RG_SPIRIT_SILVER_BOULDERS, 6,5,5,5, false);
@@ -959,16 +959,16 @@ void GenerateItemPool() {
                 AddItemToPool(RG_SPIRIT_MQ_SILVER_BIG_WALL, 6,5,5,5, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_BOTTOM_OF_THE_WELL)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::BOTTOM_OF_THE_WELL).IsVanilla()) {
                 AddItemToPool(RG_BOTW_SILVER, 6,5,5,5, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_ICE_CAVERN)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::ICE_CAVERN).IsVanilla()) {
                 AddItemToPool(RG_ICE_CAVERN_SILVER_BLADES, 6,5,5,5, false);
                 AddItemToPool(RG_ICE_CAVERN_SILVER_BLOCK, 6,5,5,5, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_GERUDO_TRAINING_GROUND)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::GERUDO_TRAINING_GROUND).IsVanilla()) {
                 AddItemToPool(RG_GTG_SILVER_LAVA, 6,5,5,5, false);
                 AddItemToPool(RG_GTG_SILVER_WATER, 6,5,5,5, false);
             } else {
@@ -976,7 +976,7 @@ void GenerateItemPool() {
                 AddItemToPool(RG_GTG_SILVER_WATER, 4,3,3,3, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_INSIDE_GANONS_CASTLE)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::GANONS_CASTLE).IsVanilla()) {
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_LIGHT, 6,5,5,5, false);
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_FOREST, 6,5,5,5, false);
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_SPIRIT, 6,5,5,5, false);
@@ -990,18 +990,18 @@ void GenerateItemPool() {
             AddItemToPool(RG_GTG_SILVER_SLOPE, 2,1,1,1, false);
             AddItemToPool(RG_GANONS_CASTLE_SILVER_FIRE, 2,1,1,1, false);
 
-            if (dungeons->GetDungeonFromScene(SCENE_DODONGOS_CAVERN)->IsMQ()) {
+            if (dungeons->GetDungeon(Rando::DODONGOS_CAVERN).IsMQ()) {
                 AddItemToPool(RG_DODONGOS_CAVERN_MQ_SILVER, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsMQ()) {
+            if (dungeons->GetDungeon(Rando::SHADOW_TEMPLE).IsMQ()) {
                 AddItemToPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, 2,1,1,1, false);
                 AddItemToPool(RG_SHADOW_SILVER_SPIKES, 2,1,1,1, false);
             } else {
                 AddItemToPool(RG_SHADOW_SILVER_SPIKES, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::SPIRIT_TEMPLE).IsVanilla()) {
                 AddItemToPool(RG_SPIRIT_SILVER_CHILD, 2,1,1,1, false);
                 AddItemToPool(RG_SPIRIT_SILVER_SUN, 2,1,1,1, false);
                 AddItemToPool(RG_SPIRIT_SILVER_BOULDERS, 2,1,1,1, false);
@@ -1010,16 +1010,16 @@ void GenerateItemPool() {
                 AddItemToPool(RG_SPIRIT_MQ_SILVER_BIG_WALL, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_BOTTOM_OF_THE_WELL)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::BOTTOM_OF_THE_WELL).IsVanilla()) {
                 AddItemToPool(RG_BOTW_SILVER, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_ICE_CAVERN)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::ICE_CAVERN).IsVanilla()) {
                 AddItemToPool(RG_ICE_CAVERN_SILVER_BLADES, 2,1,1,1, false);
                 AddItemToPool(RG_ICE_CAVERN_SILVER_BLOCK, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_GERUDO_TRAINING_GROUND)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::GERUDO_TRAINING_GROUND).IsVanilla()) {
                 AddItemToPool(RG_GTG_SILVER_LAVA, 2,1,1,1, false);
                 AddItemToPool(RG_GTG_SILVER_WATER, 2,1,1,1, false);
             } else {
@@ -1027,7 +1027,7 @@ void GenerateItemPool() {
                 AddItemToPool(RG_GTG_SILVER_WATER, 2,1,1,1, false);
             }
 
-            if (dungeons->GetDungeonFromScene(SCENE_INSIDE_GANONS_CASTLE)->IsVanilla()) {
+            if (dungeons->GetDungeon(Rando::GANONS_CASTLE).IsVanilla()) {
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_LIGHT, 2,1,1,1, false);
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_FOREST, 2,1,1,1, false);
                 AddItemToPool(RG_GANONS_CASTLE_SILVER_SPIRIT, 2,1,1,1, false);
@@ -1089,10 +1089,10 @@ void GenerateItemPool() {
         // Fixed Ice Traps
         if (ctx->GetOption(RSK_BASE_ICE_TRAPS)) {
             iceTrapstoAdd++;
-            if (ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsVanilla()) {
+            if (ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND).IsVanilla()) {
                 iceTrapstoAdd++;
             }
-            if (ctx->GetDungeon(Rando::GANONS_CASTLE)->IsVanilla()) {
+            if (ctx->GetDungeon(Rando::GANONS_CASTLE).IsVanilla()) {
                 iceTrapstoAdd += 4;
             }
         }
