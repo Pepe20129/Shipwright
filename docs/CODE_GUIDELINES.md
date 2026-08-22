@@ -54,6 +54,24 @@ Instead of using regular `assert`s which can't prevent issues in releases, use a
 - `assert(false);`.
 - An early return from the function when appropriate.
 
+## [Attributes](https://en.cppreference.com/cpp/language/attributes)
+
+Do not use the attribute `using` syntax introduzed in C++ 17.
+
+Do not include multiple attibutes in one attribute specifier sequence.
+
+Do not use the `[[assume(expression)]]` or `[[indeterminate]]` attributes as they can easily lead to UB.
+
+
+Functions that do not return must use the `[[noreturn]]` attribute.
+
+Functions that don't have any side effects and return a value must use the `[[nodiscard]]` attribute, prefferably with a reason specified.
+
+Switch case fallthroughs must me marked with the `[[fallthrough]]` attribute.
+
+
+Use all other attributes as appropiate.
+
 ## Types
 <!--
 // This is a possible future addition but there's currently debate over if it is a good idea.
