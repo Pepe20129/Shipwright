@@ -10,7 +10,7 @@
 Code should be C++, not C.
 
 Only use features supported by the latest versions of GCC, Clang & MSVC.
-See these compatibility tables ([C](https://en.cppreference.com/c/compiler_support)) ([C++](https://en.cppreference.com/cpp/compiler_support)) for which features are supported by each compiler.
+See these compatibility tables ([C](https://en.cppreference.com/c/compiler_support), [C++](https://en.cppreference.com/cpp/compiler_support)) for which features are supported by each compiler.
 
 Do not use:
 - [`goto`](https://en.cppreference.com/cpp/language/goto).
