@@ -19,6 +19,7 @@ Do not use:
 - [`const_cast`](https://en.cppreference.com/cpp/language/const_cast) to cast away constness or volatility.
 - [`new`](https://en.cppreference.com/cpp/language/new) & [`delete`](https://en.cppreference.com/cpp/language/delete) expressions.
 - [Alternative operator representations](https://en.cppreference.com/cpp/language/operator_alternative).
+- [Inline assembly](https://en.cppreference.com/cpp/language/asm).
 
 Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
 
