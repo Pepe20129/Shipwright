@@ -93,7 +93,7 @@ Use references instead of pointers (with [`std::optional`](https://en.cppreferen
 
 Prefer error values over exceptions.
 
-Prefer factory functions over public constructors (or two phase initialization) and execute as much of the initialization logic as possible in the factory function.
+Prefer factory functions over public constructors (or [two phase initialization](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rnr-two-phase-init)) and execute as much of the initialization logic as possible in the factory function.
 This avoid issues such as accidental default initialization and referencing class members before they are valid.
 
 If possible, make invalid states unrepresentable.
