@@ -9,19 +9,22 @@
 ## General
 Code should be C++, not C.
 
+Only use features supported by the latest versions of GCC, Clang & MSVC.
+See these compatibility tables ([C](https://en.cppreference.com/c/compiler_support)) ([C++](https://en.cppreference.com/cpp/compiler_support)) for which features are supported by each compiler.
+
 Do not use:
 - [`goto`](https://en.cppreference.com/cpp/language/goto).
 - Octal [integer literals](https://en.cppreference.com/cpp/language/integer_literal).
 - Octal [character escape sequences](https://en.cppreference.com/cpp/language/escape).
 - [`const_cast`](https://en.cppreference.com/cpp/language/const_cast) to cast away constness or volatility.
 - [`new`](https://en.cppreference.com/cpp/language/new) & [`delete`](https://en.cppreference.com/cpp/language/delete) expressions.
-- [Alternative operator representations](https://en.cppreference.com/cpp/language/operator_alternative)
+- [Alternative operator representations](https://en.cppreference.com/cpp/language/operator_alternative).
 
 Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
 
 Always use braces (`{}`) for `if` statements, `for` statements, `while` statements and `case` statements.
 
-Make things `const`/`constexpr`/`consteval` when possible.
+Make things `const`/`constexpr`/`consteval`/`noexcept` when possible.
 
 Prefer:
 - [Post-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Postfix_operators) over [pre-increment operators](https://en.cppreference.com/cpp/language/operator_incdec#Prefix_operators).
@@ -29,7 +32,8 @@ Prefer:
 - The `at` method over the `[]` operator for types such as [`std::array`](https://en.cppreference.com/cpp/container/array) & [`std::vector`](https://en.cppreference.com/cpp/container/vector).
 - C++ style casts over C style casts.
 
-[Clang Format](https://clang.llvm.org/docs/ClangFormat.html) is used to maintain code formatting, it may be disabled for a region of code with `// clang-format off` & `// clang-format on`. This should only be used for things such as tables which are clearer with whitespace alignment.
+[Clang Format](https://clang.llvm.org/docs/ClangFormat.html) (see [FORMATTING.md](./FORMATTING.md) for more details) is used to maintain code formatting, it may be disabled for a region of code with `// clang-format off` & `// clang-format on`.
+This should only be used for things such as tables which are clearer with whitespace alignment.
 
 TODO comments are generally used with one of these prefixes:
 - `TODO`: General TODO comments
@@ -51,7 +55,11 @@ Instead of using regular `assert`s which can't prevent issues in releases, use a
 - An early return from the function when appropriate.
 
 ## Types
+<!--
+// This is a possible future addition but there's currently debate over if it is a good idea.
+
 Use the libultra types when possible (`u64` instead of `uint64_t`, `f32` instead of `float`, etc.).
+-->
 
 Use `bool`, `true` & `false` when appropriate instead of an integer type, `1` & `0`.
 
@@ -61,9 +69,13 @@ Use [`std::optional`](https://en.cppreference.com/cpp/utility/optional), [`std::
 
 Use references instead of pointers (with [`std::optional`](https://en.cppreference.com/cpp/utility/optional) for nullable references) if possible.
 
+> [!NOTE]
+> `std::optional<T&>` is not allowed until C++ 26, use `std::optional<T*>` instead in the meanwhile
+
 Prefer error values over exceptions.
 
-Prefer factory functions over public constructors and execute as much of the initialization logic as possible in the factory function. This avoid issues such as accidental default initialization and referencing class members before they are valid.
+Prefer factory functions over public constructors (or two phase initialization) and execute as much of the initialization logic as possible in the factory function.
+This avoid issues such as accidental default initialization and referencing class members before they are valid.
 
 If possible, make invalid states unrepresentable.
 
@@ -77,7 +89,7 @@ Use the `#pragma once` pre-processor directive instead of an inclusion macro.
 Do not expose function implementations in headers.
 
 ## Original Source
-We want to keep the files from the original source (`src/`) as similar to the [original decomp](https://github.com/zeldaret/oot) ones as possible, as such, the only changes that should be done (aside from removing differences previously introduced) are the addition of `GameInteractor_Should` calls and its associated header.
+We want to keep the files from the original source (`src/`) as similar to the [original decomp](https://github.com/zeldaret/oot) ones as possible, as such, the only changes that should be done (aside from removing differences previously introduced) are the addition of `GameInteractor_Should` calls (also reffered to as the "Vanilla Behaviour" system) and its associated header.
 
 > [!NOTE]
 > We're not fully up to date with decomp so there might be some differences, contributions to bring our files closer to decomp's are welcome.
