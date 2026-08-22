@@ -140,7 +140,7 @@ void Context::AddLocations(const Container& locations, std::optional<std::vector
     if (!destination.has_value()) {
         destination = &allLocations;
     }
-    destination.value()->insert(destination->end(), std::cbegin(locations), std::cend(locations));
+    destination.value()->insert(destination.value()->end(), std::cbegin(locations), std::cend(locations));
 }
 
 bool Context::IsQuestOfLocationActive(RandomizerCheck rc) {
