@@ -1,7 +1,7 @@
 # Code Guidelines for Ship of Harkinian
 
 > [!IMPORTANT]
-> These guidelines do not apply to the files under the `src/` directory
+> These guidelines do not apply to the files under the `src/` directory.
 
 > [!NOTE]
 > Keep in mind that these guidelines have not always been here so some code has not been updated to follow these guidelines yet. Contributions to bring those cases inline with these guidelines are welcome.
@@ -20,7 +20,7 @@ Do not use:
 - [`new`](https://en.cppreference.com/cpp/language/new) & [`delete`](https://en.cppreference.com/cpp/language/delete) expressions.
 - [Alternative operator representations](https://en.cppreference.com/cpp/language/operator_alternative).
 - [Inline assembly](https://en.cppreference.com/cpp/language/asm).
-- [`void` as an argument type](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#nl25-dont-use-void-as-an-argument-type)
+- [`void` as an argument type](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#nl25-dont-use-void-as-an-argument-type).
 
 Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
 
@@ -38,9 +38,9 @@ Prefer:
 This should only be used for things such as tables which are clearer with whitespace alignment.
 
 TODO comments are generally used with one of these prefixes:
-- `TODO`: General TODO comments
-- `Upstream TODO`: TODOs relating to syncing code with decomp
-- `RANDOTODO`: TODOs relating to randomizer (there are some that have the `RANDTODO` prefix)
+- `TODO`: General TODO comments.
+- `Upstream TODO`: TODOs relating to syncing code with decomp.
+- `RANDOTODO`: TODOs relating to randomizer (there are some that have the `RANDTODO` prefix).
 
 Files and folder names should be in UpperCamelCase.
 
@@ -90,7 +90,7 @@ Use [`std::optional`](https://en.cppreference.com/cpp/utility/optional), [`std::
 Use references instead of pointers (with [`std::optional`](https://en.cppreference.com/cpp/utility/optional) for nullable references) if possible.
 
 > [!NOTE]
-> `std::optional<T&>` is not allowed until C++ 26, use `std::optional<T*>` instead in the meanwhile
+> `std::optional<T&>` is not allowed until C++ 26, use `std::optional<T*>` instead in the meanwhile.
 
 Prefer error values over exceptions.
 
