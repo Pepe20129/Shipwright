@@ -22,7 +22,7 @@ Do not use:
 - [Inline assembly](https://en.cppreference.com/cpp/language/asm).
 - [`void` as an argument type](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#nl25-dont-use-void-as-an-argument-type).
 
-Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is ambiguous or not obvious (this includes between `||` & `&&`).
+Use parenthesis when [operator precedence](https://en.cppreference.com/cpp/language/operator_precedence) is not obvious (this includes between `||` & `&&`).
 
 Always use braces (`{}`) for `if` statements, `for` statements, `while` statements and `case` statements.
 
