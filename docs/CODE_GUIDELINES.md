@@ -1,7 +1,7 @@
 # Code Guidelines for Ship of Harkinian
 
 > [!IMPORTANT]
-> These guidelines do not apply to the files under the `src/` directory.
+> These guidelines do not apply to the files under the `src/` directory. See [this](#original-source) section.
 
 > [!NOTE]
 > Keep in mind that these guidelines have not always been here so some code has not been updated to follow these guidelines yet. Contributions to bring those cases inline with these guidelines are welcome.
