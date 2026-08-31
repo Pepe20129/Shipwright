@@ -2,8 +2,9 @@
 
 #include <array>
 #include <optional>
-#include <vector>
+#include <span>
 #include <string>
+#include <vector>
 #include "nlohmann/json.hpp"
 #include "z64save.h"
 #include "z64scene.h"
@@ -43,7 +44,7 @@ class DungeonInfo {
     int8_t GetCurrentSmallKeys(SaveContext* saveContext) const;
     int8_t GetTotalSmallKeys(SaveContext* saveContext) const;
     RandomizerSettingKey GetMQSetting() const;
-    const std::vector<uint8_t>* GetDoorFlags() const;
+    std::span<const uint8_t> GetDoorFlags() const;
     void SetDungeonKnown(bool known);
     void PlaceVanillaMap() const;
     void PlaceVanillaCompass() const;
@@ -75,9 +76,9 @@ class DungeonInfo {
     std::vector<uint8_t> MQDoorFlags;
 };
 
-int8_t FindUsedSmallKeys(const SaveContext* saveContext, const SceneID scene, const std::vector<uint8_t>* DoorFlags);
+int8_t FindUsedSmallKeys(const SaveContext* saveContext, const SceneID scene, std::span<const uint8_t> doorFlags);
 int8_t FindCurrentSmallKeys(const SaveContext* saveContext, const SceneID scene);
-int8_t FindTotalSmallKeys(const SaveContext* saveContext, const SceneID scene, const std::vector<uint8_t>* DoorFlags);
+int8_t FindTotalSmallKeys(const SaveContext* saveContext, const SceneID scene, std::span<const uint8_t> doorFlags);
 
 /// How many small keys the scene takes in total. Covers dungeons, Thieves' Hideout and the chest game.
 uint8_t GetSceneSmallKeyMax(SceneID scene);
