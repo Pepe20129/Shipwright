@@ -7,7 +7,7 @@
 > Keep in mind that these guidelines have not always been here so some code has not been updated to follow these guidelines yet. Contributions to bring those cases inline with these guidelines are welcome.
 
 ## General
-Code should be C++, not C.
+Code must be C++, not C.
 
 Only use features supported by the latest versions of GCC, Clang & MSVC.
 See these compatibility tables ([C](https://en.cppreference.com/c/compiler_support), [C++](https://en.cppreference.com/cpp/compiler_support)) for which features are supported by each compiler.
@@ -36,14 +36,14 @@ Prefer:
 - [`SPDLOG` macros](https://github.com/gabime/spdlog/blob/v1.x/include/spdlog/spdlog.h) over [`LUSLOG` macros](../libultraship/include/libultraship/log/luslog.h)
 
 [Clang Format](https://clang.llvm.org/docs/ClangFormat.html) (see [FORMATTING.md](./FORMATTING.md) for more details) is used to maintain code formatting, it may be disabled for a region of code with `// clang-format off` & `// clang-format on`.
-This should only be used for things such as tables which are clearer with whitespace alignment.
+This must only be used for things such as tables which are clearer with whitespace alignment.
 
 TODO comments are generally used with one of these prefixes:
 - `TODO`: General TODO comments.
 - `Upstream TODO`: TODOs relating to syncing code with decomp.
 - `RANDOTODO`: TODOs relating to randomizer (there are some that have the `RANDTODO` prefix).
 
-Files and folder names should be in UpperCamelCase.
+Files and folder names must be in UpperCamelCase.
 
 ShipInit declarations must be at the bottom of the file.
 
